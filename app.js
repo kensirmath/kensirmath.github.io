@@ -1,7 +1,7 @@
 // Math Calculator App JavaScript
 
 // Global variables for scientific calculator
-let currentCursorPosition = 0;
+let currentExpression = '';
 let angleMode = 'DEG'; // DEG or RAD
 const MATH_CONSTANTS = {
     pi: Math.PI,
@@ -38,87 +38,63 @@ function clearResults() {
     });
 }
 
-// Scientific Calculator Functions with Cursor Support
+// Fraction conversion function using continued fractions
+function decimalToFraction(decimal, tolerance = 1e-10) {
+    if (decimal === 0) return "0";
+    if (Math.abs(decimal - Math.round(decimal)) < tolerance) {
+        return Math.round(decimal).toString();
+    }
+    
+    let sign = decimal < 0 ? "-" : "";
+    decimal = Math.abs(decimal);
+    
+    // Continued fraction algorithm
+    let h1 = 1, h2 = 0;
+    let k1 = 0, k2 = 1;
+    let b = decimal;
+    
+    do {
+        let a = Math.floor(b);
+        let aux = h1;
+        h1 = a * h1 + h2;
+        h2 = aux;
+        aux = k1;
+        k1 = a * k1 + k2;
+        k2 = aux;
+        b = 1 / (b - a);
+    } while (Math.abs(decimal - h1 / k1) > tolerance && k1 <= 10000);
+    
+    return sign + h1 + "/" + k1;
+}
+
+function displayCalculatorResult(result) {
+    // Display decimal result
+    let displayText = result.toString();
+    
+    // If it's a rational number, also display as improper fraction
+    if (isFinite(result) && !Number.isInteger(result)) {
+        try {
+            let fraction = decimalToFraction(result);
+            if (fraction && !fraction.includes("e") && fraction.includes("/")) {
+                displayText += ` = ${fraction}`;
+            }
+        } catch (e) {
+            // If conversion fails, only show decimal
+        }
+    }
+    
+    return displayText;
+}
+
+// Scientific Calculator Functions
 function initScientificCalculator() {
-    const display = document.getElementById('calc-display');
-    display.value = '';
+    currentExpression = '';
+    updateDisplay();
     document.getElementById('calc-result').classList.add('hidden');
-    
-    // Add event listeners for cursor editing
-    display.addEventListener('click', focusDisplay);
-    display.addEventListener('keydown', handleKeyDown);
-    display.addEventListener('input', updateExpression);
-    display.addEventListener('keyup', updateCursorPosition);
-    display.addEventListener('mouseup', updateCursorPosition);
 }
 
-function focusDisplay() {
-    const display = document.getElementById('calc-display');
-    display.focus();
-    updateCursorPosition();
-}
-
-function updateCursorPosition() {
-    const display = document.getElementById('calc-display');
-    currentCursorPosition = display.selectionStart;
-}
-
-function updateExpression() {
-    updateCursorPosition();
-}
-
-function handleKeyDown(event) {
-    updateCursorPosition();
-    
-    // Handle special keys
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        calculateResult();
-    } else if (event.key === 'Escape') {
-        event.preventDefault();
-        clearCalculator();
-    }
-}
-
-function insertAtCursor(text) {
-    const display = document.getElementById('calc-display');
-    const start = display.selectionStart;
-    const end = display.selectionEnd;
-    const currentValue = display.value;
-    
-    // Insert text at cursor position
-    const newValue = currentValue.substring(0, start) + text + currentValue.substring(end);
-    display.value = newValue;
-    
-    // Set new cursor position
-    const newCursorPos = start + text.length;
-    display.setSelectionRange(newCursorPos, newCursorPos);
-    display.focus();
-    
-    // Update cursor position tracking
-    currentCursorPosition = newCursorPos;
-}
-
-function backspaceAtCursor() {
-    const display = document.getElementById('calc-display');
-    const start = display.selectionStart;
-    const end = display.selectionEnd;
-    const currentValue = display.value;
-    
-    if (start !== end) {
-        // Delete selected text
-        const newValue = currentValue.substring(0, start) + currentValue.substring(end);
-        display.value = newValue;
-        display.setSelectionRange(start, start);
-    } else if (start > 0) {
-        // Delete character before cursor
-        const newValue = currentValue.substring(0, start - 1) + currentValue.substring(start);
-        display.value = newValue;
-        display.setSelectionRange(start - 1, start - 1);
-    }
-    
-    display.focus();
-    updateCursorPosition();
+function updateDisplay() {
+    document.getElementById('calc-display').value = currentExpression;
 }
 
 function toggleAngleMode() {
@@ -127,96 +103,50 @@ function toggleAngleMode() {
 }
 
 function clearCalculator() {
-    const display = document.getElementById('calc-display');
-    display.value = '';
-    display.focus();
-    currentCursorPosition = 0;
+    currentExpression = '';
+    updateDisplay();
     document.getElementById('calc-result').classList.add('hidden');
 }
 
-function calculateResult() {
+function backspaceAtCursor() {
     const display = document.getElementById('calc-display');
-    const expression = display.value;
+    const cursorPos = display.selectionStart;
     
-    if (!expression.trim()) return;
+    if (cursorPos > 0) {
+        currentExpression = currentExpression.slice(0, cursorPos - 1) + currentExpression.slice(cursorPos);
+        updateDisplay();
+        // Restore cursor position
+        setTimeout(() => {
+            display.selectionStart = display.selectionEnd = cursorPos - 1;
+        }, 0);
+    }
+}
+
+function insertAtCursor(text) {
+    const display = document.getElementById('calc-display');
+    const cursorPos = display.selectionStart || currentExpression.length;
+    
+    currentExpression = currentExpression.slice(0, cursorPos) + text + currentExpression.slice(cursorPos);
+    updateDisplay();
+    
+    // Restore cursor position
+    const newPos = cursorPos + text.length;
+    setTimeout(() => {
+        display.selectionStart = display.selectionEnd = newPos;
+    }, 0);
+}
+
+function calculateResult() {
+    if (!currentExpression) return;
     
     try {
-        const result = evaluateExpression(expression);
-        document.getElementById('calc-output').textContent = formatCalculatorResult(result);
+        const result = evaluateExpression(currentExpression);
+        document.getElementById('calc-output').textContent = displayCalculatorResult(result);
         document.getElementById('calc-result').classList.remove('hidden');
     } catch (error) {
         document.getElementById('calc-output').textContent = '錯誤：' + error.message;
         document.getElementById('calc-result').classList.remove('hidden');
     }
-}
-
-// Fraction parsing function for linear system
-function parseFraction(input) {
-    // Handle empty input
-    if (!input || input.trim() === '') return 0;
-    
-    const str = input.trim();
-    
-    // Handle mixed numbers: e.g., "2 1/3"
-    const mixedMatch = str.match(/^(-?\d+)\s+(\d+)\/(\d+)$/);
-    if (mixedMatch) {
-        const whole = parseInt(mixedMatch[1]);
-        const num = parseInt(mixedMatch[2]);
-        const den = parseInt(mixedMatch[3]);
-        if (den === 0) throw new Error('分母不能為零');
-        return whole + (whole >= 0 ? num/den : -num/den);
-    }
-    
-    // Handle pure fractions: e.g., "3/4", "-2/5"
-    const fracMatch = str.match(/^(-?\d+)\/(-?\d+)$/);
-    if (fracMatch) {
-        const num = parseInt(fracMatch[1]);
-        const den = parseInt(fracMatch[2]);
-        if (den === 0) throw new Error('分母不能為零');
-        return num / den;
-    }
-    
-    // Handle decimal numbers
-    const decimal = parseFloat(str);
-    if (isNaN(decimal)) throw new Error('無效的數字格式');
-    return decimal;
-}
-
-// Function to convert decimal to fraction
-function decimalToFraction(decimal, tolerance = 1e-10) {
-    if (Number.isInteger(decimal)) {
-        return { numerator: decimal, denominator: 1 };
-    }
-    
-    // Handle negative numbers
-    const sign = decimal < 0 ? -1 : 1;
-    decimal = Math.abs(decimal);
-    
-    // Try to find a simple fraction representation
-    for (let denominator = 2; denominator <= 1000; denominator++) {
-        const numerator = Math.round(decimal * denominator);
-        if (Math.abs(decimal - numerator / denominator) < tolerance) {
-            const gcdValue = gcd(numerator, denominator);
-            return {
-                numerator: sign * (numerator / gcdValue),
-                denominator: denominator / gcdValue
-            };
-        }
-    }
-    
-    // If no simple fraction found, return as decimal
-    return null;
-}
-
-function gcd(a, b) {
-    a = Math.abs(a);
-    b = Math.abs(b);
-    while (b !== 0) {
-        const temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
 }
 
 // Expression Parser and Evaluator
@@ -450,6 +380,364 @@ function formatCalculatorResult(num) {
     return num.toFixed(10).replace(/\.?0+$/, '');
 }
 
+// Cubic Equation Solver
+function solveCubic() {
+    const a = parseFloat(document.getElementById('cubic-a').value);
+    const b = parseFloat(document.getElementById('cubic-b').value) || 0;
+    const c = parseFloat(document.getElementById('cubic-c').value) || 0;
+    const d = parseFloat(document.getElementById('cubic-d').value) || 0;
+    
+    const resultDiv = document.getElementById('cubic-result');
+    const outputDiv = document.getElementById('cubic-output');
+    
+    // Validation
+    if (isNaN(a) || a === 0) {
+        outputDiv.innerHTML = '<div class="error-message">錯誤：係數 a 不能為 0 或空白！</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+    
+    try {
+        const result = solveCubicEquation(a, b, c, d);
+        
+        let html = '<div class="result-item">';
+        html += '<div class="result-label">方程式</div>';
+        html += `<div class="result-value">${formatCoefficient(a)}x³ ${formatTerm(b)}x² ${formatTerm(c)}x ${formatTerm(d, true)} = 0</div>`;
+        html += '</div>';
+        
+        html += '<div class="result-item">';
+        html += '<div class="result-label">判別式 Δ</div>';
+        html += `<div class="result-value">Δ = ${formatNumber(result.discriminant)}</div>`;
+        html += '</div>';
+        
+        html += '<div class="result-item">';
+        html += '<div class="result-label">根的性質</div>';
+        html += `<div class="result-value ${getRootNatureClass(result.discriminant)}">${result.nature}</div>`;
+        html += '</div>';
+        
+        html += '<div class="result-item">';
+        html += '<div class="result-label">根的值</div>';
+        
+        result.roots.forEach((root, index) => {
+            if (typeof root === 'number') {
+                html += `<div class="result-value">x${index + 1} = ${formatNumber(root)}</div>`;
+            } else {
+                html += `<div class="result-value complex-root">x${index + 1} = ${formatNumber(root.real)} + ${formatNumber(root.imag)}i</div>`;
+            }
+        });
+        
+        html += '</div>';
+        
+        outputDiv.innerHTML = html;
+        resultDiv.classList.remove('hidden');
+        
+    } catch (error) {
+        outputDiv.innerHTML = `<div class="error-message">錯誤：${error.message}</div>`;
+        resultDiv.classList.remove('hidden');
+    }
+}
+
+function solveCubicEquation(a, b, c, d) {
+    if (a === 0) throw new Error('係數 a 不能為零');
+    
+    // Normalize to x³ + px² + qx + r = 0
+    let p = b / a;
+    let q = c / a;
+    let r = d / a;
+    
+    // Convert to depressed cubic: t³ + At + B = 0
+    // t = x + p/3
+    let A = q - (p * p) / 3;
+    let B = (2 * p * p * p - 9 * p * q + 27 * r) / 27;
+    
+    // Calculate discriminant
+    let discriminant = -4 * A * A * A - 27 * B * B;
+    
+    let roots = [];
+    
+    if (Math.abs(discriminant) < 1e-10) {
+        // Discriminant = 0: repeated roots
+        if (Math.abs(A) < 1e-10) {
+            // A = 0: triple root
+            let root = -p / 3;
+            roots.push(root);
+            roots.push(root);
+            roots.push(root);
+        } else {
+            // One single root and one double root
+            let t1 = 3 * B / A;
+            let t2 = -3 * B / (2 * A);
+            roots.push(t1 - p / 3);
+            roots.push(t2 - p / 3);
+            roots.push(t2 - p / 3);
+        }
+    } else if (discriminant > 0) {
+        // Discriminant > 0: three different real roots (trigonometric method)
+        let m = 2 * Math.sqrt(-A / 3);
+        let theta = Math.acos(3 * B / (A * m)) / 3;
+        
+        for (let k = 0; k < 3; k++) {
+            let t = m * Math.cos(theta - (2 * Math.PI * k) / 3);
+            roots.push(t - p / 3);
+        }
+    } else {
+        // Discriminant < 0: one real root, two complex roots (Cardano's formula)
+        let u = Math.cbrt((-B + Math.sqrt(-discriminant / 108)) / 2);
+        let v = Math.cbrt((-B - Math.sqrt(-discriminant / 108)) / 2);
+        
+        // Real root
+        let realRoot = u + v - p / 3;
+        roots.push(realRoot);
+        
+        // Complex roots
+        let realPart = -(u + v) / 2 - p / 3;
+        let imagPart = (u - v) * Math.sqrt(3) / 2;
+        roots.push({ real: realPart, imag: imagPart });
+        roots.push({ real: realPart, imag: -imagPart });
+    }
+    
+    return {
+        roots: roots,
+        discriminant: discriminant,
+        nature: discriminant > 0 ? "三個不同實根" : 
+                discriminant === 0 ? "重根" : "一個實根，兩個復根"
+    };
+}
+
+function getRootNatureClass(discriminant) {
+    if (discriminant > 0) return "root-nature-real3";
+    if (discriminant === 0) return "root-nature-repeated";
+    return "root-nature-real1";
+}
+
+// Polynomial Expansion
+function expandPolynomial() {
+    const input = document.getElementById('poly-input').value.trim();
+    
+    const resultDiv = document.getElementById('poly-result');
+    const outputDiv = document.getElementById('poly-output');
+    
+    if (!input) {
+        outputDiv.innerHTML = '<div class="error-message">錯誤：請輸入多項式表達式！</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+    
+    try {
+        const result = expandPolynomialExpression(input);
+        
+        let html = '<div class="result-item">';
+        html += '<div class="result-label">原始表達式</div>';
+        html += `<div class="result-value poly-original">${input}</div>`;
+        html += '</div>';
+        
+        html += '<div class="result-item">';
+        html += '<div class="result-label">展開結果</div>';
+        html += `<div class="result-value poly-expanded">${result}</div>`;
+        html += '</div>';
+        
+        outputDiv.innerHTML = html;
+        resultDiv.classList.remove('hidden');
+        
+    } catch (error) {
+        outputDiv.innerHTML = `<div class="error-message">錯誤：${error.message}</div>`;
+        resultDiv.classList.remove('hidden');
+    }
+}
+
+function expandPolynomialExpression(expression) {
+    try {
+        // Remove spaces
+        expression = expression.replace(/\s/g, '');
+        
+        // Handle power expressions like (x+1)^2
+        expression = expandPowers(expression);
+        
+        // Handle multiplication of binomials
+        expression = expandProducts(expression);
+        
+        return simplifyPolynomial(expression);
+    } catch (error) {
+        throw new Error('無法解析多項式表達式');
+    }
+}
+
+function expandPowers(expression) {
+    // Handle (polynomial)^n format
+    const powerPattern = /\(([^)]+)\)\^(\d+)/g;
+    
+    return expression.replace(powerPattern, (match, poly, power) => {
+        const n = parseInt(power);
+        let result = poly;
+        
+        for (let i = 1; i < n; i++) {
+            result = multiplyTwoPolynomials(result, poly);
+        }
+        
+        return `(${result})`;
+    });
+}
+
+function expandProducts(expression) {
+    // Handle (a)(b) format repeatedly until no more expansions possible
+    let hasChanges = true;
+    
+    while (hasChanges) {
+        const original = expression;
+        const productPattern = /\(([^)]+)\)\(([^)]+)\)/;
+        
+        if (productPattern.test(expression)) {
+            expression = expression.replace(productPattern, (match, poly1, poly2) => {
+                return `(${multiplyTwoPolynomials(poly1, poly2)})`;
+            });
+        } else {
+            hasChanges = false;
+        }
+        
+        if (expression === original) {
+            hasChanges = false;
+        }
+    }
+    
+    // Remove outer parentheses if they exist
+    if (expression.startsWith('(') && expression.endsWith(')')) {
+        expression = expression.slice(1, -1);
+    }
+    
+    return expression;
+}
+
+function multiplyTwoPolynomials(poly1, poly2) {
+    const terms1 = parsePolynomialTerms(poly1);
+    const terms2 = parsePolynomialTerms(poly2);
+    
+    const resultTerms = [];
+    
+    for (const term1 of terms1) {
+        for (const term2 of terms2) {
+            resultTerms.push({
+                coeff: term1.coeff * term2.coeff,
+                power: term1.power + term2.power
+            });
+        }
+    }
+    
+    return formatPolynomial(combineTerms(resultTerms));
+}
+
+function parsePolynomialTerms(poly) {
+    const terms = [];
+    
+    // Split by + and - while keeping the signs
+    const parts = poly.split(/([+-])/).filter(part => part.trim() !== '');
+    
+    let currentCoeff = 1;
+    
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i].trim();
+        
+        if (part === '+') {
+            currentCoeff = 1;
+            continue;
+        } else if (part === '-') {
+            currentCoeff = -1;
+            continue;
+        }
+        
+        let coeff = currentCoeff;
+        let power = 0;
+        
+        if (part.includes('x')) {
+            const xIndex = part.indexOf('x');
+            
+            // Get coefficient
+            const coeffPart = part.substring(0, xIndex);
+            if (coeffPart === '' || coeffPart === '+') {
+                coeff = currentCoeff;
+            } else if (coeffPart === '-') {
+                coeff = -currentCoeff;
+            } else {
+                coeff = currentCoeff * parseFloat(coeffPart);
+            }
+            
+            // Get power
+            if (part.includes('^')) {
+                power = parseInt(part.split('^')[1]);
+            } else {
+                power = 1;
+            }
+        } else {
+            // Constant term
+            coeff = currentCoeff * parseFloat(part);
+            power = 0;
+        }
+        
+        terms.push({ coeff, power });
+        currentCoeff = 1; // Reset for next term
+    }
+    
+    return terms;
+}
+
+function combineTerms(terms) {
+    const combined = {};
+    
+    for (const term of terms) {
+        if (combined[term.power]) {
+            combined[term.power] += term.coeff;
+        } else {
+            combined[term.power] = term.coeff;
+        }
+    }
+    
+    return combined;
+}
+
+function formatPolynomial(combined) {
+    const powers = Object.keys(combined).map(Number).sort((a, b) => b - a);
+    let result = '';
+    
+    for (let i = 0; i < powers.length; i++) {
+        const power = powers[i];
+        const coeff = combined[power];
+        
+        if (Math.abs(coeff) < 1e-10) continue;
+        
+        // Add sign
+        if (result && coeff > 0) {
+            result += ' + ';
+        } else if (coeff < 0) {
+            result += result ? ' - ' : '-';
+        }
+        
+        const absCoeff = Math.abs(coeff);
+        
+        // Add coefficient and variable
+        if (power === 0) {
+            result += absCoeff;
+        } else if (power === 1) {
+            if (absCoeff === 1) {
+                result += 'x';
+            } else {
+                result += absCoeff + 'x';
+            }
+        } else {
+            if (absCoeff === 1) {
+                result += 'x^' + power;
+            } else {
+                result += absCoeff + 'x^' + power;
+            }
+        }
+    }
+    
+    return result || '0';
+}
+
+function simplifyPolynomial(expression) {
+    // This function would perform additional simplification if needed
+    return expression;
+}
+
 // Quadratic Equation Solver
 function solveQuadratic() {
     const a = parseFloat(document.getElementById('quad-a').value);
@@ -534,157 +822,89 @@ function solveQuadratic() {
     resultDiv.classList.remove('hidden');
 }
 
-// Linear System Solver with Fraction Support
+// Linear System Solver
 function solveLinear() {
+    const a = parseFloat(document.getElementById('linear-a').value);
+    const b = parseFloat(document.getElementById('linear-b').value);
+    const c = parseFloat(document.getElementById('linear-c').value);
+    const d = parseFloat(document.getElementById('linear-d').value);
+    const e = parseFloat(document.getElementById('linear-e').value);
+    const f = parseFloat(document.getElementById('linear-f').value);
+    
     const resultDiv = document.getElementById('linear-result');
     const outputDiv = document.getElementById('linear-output');
     
-    try {
-        // Parse all coefficients using fraction parser
-        const a = parseFraction(document.getElementById('linear-a').value);
-        const b = parseFraction(document.getElementById('linear-b').value);
-        const c = parseFraction(document.getElementById('linear-c').value);
-        const d = parseFraction(document.getElementById('linear-d').value);
-        const e = parseFraction(document.getElementById('linear-e').value);
-        const f = parseFraction(document.getElementById('linear-f').value);
+    // Validation
+    if ([a, b, c, d, e, f].some(val => isNaN(val))) {
+        outputDiv.innerHTML = '<div class="error-message">錯誤：請填入所有係數！</div>';
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+    
+    // Calculate determinant
+    const determinant = a * e - b * d;
+    
+    let html = '<div class="result-item">';
+    html += '<div class="result-label">方程組</div>';
+    html += `<div class="result-value">${formatCoefficient(a)}x ${formatTerm(b)}y ${formatTerm(c, true)} = 0</div>`;
+    html += `<div class="result-value">${formatCoefficient(d)}x ${formatTerm(e)}y ${formatTerm(f, true)} = 0</div>`;
+    html += '</div>';
+    
+    html += '<div class="result-item">';
+    html += '<div class="result-label">行列式 D</div>';
+    html += `<div class="result-value">D = ae - bd = (${a})(${e}) - (${b})(${d}) = ${determinant}</div>`;
+    html += '</div>';
+    
+    if (determinant !== 0) {
+        // Unique solution using Cramer's rule
+        const x = (c * e - b * f) / determinant;
+        const y = (a * f - c * d) / determinant;
         
-        // Calculate determinant
-        const determinant = a * e - b * d;
-        
-        let html = '<div class="result-item">';
-        html += '<div class="result-label">輸入解析</div>';
-        html += '<div class="fraction-inputs">';
-        html += `<div class="fraction-display">a = ${document.getElementById('linear-a').value} → ${formatNumberWithFraction(a)}</div>`;
-        html += `<div class="fraction-display">b = ${document.getElementById('linear-b').value} → ${formatNumberWithFraction(b)}</div>`;
-        html += `<div class="fraction-display">c = ${document.getElementById('linear-c').value} → ${formatNumberWithFraction(c)}</div>`;
-        html += `<div class="fraction-display">d = ${document.getElementById('linear-d').value} → ${formatNumberWithFraction(d)}</div>`;
-        html += `<div class="fraction-display">e = ${document.getElementById('linear-e').value} → ${formatNumberWithFraction(e)}</div>`;
-        html += `<div class="fraction-display">f = ${document.getElementById('linear-f').value} → ${formatNumberWithFraction(f)}</div>`;
-        html += '</div>';
+        html += '<div class="result-item">';
+        html += '<div class="result-label">解的情況</div>';
+        html += '<div class="result-value discriminant-positive">D ≠ 0：唯一解</div>';
         html += '</div>';
         
         html += '<div class="result-item">';
-        html += '<div class="result-label">方程組</div>';
-        html += `<div class="result-value">${formatCoefficient(a)}x ${formatTerm(b)}y ${formatTerm(c, true)} = 0</div>`;
-        html += `<div class="result-value">${formatCoefficient(d)}x ${formatTerm(e)}y ${formatTerm(f, true)} = 0</div>`;
+        html += '<div class="result-label">解</div>';
+        html += '<div class="result-formula">';
+        html += `x = (ce - bf) / D = (${c}×${e} - ${b}×${f}) / ${determinant}`;
+        html += '</div>';
+        html += '<div class="result-formula">';
+        html += `y = (af - cd) / D = (${a}×${f} - ${c}×${d}) / ${determinant}`;
+        html += '</div>';
+        html += `<div class="result-value">x = ${formatNumber(x)}</div>`;
+        html += `<div class="result-value">y = ${formatNumber(y)}</div>`;
         html += '</div>';
         
-        html += '<div class="result-item">';
-        html += '<div class="result-label">行列式 D</div>';
-        html += `<div class="result-value">D = ae - bd = (${formatNumberWithFraction(a)})(${formatNumberWithFraction(e)}) - (${formatNumberWithFraction(b)})(${formatNumberWithFraction(d)}) = ${formatNumberWithFraction(determinant)}</div>`;
-        html += '</div>';
+    } else {
+        // Check if the system is inconsistent or has infinitely many solutions
+        const ratio1 = (b !== 0) ? a / b : null;
+        const ratio2 = (e !== 0) ? d / e : null;
+        const ratio3 = (b !== 0) ? c / b : (e !== 0) ? f / e : null;
         
-        if (Math.abs(determinant) > 1e-10) {
-            // Unique solution using Cramer's rule
-            const x = -(c * e - b * f) / determinant;
-            const y = -(a * f - c * d) / determinant;
-            
-            html += '<div class="result-item">';
-            html += '<div class="result-label">解的情況</div>';
-            html += '<div class="result-value discriminant-positive">D ≠ 0：唯一解</div>';
-            html += '</div>';
-            
-            html += '<div class="result-item">';
-            html += '<div class="result-label">解（分數形式）</div>';
-            const xFrac = decimalToFraction(x);
-            const yFrac = decimalToFraction(y);
-            if (xFrac && yFrac) {
-                html += `<div class="result-value">x = ${xFrac.numerator}/${xFrac.denominator}</div>`;
-                html += `<div class="result-value">y = ${yFrac.numerator}/${yFrac.denominator}</div>`;
-            } else {
-                html += `<div class="result-value">x ≈ ${formatNumber(x)}</div>`;
-                html += `<div class="result-value">y ≈ ${formatNumber(y)}</div>`;
+        let isConsistent = false;
+        
+        if (a === 0 && b === 0 && c === 0 && d === 0 && e === 0 && f === 0) {
+            isConsistent = true;
+        } else if (ratio1 !== null && ratio2 !== null && Math.abs(ratio1 - ratio2) < 1e-10) {
+            if (ratio3 !== null && Math.abs(ratio1 - ratio3) < 1e-10) {
+                isConsistent = true;
             }
-            html += '</div>';
-            
-            html += '<div class="result-item">';
-            html += '<div class="result-label">解（小數形式）</div>';
-            html += `<div class="result-value">x = ${formatNumber(x)}</div>`;
-            html += `<div class="result-value">y = ${formatNumber(y)}</div>`;
-            html += '</div>';
-            
+        }
+        
+        html += '<div class="result-item">';
+        html += '<div class="result-label">解的情況</div>';
+        if (isConsistent) {
+            html += '<div class="result-value discriminant-zero">D = 0：無窮多解（兩個方程式等價）</div>';
         } else {
-            // Check if the system is inconsistent or has infinitely many solutions
-            const isConsistent = checkSystemConsistency(a, b, c, d, e, f);
-            
-            html += '<div class="result-item">';
-            html += '<div class="result-label">解的情況</div>';
-            if (isConsistent) {
-                html += '<div class="result-value discriminant-zero">D = 0：無窮多解（兩個方程式等價）</div>';
-            } else {
-                html += '<div class="result-value discriminant-negative">D = 0：無解（兩個方程式矛盾）</div>';
-            }
-            html += '</div>';
+            html += '<div class="result-value discriminant-negative">D = 0：無解（兩個方程式矛盾）</div>';
         }
-        
-        outputDiv.innerHTML = html;
-        
-    } catch (error) {
-        outputDiv.innerHTML = `<div class="error-message">錯誤：${error.message}</div>`;
+        html += '</div>';
     }
     
+    outputDiv.innerHTML = html;
     resultDiv.classList.remove('hidden');
-}
-
-function checkSystemConsistency(a, b, c, d, e, f) {
-    // Check if the two equations are proportional
-    const tolerance = 1e-10;
-    
-    // All coefficients are zero
-    if (Math.abs(a) < tolerance && Math.abs(b) < tolerance && Math.abs(c) < tolerance &&
-        Math.abs(d) < tolerance && Math.abs(e) < tolerance && Math.abs(f) < tolerance) {
-        return true;
-    }
-    
-    // Find non-zero coefficient to use as reference
-    let reference = null;
-    let refIndex = -1;
-    const coeffs1 = [a, b, c];
-    const coeffs2 = [d, e, f];
-    
-    for (let i = 0; i < 3; i++) {
-        if (Math.abs(coeffs1[i]) > tolerance) {
-            reference = coeffs1[i];
-            refIndex = i;
-            break;
-        }
-    }
-    
-    if (reference === null) {
-        // First equation is all zeros, check second
-        for (let i = 0; i < 3; i++) {
-            if (Math.abs(coeffs2[i]) > tolerance) {
-                return false; // Inconsistent
-            }
-        }
-        return true;
-    }
-    
-    // Check if second equation is proportional to first
-    if (Math.abs(coeffs2[refIndex]) < tolerance) {
-        return false;
-    }
-    
-    const ratio = coeffs2[refIndex] / reference;
-    
-    for (let i = 0; i < 3; i++) {
-        const expected = coeffs1[i] * ratio;
-        if (Math.abs(coeffs2[i] - expected) > tolerance) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-function formatNumberWithFraction(num) {
-    if (Math.abs(num) < 1e-10) return '0';
-    
-    const frac = decimalToFraction(num);
-    if (frac && frac.denominator !== 1) {
-        return `${frac.numerator}/${frac.denominator} (${formatNumber(num)})`;
-    }
-    return formatNumber(num);
 }
 
 // Radical Simplification
@@ -754,7 +974,7 @@ function formatCoefficient(coeff) {
 }
 
 function formatTerm(coeff, isConstant = false) {
-    if (Math.abs(coeff) < 1e-10) return '';
+    if (coeff === 0) return '';
     if (coeff > 0) {
         if (isConstant) {
             return '+ ' + formatNumber(coeff);
@@ -769,13 +989,23 @@ function formatTerm(coeff, isConstant = false) {
 }
 
 function formatNumber(num) {
-    if (Math.abs(num) < 1e-10) return '0';
-    
     if (Number.isInteger(num)) {
         return num.toString();
     }
     
-    return num.toFixed(10).replace(/\.?0+$/, '');
+    // Check if it's a simple fraction
+    const tolerance = 1e-10;
+    for (let denominator = 2; denominator <= 100; denominator++) {
+        const numerator = Math.round(num * denominator);
+        if (Math.abs(num - numerator / denominator) < tolerance) {
+            if (numerator % denominator === 0) {
+                return (numerator / denominator).toString();
+            }
+            return `${numerator}/${denominator}`;
+        }
+    }
+    
+    return num.toFixed(6).replace(/\.?0+$/, '');
 }
 
 function simplifySquareRoot(n) {
@@ -819,30 +1049,58 @@ document.addEventListener('DOMContentLoaded', function() {
     showPage('main-menu');
     
     // Add enter key support for inputs
-    const numberInputs = document.querySelectorAll('input[type="number"]');
-    numberInputs.forEach(input => {
+    const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+    inputs.forEach(input => {
         input.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const page = input.closest('.page');
                 if (page.id === 'quadratic') {
                     solveQuadratic();
+                } else if (page.id === 'linear') {
+                    solveLinear();
                 } else if (page.id === 'radical') {
                     simplifyRadical();
+                } else if (page.id === 'cubic') {
+                    solveCubic();
+                } else if (page.id === 'polynomial') {
+                    expandPolynomial();
                 }
             }
         });
     });
     
-    // Add enter key support for text inputs (fraction inputs)
-    const textInputs = document.querySelectorAll('.fraction-input');
-    textInputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const page = input.closest('.page');
-                if (page.id === 'linear') {
-                    solveLinear();
-                }
-            }
-        });
+    // Add keyboard support for scientific calculator
+    document.addEventListener('keydown', function(e) {
+        const currentPage = document.querySelector('.page.active');
+        if (currentPage && currentPage.id === 'scientific') {
+            handleCalculatorKeyboard(e);
+        }
     });
 });
+
+function handleCalculatorKeyboard(e) {
+    const key = e.key;
+    
+    if (/[0-9]/.test(key)) {
+        insertAtCursor(key);
+        e.preventDefault();
+    } else if (['+', '-', '*', '/'].includes(key)) {
+        insertAtCursor(key);
+        e.preventDefault();
+    } else if (key === '.') {
+        insertAtCursor('.');
+        e.preventDefault();
+    } else if (key === '(' || key === ')') {
+        insertAtCursor(key);
+        e.preventDefault();
+    } else if (key === 'Enter') {
+        calculateResult();
+        e.preventDefault();
+    } else if (key === 'Escape' || key === 'c' || key === 'C') {
+        clearCalculator();
+        e.preventDefault();
+    } else if (key === 'Backspace') {
+        backspaceAtCursor();
+        e.preventDefault();
+    }
+}

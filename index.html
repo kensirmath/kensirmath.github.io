@@ -37,7 +37,21 @@
                     <div class="btn-content">
                         <span class="btn-symbol">sin</span>
                         <span class="btn-title">科學計算機</span>
-                        <span class="btn-subtitle">支援游標編輯</span>
+                        <span class="btn-subtitle">支援游標編輯 + 分數結果</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">x³</span>
+                        <span class="btn-title">三次方程求解</span>
+                        <span class="btn-subtitle">ax³ + bx² + cx + d = 0</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">(x)</span>
+                        <span class="btn-title">多項式展開</span>
+                        <span class="btn-subtitle">展開多項式表達式</span>
                     </div>
                 </button>
             </div>
@@ -89,7 +103,7 @@
             </div>
 
             <div class="fraction-hint">
-                <div class="hint-text">💡 支援分數輸入：1/2、-3/4、2 1/3（混合數）或小數 0.5</div>
+                <div class="hint-text">💡 可輸入分數，如 1/2、-3/4 或小數 0.5</div>
             </div>
 
             <div class="input-section">
@@ -99,17 +113,14 @@
                         <div class="form-group">
                             <label class="form-label">a</label>
                             <input type="text" id="linear-a" class="form-control fraction-input" placeholder="如: 1/2" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">b</label>
                             <input type="text" id="linear-b" class="form-control fraction-input" placeholder="如: -3/4" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">c</label>
                             <input type="text" id="linear-c" class="form-control fraction-input" placeholder="如: 0.5" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                     </div>
                 </div>
@@ -120,17 +131,14 @@
                         <div class="form-group">
                             <label class="form-label">d</label>
                             <input type="text" id="linear-d" class="form-control fraction-input" placeholder="如: 2" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">e</label>
                             <input type="text" id="linear-e" class="form-control fraction-input" placeholder="如: 1/3" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">f</label>
                             <input type="text" id="linear-f" class="form-control fraction-input" placeholder="如: -1" required>
-                            <div class="input-hint">可輸入分數如 1/2 或小數 0.5</div>
                         </div>
                     </div>
                 </div>
@@ -183,7 +191,7 @@
                         <button id="angle-mode-btn" class="btn btn--secondary btn--sm" onclick="toggleAngleMode()">DEG</button>
                     </div>
                     <div class="edit-hint">
-                        <span class="hint-text">💡 點擊任意位置定位游標，按鈕會在游標位置插入內容</span>
+                        <span class="hint-text">💡 點擊輸入框任意位置來編輯表達式</span>
                     </div>
                 </div>
                 
@@ -227,7 +235,7 @@
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">4</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">5</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('6')">6</button>
-                    <button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()">=</button>
+                    <button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()" rowspan="2">=</button>
                     
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('1')">1</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('2')">2</button>
@@ -241,6 +249,73 @@
                     <div class="result-label">計算結果</div>
                     <div id="calc-output" class="result-value"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 三次方程求解器 -->
+        <div id="cubic" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>三次方程求解</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">ax³ + bx² + cx + d = 0</span>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">係數 a (x³項係數，不能為0)</label>
+                    <input type="number" id="cubic-a" class="form-control" step="any" placeholder="例如：1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 b (x²項係數)</label>
+                    <input type="number" id="cubic-b" class="form-control" step="any" placeholder="例如：-6" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 c (x項係數)</label>
+                    <input type="number" id="cubic-c" class="form-control" step="any" placeholder="例如：11" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 d (常數項)</label>
+                    <input type="number" id="cubic-d" class="form-control" step="any" placeholder="例如：-6" value="0">
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="solveCubic()">計算</button>
+            </div>
+
+            <div id="cubic-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="cubic-output"></div>
+            </div>
+        </div>
+
+        <!-- 多項式展開器 -->
+        <div id="polynomial" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>多項式展開</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">展開多項式表達式</span>
+            </div>
+
+            <div class="fraction-hint">
+                <div class="hint-text">💡 支援格式：(x+1)(x+2), (x+1)^2, (2x+3)(x-1) 等等</div>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">輸入多項式表達式</label>
+                    <input type="text" id="poly-input" class="form-control" placeholder="例如：(x+1)(x+2) 或 (x+1)^2 或 (x+1)(x-1)(x+3)" required>
+                    <small>支援格式：(x+1)(x+2), (x+1)^2, (2x+3)(x-1), 等等</small>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="expandPolynomial()">展開</button>
+            </div>
+
+            <div id="poly-result" class="result-section hidden">
+                <h3>展開結果</h3>
+                <div id="poly-output"></div>
             </div>
         </div>
     </div>

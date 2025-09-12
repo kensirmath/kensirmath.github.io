@@ -774,8 +774,9 @@ body {
 
 .menu-buttons {
   display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-24);
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -924,27 +925,14 @@ body {
 .fraction-input {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-base);
-  background: var(--color-bg-6);
-  border: 2px solid var(--color-border);
-  transition: all var(--duration-fast) var(--ease-standard);
 }
 
-.fraction-input:focus {
-  background: var(--color-surface);
-  border-color: var(--color-primary);
-  box-shadow: var(--focus-ring);
+.fraction-input:invalid {
+  border-color: var(--color-error);
 }
 
-.fraction-input::placeholder {
-  color: var(--color-text-secondary);
-  font-style: italic;
-}
-
-.input-hint {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin-top: var(--space-4);
-  font-style: italic;
+.fraction-input:valid {
+  border-color: var(--color-success);
 }
 
 /* Result Section */
@@ -1038,22 +1026,6 @@ body {
   margin-bottom: 0;
 }
 
-/* Fraction Display Styling */
-.fraction-inputs {
-  display: grid;
-  gap: var(--space-8);
-}
-
-.fraction-display {
-  font-family: var(--font-family-mono);
-  background: var(--color-bg-7);
-  padding: var(--space-8) var(--space-12);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-}
-
 /* Scientific Calculator Styles */
 .calculator {
   background: var(--color-surface);
@@ -1082,15 +1054,13 @@ body {
   color: var(--color-text);
   font-weight: var(--font-weight-medium);
   cursor: text;
-  transition: all var(--duration-fast) var(--ease-standard);
-  resize: none;
+  transition: border-color var(--duration-fast) var(--ease-standard);
 }
 
 .display-input:focus {
   border-color: var(--color-primary);
   outline: none;
   box-shadow: var(--focus-ring);
-  background: var(--color-surface);
 }
 
 .display-input::placeholder {
@@ -1195,6 +1165,73 @@ body {
   font-weight: var(--font-weight-medium);
 }
 
+/* Fraction display styling */
+.fraction-display {
+  font-family: var(--font-family-mono);
+  background: var(--color-bg-7);
+  padding: var(--space-8);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  margin: var(--space-4);
+  border: 1px solid var(--color-border);
+}
+
+.fraction-original {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.fraction-converted {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Root nature styling for cubic equations */
+.root-nature-real3 {
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
+}
+
+.root-nature-real1 {
+  color: var(--color-warning);
+  font-weight: var(--font-weight-semibold);
+}
+
+.root-nature-repeated {
+  color: var(--color-info);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Complex root styling */
+.complex-root {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Polynomial expansion styling */
+.poly-step {
+  background: var(--color-bg-8);
+  padding: var(--space-12);
+  border-radius: var(--radius-sm);
+  margin: var(--space-8) 0;
+  border: 1px solid var(--color-border);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+}
+
+.poly-original {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+}
+
+.poly-expanded {
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-mono);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -1209,6 +1246,10 @@ body {
   .page-header h2 {
     text-align: center;
     order: -1;
+  }
+  
+  .menu-buttons {
+    grid-template-columns: 1fr;
   }
   
   .menu-btn {
@@ -1346,54 +1387,4 @@ body {
 
 .display-input:focus {
   caret-color: var(--color-primary);
-}
-
-/* Enhanced fraction input feedback */
-.fraction-input:valid {
-  border-color: var(--color-success);
-  background: var(--color-bg-3);
-}
-
-.fraction-input:invalid:not(:placeholder-shown) {
-  border-color: var(--color-error);
-  background: rgba(var(--color-error-rgb), 0.05);
-}
-
-/* Special styling for fraction conversion display */
-.fraction-inputs .fraction-display {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.fraction-original {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.fraction-converted {
-  color: var(--color-text);
-  font-weight: var(--font-weight-semibold);
-}
-
-/* Calculator display selection styling */
-.display-input::selection {
-  background: rgba(var(--color-primary-rgb), 0.3);
-  color: var(--color-text);
-}
-
-.display-input::-moz-selection {
-  background: rgba(var(--color-primary-rgb), 0.3);
-  color: var(--color-text);
-}
-
-/* Focus ring enhancements */
-.fraction-input:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.display-input:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
 }
