@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數學計算器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 主選單 -->
+        <div id="main-menu" class="page active">
+            <h1 class="app-title">數學計算器</h1>
+            <div class="menu-buttons">
+                <button class="btn btn--primary menu-btn" onclick="showPage('quadratic')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">x²</span>
+                        <span class="btn-title">二次方程求解</span>
+                        <span class="btn-subtitle">ax² + bx + c = 0</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">{x,y}</span>
+                        <span class="btn-title">聯立方程求解</span>
+                        <span class="btn-subtitle">支援分數輸入</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">√</span>
+                        <span class="btn-title">根號化簡</span>
+                        <span class="btn-subtitle">√n</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">sin</span>
+                        <span class="btn-title">科學計算機</span>
+                        <span class="btn-subtitle">支援游標編輯 + 分數結果</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">x³</span>
+                        <span class="btn-title">三次方程求解</span>
+                        <span class="btn-subtitle">ax³ + bx² + cx + d = 0</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">(x)</span>
+                        <span class="btn-title">多項式展開</span>
+                        <span class="btn-subtitle">展開多項式表達式</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 二次方程求解器 -->
+        <div id="quadratic" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>二次方程求解</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">ax² + bx + c = 0</span>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">係數 a（不能為 0）</label>
+                    <input type="number" id="quad-a" class="form-control" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 b</label>
+                    <input type="number" id="quad-b" class="form-control" step="any" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 c</label>
+                    <input type="number" id="quad-c" class="form-control" step="any" value="0">
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="solveQuadratic()">計算</button>
+            </div>
+
+            <div id="quad-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="quad-output"></div>
+            </div>
+        </div>
+
+        <!-- 聯立方程求解器 -->
+        <div id="linear" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>聯立方程求解</h2>
+            </div>
+            
+            <div class="equation-display">
+                <div class="equation">ax + by + c = 0</div>
+                <div class="equation">dx + ey + f = 0</div>
+            </div>
+
+            <div class="fraction-hint">
+                <div class="hint-text">💡 可輸入分數，如 1/2、-3/4 或小數 0.5</div>
+            </div>
+
+            <div class="input-section">
+                <div class="equation-inputs">
+                    <h4>第一個方程：ax + by + c = 0</h4>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">a</label>
+                            <input type="text" id="linear-a" class="form-control fraction-input" placeholder="如: 1/2" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">b</label>
+                            <input type="text" id="linear-b" class="form-control fraction-input" placeholder="如: -3/4" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">c</label>
+                            <input type="text" id="linear-c" class="form-control fraction-input" placeholder="如: 0.5" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="equation-inputs">
+                    <h4>第二個方程：dx + ey + f = 0</h4>
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label class="form-label">d</label>
+                            <input type="text" id="linear-d" class="form-control fraction-input" placeholder="如: 2" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">e</label>
+                            <input type="text" id="linear-e" class="form-control fraction-input" placeholder="如: 1/3" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">f</label>
+                            <input type="text" id="linear-f" class="form-control fraction-input" placeholder="如: -1" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn--primary btn--full-width" onclick="solveLinear()">計算</button>
+            </div>
+
+            <div id="linear-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="linear-output"></div>
+            </div>
+        </div>
+
+        <!-- 根號化簡器 -->
+        <div id="radical" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>根號化簡</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">√n</span>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">輸入數字 n（正整數）</label>
+                    <input type="number" id="radical-n" class="form-control" min="1" step="1" required>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="simplifyRadical()">計算</button>
+            </div>
+
+            <div id="radical-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="radical-output"></div>
+            </div>
+        </div>
+
+        <!-- 科學計算機 -->
+        <div id="scientific" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>科學計算機</h2>
+            </div>
+            
+            <div class="calculator">
+                <div class="calculator-display">
+                    <input type="text" id="calc-display" class="display-input" placeholder="輸入數學表達式...">
+                    <div class="angle-mode">
+                        <button id="angle-mode-btn" class="btn btn--secondary btn--sm" onclick="toggleAngleMode()">DEG</button>
+                    </div>
+                    <div class="edit-hint">
+                        <span class="hint-text">💡 點擊輸入框任意位置來編輯表達式</span>
+                    </div>
+                </div>
+                
+                <div class="calculator-buttons">
+                    <!-- 第一行：清除和退格 -->
+                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">C</button>
+                    <button class="btn btn--outline calc-btn" onclick="backspaceAtCursor()">←</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('(')">(</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor(')')">)</button>
+                    
+                    <!-- 第二行：三角函數 -->
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sin(')">sin</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('cos(')">cos</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('tan(')">tan</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">/</button>
+                    
+                    <!-- 第三行：反三角函數 -->
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('asin(')">asin</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('acos(')">acos</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('atan(')">atan</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">×</button>
+                    
+                    <!-- 第四行：對數和指數 -->
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('log(')">log</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('ln(')">ln</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('exp(')">exp</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">-</button>
+                    
+                    <!-- 第五行：根號和常數 -->
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sqrt(')">√</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('pi')">π</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('e')">e</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">+</button>
+                    
+                    <!-- 數字按鈕 -->
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('7')">7</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('8')">8</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">9</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('^')">x^y</button>
+                    
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">4</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">5</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('6')">6</button>
+                    <button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()" rowspan="2">=</button>
+                    
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('1')">1</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('2')">2</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('3')">3</button>
+                    
+                    <button class="btn btn--outline calc-btn zero-btn" onclick="insertAtCursor('0')">0</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('.')">.</button>
+                </div>
+                
+                <div id="calc-result" class="calculator-result hidden">
+                    <div class="result-label">計算結果</div>
+                    <div id="calc-output" class="result-value"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 三次方程求解器 -->
+        <div id="cubic" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>三次方程求解</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">ax³ + bx² + cx + d = 0</span>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">係數 a (x³項係數，不能為0)</label>
+                    <input type="number" id="cubic-a" class="form-control" step="any" placeholder="例如：1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 b (x²項係數)</label>
+                    <input type="number" id="cubic-b" class="form-control" step="any" placeholder="例如：-6" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 c (x項係數)</label>
+                    <input type="number" id="cubic-c" class="form-control" step="any" placeholder="例如：11" value="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 d (常數項)</label>
+                    <input type="number" id="cubic-d" class="form-control" step="any" placeholder="例如：-6" value="0">
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="solveCubic()">計算</button>
+            </div>
+
+            <div id="cubic-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="cubic-output"></div>
+            </div>
+        </div>
+
+        <!-- 多項式展開器 -->
+        <div id="polynomial" class="page">
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <h2>多項式展開</h2>
+            </div>
+            
+            <div class="equation-display">
+                <span class="equation">展開多項式表達式</span>
+            </div>
+
+            <div class="fraction-hint">
+                <div class="hint-text">💡 支援格式：(x+1)(x+2), (x+1)^2, (2x+3)(x-1) 等等</div>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">輸入多項式表達式</label>
+                    <input type="text" id="poly-input" class="form-control" placeholder="例如：(x+1)(x+2) 或 (x+1)^2 或 (x+1)(x-1)(x+3)" required>
+                    <small>支援格式：(x+1)(x+2), (x+1)^2, (2x+3)(x-1), 等等</small>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="expandPolynomial()">展開</button>
+            </div>
+
+            <div id="poly-result" class="result-section hidden">
+                <h3>展開結果</h3>
+                <div id="poly-output"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
