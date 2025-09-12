@@ -738,7 +738,7 @@ select.form-control {
 }
 
 /* END PERPLEXITY DESIGN SYSTEM */
-/* Custom styles for Math Calculator App */
+/* Enhanced styles for Advanced Math Calculator App */
 
 body {
   background-color: var(--color-background);
@@ -746,7 +746,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: var(--space-24);
 }
@@ -774,9 +774,8 @@ body {
 
 .menu-buttons {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-24);
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
@@ -787,6 +786,8 @@ body {
   border-radius: var(--radius-lg);
   transition: all var(--duration-normal) var(--ease-standard);
   border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
 }
 
 .menu-btn:hover {
@@ -795,11 +796,29 @@ body {
   border-color: var(--color-primary-hover);
 }
 
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.menu-btn:hover::before {
+  transform: translateX(100%);
+}
+
 .btn-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-8);
+  position: relative;
+  z-index: 1;
 }
 
 .btn-symbol {
@@ -817,6 +836,7 @@ body {
   font-size: var(--font-size-base);
   opacity: 0.9;
   font-family: var(--font-family-mono);
+  text-align: center;
 }
 
 /* Page Header */
@@ -838,6 +858,11 @@ body {
 .back-btn {
   font-size: var(--font-size-base);
   padding: var(--space-8) var(--space-16);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.back-btn:hover {
+  transform: translateX(-2px);
 }
 
 /* Equation Display */
@@ -886,6 +911,7 @@ body {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-card-border);
   margin-bottom: var(--space-24);
+  box-shadow: var(--shadow-sm);
 }
 
 .equation-inputs {
@@ -908,6 +934,14 @@ body {
   gap: var(--space-16);
 }
 
+/* Cubic equation grid */
+.input-grid.cubic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
 .form-group {
   margin-bottom: var(--space-16);
 }
@@ -915,10 +949,70 @@ body {
 .form-control {
   font-size: var(--font-size-lg);
   padding: var(--space-12) var(--space-16);
+  transition: all var(--duration-fast) var(--ease-standard);
 }
 
 .form-control:focus {
   box-shadow: var(--focus-ring);
+  transform: scale(1.02);
+}
+
+/* Enhanced Polynomial input styling */
+.poly-input {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+  min-height: 60px;
+  resize: vertical;
+}
+
+.input-hint {
+  margin-top: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-bg-4);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+}
+
+.input-hint strong {
+  color: var(--color-primary);
+  display: block;
+  margin-bottom: var(--space-8);
+}
+
+/* Examples Section */
+.examples-section {
+  margin-top: var(--space-20);
+  padding: var(--space-20);
+  background: var(--color-bg-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.examples-section h4 {
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.example-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-12);
+}
+
+.example-btn {
+  padding: var(--space-10) var(--space-12);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.example-btn:hover {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  transform: translateY(-1px);
 }
 
 /* Fraction Input Styling */
@@ -942,6 +1036,7 @@ body {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   margin-top: var(--space-24);
+  animation: slideUp var(--duration-normal) var(--ease-standard);
 }
 
 .result-section h3 {
@@ -956,6 +1051,12 @@ body {
   border-radius: var(--radius-base);
   margin-bottom: var(--space-12);
   border: 1px solid var(--color-card-border-inner);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.result-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
 }
 
 .result-item:last-child {
@@ -986,6 +1087,7 @@ body {
   border: 1px solid var(--color-border);
 }
 
+/* Enhanced discriminant styling */
 .discriminant-positive {
   color: var(--color-success);
   font-weight: var(--font-weight-semibold);
@@ -999,6 +1101,39 @@ body {
 .discriminant-negative {
   color: var(--color-error);
   font-weight: var(--font-weight-semibold);
+}
+
+/* Factorization Section */
+.factorization-section {
+  background: var(--color-bg-6);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  margin-top: var(--space-16);
+  border: 2px solid var(--color-primary);
+}
+
+.factorization-section h4 {
+  margin-bottom: var(--space-12);
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.factorization-section h4::before {
+  content: '🔍';
+}
+
+.factorization-result {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  background: var(--color-surface);
+  padding: var(--space-12);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
 }
 
 .solution-steps {
@@ -1020,6 +1155,10 @@ body {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
+  padding: var(--space-8);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
 }
 
 .step:last-child {
@@ -1034,6 +1173,7 @@ body {
   padding: var(--space-24);
   max-width: 500px;
   margin: 0 auto;
+  box-shadow: var(--shadow-lg);
 }
 
 .calculator-display {
@@ -1128,6 +1268,7 @@ body {
   border-radius: var(--radius-base);
   border: 1px solid var(--color-border);
   text-align: center;
+  animation: fadeIn var(--duration-normal) var(--ease-standard);
 }
 
 .calculator-result .result-label {
@@ -1143,6 +1284,164 @@ body {
   word-break: break-all;
 }
 
+/* Enhanced Fraction display in calculator */
+.fraction-result {
+  background: var(--color-bg-7);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  margin-top: var(--space-12);
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-8);
+  padding: var(--space-12);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.result-row:hover {
+  transform: translateX(2px);
+}
+
+.result-row:last-child {
+  margin-bottom: 0;
+}
+
+.result-type {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.result-value-fraction {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Cubic equation specific styles */
+.cubic-discriminant-info {
+  background: var(--color-bg-8);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  margin: var(--space-12) 0;
+}
+
+.cubic-discriminant-info h5 {
+  margin-bottom: var(--space-8);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.root-type-indicator {
+  display: inline-block;
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-8);
+}
+
+.root-type-three-real {
+  background: rgba(var(--color-success-rgb), 0.2);
+  color: var(--color-success);
+  border: 1px solid rgba(var(--color-success-rgb), 0.3);
+}
+
+.root-type-one-real {
+  background: rgba(var(--color-warning-rgb), 0.2);
+  color: var(--color-warning);
+  border: 1px solid rgba(var(--color-warning-rgb), 0.3);
+}
+
+.root-type-repeated {
+  background: rgba(var(--color-info-rgb), 0.2);
+  color: var(--color-info);
+  border: 1px solid rgba(var(--color-info-rgb), 0.3);
+}
+
+/* Enhanced Polynomial expansion styles */
+.polynomial-result {
+  background: var(--color-surface);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-card-border-inner);
+  margin-bottom: var(--space-16);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.polynomial-result:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.polynomial-original {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-mono);
+  margin-bottom: var(--space-8);
+}
+
+.polynomial-expanded {
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-bg-1);
+  padding: var(--space-12);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.expansion-steps {
+  background: var(--color-bg-5);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  margin-top: var(--space-16);
+  border: 1px solid var(--color-border);
+}
+
+.expansion-steps h4 {
+  margin-bottom: var(--space-12);
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.expansion-steps h4::before {
+  content: '📝';
+}
+
+.expansion-step {
+  margin-bottom: var(--space-8);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  padding: var(--space-12);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-primary);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.expansion-step:hover {
+  transform: translateX(4px);
+  border-left-color: var(--color-primary-hover);
+}
+
+.expansion-step:last-child {
+  margin-bottom: 0;
+}
+
 /* Error Messages */
 .error-message {
   background: rgba(var(--color-error-rgb), 0.1);
@@ -1152,6 +1451,7 @@ body {
   border: 1px solid rgba(var(--color-error-rgb), 0.2);
   margin-top: var(--space-16);
   font-weight: var(--font-weight-medium);
+  animation: shake 0.5s var(--ease-standard);
 }
 
 /* Success Messages */
@@ -1186,52 +1486,6 @@ body {
   font-weight: var(--font-weight-semibold);
 }
 
-/* Root nature styling for cubic equations */
-.root-nature-real3 {
-  color: var(--color-success);
-  font-weight: var(--font-weight-semibold);
-}
-
-.root-nature-real1 {
-  color: var(--color-warning);
-  font-weight: var(--font-weight-semibold);
-}
-
-.root-nature-repeated {
-  color: var(--color-info);
-  font-weight: var(--font-weight-semibold);
-}
-
-/* Complex root styling */
-.complex-root {
-  color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
-}
-
-/* Polynomial expansion styling */
-.poly-step {
-  background: var(--color-bg-8);
-  padding: var(--space-12);
-  border-radius: var(--radius-sm);
-  margin: var(--space-8) 0;
-  border: 1px solid var(--color-border);
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-base);
-}
-
-.poly-original {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
-}
-
-.poly-expanded {
-  color: var(--color-text);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  font-family: var(--font-family-mono);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -1246,10 +1500,7 @@ body {
   .page-header h2 {
     text-align: center;
     order: -1;
-  }
-  
-  .menu-buttons {
-    grid-template-columns: 1fr;
+    font-size: var(--font-size-2xl);
   }
   
   .menu-btn {
@@ -1266,6 +1517,10 @@ body {
   }
   
   .input-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-grid.cubic-grid {
     grid-template-columns: 1fr;
   }
   
@@ -1294,6 +1549,10 @@ body {
   
   .edit-hint {
     display: none;
+  }
+  
+  .example-buttons {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1339,13 +1598,18 @@ body {
     padding: var(--space-4) var(--space-8);
     font-size: var(--font-size-xs);
   }
+  
+  .examples-section {
+    padding: var(--space-16);
+  }
+  
+  .example-btn {
+    padding: var(--space-8) var(--space-10);
+    font-size: var(--font-size-xs);
+  }
 }
 
-/* Animation */
-.page {
-  animation: fadeIn var(--duration-normal) var(--ease-standard);
-}
-
+/* Enhanced Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1355,6 +1619,27 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.page {
+  animation: fadeIn var(--duration-normal) var(--ease-standard);
 }
 
 /* Calculator button hover effects */
@@ -1387,4 +1672,42 @@ body {
 
 .display-input:focus {
   caret-color: var(--color-primary);
+}
+
+/* Multi-variable support indicators */
+.variable-tag {
+  display: inline-block;
+  padding: var(--space-4) var(--space-8);
+  background: var(--color-bg-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  margin: var(--space-2);
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-border);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
