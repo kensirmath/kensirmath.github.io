@@ -613,7 +613,7 @@ function displayEnhancedCalculatorResult(result) {
 }
 
 // Enhanced rational number detection
-function isRationalNumber(num, tolerance = 1e-12) {
+function isRationalNumber(num, tolerance = 1e-22) {
     if (!isFinite(num) || isNaN(num)) return false;
     
     // Check if it's very close to an integer
@@ -627,7 +627,7 @@ function isRationalNumber(num, tolerance = 1e-12) {
 }
 
 // Enhanced Decimal to Fraction Conversion using Continued Fractions
-function decimalToFraction(decimal, tolerance = 1e-12) {
+function decimalToFraction(decimal, tolerance = 1e-22) {
     if (Math.abs(decimal - Math.round(decimal)) < tolerance) {
         return { numerator: Math.round(decimal), denominator: 1 };
     }
@@ -787,7 +787,7 @@ function factorQuadratic(a, b, c) {
     return formatFactorizedForm(a, root1, root2);
 }
 
-function isSimpleFraction(num, tolerance = 1e-10) {
+function isSimpleFraction(num, tolerance = 1e-20) {
     if (Number.isInteger(num)) return true;
     
     // Check if it's a simple fraction
@@ -1399,7 +1399,7 @@ function formatNumber(num) {
         return num.toString();
     }
     
-    const tolerance = 1e-10;
+    const tolerance = 1e-20;
     for (let denominator = 2; denominator <= 100; denominator++) {
         const numerator = Math.round(num * denominator);
         if (Math.abs(num - numerator / denominator) < tolerance) {
