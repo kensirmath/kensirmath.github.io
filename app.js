@@ -588,7 +588,7 @@ function displayEnhancedCalculatorResult(result) {
         if (fraction.denominator === 1) {
             // Integer result
             outputDiv.innerHTML = `<div class="result-value">${result}</div>`;
-        } else if (Math.abs(fraction.denominator) <= 1000) {
+        } else if (Math.abs(fraction.denominator) <= 10000) {
             // Rational number - show both decimal and fraction
             outputDiv.innerHTML = `
                 <div class="fraction-result">
