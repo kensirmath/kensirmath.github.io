@@ -783,7 +783,9 @@ function factorQuadratic(a, b, c) {
     
     // Check if roots are rational numbers
     if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
-    
+
+//    return formatFactorizedForm(a, root1, root2);
+
     // 自己加20250919.1616 (改factorization display result)
    // const root199 = (-b + sqrtD) / Math.gcd(Math.int(-b + sqrtD),Math.int(2 * a))
   //  const root299 = (-b - sqrtD) / Math.gcd(Math.int(-b - sqrtD),Math.int(2 * a))
@@ -791,7 +793,9 @@ function factorQuadratic(a, b, c) {
   //  return formatFactorizedForm(a99, root199, root299);
     // 自己加20250919.1616 (改factorization display result)
 
-    return formatFactorizedForm(a, root1, root2);
+    // 自己加20250919.1933 (改factorization display result)
+    return formatFactorizedForm(a, b, c);
+    // 自己加20250919.1933 (改factorization display result)
     
 }
 
@@ -808,25 +812,39 @@ function isSimpleFraction(num, tolerance = 1e-20) {
     return false;
 }
 
-function formatFactorizedForm(a, root1, root2) {
-    const formatRoot = (root) => {
-        if (Number.isInteger(root)) {
-            return root < 0 ? `+ ${-root}` : `- ${root}`;
-        }
-        // Handle fractions
-        const frac = decimalToFraction(root);
-        if (frac.denominator === 1) {
-            return frac.numerator < 0 ? `+ ${-frac.numerator}` : `- ${frac.numerator}`;
-        }
-        return root < 0 ? `+ ${-root}` : `- ${root}`;
-    };
+//function formatFactorizedForm(a, root1, root2) {
+//    const formatRoot = (root) => {
+//        if (Number.isInteger(root)) {
+//            return root < 0 ? `+ ${-root}` : `- ${root}`;
+//        }
+//        // Handle fractions
+//        const frac = decimalToFraction(root);
+//        if (frac.denominator === 1) {
+//            return frac.numerator < 0 ? `+ ${-frac.numerator}` : `- ${frac.numerator}`;
+//        }
+//        return root < 0 ? `+ ${-root}` : `- ${root}`;
+//    };
     
+//    if (a === 1) {
+//        return `(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+//    } else {
+//        return `${a}(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+//    }
+//}
+
+    // 自己加20250919.1933 (改factorization display result)
+function formatFactorizedForm(a, b, c) {
+    const a99 = Math.gcd(a,b,c)
+    const root199 = (-b+Math.sqrt(b*b-4*a*c)) / Math.gcd(-b+Math.sqrt(b*b-4*a*c),2*a)
+    const root299 = (-b-Math.sqrt(b*b-4*a*c)) / Math.gcd(-b-Math.sqrt(b*b-4*a*c),2*a)
+
     if (a === 1) {
-        return `(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+        return `(x ${root199 < 0 ? `+ ${-root199}` : `- ${root199}`})(x ${root299 < 0 ? `+ ${-root299}` : `- ${root299}`})`;
     } else {
-        return `${a}(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+        return `${a}(x ${root199 < 0 ? `+ ${-root199}` : `- ${root199}`})(x ${root299 < 0 ? `+ ${-root299}` : `- ${root299}`})`;
     }
 }
+    // 自己加20250919.1933 (改factorization display result)
 
 // Enhanced Cubic Equation Solver with Factorization
 function solveCubicEnhanced() {
