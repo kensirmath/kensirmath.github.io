@@ -645,7 +645,7 @@ function decimalToFraction(decimal, tolerance = 1e-22) {
     let p0 = 1, p1 = a;
     let q0 = 0, q1 = 1;
     
-    for (let i = 0; i < 100 && remainder > tolerance && q1 < 10000; i++) {
+    for (let i = 0; i < 10000 && remainder > tolerance && q1 < 10000; i++) {
         decimal = 1 / remainder;
         a = Math.floor(decimal);
         remainder = decimal - a;
