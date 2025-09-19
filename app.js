@@ -785,12 +785,12 @@ function factorQuadratic(a, b, c) {
     if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
     
     // 自己加20250919.1616 (改factorization display result)
-    const root1 = Math.gcd((-b + sqrtD),(2 * a))
-    const root2 = Math.gcd((-b - sqrtD),(2 * a))
-    const a = math.gcd(a,b,c)
+    const root199 = Math.gcd((-b + sqrtD),(2 * a))
+    const root299 = Math.gcd((-b - sqrtD),(2 * a))
+    const a99 = math.gcd(a,b,c)
     // 自己加20250919.1616 (改factorization display result)
 
-    return formatFactorizedForm(a, root1, root2);
+    return formatFactorizedForm(a99, root199, root299);
 }
 
 function isSimpleFraction(num, tolerance = 1e-20) {
