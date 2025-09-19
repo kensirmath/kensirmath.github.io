@@ -833,7 +833,7 @@ function formatFactorizedFormTemporarilyDisabled(a, root1, root2) {
 }
 
     // 自己加20250919.1933 (改factorization display result)
-function formatFactorizedForm(a, b,c,root1, root2) {
+function formatFactorizedForm(a, b, c, root1, root2) {
     const formatRoot = (root) => {
         if (Number.isInteger(root)) {
             return root < 0 ? `+ ${-root}` : `- ${root}`;
@@ -853,16 +853,16 @@ function formatFactorizedForm(a, b,c,root1, root2) {
         // Handle fractions
         const frac = decimalToFraction(root);
         if (frac.denominator > 1) {
-            return `${-frac.denominator}`;
+            return `${frac.denominator}`;
         }
         return root < 0 ? `+ ${-root}` : `- ${root}`;
     };
 
     
     if (a === 1) {
-        return `(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+        return `(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     } else {
-        return `${a}(${formatRoot2(-root1)} x ${formatRoot(-root1)})(${formatRoot2(-root2)} x ${formatRoot(-root2)})`;
+        return `${Math.gcd(a,b,c)}(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     }
 }
 
