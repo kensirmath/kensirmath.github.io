@@ -860,9 +860,9 @@ function formatFactorizedForm(a, b, c, root1, root2) {
 
     
     if (a === 1) {
-        return `(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
+        return `(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     } else {
-        return `${Math.gcd(a,b,c)}(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
+        return `${Math.gcd(a,b,c)}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     }
 }
 
