@@ -794,7 +794,7 @@ function factorQuadratic(a, b, c) {
     // 自己加20250919.1616 (改factorization display result)
 
     // 自己加20250919.1933 (改factorization display result)
-    return formatFactorizedForm(a, b, c);
+    return formatFactorizedForm(a, b, c, root1, root2);
     // 自己加20250919.1933 (改factorization display result)
     
 }
@@ -812,7 +812,7 @@ function isSimpleFraction(num, tolerance = 1e-20) {
     return false;
 }
 
-//function formatFactorizedForm(a, root1, root2) {
+function formatFactorizedFormTemporarilyDisabled(a, root1, root2) {
     const formatRoot = (root) => {
         if (Number.isInteger(root)) {
             return root < 0 ? `+ ${-root}` : `- ${root}`;
@@ -833,6 +833,38 @@ function isSimpleFraction(num, tolerance = 1e-20) {
 }
 
     // 自己加20250919.1933 (改factorization display result)
+function formatFactorizedForm(a, b,c,root1, root2) {
+    const formatRoot = (root) => {
+        if (Number.isInteger(root)) {
+            return root < 0 ? `+ ${-root}` : `- ${root}`;
+        }
+        // Handle fractions
+        const frac = decimalToFraction(root);
+        if (frac.denominator > 1) {
+            return frac.numerator < 0 ? `+ ${-frac.numerator}` : `- ${frac.numerator}`;
+        }
+        return root < 0 ? `+ ${-root}` : `- ${root}`;
+    };
+
+    const formatRoot2 = (root) => {
+        if (Number.isInteger(root)) {
+            return ``;
+        }
+        // Handle fractions
+        const frac = decimalToFraction(root);
+        if (frac.denominator > 1) {
+            return `${-frac.denominator}`;
+        }
+        return root < 0 ? `+ ${-root}` : `- ${root}`;
+    };
+
+    
+    if (a === 1) {
+        return `(x ${formatRoot(-root1)})(x ${formatRoot(-root2)})`;
+    } else {
+        return `${a}(${formatRoot2(-root1)} x ${formatRoot(-root1)})(${formatRoot2(-root2)} x ${formatRoot(-root2)})`;
+    }
+}
 
     // 自己加20250919.1933 (改factorization display result)
 
