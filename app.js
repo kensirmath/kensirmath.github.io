@@ -782,7 +782,7 @@ function factorQuadratic(a, b, c) {
     const root2 = (-b - sqrtD) / (2 * a);
     
     // Check if roots are rational numbers
-//    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
+    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
 
 //    return formatFactorizedForm(a, root1, root2);
 
