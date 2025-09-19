@@ -785,8 +785,8 @@ function factorQuadratic(a, b, c) {
     if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
     
     // 自己加20250919.1616 (改factorization display result)
-    const root199 = Math.gcd((-b + sqrtD),(2 * a))
-    const root299 = Math.gcd((-b - sqrtD),(2 * a))
+    const root199 = (-b + sqrtD) / Math.gcd((-b + sqrtD),(2 * a))
+    const root299 = (-b - sqrtD) / Math.gcd((-b - sqrtD),(2 * a))
     const a99 = Math.gcd(a,b,c)
     // 自己加20250919.1616 (改factorization display result)
 
