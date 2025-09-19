@@ -699,12 +699,12 @@ function solveQuadraticEnhanced() {
     
     // Try factorization first
     const factorization = factorQuadratic(a, b, c);
-    if (factorization) {
+//    if (factorization) {
         html += '<div class="factorization-section">';
         html += '<h4>因式分解</h4>';
         html += `<div class="factorization-result">${factorization}</div>`;
         html += '</div>';
-    }
+//    }
     
     html += '<div class="result-item">';
     html += '<div class="result-label">判別式 Δ</div>';
