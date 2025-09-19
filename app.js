@@ -916,7 +916,7 @@ function solveCubicEnhanced() {
     }
 
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式20250919.2242222222222</div>';
+    html += '<div class="result-label">方程式</div>';
     html += `<div class="result-value">${formatCoefficient(a)}x³ ${formatTerm(b)}x² ${formatTerm(c)}x ${formatTerm(d, true)} = 0</div>`;
     html += '</div>';
 
@@ -931,10 +931,14 @@ function solveCubicEnhanced() {
 
     // Calculate discriminant and solve
     const discriminant = calculateCubicDiscriminant(a, b, c, d);
+    let temporaryList = factorCubic9999(a, b, c, d);
 
     html += '<div class="result-item">';
     html += '<div class="result-label">判別式 Δ</div>';
-    html += `<div class="result-value">Δ = ${discriminant.toFixed(6)}</div>`;
+    //    html += `<div class="result-value">Δ = ${discriminant.toFixed(6)}</div>`;
+    //  show quadratic discriminant istead! 20250919.2244
+    html += `<div class="result-value">Δ = (${temporaryList[0]})^2 - 4*(${temporaryList[1]})*(${temporaryList[2]}) =${temporaryList[3]}</div>`;
+
     html += '</div>';
 
     // Add simple root finding
@@ -999,6 +1003,33 @@ function factorCubic(a, b, c, d) {
 
     return null;
 }
+
+// Cubic discriminant function
+function factorCubic9999(a, b, c, d) {
+    // Try to find integer roots using rational root theorem
+    const possibleRoots = getRationalRoots(a, b, c, d);
+
+    for (let root of possibleRoots.slice(0, 10)) { // Limit to first 10 candidates
+        if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
+            // Found a root, perform synthetic division
+
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d)
+            const a9999 = ~~(a / GCD9999)
+            const b9999 = ~~(b / GCD9999)
+            const c9999 = ~~(c / GCD9999)
+            const d9999 = ~~(d / GCD9999)
+
+            const quotient = syntheticDivision([a9999, b9999, c9999, d9999], root);
+            const discriminant9999 = quotient[1] * quotient[1] - 4 * quotient[0] * quotient[2]
+            if (quotient) {
+                return [quotient[0], quotient[1], quotient[2], discriminant9999];
+            } else {
+                return null;
+            }
+        }
+    }
+}
+
 
 function getRationalRoots(a, b, c, d) {
     // Find all possible rational roots using p/q where p divides d and q divides a
