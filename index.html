@@ -4,66 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>進階數學計算器</title>
+    <title>科學計算機及數學程式 Scientific Calculator and Mathematical Programs</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="container">
-        <!-- 主選單 -->
+        <!-- 主選單 Menu -->
         <div id="main-menu" class="page active">
-            <h1 class="app-title">進階數學計算器</h1>
+            <h1 class="app-title">科學計算機及數學程式 Scientific Calculator and Mathematical Programs</h1>
             <div class="menu-buttons">
                 <button class="btn btn--primary menu-btn" onclick="showPage('quadratic')">
                     <div class="btn-content">
                         <span class="btn-symbol">x²</span>
-                        <span class="btn-title">二次方程求解</span>
-                        <span class="btn-subtitle">增強因式分解功能</span>
+                        <span class="btn-title">二次方程求解器 Quadratic Equation Solver</span>
+                        <span class="btn-subtitle">因式分解功能 Factorization</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
                     <div class="btn-content">
                         <span class="btn-symbol">{x,y}</span>
-                        <span class="btn-title">聯立方程求解</span>
-                        <span class="btn-subtitle">支援分數輸入</span>
+                        <span class="btn-title">聯立方程求解器 Simultaneous Equation Solver</span>
+                        <span class="btn-subtitle">支援分數及小數輸入 Support fraction and decimal number</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
                     <div class="btn-content">
                         <span class="btn-symbol">√</span>
-                        <span class="btn-title">根號化簡</span>
+                        <span class="btn-title">根式化簡 Surd simplication</span>
                         <span class="btn-subtitle">√n</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
                     <div class="btn-content">
                         <span class="btn-symbol">sin</span>
-                        <span class="btn-title">科學計算機</span>
-                        <span class="btn-subtitle">智能分數顯示</span>
+                        <span class="btn-title">科學計算機 Scientific Calculator</span>
+                        <span class="btn-subtitle">具分數顯示功能 Support fraction display</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
                     <div class="btn-content">
                         <span class="btn-symbol">x³</span>
-                        <span class="btn-title">三次方程求解</span>
-                        <span class="btn-subtitle">增強因式分解功能</span>
+                        <span class="btn-title">三次方程求解器 Cubic Equation Solver</span>
+                        <span class="btn-subtitle">因式分解功能 Factorization</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
                     <div class="btn-content">
                         <span class="btn-symbol">(xy)</span>
-                        <span class="btn-title">高階多項式展開</span>
-                        <span class="btn-subtitle">修正版 - 準確計算</span>
+                        <span class="btn-title">多項式展開 Polynomial Expansion</span>
+                        <span class="btn-subtitle">e.g. (2)(x+1),(x+1)(x+1),(x+1)(x+2),etc</span>
                     </div>
                 </button>
             </div>
         </div>
 
-        <!-- 二次方程求解器 -->
+        <!-- 二次方程求解器 Quadratic Equation Solver -->
         <div id="quadratic" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
-                <h2>二次方程求解（增強版）</h2>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to Menu</button>
+                <h2>二次方程求解器 Quadratic Equation Solver</h2>
             </div>
 
             <div class="equation-display">
@@ -92,10 +92,10 @@
             </div>
         </div>
 
-        <!-- 聯立方程求解器 -->
+        <!-- 聯立方程求解器 Simultaneous Equation Solver-->
         <div id="linear" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 
                 <h2>聯立方程求解</h2>
             </div>
 
@@ -163,7 +163,7 @@
         <!-- 根號化簡器 -->
         <div id="radical" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 
                 <h2>根號化簡</h2>
             </div>
 
@@ -191,7 +191,7 @@
         <!-- 科學計算機 -->
         <div id="scientific" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 
                 <h2>科學計算機（智能分數顯示）</h2>
             </div>
 
@@ -270,7 +270,7 @@
         <!-- 三次方程求解器 -->
         <div id="cubic" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 
                 <h2>三次方程求解（增強版）</h2>
             </div>
 
@@ -309,10 +309,10 @@
             </div>
         </div>
 
-        <!-- 高階多項式展開器（修正版） -->
+        <!-- 多項式展開器 -->
         <div id="polynomial" class="page">
             <div class="page-header">
-                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單</button>
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to Menu</button>
                 <h2>高階多項式展開器（修正版）</h2>
             </div>
 
