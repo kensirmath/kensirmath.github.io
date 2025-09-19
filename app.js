@@ -1,3 +1,34 @@
+function gcd(x, y) {
+    // 確保數字為正數
+    x = Math.abs(x);
+    y = Math.abs(y);
+
+    // 歐幾里得演算法的遞迴實作
+    if (y === 0) {
+        return x;
+    } else {
+        return gcd(y, x % y);
+    }
+}
+
+function roundTo(n, digits) {
+    var negative = false;
+    if (digits === undefined) {
+        digits = 0;
+    }
+    if (n < 0) {
+        negative = true;
+        n = n * -1;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    n = (Math.round(n) / multiplicator).toFixed(digits);
+    if (negative) {
+        n = (n * -1).toFixed(digits);
+    }
+    return n;
+}
+
 // Enhanced Advanced Math Calculator App JavaScript with Fixed Polynomial Expansion
 
 // Global variables for scientific calculator
@@ -693,7 +724,7 @@ function solveQuadraticEnhanced() {
     const discriminant = b * b - 4 * a * c;
 
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式20250919.212000000000</div>';
+    html += '<div class="result-label">方程式</div>';
     html += `<div class="result-value"> ${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
     html += '</div>';
 
@@ -848,27 +879,16 @@ function formatFactorizedForm(a, b, c, root1, root2) {
         return ``;
     };
 
-
-    function gcd(x, y) {
-        // 確保數字為正數
-        x = Math.abs(x);
-        y = Math.abs(y);
-
-        // 歐幾里得演算法的遞迴實作
-        if (y === 0) {
-            return x;
-        } else {
-            return gcd(y, x % y);
-        }
-    }
-
     const GCD99 = gcd(gcd(a, b), c)
     if (GCD99 === 1) {
         return `(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     } else {
         return `${GCD99}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     }
+
 }
+
+
 
 // 自己加20250919.1933 (改factorization display result)
 
@@ -896,7 +916,7 @@ function solveCubicEnhanced() {
     }
 
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式</div>';
+    html += '<div class="result-label">方程式20250919.2215555555</div>';
     html += `<div class="result-value">${formatCoefficient(a)}x³ ${formatTerm(b)}x² ${formatTerm(c)}x ${formatTerm(d, true)} = 0</div>`;
     html += '</div>';
 
@@ -957,10 +977,22 @@ function factorCubic(a, b, c, d) {
     for (let root of possibleRoots.slice(0, 10)) { // Limit to first 10 candidates
         if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
             // Found a root, perform synthetic division
-            const quotient = syntheticDivision([a, b, c, d], root);
+
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d)
+            const a9999 = ~~(a / GCD9999)
+            const b9999 = ~~(b / GCD9999)
+            const c9999 = ~~(c / GCD9999)
+            const d9999 = ~~(d / GCD9999)
+
+            const quotient = syntheticDivision([a9999, b9999, c9999, d9999], root);
+            // const quotient = syntheticDivision([a, b, c, d], root);
             if (quotient) {
                 const quadraticPart = formatQuadratic(quotient[0], quotient[1], quotient[2]);
-                return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${factorQuadratic})`;
+                if (GCD9999 === 1) {
+                    return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${factorQuadratic(quotient[0], quotient[1], quotient[2])})`;
+                } else {
+                    return `${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${factorQuadratic(quotient[0], quotient[1], quotient[2])})`;
+                }
             }
         }
     }
