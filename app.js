@@ -693,7 +693,7 @@ function solveQuadraticEnhanced() {
     const discriminant = b * b - 4 * a * c;
     
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式20250919.2108</div>';
+    html += '<div class="result-label">方程式20250919.2112</div>';
     html += `<div class="result-value"> ${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
     html += '</div>';
     
@@ -776,7 +776,7 @@ function factorQuadratic(a, b, c) {
     const sqrtD = Math.sqrt(discriminant);
     
     // Check if discriminant is a perfect square
-    if (!Number.isInteger(sqrtD)) return null;
+    if (Number.isInteger(sqrtD)) {
     
     const root1 = (-b + sqrtD) / (2 * a);
     const root2 = (-b - sqrtD) / (2 * a);
@@ -789,7 +789,8 @@ function factorQuadratic(a, b, c) {
     // 自己加20250919.1933 (改factorization display result)
     return formatFactorizedForm(a, b, c, root1, root2);
     // 自己加20250919.1933 (改factorization display result)
-    
+    }
+    return null;
 }
 
 function isSimpleFraction(num, tolerance = 1e-20) {
