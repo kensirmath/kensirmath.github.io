@@ -56,6 +56,111 @@
                         <span class="btn-subtitle">e.g. (2)(x+1),(x+1)(x+1),(x+1)(x+2),etc</span>
                     </div>
                 </button>
+
+
+                <button class="btn btn--primary menu-btn">
+                    <div class="btn-content">
+                        <span class="btn-symbol">5**</span>
+                        <span class="btn-title">Important Formulas</span>
+                        <!--<span class="btn-subtitle">x=[-b+-√(b²-4ac)] / (2a)</span>-->
+                    </div>
+                </button>
+
+                <!--20250920.0612: make good use of AI to gen formulas in MathML language-->
+                <math display="block" style="font-size:24px;">
+                    <mrow>
+                        <mi>x</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mrow>
+                                    <mo>−</mo>
+                                    <mi>b</mi>
+                                </mrow>
+                                <mo>±</mo>
+                                <msqrt>
+                                    <mrow>
+                                        <msup>
+                                            <mi>b</mi>
+                                            <mn>2</mn>
+                                        </msup>
+                                        <mo>−</mo>
+                                        <mrow>
+                                            <mn>4</mn>
+                                            <mo>⁢</mo>
+                                            <mi>a</mi>
+                                            <mo>⁢</mo>
+                                            <mi>c</mi>
+                                        </mrow>
+                                    </mrow>
+                                </msqrt>
+                            </mrow>
+                            <mrow>
+                                <mn>2</mn>
+                                <mo>⁢</mo>
+                                <mi>a</mi>
+                            </mrow>
+                        </mfrac>
+                    </mrow>
+                </math>
+
+                <math display="block" style="font-size:24px;">
+                    <mn>&Delta;</mn>
+                    <mo>=</mo>
+                    <msup>
+                        <mi>b</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>-</mo>
+                    <mn>4</mn>
+                    <mo>&#8290;</mo>
+                    <mi>a</mi>
+                    <mo>&#8290;</mo>
+                    <mi>c</mi>
+                </math>
+
+
+                <math display="block" style="font-size:24px;">
+                    <mi>&alpha;</mi>
+                    <mo>+</mo>
+                    <mi>&beta;</mi>
+                    <mo>=</mo>
+                    <mo>-</mo>
+                    <mfrac>
+                        <mrow>
+                            <mi>b</mi>
+                        </mrow>
+                        <mi>a</mi>
+                    </mfrac>
+                </math>
+
+                <math display="block" style="font-size:24px;">
+                    <mi>&alpha;</mi>
+                    <mi>&beta;</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mrow>
+                            <mi>c</mi>
+                        </mrow>
+                        <mi>a</mi>
+                    </mfrac>
+                </math>
+
+                <math display="block" style="font-size:24px;">
+                    <mo>Slope</mo>
+                    <mo>=</mo>
+                    <mo>-</mo>
+                    <mfrac>
+                        <mrow>
+                            <mi>A</mi>
+                        </mrow>
+                        <mi>B</mi>
+                    </mfrac>
+                </math>
+
+
+
+
             </div>
         </div>
 
@@ -295,18 +400,17 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">係數 b</label>
-                        <input type="number" id="cubic-b" class="form-control" step="any" value="0"
-                            placeholder="可選，預設為 0">
+                        <!--<input type="number" id="cubic-b" class="form-control" step="any" value="0"
+                            placeholder="可選，預設為 0">-->
+                        <input type="number" id="cubic-b" class="form-control" step="any" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">係數 c</label>
-                        <input type="number" id="cubic-c" class="form-control" step="any" value="0"
-                            placeholder="可選，預設為 0">
+                        <input type="number" id="cubic-c" class="form-control" step="any" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">係數 d</label>
-                        <input type="number" id="cubic-d" class="form-control" step="any" value="0"
-                            placeholder="可選，預設為 0">
+                        <input type="number" id="cubic-d" class="form-control" step="any" required>
                     </div>
                 </div>
                 <button class="btn btn--primary btn--full-width" onclick="solveCubicEnhanced()">計算</button>
