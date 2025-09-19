@@ -784,6 +784,12 @@ function factorQuadratic(a, b, c) {
     // Check if roots are rational numbers
     if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
     
+    // 自己加20250919.1616 (改factorization display result)
+    root1 = Math.gcd((-b + sqrtD),(2 * a))
+    root2 = Math.gcd((-b - sqrtD),(2 * a))
+    a = math.gcd(a,b,c)
+    // 自己加20250919.1616 (改factorization display result)
+
     return formatFactorizedForm(a, root1, root2);
 }
 
