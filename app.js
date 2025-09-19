@@ -960,7 +960,7 @@ function factorCubic(a, b, c, d) {
             const quotient = syntheticDivision([a, b, c, d], root);
             if (quotient) {
                 const quadraticPart = formatQuadratic(quotient[0], quotient[1], quotient[2]);
-                return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})`;
+                return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${factorQuadratic})`;
             }
         }
     }
