@@ -670,8 +670,8 @@ function decimalToFraction(decimal, tolerance = 1e-22) {
 // Enhanced Quadratic Equation Solver with Factorization
 function solveQuadraticEnhanced() {
     const a = parseFloat(document.getElementById('quad-a').value);
-    const b = parseFloat(document.getElementById('quad-b').value);
-    const c = parseFloat(document.getElementById('quad-c').value);
+    const b = parseFloat(document.getElementById('quad-b').value || 0);
+    const c = parseFloat(document.getElementById('quad-c').value || 0);
     
     const resultDiv = document.getElementById('quad-result');
     const outputDiv = document.getElementById('quad-output');
