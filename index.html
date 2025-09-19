@@ -432,17 +432,19 @@
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">9</button>
                     <!--<button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()"
                         rowspan="2">EXE</button>-->
-                    <button class="btn btn--outline calc-btn" onclick="backspaceAtCursor()">←</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*')
+                        ;insertAtCursor('1');insertAtCursor('0');insertAtCursor('^')">x10^</button>
 
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">4</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">5</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('6')">6</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('pi')">π</button>
+                    <button class="btn btn--secondary calc-btn"
+                        onclick="insertAtCursor('/');insertAtCursor('1');insertAtCursor('0');insertAtCursor('0')">%</button>
 
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('1')">1</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('2')">2</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('3')">3</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('e')">e</button>
+                    <button class="btn btn--outline calc-btn" onclick="backspaceAtCursor()">←</button>
 
                     <!--<button class="btn btn--outline calc-btn zero-btn" onclick="insertAtCursor('0')">0</button>-->
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('0')">0</button>
@@ -470,7 +472,7 @@
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('asin(')">asin</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('acos(')">acos</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('atan(')">atan</button>
-                    <button class="btn btn--secondary calc-btn" onclick="clearCalculator()">AC</button>
+                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC</button>
 
 
                     <!-- 第五行：根號和常數 -->
