@@ -916,7 +916,7 @@ function solveCubicEnhanced() {
     }
 
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式20250919.2215555555</div>';
+    html += '<div class="result-label">方程式20250919.2240000000</div>';
     html += `<div class="result-value">${formatCoefficient(a)}x³ ${formatTerm(b)}x² ${formatTerm(c)}x ${formatTerm(d, true)} = 0</div>`;
     html += '</div>';
 
@@ -979,10 +979,10 @@ function factorCubic(a, b, c, d) {
             // Found a root, perform synthetic division
 
             const GCD9999 = gcd(gcd(gcd(a, b), c), d)
-            const a9999 = ~~(a / GCD9999)
-            const b9999 = ~~(b / GCD9999)
-            const c9999 = ~~(c / GCD9999)
-            const d9999 = ~~(d / GCD9999)
+            const a9999 = (a / GCD9999) >> 0
+            const b9999 = (b / GCD9999) >> 0
+            const c9999 = (c / GCD9999) >> 0
+            const d9999 = (d / GCD9999) >> 0
 
             const quotient = syntheticDivision([a9999, b9999, c9999, d9999], root);
             // const quotient = syntheticDivision([a, b, c, d], root);
