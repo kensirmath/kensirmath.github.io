@@ -693,7 +693,7 @@ function solveQuadraticEnhanced() {
     const discriminant = b * b - 4 * a * c;
     
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式</div>';
+    html += '<div class="result-label">方程式20250919.2102</div>';
     html += `<div class="result-value">${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
     html += '</div>';
     
@@ -847,7 +847,7 @@ function formatFactorizedForm(a, b, c, root1, root2) {
         return ``;
     };
 
-    const GCD99 = gcd(a,b,c)
+    const GCD99 = Math.gcd(Math.gcd(a,b),c)
     if (GCD99 === 1) {
         return `(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     } else {
