@@ -5,9 +5,9 @@ function gcd(x, y) {
 
     // 歐幾里得演算法的遞迴實作
     if (y === 0) {
-        return x;
+        return x*Math.sign(x);
     } else {
-        return gcd(y, x % y);
+        return gcd(y, x % y)*Math.sign(x*y);
     }
 }
 
