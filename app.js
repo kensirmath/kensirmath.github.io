@@ -937,7 +937,7 @@ function solveCubicEnhanced() {
     html += '<div class="result-label">判別式 Δ</div>';
     //    html += `<div class="result-value">Δ = ${discriminant.toFixed(6)}</div>`;
     //  show quadratic discriminant istead! 20250919.2244
-    html += `<div class="result-value">Δ = (${temporaryList[0]})^2 - 4*(${temporaryList[1]})*(${temporaryList[2]}) =${temporaryList[3]}</div>`;
+    html += `<div class="result-value">Δ = (${temporaryList[0]})² - 4*(${temporaryList[1]})*(${temporaryList[2]}) =${temporaryList[3]}</div>`;
 
     html += '</div>';
 
