@@ -791,7 +791,7 @@ function factorQuadratic(a, b, c) {
   //  return formatFactorizedForm(a99, root199, root299);
     // 自己加20250919.1616 (改factorization display result)
 
-   return formatFactorizedForm(a, root1, root2);
+    return formatFactorizedForm(a, root1, root2);
     
 }
 
