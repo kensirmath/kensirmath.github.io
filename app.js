@@ -782,16 +782,9 @@ function factorQuadratic(a, b, c) {
     const root2 = (-b - sqrtD) / (2 * a);
     
     // Check if roots are rational numbers
-//    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
+    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
 
 //    return formatFactorizedForm(a, root1, root2);
-
-    // 自己加20250919.1616 (改factorization display result)
-   // const root199 = (-b + sqrtD) / Math.gcd(Math.int(-b + sqrtD),Math.int(2 * a))
-  //  const root299 = (-b - sqrtD) / Math.gcd(Math.int(-b - sqrtD),Math.int(2 * a))
-  //  const a99 = Math.gcd(a,b,c)
-  //  return formatFactorizedForm(a99, root199, root299);
-    // 自己加20250919.1616 (改factorization display result)
 
     // 自己加20250919.1933 (改factorization display result)
     return formatFactorizedForm(a, b, c, root1, root2);
@@ -803,7 +796,7 @@ function isSimpleFraction(num, tolerance = 1e-20) {
     if (Number.isInteger(num)) return true;
     
     // Check if it's a simple fraction
-    for (let denom = 2; denom <= 20; denom++) {
+    for (let denom = 2; denom <= 100; denom++) {
         const numerator = num * denom;
         if (Math.abs(numerator - Math.round(numerator)) < tolerance) {
             return true;
@@ -847,15 +840,11 @@ function formatFactorizedForm(a, b, c, root1, root2) {
     };
 
     const formatRoot2 = (root) => {
-        if (Number.isInteger(root)) {
-            return ``;
-        }
-        // Handle fractions
         const frac = decimalToFraction(root);
         if (frac.denominator > 1) {
             return `${frac.denominator}`;
         }
-        return ``;
+        return null;
     };
 
     
