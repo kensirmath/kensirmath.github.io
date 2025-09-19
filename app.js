@@ -782,7 +782,7 @@ function factorQuadratic(a, b, c) {
     const root2 = (-b - sqrtD) / (2 * a);
     
     // Check if roots are rational numbers
-    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
+//    if (!isSimpleFraction(root1) || !isSimpleFraction(root2)) return null;
 
 //    return formatFactorizedForm(a, root1, root2);
 
@@ -844,10 +844,10 @@ function formatFactorizedForm(a, b, c, root1, root2) {
         if (frac.denominator > 1) {
             return `${frac.denominator}`;
         }
-        return null;
+        return ``;
     };
 
-    const GCD99 = Math.gcd(a,b,c)
+    const GCD99 = gcd(a,b,c)
     if (GCD99 === 1) {
         return `(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     } else {
