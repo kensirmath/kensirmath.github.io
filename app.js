@@ -847,11 +847,11 @@ function formatFactorizedForm(a, b, c, root1, root2) {
         return null;
     };
 
-    
-    if (Math.gcd(a,b,c) === 1) {
+    const GCD99 = Math.gcd(a,b,c)
+    if (GCD99 === 1) {
         return `(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     } else {
-        return `${Math.gcd(a,b,c)}(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
+        return `${GCD99}(${formatRoot2(-root1)}x ${formatRoot(-root1)})(${formatRoot2(-root2)}x ${formatRoot(-root2)})`;
     }
 }
 
