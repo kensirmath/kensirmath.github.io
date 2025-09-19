@@ -834,26 +834,58 @@ function isSimpleFraction(num, tolerance = 1e-20) {
 
     // 自己加20250919.1933 (改factorization display result)
 function formatFactorizedForm(a, b, c) {
-    const a99 = Math.gcd(a,b,c)
-    const root199 = (-b+Math.sqrt(b*b-4*a*c)) / Math.gcd(-b+Math.sqrt(b*b-4*a*c),2*a)
-    const root299 = (-b-Math.sqrt(b*b-4*a*c)) / Math.gcd(-b-Math.sqrt(b*b-4*a*c),2*a)
 
-    if (root199 < 0){
-        let display199 = `+ ${-root199}`
-    } else{
-        let display199 = `- ${root199}`
-    }        
-
-    if (root299 < 0){
-        let display299 = `+ ${-root299}`
-    } else{
-        let display299 = `- ${root299}`
-    }        
-        
-    if (a === 1) {
-        return `(x ${display199})(x ${display299})`;
-    } else {
-        return `${a}(x ${display199})(x ${display299})`;
+    function gcd(a, b) {
+      return b ? gcd(b, a % b) : Math.abs(a);
+    }
+    
+    function factorQuadratic(a, b, c) {
+      // Factor out GCD if possible
+      let g = gcd(gcd(a, b), c);
+      let fa = a/g, fb = b/g, fc = c/g;
+    
+      // AC method
+      let ac = fa * fc;
+      let found = false, m1, m2;
+      for (let i = -Math.abs(ac); i <= Math.abs(ac); i++) {
+        if (i === 0) continue;
+        if (ac % i === 0) {
+          let j = ac / i;
+          if (i + j === fb) {
+            m1 = i; m2 = j;
+            found = true;
+            break;
+          }
+        }
+      }
+    
+      if (found) {
+        // Factor by grouping
+        // fa*x^2 + m1*x + m2*x + fc
+        // Group: (fa*x^2 + m1*x) + (m2*x + fc)
+        function factorPair(a, b) {
+          let g = gcd(a, b);
+          return [g, a/g, b/g];
+        }
+        let [g1, a1, b1] = factorPair(fa, m1);
+        let [g2, a2, b2] = factorPair(m2, fc);
+    
+        let x1 = `(${g1 !== 1 ? g1 : ""}x${b1 >= 0 ? "+" : ""}${b1})`;
+        let x2 = `(${g2 !== 1 ? g2 : ""}x${b2 >= 0 ? "+" : ""}${b2})`;
+    
+        let factorization = 
+          (g !== 1 ? g : "") +
+          x1 + x2 + "=0";
+    
+        return factorization.replace(/\+\-/g, "-");
+      } else {
+        // If not factorable over integers, return roots
+        let discriminant = fb*fb - 4*fa*fc;
+        if (discriminant < 0) return "Not factorable over real numbers";
+        let root1 = (-fb + Math.sqrt(discriminant)) / (2 * fa);
+        let root2 = (-fb - Math.sqrt(discriminant)) / (2 * fa);
+        return `(x-${root1})(x-${root2})=0`;
+      }
     }
 }
     // 自己加20250919.1933 (改factorization display result)
