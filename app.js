@@ -855,11 +855,11 @@ function formatFactorizedForm(a, b, c, root1, root2) {
         if (frac.denominator > 1) {
             return `${frac.denominator}`;
         }
-        return root < 0 ? `+ ${-root}` : `- ${root}`;
+        return ``;
     };
 
     
-    if (a === 1) {
+    if (Math.gcd(a,b,c) === 1) {
         return `(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     } else {
         return `${Math.gcd(a,b,c)}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
