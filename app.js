@@ -838,10 +838,22 @@ function formatFactorizedForm(a, b, c) {
     const root199 = (-b+Math.sqrt(b*b-4*a*c)) / Math.gcd(-b+Math.sqrt(b*b-4*a*c),2*a)
     const root299 = (-b-Math.sqrt(b*b-4*a*c)) / Math.gcd(-b-Math.sqrt(b*b-4*a*c),2*a)
 
+    if (root199 < 0){
+        let display199 = '+ '+${-root199}
+    } else{
+        let display199 = '- '+${root199}
+    }        
+
+    if (root299 < 0){
+        let display299 = '+ '+${-root299}
+    } else{
+        let display299 = '- '+${root299}
+    }        
+        
     if (a === 1) {
-        return `(x ${root199 < 0 ? `+ ${-root199}` : `- ${root199}`})(x ${root299 < 0 ? `+ ${-root299}` : `- ${root299}`})`;
+        return `(x ${display199})(x ${display299})`;
     } else {
-        return `${a}(x ${root199 < 0 ? `+ ${-root199}` : `- ${root199}`})(x ${root299 < 0 ? `+ ${-root299}` : `- ${root299}`})`;
+        return `${a}(x ${display199})(x ${display299})`;
     }
 }
     // 自己加20250919.1933 (改factorization display result)
