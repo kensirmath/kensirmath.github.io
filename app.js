@@ -693,8 +693,8 @@ function solveQuadraticEnhanced() {
     const discriminant = b * b - 4 * a * c;
     
     let html = '<div class="result-item">';
-    html += '<div class="result-label">方程式</div>';
-    html += `<div class="result-value">20250919.2103 ${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
+    html += '<div class="result-label">方程式20250919.2105</div>';
+    html += `<div class="result-value"> ${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
     html += '</div>';
     
     // Try factorization first
