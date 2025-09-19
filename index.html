@@ -14,32 +14,25 @@
         <div id="main-menu" class="page active">
             <h1 class="app-title">科學計算機及數學程式 Scientific Calculator and Mathematical Programs</h1>
             <div class="menu-buttons">
+                <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">EXE</span>
+                        <span class="btn-title">科學計算機 Scientific Calculator</span>
+                        <span class="btn-subtitle">具分數顯示功能 Support fraction display</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">(x,y)</span>
+                        <span class="btn-title">聯立方程求解器 Simultaneous Equation Solver</span>
+                        <span class="btn-subtitle">支援分數及小數輸入 Support fraction and decimal number</span>
+                    </div>
+                </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('quadratic')">
                     <div class="btn-content">
                         <span class="btn-symbol">x²</span>
                         <span class="btn-title">二次方程求解器 Quadratic Equation Solver</span>
                         <span class="btn-subtitle">因式分解功能 Factorization</span>
-                    </div>
-                </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
-                    <div class="btn-content">
-                        <span class="btn-symbol">{x,y}</span>
-                        <span class="btn-title">聯立方程求解器 Simultaneous Equation Solver</span>
-                        <span class="btn-subtitle">支援分數及小數輸入 Support fraction and decimal number</span>
-                    </div>
-                </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
-                    <div class="btn-content">
-                        <span class="btn-symbol">√</span>
-                        <span class="btn-title">根式化簡器 Surd simplifier</span>
-                        <span class="btn-subtitle">√n</span>
-                    </div>
-                </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
-                    <div class="btn-content">
-                        <span class="btn-symbol">sin</span>
-                        <span class="btn-title">科學計算機 Scientific Calculator</span>
-                        <span class="btn-subtitle">具分數顯示功能 Support fraction display</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
@@ -51,9 +44,16 @@
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
                     <div class="btn-content">
-                        <span class="btn-symbol">(xy)</span>
+                        <span class="btn-symbol">(a+b)(a-b)=a²-b²</span>
                         <span class="btn-title">多項式展開 Polynomial Expansion</span>
                         <span class="btn-subtitle">e.g. (2)(x+1),(x+1)(x+1),(x+1)(x+2),etc</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">√</span>
+                        <span class="btn-title">根式化簡器 Surd simplifier</span>
+                        <span class="btn-subtitle">√(a²)=a,√(ab)=√a√b,√(a²b)=a√b</span>
                     </div>
                 </button>
 
