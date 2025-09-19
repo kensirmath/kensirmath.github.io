@@ -839,15 +839,15 @@ function formatFactorizedForm(a, b, c) {
     const root299 = (-b-Math.sqrt(b*b-4*a*c)) / Math.gcd(-b-Math.sqrt(b*b-4*a*c),2*a)
 
     if (root199 < 0){
-        let display199 = '+ '+${-root199}
+        let display199 = `+ ${-root199}`
     } else{
-        let display199 = '- '+${root199}
+        let display199 = `- ${root199}`
     }        
 
     if (root299 < 0){
-        let display299 = '+ '+${-root299}
+        let display299 = `+ ${-root299}`
     } else{
-        let display299 = '- '+${root299}
+        let display299 = `- ${root299}`
     }        
         
     if (a === 1) {
