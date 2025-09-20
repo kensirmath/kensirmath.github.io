@@ -986,7 +986,7 @@ function factorCubic(a, b, c, d) {
         if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
             // Found a root, perform synthetic division
 
-            const GCD9999 = gcd(gcd(gcd(a, b), c), d)
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d)*Math.sign(a)
             const a9999 = ~~(a / GCD9999)
             const b9999 = ~~(b / GCD9999)
             const c9999 = ~~(c / GCD9999)
@@ -998,6 +998,8 @@ function factorCubic(a, b, c, d) {
                 const quadraticPart = formatQuadratic(quotient[0], quotient[1], quotient[2]);
                 if (GCD9999 === 1) {
                     return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
+                } else if (GCD9999 === -1) {
+                    return `-(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
                 } else {
                     return `${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
                 }
