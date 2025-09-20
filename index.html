@@ -415,7 +415,8 @@
                 </div>
 
                 <div class="calculator-buttons">
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">+</button>
+                    <button class="btn btn--primary calc-btn"
+                        onclick="setTimeout(function(){insertAtCursor('+');}, 100)">+</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">-</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">×</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">/</button>
