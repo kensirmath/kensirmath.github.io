@@ -1587,7 +1587,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add enter key support for inputs
     const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
     inputs.forEach(input => {
-        input.addEventListener('keypress', function (e) {
+//        input.addEventListener('keypress', function (e) {
+        input.addEventListener('input', function (e) {
             if (e.key === 'Enter') {
                 const page = input.closest('.page');
                 if (!page) return;
