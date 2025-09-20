@@ -402,11 +402,27 @@
 
             <div class="calculator">
                 <div class="calculator-display">
-                    <input type="text" id="calc-display" class="display-input" placeholder="輸入數學表達式..." mode="none">
+                    <script>
+                        let timer; // Store the timeout
+                        function delayAction() {
+                            clearTimeout(timer);
+                            timer = setTimeout(function () {
+                                null
+                                // alert('Action triggered after typing delay!');
+                                // You can replace this with any function, like fetch or update code
+                            }, 100); // 1000ms = 1 second
+                        }
+                    </script>
+
+
+                    <input type="text" id="calc-display" class="display-input" placeholder="輸入數學表達式..." mode="none"
+                        oninput="delayAction()">
                     <div class="angle-mode">
                         <button id="angle-mode-btn" class="btn btn--secondary btn--sm" onclick="toggleAngleMode()">度
                             DEG</button>
                     </div>
+
+
                     <!--
                     <div class="edit-hint">
                         <span class="hint-text">💡 只對有理數結果顯示分數形式 Display of fraction is only applicable to rational number</span>
@@ -415,8 +431,7 @@
                 </div>
 
                 <div class="calculator-buttons">
-                    <button class="btn btn--primary calc-btn"
-                        onclick="setTimeout(function(){insertAtCursor('+');}, 100)">+</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">+</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">-</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">×</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">/</button>
