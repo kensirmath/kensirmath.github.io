@@ -880,8 +880,10 @@ function formatFactorizedForm(a, b, c, root1, root2) {
     };
 
     const GCD99 = gcd(gcd(a, b), c)
-    if (GCD99 === 1) {
+    if (a>0 && GCD99 === 1) {
         return `(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
+    } elseif (a<0 && GCD99 === 1) {
+        return `-(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     } else {
         return `${GCD99}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     }
