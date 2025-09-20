@@ -1017,7 +1017,7 @@ function factorCubic9999(a, b, c, d) {
         if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
             // Found a root, perform synthetic division
 
-            const GCD9999 = gcd(gcd(gcd(a, b), c), d)
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d)*Math.sign(a)
             const a9999 = ~~(a / GCD9999)
             const b9999 = ~~(b / GCD9999)
             const c9999 = ~~(c / GCD9999)
