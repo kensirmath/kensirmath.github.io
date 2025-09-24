@@ -1877,7 +1877,7 @@
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">+</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">-</button>
                     <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">×</button>
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">/</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">÷</button>
 
                     <!-- 第一行：清除和退格 -->
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('(')">(</button>
@@ -1889,8 +1889,6 @@
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('7')">7</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('8')">8</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">9</button>
-                    <!--<button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()"
-                        rowspan="2">EXE</button>-->
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*')
                         ;insertAtCursor('1');insertAtCursor('0');insertAtCursor('^')">x10^</button>
 
@@ -1908,18 +1906,18 @@
                     <!--<button class="btn btn--outline calc-btn zero-btn" onclick="insertAtCursor('0')">0</button>-->
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('0')">0</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('.')">.</button>
-                    <!--<button class="btn btn--primary calc-btn" onclick="calculateResult()">EXE</button>-->
+
                     <!--<button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()"
                         rowspan="2">EXE</button>-->
                     <button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()"
-                        colspan="2">EXE</button>
+                        colspan="2">EXE(=)</button>
 
 
                     <!-- 第二行：三角函數 -->
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sin(')">sin</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('cos(')">cos</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('tan(')">tan</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('pi')">π</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('pi')">π(pi)</button>
 
                     <!-- 第四行：對數和指數 -->
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('log(')">log</button>
@@ -1931,7 +1929,7 @@
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('asin(')">asin</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('acos(')">acos</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('atan(')">atan</button>
-                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC</button>
+                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC(qQ@)</button>
 
 
                     <!-- 第五行：根號和常數 -->
