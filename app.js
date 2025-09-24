@@ -818,11 +818,40 @@ function factorQuadratic(a, b, c) {
         //    return formatFactorizedForm(a, root1, root2);
 
         // 自己加20250919.1933 (改factorization display result)
+        //20250925.0753 停止顯示，等佢地自己寫
+        //        return formatFactorizedForm(a, b, c, root1, root2);
+        return `公因式(母x - 子)(母x - 子)`;
+
+        // 自己加20250919.1933 (改factorization display result)
+    }
+    return null;
+}
+
+// Quadratic factorization function 99
+function factorQuadratic99(a, b, c) {
+    const discriminant = b * b - 4 * a * c;
+
+    if (discriminant < 0) return null; // No real roots
+
+    const sqrtD = Math.sqrt(discriminant);
+
+    // Check if discriminant is a perfect square
+    if (Number.isInteger(sqrtD)) {
+
+        const root1 = (-b + sqrtD) / (2 * a);
+        const root2 = (-b - sqrtD) / (2 * a);
+
+
+        // 自己加20250919.1933 (改factorization display result)
+        //20250925.0753 可以顯示！
+        return `公因式(母x - 子)(母x - 子)`;
         return formatFactorizedForm(a, b, c, root1, root2);
         // 自己加20250919.1933 (改factorization display result)
     }
     return null;
 }
+
+
 
 function isSimpleFraction(num, tolerance = 1e-20) {
     if (Number.isInteger(num)) return true;
