@@ -1661,4 +1661,15 @@ function handleCalculatorKeyboard(e) {
         e.preventDefault();
     }
     }
+        if (key === 'Enter') {
+        calculateResult();
+        e.preventDefault();
+    } else if (key === 'Escape' || key === 'q' || key === 'Q') {
+        clearCalculator();
+        e.preventDefault();
+    } else if (key === '%') {
+        insertAtCursor('/100');
+        e.preventDefault();
+    }
+    
 }
