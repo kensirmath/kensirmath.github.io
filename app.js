@@ -1663,13 +1663,13 @@ function handleCalculatorKeyboard(e) {
     }
         if (key === 'Enter' || key === '=') {
         calculateResult();
-       // e.preventDefault();
+        e.preventDefault();
     } else if (key === 'Escape' || key === 'q' || key === 'Q') {
         clearCalculator();
-       // e.preventDefault();
+        e.preventDefault();
     } else if (key === '%') {
         insertAtCursor('/100');
-       // e.preventDefault();
+        e.preventDefault();
     }
     
 }
