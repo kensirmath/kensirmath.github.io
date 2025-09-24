@@ -1661,15 +1661,19 @@ function handleCalculatorKeyboard(e) {
         e.preventDefault();
     }
     }
-        if (key === 'Enter' || key === '=') {
+        if (key === 'Enter') {
         calculateResult();
-        e.preventDefault();
-    } else if (key === 'Escape' || key === 'q' || key === 'Q') {
+        } else if (key === '=') {
+        calculateResult();
+        backspaceAtCursor()
+        } else if (key === 'Escape') {
         clearCalculator();
-        e.preventDefault();
+        } else if (key === '@' || key === 'q' || key === 'Q') {
+        clearCalculator();
+        backspaceAtCursor()
     } else if (key === '%') {
         insertAtCursor('/100');
-        e.preventDefault();
+        backspaceAtCursor()
     }
     
 }
