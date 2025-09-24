@@ -1640,11 +1640,12 @@ document.addEventListener('DOMContentLoaded', function () {
 function handleCalculatorKeyboard(e) {
     const key = e.key;
 
+    if (1===0){
     if (/[0-9]/.test(key)) {
         insertAtCursor(key);
         e.preventDefault();
-    } else if (['+', '-', '*', '/'].includes(key)) {
-        insertAtCursor(key);
+   } else if (['+', '-', '*', '/'].includes(key)) {
+       insertAtCursor(key);
         e.preventDefault();
     } else if (key === '.') {
         insertAtCursor('.');
@@ -1658,5 +1659,6 @@ function handleCalculatorKeyboard(e) {
     } else if (key === 'Escape' || key === 'c' || key === 'C') {
         clearCalculator();
         e.preventDefault();
+    }
     }
 }
