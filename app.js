@@ -698,7 +698,7 @@ function decimalToFraction(decimal, tolerance = 1e-22) {
     return { numerator: sign * p1, denominator: q1 };
 }
 
-// Enhanced Quadratic Equation Solver with Factorization
+// Enhanced Quadratic Equation Solver without Factorization
 function solveQuadraticEnhanced() {
     const a = parseFloat(document.getElementById('quad-a').value);
     const b = parseFloat(document.getElementById('quad-b').value || 0);
@@ -797,6 +797,108 @@ function solveQuadraticEnhanced() {
     resultDiv.classList.remove('hidden');
     resultDiv.style.display = 'block';
 }
+
+//自己加 20250925.0802
+// Enhanced Quadratic Polynomial with Factorization
+function solveQuadraticEnhanced99() {
+    const a = parseFloat(document.getElementById('quad-a').value);
+    const b = parseFloat(document.getElementById('quad-b').value || 0);
+    const c = parseFloat(document.getElementById('quad-c').value || 0);
+
+    const resultDiv = document.getElementById('quad-result');
+    const outputDiv = document.getElementById('quad-output');
+
+    if (!resultDiv || !outputDiv) {
+        console.error('Result elements not found');
+        return;
+    }
+
+    // Validation
+    if (isNaN(a) || a === 0) {
+        outputDiv.innerHTML = '<div class="error-message">錯誤：係數 a 不能為 0 或空白！</div>';
+        resultDiv.classList.remove('hidden');
+        resultDiv.style.display = 'block';
+        return;
+    }
+
+    // Calculate discriminant
+    const discriminant = b * b - 4 * a * c;
+
+    let html = '<div class="result-item">';
+    html += '<div class="result-label">方程式</div>';
+    html += `<div class="result-value"> ${formatCoefficient(a)}x² ${formatTerm(b)}x ${formatTerm(c, true)} = 0</div>`;
+    html += '</div>';
+
+    // Try factorization first
+    const factorization = factorQuadratic99(a, b, c);
+    //    if (factorization) {
+    html += '<div class="factorization-section">';
+    html += '<h4>因式分解</h4>';
+    html += `<div class="factorization-result">${factorization}</div>`;
+    html += '</div>';
+    //    }
+
+    html += '<div class="result-item">';
+    html += '<div class="result-label">判別式 Δ</div>';
+    html += `<div class="result-value">Δ = b² - 4ac = (${b})² - 4(${a})(${c}) = ${discriminant}</div>`;
+    html += '</div>';
+
+    html += '<div class="result-item">';
+    html += '<div class="result-label">根的性質</div>';
+
+    if (discriminant > 0) {
+        html += '<div class="result-value discriminant-positive">Δ > 0：兩個不同實根</div>';
+        html += '</div>';
+
+        const sqrt_discriminant = Math.sqrt(discriminant);
+        const x1 = (-b + sqrt_discriminant) / (2 * a);
+        const x2 = (-b - sqrt_discriminant) / (2 * a);
+
+        html += '<div class="result-item">';
+        html += '<div class="result-label">根的值</div>';
+        html += '<div class="result-formula">';
+        html += `x = (-b ± √Δ) / (2a) = (${-b} ± √${discriminant}) / ${2 * a}`;
+        html += '</div>';
+        html += `<div class="result-value">x₁ = ${formatNumber(x1)}</div>`;
+        html += `<div class="result-value">x₂ = ${formatNumber(x2)}</div>`;
+        html += '</div>';
+
+    } else if (discriminant === 0) {
+        html += '<div class="result-value discriminant-zero">Δ = 0：一個重根</div>';
+        html += '</div>';
+
+        const x = -b / (2 * a);
+
+        html += '<div class="result-item">';
+        html += '<div class="result-label">根的值</div>';
+        html += '<div class="result-formula">';
+        html += `x = -b / (2a) = ${-b} / ${2 * a}`;
+        html += '</div>';
+        html += `<div class="result-value">x = ${formatNumber(x)}</div>`;
+        html += '</div>';
+
+    } else {
+        html += '<div class="result-value discriminant-negative">Δ < 0：兩個復數根</div>';
+        html += '</div>';
+
+        const realPart = -b / (2 * a);
+        const imaginaryPart = Math.sqrt(-discriminant) / (2 * a);
+
+        html += '<div class="result-item">';
+        html += '<div class="result-label">復數根</div>';
+        html += '<div class="result-formula">';
+        html += `x = (-b ± i√|Δ|) / (2a) = (${-b} ± i√${-discriminant}) / ${2 * a}`;
+        html += '</div>';
+        html += `<div class="result-value">x₁ = ${formatNumber(realPart)} + ${formatNumber(imaginaryPart)}i</div>`;
+        html += `<div class="result-value">x₂ = ${formatNumber(realPart)} - ${formatNumber(imaginaryPart)}i</div>`;
+        html += '</div>';
+    }
+
+    outputDiv.innerHTML = html;
+    resultDiv.classList.remove('hidden');
+    resultDiv.style.display = 'block';
+}
+
 
 // Quadratic factorization function
 function factorQuadratic(a, b, c) {
