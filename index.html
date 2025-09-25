@@ -32,7 +32,7 @@
                     <div class="btn-content">
                         <span class="btn-symbol">ax²+bx+c=0</span>
                         <span class="btn-title">二次方程求解器 Quadratic Equation Solver</span>
-                        <span class="btn-subtitle">因式分解功能 Factorization</span>
+                        <span class="btn-subtitle">不含因式分解功能 Without Factorization</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
@@ -47,6 +47,13 @@
                         <span class="btn-symbol">(x+y)(x-y)=(x)²-(y)²</span>
                         <span class="btn-title">多項式展開 Polynomial Expansion</span>
                         <span class="btn-subtitle">e.g. (2)(x+1),(x+1)(x+1),(x+1)(x+2),etc</span>
+                    </div>
+                </button>
+                <button class="btn btn--primary menu-btn" onclick="showPage('quadratic99')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">ax²+bx+c</span>
+                        <span class="btn-title">二次多項式 Quadratic Polynomial</span>
+                        <span class="btn-subtitle">具因式分解功能 Factorization</span>
                     </div>
                 </button>
                 <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
@@ -1738,6 +1745,45 @@
 
         </div>
 
+
+        <!-- 二次多項式 Quadratic Polynomial -->
+        <div id="quadratic99" class="page">
+
+            <div class="equation-display">
+                <span class="equation">ax² + bx + c</span>
+                <span class="equation">ax² + bxy + cy² = (母x-子y)(母x-子y)</span>
+            </div>
+
+            <div class="input-section">
+                <div class="form-group">
+                    <label class="form-label">係數 a（不能為 0）</label>
+                    <input type="number" id="quad-a" class="form-control" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 b</label>
+                    <input type="number" id="quad-b" class="form-control" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">係數 c</label>
+                    <input type="number" id="quad-c" class="form-control" step="any" required>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="solveQuadraticEnhanced99()">計算</button>
+            </div>
+
+            <div id="quad-result" class="result-section hidden">
+                <h3>計算結果</h3>
+                <div id="quad-output"></div>
+            </div>
+
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
+                    Menu</button>
+                <h2>二次多項式 Quadratic Polynomial</h2>
+            </div>
+
+        </div>
+
+        
         <!-- 聯立方程求解器 Simultaneous Equation Solver-->
         <div id="linear" class="page">
 
