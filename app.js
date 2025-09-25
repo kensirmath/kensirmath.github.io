@@ -945,8 +945,8 @@ function factorQuadratic99(a, b, c) {
 
 
         // 自己加20250919.1933 (改factorization display result)
-        //20250925.0753 可以顯示！
-        return `公因式(母x - 子)(母x - 子)`;
+        //20250925.0753 可以顯示factorization, 但function 不能return two results！
+        // return `公因式(母x - 子)(母x - 子)`;
         return formatFactorizedForm(a, b, c, root1, root2);
         // 自己加20250919.1933 (改factorization display result)
     }
