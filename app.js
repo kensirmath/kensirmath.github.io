@@ -1128,11 +1128,11 @@ function factorCubic(a, b, c, d) {
             if (quotient) {
                 const quadraticPart = formatQuadratic(quotient[0], quotient[1], quotient[2]);
                 if (GCD9999 === 1) {
-                    return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
+                    return `(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic99(quotient[0], quotient[1], quotient[2])}`;
                 } else if (GCD9999 === -1) {
-                    return `-(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
+                    return `-(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic99(quotient[0], quotient[1], quotient[2])}`;
                 } else {
-                    return `${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic(quotient[0], quotient[1], quotient[2])}`;
+                    return `${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})(${quadraticPart})=${GCD9999}(x ${root >= 0 ? '-' : '+'} ${Math.abs(root)})${factorQuadratic99(quotient[0], quotient[1], quotient[2])}`;
                 }
             }
         }
