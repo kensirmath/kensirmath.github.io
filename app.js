@@ -5,9 +5,9 @@ function gcd(x, y) {
 
     // 歐幾里得演算法的遞迴實作
     if (y === 0) {
-        return x*Math.sign(x);
+        return x * Math.sign(x);
     } else {
-        return gcd(y, x % y)*Math.sign(x*y);
+        return gcd(y, x % y) * Math.sign(x * y);
     }
 }
 
@@ -801,12 +801,12 @@ function solveQuadraticEnhanced() {
 //自己加 20250925.0802
 // Enhanced Quadratic Polynomial with Factorization
 function solveQuadraticEnhanced99() {
-    const a = parseFloat(document.getElementById('quad-a').value);
-    const b = parseFloat(document.getElementById('quad-b').value || 0);
-    const c = parseFloat(document.getElementById('quad-c').value || 0);
+    const a = parseFloat(document.getElementById('quad-a99').value);
+    const b = parseFloat(document.getElementById('quad-b99').value || 0);
+    const c = parseFloat(document.getElementById('quad-c99').value || 0);
 
-    const resultDiv = document.getElementById('quad-result');
-    const outputDiv = document.getElementById('quad-output');
+    const resultDiv = document.getElementById('quad-result99');
+    const outputDiv = document.getElementById('quad-output99');
 
     if (!resultDiv || !outputDiv) {
         console.error('Result elements not found');
@@ -1011,11 +1011,11 @@ function formatFactorizedForm(a, b, c, root1, root2) {
     };
 
     const GCD99 = gcd(gcd(a, b), c)
-    if ((a>0) && (GCD99 === 1)) {
+    if ((a > 0) && (GCD99 === 1)) {
         return `(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
-    } else if ((a<0) && (GCD99 === 1)) {
+    } else if ((a < 0) && (GCD99 === 1)) {
         return `-(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
-    } else if (a<0) {
+    } else if (a < 0) {
         return `-${GCD99}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
     } else {
         return `${GCD99}(${formatRoot2(root1)}x ${formatRoot(root1)})(${formatRoot2(root2)}x ${formatRoot(root2)})`;
@@ -1117,7 +1117,7 @@ function factorCubic(a, b, c, d) {
         if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
             // Found a root, perform synthetic division
 
-            const GCD9999 = gcd(gcd(gcd(a, b), c), d)*Math.sign(a)
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d) * Math.sign(a)
             const a9999 = ~~(a / GCD9999)
             const b9999 = ~~(b / GCD9999)
             const c9999 = ~~(c / GCD9999)
@@ -1150,7 +1150,7 @@ function factorCubic9999(a, b, c, d) {
         if (Math.abs(evaluatePolynomial([a, b, c, d], root)) < 1e-10) {
             // Found a root, perform synthetic division
 
-            const GCD9999 = gcd(gcd(gcd(a, b), c), d)*Math.sign(a)
+            const GCD9999 = gcd(gcd(gcd(a, b), c), d) * Math.sign(a)
             const a9999 = ~~(a / GCD9999)
             const b9999 = ~~(b / GCD9999)
             const c9999 = ~~(c / GCD9999)
@@ -1724,7 +1724,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add enter key support for inputs
     const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
     inputs.forEach(input => {
-//        input.addEventListener('keypress', function (e) {
+        //        input.addEventListener('keypress', function (e) {
         input.addEventListener('input', function (e) {
             if (e.key === 'Enter') {
                 const page = input.closest('.page');
@@ -1771,40 +1771,40 @@ document.addEventListener('DOMContentLoaded', function () {
 function handleCalculatorKeyboard(e) {
     const key = e.key;
 
-    if (1===0){
-    if (/[0-9]/.test(key)) {
-        insertAtCursor(key);
-        e.preventDefault();
-   } else if (['+', '-', '*', '/'].includes(key)) {
-       insertAtCursor(key);
-        e.preventDefault();
-    } else if (key === '.') {
-        insertAtCursor('.');
-        e.preventDefault();
-    } else if (key === '(' || key === ')') {
-        insertAtCursor(key);
-        e.preventDefault();
-    } else if (key === 'Enter') {
-        calculateResult();
-        e.preventDefault();
-    } else if (key === 'Escape' || key === 'c' || key === 'C') {
-        clearCalculator();
-        e.preventDefault();
+    if (1 === 0) {
+        if (/[0-9]/.test(key)) {
+            insertAtCursor(key);
+            e.preventDefault();
+        } else if (['+', '-', '*', '/'].includes(key)) {
+            insertAtCursor(key);
+            e.preventDefault();
+        } else if (key === '.') {
+            insertAtCursor('.');
+            e.preventDefault();
+        } else if (key === '(' || key === ')') {
+            insertAtCursor(key);
+            e.preventDefault();
+        } else if (key === 'Enter') {
+            calculateResult();
+            e.preventDefault();
+        } else if (key === 'Escape' || key === 'c' || key === 'C') {
+            clearCalculator();
+            e.preventDefault();
+        }
     }
-    }
-        if (key === 'Enter') {
+    if (key === 'Enter') {
         calculateResult();
-        } else if (key === '=') {
+    } else if (key === '=') {
         calculateResult();
         backspaceAtCursor()
-        } else if (key === 'Escape') {
+    } else if (key === 'Escape') {
         clearCalculator();
-        } else if (key === '@' || key === 'q' || key === 'Q') {
+    } else if (key === '@' || key === 'q' || key === 'Q') {
         clearCalculator();
         backspaceAtCursor()
     } else if (key === '%') {
         insertAtCursor('/100');
         backspaceAtCursor()
     }
-    
+
 }
