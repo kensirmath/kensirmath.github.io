@@ -1570,7 +1570,9 @@ function parseExpression(tokens) {
     const result = parseAddSub();
 
     if (peek()) {
-        throw new Error(`意外的符號：${peek().value}`);
+                backspaceAtCursor()
+
+ //       throw new Error(`意外的符號：${peek().value}`);
     }
 
     return result;
