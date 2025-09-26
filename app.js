@@ -1539,7 +1539,9 @@ function parseExpression(tokens) {
             const arg = parseAddSub();
 
             if (!peek() || peek().type !== 'RPAREN') {
-                throw new Error('缺少右括號');
+                insertAtCursor(')');
+                calculateResult();
+                //                throw new Error('缺少右括號,已自動補回');
             }
 
             consume();
@@ -1552,14 +1554,17 @@ function parseExpression(tokens) {
             const result = parseAddSub();
 
             if (!peek() || peek().type !== 'RPAREN') {
-                throw new Error('缺少右括號');
+                insertAtCursor(')');
+                calculateResult();
+                //                throw new Error('缺少右括號,已自動補回');
             }
 
             consume();
             return result;
         }
+        backspaceAtCursor()
 
-        throw new Error(`意外的符號：${token.value}`);
+        //throw new Error(`意外的符號：${token.value}`);
     }
 
     const result = parseAddSub();
