@@ -1261,7 +1261,7 @@ body {
 }
 
 .equals-btn {
-  grid-column: span 2;
+  grid-column: span 1;
   height: auto;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
