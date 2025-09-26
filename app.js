@@ -1763,7 +1763,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentPage && currentPage.id === 'scientific') {
             handleCalculatorKeyboard(e);
         }
-    });
+    },true);
 
     // Add cursor support for calculator display
     const calcDisplay = document.getElementById('calc-display');
