@@ -1780,34 +1780,42 @@ function handleCalculatorKeyboard(e) {
     if (1 === 0) {
         if (/[0-9]/.test(key)) {
             insertAtCursor(key);
-            e.preventDefault();
+            e.stopImmediatePropagation()
+            // e.preventDefault();
         } else if (['+', '-', '*', '/'].includes(key)) {
             insertAtCursor(key);
-            e.preventDefault();
+            e.stopImmediatePropagation()
+            // e.preventDefault();
         } else if (key === '.') {
             insertAtCursor('.');
-            e.preventDefault();
+            e.stopImmediatePropagation()
+            // e.preventDefault();
         } else if (key === '(' || key === ')') {
             insertAtCursor(key);
-            e.preventDefault();
+            e.stopImmediatePropagation()
+            // e.preventDefault();
         } else if (key === 'Enter') {
             calculateResult();
-            e.preventDefault();
+            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (key === 'Escape' || key === 'c' || key === 'C') {
             clearCalculator();
-            e.preventDefault();
+            e.stopImmediatePropagation()
+//            e.preventDefault();
         }
     }
     if (key === 'Enter') {
         calculateResult();
     } else if (key === '=') {
         calculateResult();
-        e.preventDefault();
+        e.stopImmediatePropagation()
+        // e.preventDefault();
     } else if (key === 'Escape') {
         clearCalculator();
     } else if (key === '@' || key === 'q' || key === 'Q') {
         clearCalculator();
-        e.preventDefault();
+        e.stopImmediatePropagation()
+        // e.preventDefault();
     } else if (key === '%') {
         insertAtCursor('/100');
         backspaceAtCursor()
