@@ -74,7 +74,7 @@
                 </button>
 
                 <!--20250920.0612: make good use of AI to gen formulas in MathML language-->
-                <math display="inline" style="font-size:12px;">
+                <!--<math display="inline" style="font-size:12px;">
                     <mrow>
                         <mi>x</mi>
                         <mo>=</mo>
@@ -120,9 +120,7 @@
                     </msup>
                     <mo>-</mo>
                     <mn>4</mn>
-                    <mo>&#8290;</mo>
                     <mi>a</mi>
-                    <mo>&#8290;</mo>
                     <mi>c</mi>
                 </math>
 
@@ -260,7 +258,7 @@
                         </mrow>
                         <mi>B</mi>
                     </mfrac>
-                </math>
+                </math>-->
 
 
 
@@ -332,28 +330,28 @@
                             <mi>Δ</mi>
                             <mo>></mo>
                             <mn>0</mn>
-                        </math> 2 roots
+                        </math> for the equation has 2 roots
                     </li>
                     <li>
                         <math display="inline" style="font-size:12px;">
                             <mi>Δ</mi>
                             <mo>=</mo>
                             <mn>0</mn>
-                        </math> 1 root (2 equal roots)
+                        </math> for the equation has only 1 root (or 2 equal roots)
                     </li>
                     <li>
                         <math display="inline" style="font-size:12px;">
                             <mi>Δ</mi>
                             <mo>&lt;</mo>
                             <mn>0</mn>
-                        </math> no roots
+                        </math> for the equation has no roots
                     </li>
                     <li>
                         <math display="inline" style="font-size:12px;">
                             <mi>Δ</mi>
                             <mo>≥</mo>
                             <mn>0</mn>
-                        </math> has root(s) (can be 1 or 2)
+                        </math> for the equation has root(s) (can be 1 or 2)
                     </li>
                 </ul>
 
@@ -427,7 +425,7 @@
                     </math>
                 </p>
 
-                <h4>Graph</h4>
+                <h4>Quadratic Graph</h4>
                 <ul>
                     <li>
                         <math display="inline" style="font-size:12px;">
@@ -1677,12 +1675,210 @@
                     </li>
                 </ol>
 
+                <h3>More about Statistics</h3>
 
+                <ol>
+                    <li>
+                        <mtext>(a) Range</mtext>
+                        <mtext>Range = Largest value − Smallest value</mtext>
+                        <mtext>Range = Highest class boundary − Lowest class boundary</mtext>
+                    </li>
+                    <li>
+                        <mtext>(b) Inter-quartile range</mtext>
+                        <mtext>Inter-quartile range = Upper quartile − Lower quartile</mtext>
+                    </li>
+                    <li>
+                        <mtext>(c) Standard deviation</mtext>
+                        <math display="inline" style="font-size:12px;">
+                            <mi>&#x3C3;</mi>
+                            <mo>=</mo>
+                            <msqrt>
+                                <mfrac>
+                                    <mrow>
+                                        <msup>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mn>1</mn>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mover>
+                                                    <mi>x</mi>
+                                                    <mo>&#xAF;</mo>
+                                                </mover>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mn>2</mn>
+                                        </msup>
+                                        <mo>+</mo>
+                                        <msup>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mn>2</mn>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mover>
+                                                    <mi>x</mi>
+                                                    <mo>&#xAF;</mo>
+                                                </mover>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mn>2</mn>
+                                        </msup>
+                                        <mo>+\cdots+</mo>
+                                        <msup>
+                                            <mrow>
+                                                <mo>(</mo>
+                                                <msub>
+                                                    <mi>x</mi>
+                                                    <mi>n</mi>
+                                                </msub>
+                                                <mo>-</mo>
+                                                <mover>
+                                                    <mi>x</mi>
+                                                    <mo>&#xAF;</mo>
+                                                </mover>
+                                                <mo>)</mo>
+                                            </mrow>
+                                            <mn>2</mn>
+                                        </msup>
+                                    </mrow>
+                                    <mi>n</mi>
+                                </mfrac>
+                            </msqrt>
+                        </math>
+                        <mtext>where <mover>
+                                <mi>x</mi>
+                                <mo>&#xAF;</mo>
+                            </mover> is the mean and <mi>n</mi> is the total number of data.</mtext>
 
+                    </li>
+                    <li>
+                        (d) Standard score =
+                        <math display="inline" style="font-size:12px;">
+                            <mfrac>
+                                <mrow>
+                                    <mi>x</mi>
+                                    <mo>-</mo>
+                                    <mover>
+                                        <mi>x</mi>
+                                        <mo>&#xAF;</mo>
+                                    </mover>
+                                </mrow>
+                                <mi>&#x3C3;</mi>
+                            </mfrac>
+                        </math>
+                        <mtext>, where x is the value of the datum.</mtext>
+                    </li>
+                    <li>
+                        <mtext>Normal distribution: 34%, 13.5%, 2.35%, 0.15%</mtext>
+                    </li>
+                    <li>
+                        <mtext>If each datum is added/subtracted by k:</mtext>
+                        <mtext>mean, mode, median → add/subtract k</mtext>
+                        <mtext>Range, IQR, S.D., Variance → no change</mtext>
+                    </li>
+                    <li>
+                        <mtext>If each datum is multiplied/divided by k:</mtext>
+                        <mtext>mean, mode, median → multiply/divide by k</mtext>
+                        <mtext>Range, IQR, S.D. → multiply/divide by k</mtext>
+                        <mtext>Variance → multiply/divide by k squared</mtext>
+                    </li>
+                </ol>
 
-
-
-
+                <h3>F.5 Equations of Circles</h3>
+                <ol>
+                    <li>
+                        <mtext>For a circle with the centre (h, k) and radius r, the equation of the circle: (x - h)^2 +
+                            (y - k)^2 = r^2</mtext>
+                    </li>
+                    <li>
+                        <mtext>For an equation of a circle x^2 + y^2 + Dx + Ey + F = 0,</mtext>
+                        <mtext>centre = ( -D/2, -E/2 )</mtext>
+                        <mtext>radius = sqrt{ (D/2)^2 + (E/2)^2 - F }</mtext>
+                    </li>
+                    <li>
+                        <mtext>Real Circle: r > 0</mtext>
+                        <mtext>Point Circle: r = 0</mtext>
+                        <mtext>Imaginary Circle: r < 0</mtext>
+                    </li>
+                    <li>
+                        <mtext>*Equation of Tangent: Let y = mx + c. Sub y = mx + c into x^2 + y^2 + Dx + Ey + F
+                            = 0,
+                            find Δ = b^2 − 4ac.</mtext>
+                    </li>
+                    <li>
+                        <mtext>*Geometric Relationships:</mtext>
+                        <mtext>Collinear: A, B, C forms a straight line.</mtext>
+                        <mtext>Concyclic: A, B, C, D forms a circle.</mtext>
+                        <mtext>Perpendicular bisector: straight line passes through mid-point of AB and
+                            perpendicular to
+                            AB.</mtext>
+                        <mtext>Angle bisector: two straight lines pass through intersection of AB and CD, and
+                            divide
+                            angles equally.</mtext>
+                        <mtext>Parallel: slope of straight line = slope of AB.</mtext>
+                        <mtext>Perpendicular: (slope of line) × (slope of AB) = -1.</mtext>
+                </ol>
+                <h3>F.5 Arithmetic and Geometric Sequences</h3>
+                <ol>
+                    <li>
+                        <mtext>Arithmetic sequence (AS):</mtext>
+                    </li>
+                    <li>
+                        <mtext>a = first term, d = common difference, n = number of terms, l = last term</mtext>
+                    </li>
+                    <li>
+                        <mtext>General term: T(n) = a + (n - 1)d</mtext>
+                    </li>
+                    <li>
+                        <mtext>Sum: S(n) = n/2 [2a + (n - 1)d] or S(n) = n/2 (a + l)</mtext>
+                    </li>
+                    <li>
+                        <mtext>Geometric sequence (GS):</mtext>
+                    </li>
+                    <li>
+                        <mtext>a = first term, r = common ratio, n = no. of terms</mtext>
+                    </li>
+                    <li>
+                        <mtext>General term: T(n) = a r^{n-1}</mtext>
+                    </li>
+                    <li>
+                        <mtext>Sum: S(n) = [a(r^n - 1)]/(r - 1) or S(n) = [a(1 - r^n)]/(1 - r)</mtext>
+                    </li>
+                    <li>
+                        <mtext>If <math>
+                                <mo>-1</mo>
+                                <mi>
+                                    < r <</mi>
+                                        <mo>1</mo>
+                            </math>, sum to infinity: S(∞)=a/(1 - r)</mtext>
+                    </li>
+                </ol>
+                <h3>F.5 Compound Inequality</h3>
+                <ol>
+                    <li>
+                        <mtext>“And”: overlap， "Or": All</mtext>
+                    </li>
+                    <li>
+                        <mtext>a is positive：</mtext>
+                    </li>
+                    <li>
+                        <mtext>ax^2 + bx + c < 0， roots α < x < β</mtext>
+                    </li>
+                    <li>
+                        <mtext>ax^2 + bx + c ≤ 0， α ≤ x ≤ β</mtext>
+                    </li>
+                    <li>
+                        <mtext>ax^2 + bx + c > 0, x < α or x> β</mtext>
+                    </li>
+                    <li>
+                        <mtext>ax^2 + bx + c ≥ 0， x ≤ α or x ≥ β</mtext>
+                    </li>
+                </ol>
 
 
 
