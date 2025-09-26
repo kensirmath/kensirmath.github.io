@@ -1795,13 +1795,13 @@ function handleCalculatorKeyboard(e) {
     if (key === 'Enter') {
         calculateResult();
     } else if (key === '=') {
-        calculateResult();
         backspaceAtCursor()
+        calculateResult();
     } else if (key === 'Escape') {
         clearCalculator();
     } else if (key === '@' || key === 'q' || key === 'Q') {
-        clearCalculator();
         backspaceAtCursor()
+        clearCalculator();
     } else if (key === '%') {
         insertAtCursor('/100');
         backspaceAtCursor()
