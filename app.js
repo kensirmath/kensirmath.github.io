@@ -1763,7 +1763,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentPage && currentPage.id === 'scientific') {
             handleCalculatorKeyboard(e);
         }
-    },true);
+    }, true);
 
     // Add cursor support for calculator display
     const calcDisplay = document.getElementById('calc-display');
@@ -1781,27 +1781,27 @@ function handleCalculatorKeyboard(e) {
         if (/[0-9]/.test(key)) {
             insertAtCursor(key);
             e.stopImmediatePropagation()
-            // e.preventDefault();
+            e.preventDefault();
         } else if (['+', '-', '*', '/'].includes(key)) {
             insertAtCursor(key);
             e.stopImmediatePropagation()
-            // e.preventDefault();
+            e.preventDefault();
         } else if (key === '.') {
             insertAtCursor('.');
             e.stopImmediatePropagation()
-            // e.preventDefault();
+            e.preventDefault();
         } else if (key === '(' || key === ')') {
             insertAtCursor(key);
             e.stopImmediatePropagation()
-            // e.preventDefault();
+            e.preventDefault();
         } else if (key === 'Enter') {
             calculateResult();
             e.stopImmediatePropagation()
-            //            e.preventDefault();
+            e.preventDefault();
         } else if (key === 'Escape' || key === 'c' || key === 'C') {
             clearCalculator();
             e.stopImmediatePropagation()
-//            e.preventDefault();
+            e.preventDefault();
         }
     }
     if (key === 'Enter') {
@@ -1809,13 +1809,13 @@ function handleCalculatorKeyboard(e) {
     } else if (key === '=') {
         calculateResult();
         e.stopImmediatePropagation()
-        // e.preventDefault();
+        e.preventDefault();
     } else if (key === 'Escape') {
         clearCalculator();
     } else if (key === '@' || key === 'q' || key === 'Q') {
         clearCalculator();
         e.stopImmediatePropagation()
-        // e.preventDefault();
+        e.preventDefault();
     } else if (key === '%') {
         insertAtCursor('/100');
         backspaceAtCursor()
