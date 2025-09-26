@@ -1571,7 +1571,7 @@ function parseExpression(tokens) {
 
     if (peek()) {
         backspaceAtCursor()
-        //throw new Error(`意外的符號：${peek().value}`);
+        //        throw new Error(`意外的符號：${peek().value}`);
     }
 
     return result;
