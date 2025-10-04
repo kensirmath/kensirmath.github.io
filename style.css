@@ -760,7 +760,7 @@ body {
   display: block;
 }
 
-/* Main Menu Styles */
+/* Main  Styles */
 .app-title {
   text-align: center;
   margin-bottom: var(--space-32);
@@ -775,7 +775,7 @@ body {
 .menu-buttons {
   display: grid;
   gap: var(--space-24);
-  max-width: 700px;
+  max-width: 3000px;
   margin: 0 auto;
 }
 
