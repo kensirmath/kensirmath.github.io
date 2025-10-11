@@ -65,7 +65,7 @@
                 </button>
 
 
-                <button class="btn btn--primary menu-btn">
+                <button class="btn btn--primary menu-btn" onclick="showPage('formulas')">
                     <div class="btn-content">
                         <span class="btn-symbol">5**</span>
                         <span class="btn-title">Important Formulas</span>
@@ -74,8 +74,16 @@
                 </button>
 
 
-                <!--20250920.0612: make good use of AI to gen formulas in MathML language-->
-                <!--<math display="inline" style="font-size:12px;">
+            </div>
+        </div>
+
+        <!-- 5** Formulas-->
+        <div id="formulas" class="page">
+
+
+
+            <!--20250920.0612: make good use of AI to gen formulas in MathML language-->
+            <!--<math display="inline" style="font-size:12px;">
                     <mrow>
                         <mi>x</mi>
                         <mo>=</mo>
@@ -264,205 +272,265 @@
 
 
 
-                <!--20250922.1533 here-->
+            <!--20250922.1533 here-->
 
-                <h3>Quadratic Equations in One Unknown</h3>
+            <h3>Quadratic Equations in One Unknown</h3>
 
-                <p>For the quadratic equation <math display="inline" style="font-size:12px;">
-                        <msup>
-                            <mi>ax</mi>
+            <p>For the quadratic equation <math display="inline" style="font-size:12px;">
+                    <msup>
+                        <mi>ax</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <mi>bx</mi>
+                    <mo>+</mo>
+                    <mi>c</mi>
+                    <mo>=</mo>
+                    <mn>0</mn>
+                </math>, where <math display="inline" style="font-size:12px;">
+                    <mi>a</mi>
+                    <mo>≠</mo>
+                    <mn>0</mn>
+                </math>:</p>
+
+            <p>(a) <math display="inline" style="font-size:12px;">
+                    <mi>x</mi>
+                    <mo>=</mo>
+                    <mfrac>
+                        <mrow>
+                            <mo>-</mo>
+                            <mi>b</mi>
+                            <mo>±</mo>
+                            <msqrt>
+                                <mrow>
+                                    <msup>
+                                        <mi>b</mi>
+                                        <mn>2</mn>
+                                    </msup>
+                                    <mo>-</mo>
+                                    <mn>4</mn>
+                                    <mi>ac</mi>
+                                </mrow>
+                            </msqrt>
+                        </mrow>
+                        <mrow>
                             <mn>2</mn>
-                        </msup>
-                        <mo>+</mo>
-                        <mi>bx</mi>
-                        <mo>+</mo>
-                        <mi>c</mi>
-                        <mo>=</mo>
-                        <mn>0</mn>
-                    </math>, where <math display="inline" style="font-size:12px;">
-                        <mi>a</mi>
-                        <mo>≠</mo>
-                        <mn>0</mn>
-                    </math>:</p>
+                            <mi>a</mi>
+                        </mrow>
+                    </mfrac>
+                </math>
+            </p>
 
-                <p>(a) <math display="inline" style="font-size:12px;">
-                        <mi>x</mi>
-                        <mo>=</mo>
-                        <mfrac>
-                            <mrow>
-                                <mo>-</mo>
-                                <mi>b</mi>
-                                <mo>±</mo>
-                                <msqrt>
-                                    <mrow>
-                                        <msup>
-                                            <mi>b</mi>
-                                            <mn>2</mn>
-                                        </msup>
-                                        <mo>-</mo>
-                                        <mn>4</mn>
-                                        <mi>ac</mi>
-                                    </mrow>
-                                </msqrt>
-                            </mrow>
-                            <mrow>
-                                <mn>2</mn>
-                                <mi>a</mi>
-                            </mrow>
-                        </mfrac>
-                    </math>
-                </p>
-
-                <p>(b) Discriminant <math display="inline" style="font-size:12px;">
+            <p>(b) Discriminant <math display="inline" style="font-size:12px;">
+                    <mi>Δ</mi>
+                    <mo>=</mo>
+                    <msup>
+                        <mi>b</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>-</mo>
+                    <mn>4</mn>
+                    <mi>ac</mi>
+                </math>
+            </p>
+            <ul>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>Δ</mi>
+                        <mo>></mo>
+                        <mn>0</mn>
+                    </math> for the equation has 2 roots
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mi>Δ</mi>
                         <mo>=</mo>
-                        <msup>
-                            <mi>b</mi>
-                            <mn>2</mn>
-                        </msup>
-                        <mo>-</mo>
-                        <mn>4</mn>
-                        <mi>ac</mi>
-                    </math>
-                </p>
-                <ul>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>Δ</mi>
-                            <mo>></mo>
-                            <mn>0</mn>
-                        </math> for the equation has 2 roots
-                    </li>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>Δ</mi>
-                            <mo>=</mo>
-                            <mn>0</mn>
-                        </math> for the equation has only 1 root (or 2 equal roots)
-                    </li>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>Δ</mi>
-                            <mo>&lt;</mo>
-                            <mn>0</mn>
-                        </math> for the equation has no roots
-                    </li>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>Δ</mi>
-                            <mo>≥</mo>
-                            <mn>0</mn>
-                        </math> for the equation has root(s) (can be 1 or 2)
-                    </li>
-                </ul>
+                        <mn>0</mn>
+                    </math> for the equation has only 1 root (or 2 equal roots)
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>Δ</mi>
+                        <mo>&lt;</mo>
+                        <mn>0</mn>
+                    </math> for the equation has no roots
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>Δ</mi>
+                        <mo>≥</mo>
+                        <mn>0</mn>
+                    </math> for the equation has root(s) (can be 1 or 2)
+                </li>
+            </ul>
 
-                <p>(c)</p>
-                <ul>
-                    <li>(i) Sum of roots = <math display="inline" style="font-size:12px;">
-                            <mi>α</mi>
-                            <mo>+</mo>
-                            <mi>β</mi>
-                            <mo>=</mo>
-                            <mo>-</mo>
-                            <mfrac>
-                                <mi>b</mi>
-                                <mi>a</mi>
-                            </mfrac>
-                        </math>
-                    </li>
-                    <li>(ii) Product of roots = <math display="inline" style="font-size:12px;">
-                            <mi>αβ</mi>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mi>c</mi>
-                                <mi>a</mi>
-                            </mfrac>
-                        </math>
-                    </li>
-                </ul>
-
-                <p>Note: <math display="inline" style="font-size:12px;">
-                        <msup>
-                            <mi>α</mi>
-                            <mn>2</mn>
-                        </msup>
-                        <mo>+</mo>
-                        <msup>
-                            <mi>β</mi>
-                            <mn>2</mn>
-                        </msup>
-                        <mo>=</mo>
-                        <mo>(</mo>
+            <p>(c)</p>
+            <ul>
+                <li>(i) Sum of roots = <math display="inline" style="font-size:12px;">
                         <mi>α</mi>
                         <mo>+</mo>
                         <mi>β</mi>
-                        <mo>)</mo>
-                        <msup>
-                            <mrow />
-                            <mn>2</mn>
-                        </msup>
+                        <mo>=</mo>
                         <mo>-</mo>
-                        <mn>2</mn>
-                        <mi>αβ</mi>
+                        <mfrac>
+                            <mi>b</mi>
+                            <mi>a</mi>
+                        </mfrac>
                     </math>
-                </p>
+                </li>
+                <li>(ii) Product of roots = <math display="inline" style="font-size:12px;">
+                        <mi>αβ</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mi>c</mi>
+                            <mi>a</mi>
+                        </mfrac>
+                    </math>
+                </li>
+            </ul>
 
-                <p>New equation: <math display="inline" style="font-size:12px;">
-                        <msup>
-                            <mi>x</mi>
-                            <mn>2</mn>
-                        </msup>
-                        <mo>-</mo>
-                        <mo>(</mo>
-                        <mi>α'</mi>
-                        <mo>+</mo>
-                        <mi>β'</mi>
-                        <mo>)</mo>
+            <p>Note: <math display="inline" style="font-size:12px;">
+                    <msup>
+                        <mi>α</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <msup>
+                        <mi>β</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>=</mo>
+                    <mo>(</mo>
+                    <mi>α</mi>
+                    <mo>+</mo>
+                    <mi>β</mi>
+                    <mo>)</mo>
+                    <msup>
+                        <mrow />
+                        <mn>2</mn>
+                    </msup>
+                    <mo>-</mo>
+                    <mn>2</mn>
+                    <mi>αβ</mi>
+                </math>
+            </p>
+
+            <p>New equation: <math display="inline" style="font-size:12px;">
+                    <msup>
                         <mi>x</mi>
-                        <mo>+</mo>
-                        <mi>α'β'</mi>
+                        <mn>2</mn>
+                    </msup>
+                    <mo>-</mo>
+                    <mo>(</mo>
+                    <mi>α'</mi>
+                    <mo>+</mo>
+                    <mi>β'</mi>
+                    <mo>)</mo>
+                    <mi>x</mi>
+                    <mo>+</mo>
+                    <mi>α'β'</mi>
+                    <mo>=</mo>
+                    <mn>0</mn>
+                </math>
+            </p>
+
+            <h4>Quadratic Graph</h4>
+            <ul>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>a</mi>
+                        <mo>></mo>
+                        <mn>0</mn>
+                    </math>: open upwards, minimum
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>a</mi>
+                        <mo>&lt;</mo>
+                        <mn>0</mn>
+                    </math>: open downwards, maximum
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>c</mi>
+                    </math> = y-intercept = Sub <math display="inline" style="font-size:12px;">
+                        <mo>(</mo>
+                        <mn>0</mn>
+                        <mo>,</mo>
+                        <mi>y</mi>
+                        <mo>)</mo>
+                    </math>, that is <math display="inline" style="font-size:12px;">
+                        <mi>x</mi>
                         <mo>=</mo>
                         <mn>0</mn>
+                    </math>, find <math display="inline" style="font-size:12px;">
+                        <mi>y</mi>
                     </math>
-                </p>
+                </li>
+            </ul>
 
-                <h4>Quadratic Graph</h4>
-                <ul>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
+            <p>Vertex = <math display="inline" style="font-size:12px;">
+                    <mo>(</mo>
+                    <mo>-</mo>
+                    <mfrac>
+                        <mi>b</mi>
+                        <mrow>
+                            <mn>2</mn>
                             <mi>a</mi>
-                            <mo>></mo>
-                            <mn>0</mn>
-                        </math>: open upwards, minimum
-                    </li>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
+                        </mrow>
+                    </mfrac>
+                    <mo>,</mo>
+                    <mo>-</mo>
+                    <mfrac>
+                        <mrow>
+                            <msup>
+                                <mi>b</mi>
+                                <mn>2</mn>
+                            </msup>
+                            <mo>-</mo>
+                            <mn>4</mn>
+                            <mi>ac</mi>
+                        </mrow>
+                        <mrow>
+                            <mn>4</mn>
                             <mi>a</mi>
-                            <mo>&lt;</mo>
-                            <mn>0</mn>
-                        </math>: open downwards, maximum
-                    </li>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>c</mi>
-                        </math> = y-intercept = Sub <math display="inline" style="font-size:12px;">
-                            <mo>(</mo>
-                            <mn>0</mn>
-                            <mo>,</mo>
-                            <mi>y</mi>
-                            <mo>)</mo>
-                        </math>, that is <math display="inline" style="font-size:12px;">
-                            <mi>x</mi>
-                            <mo>=</mo>
-                            <mn>0</mn>
-                        </math>, find <math display="inline" style="font-size:12px;">
-                            <mi>y</mi>
-                        </math>
-                    </li>
-                </ul>
+                        </mrow>
+                    </mfrac>
+                    <mo>)</mo>
+                    <mo>=</mo>
+                    <mo>(</mo>
+                    <mi>h</mi>
+                    <mo>,</mo>
+                    <mi>k</mi>
+                    <mo>)</mo>
+                </math>
+            </p>
 
-                <p>Vertex = <math display="inline" style="font-size:12px;">
-                        <mo>(</mo>
+            <p>If <math display="inline" style="font-size:12px;">
+                    <mi>y</mi>
+                    <mo>=</mo>
+                    <mi>f</mi>
+                    <mo>(</mo>
+                    <mi>x</mi>
+                    <mo>)</mo>
+                    <mo>=</mo>
+                    <mi>a</mi>
+                    <mo>(</mo>
+                    <mi>x</mi>
+                    <mo>-</mo>
+                    <mi>h</mi>
+                    <mo>)</mo>
+                    <msup>
+                        <mrow />
+                        <mn>2</mn>
+                    </msup>
+                    <mo>+</mo>
+                    <mi>k</mi>
+                </math>:</p>
+            <ul>
+                <li>Axis of symmetry: <math display="inline" style="font-size:12px;">
+                        <mi>x</mi>
+                        <mo>=</mo>
                         <mo>-</mo>
                         <mfrac>
                             <mi>b</mi>
@@ -471,7 +539,12 @@
                                 <mi>a</mi>
                             </mrow>
                         </mfrac>
-                        <mo>,</mo>
+                    </math> [or <math display="inline" style="font-size:12px;">
+                        <mi>x</mi>
+                        <mo>=</mo>
+                        <mi>h</mi>
+                    </math>]</li>
+                <li>Optimum/Maximum/Minimum = <math display="inline" style="font-size:12px;">
                         <mo>-</mo>
                         <mfrac>
                             <mrow>
@@ -488,1666 +561,1619 @@
                                 <mi>a</mi>
                             </mrow>
                         </mfrac>
-                        <mo>)</mo>
-                        <mo>=</mo>
-                        <mo>(</mo>
-                        <mi>h</mi>
-                        <mo>,</mo>
+                    </math> [or <math display="inline" style="font-size:12px;">
                         <mi>k</mi>
-                        <mo>)</mo>
-                    </math>
-                </p>
+                    </math>]</li>
+            </ul>
 
-                <p>If <math display="inline" style="font-size:12px;">
-                        <mi>y</mi>
-                        <mo>=</mo>
-                        <mi>f</mi>
+            <p>Other:</p>
+            <ol>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>x</mi>
+                    </math>-intercept = Sub <math display="inline" style="font-size:12px;">
                         <mo>(</mo>
                         <mi>x</mi>
+                        <mo>,</mo>
+                        <mn>0</mn>
                         <mo>)</mo>
+                    </math>, that is <math display="inline" style="font-size:12px;">
+                        <mi>y</mi>
+                        <mo>=</mo>
+                        <mn>0</mn>
+                    </math>, find <math display="inline" style="font-size:12px;">
+                        <mi>x</mi>
+                    </math>
+                </li>
+                <li>Completing square: <math display="inline" style="font-size:12px;">
+                        <mi>y</mi>
+                        <mo>=</mo>
+                        <mi>a</mi>
+                        <msup>
+                            <mi>x</mi>
+                            <mn>2</mn>
+                        </msup>
+                        <mo>+</mo>
+                        <mi>bx</mi>
+                        <mo>+</mo>
+                        <mi>c</mi>
                         <mo>=</mo>
                         <mi>a</mi>
                         <mo>(</mo>
                         <mi>x</mi>
-                        <mo>-</mo>
-                        <mi>h</mi>
+                        <mo>+</mo>
+                        <mfrac>
+                            <mi>b</mi>
+                            <mrow>
+                                <mn>2</mn>
+                                <mi>a</mi>
+                            </mrow>
+                        </mfrac>
                         <mo>)</mo>
                         <msup>
                             <mrow />
                             <mn>2</mn>
                         </msup>
                         <mo>+</mo>
-                        <mi>k</mi>
-                    </math>:</p>
-                <ul>
-                    <li>Axis of symmetry: <math display="inline" style="font-size:12px;">
-                            <mi>x</mi>
-                            <mo>=</mo>
-                            <mo>-</mo>
-                            <mfrac>
+                        <mi>c</mi>
+                        <mo>-</mo>
+                        <mfrac>
+                            <msup>
                                 <mi>b</mi>
-                                <mrow>
-                                    <mn>2</mn>
-                                    <mi>a</mi>
-                                </mrow>
-                            </mfrac>
-                        </math> [or <math display="inline" style="font-size:12px;">
-                            <mi>x</mi>
-                            <mo>=</mo>
-                            <mi>h</mi>
-                        </math>]</li>
-                    <li>Optimum/Maximum/Minimum = <math display="inline" style="font-size:12px;">
-                            <mo>-</mo>
-                            <mfrac>
-                                <mrow>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>-</mo>
-                                    <mn>4</mn>
-                                    <mi>ac</mi>
-                                </mrow>
-                                <mrow>
-                                    <mn>4</mn>
-                                    <mi>a</mi>
-                                </mrow>
-                            </mfrac>
-                        </math> [or <math display="inline" style="font-size:12px;">
-                            <mi>k</mi>
-                        </math>]</li>
-                </ul>
+                                <mn>2</mn>
+                            </msup>
+                            <mrow>
+                                <mn>4</mn>
+                                <mi>a</mi>
+                            </mrow>
+                        </mfrac>
+                    </math>
+                </li>
+                <li>Important Skill: Write down all coordinates. Sub those points lying on the graph into the
+                    equations one by one.</li>
+            </ol>
 
-                <p>Other:</p>
-                <ol>
-                    <li>
-                        <math display="inline" style="font-size:12px;">
+            <h3>Equation of Straight Lines</h3>
+            <p>Find slope first.</p>
+
+            <ol>
+                <li>(a) For the line passing through a point <math display="inline" style="font-size:12px;">
+                        <mo>(</mo>
+                        <msub>
                             <mi>x</mi>
-                        </math>-intercept = Sub <math display="inline" style="font-size:12px;">
-                            <mo>(</mo>
-                            <mi>x</mi>
-                            <mo>,</mo>
-                            <mn>0</mn>
-                            <mo>)</mo>
-                        </math>, that is <math display="inline" style="font-size:12px;">
+                            <mn>1</mn>
+                        </msub>
+                        <mo>,</mo>
+                        <msub>
                             <mi>y</mi>
-                            <mo>=</mo>
-                            <mn>0</mn>
-                        </math>, find <math display="inline" style="font-size:12px;">
-                            <mi>x</mi>
-                        </math>
-                    </li>
-                    <li>Completing square: <math display="inline" style="font-size:12px;">
+                            <mn>1</mn>
+                        </msub>
+                        <mo>)</mo>
+                    </math> with slope <math display="inline" style="font-size:12px;">
+                        <mi>m</mi>
+                    </math>:<br />
+                    equation of the straight line: <math display="inline" style="font-size:12px;">
+                        <mi>y</mi>
+                        <mo>-</mo>
+                        <msub>
                             <mi>y</mi>
-                            <mo>=</mo>
-                            <mi>a</mi>
-                            <msup>
-                                <mi>x</mi>
-                                <mn>2</mn>
-                            </msup>
-                            <mo>+</mo>
-                            <mi>bx</mi>
-                            <mo>+</mo>
-                            <mi>c</mi>
-                            <mo>=</mo>
-                            <mi>a</mi>
-                            <mo>(</mo>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>=</mo>
+                        <mi>m</mi>
+                        <mo>(</mo>
+                        <mi>x</mi>
+                        <mo>-</mo>
+                        <msub>
                             <mi>x</mi>
-                            <mo>+</mo>
+                            <mn>1</mn>
+                        </msub>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(b) <math display="inline" style="font-size:12px;">
+                        <mi>y</mi>
+                        <mo>=</mo>
+                        <mi>mx</mi>
+                        <mo>+</mo>
+                        <mi>c</mi>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mi>m</mi>
+                    </math> is the slope, <math display="inline" style="font-size:12px;">
+                        <mi>c</mi>
+                    </math> is the y-intercept</li>
+
+                <li>(c) For an equation of the straight line <math display="inline" style="font-size:12px;">
+                        <mi>Ax</mi>
+                        <mo>+</mo>
+                        <mi>By</mi>
+                        <mo>+</mo>
+                        <mi>C</mi>
+                        <mo>=</mo>
+                        <mn>0</mn>
+                    </math>:
+                    <ul>
+                        <li>slope = <math display="inline" style="font-size:12px;">
+                                <mo>-</mo>
+                                <mfrac>
+                                    <mi>A</mi>
+                                    <mi>B</mi>
+                                </mfrac>
+                            </math>
+                        </li>
+                        <li>y-intercept = <math display="inline" style="font-size:12px;">
+                                <mo>-</mo>
+                                <mfrac>
+                                    <mi>C</mi>
+                                    <mi>B</mi>
+                                </mfrac>
+                            </math>
+                        </li>
+                        <li>x-intercept = <math display="inline" style="font-size:12px;">
+                                <mo>-</mo>
+                                <mfrac>
+                                    <mi>C</mi>
+                                    <mi>A</mi>
+                                </mfrac>
+                            </math>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p>Find intersection point: Solve equations <math display="inline" style="font-size:12px;">
+                    <msub>
+                        <mi>L</mi>
+                        <mn>1</mn>
+                    </msub>
+                </math> and <math display="inline" style="font-size:12px;">
+                    <msub>
+                        <mi>L</mi>
+                        <mn>2</mn>
+                    </msub>
+                </math>.</p>
+
+            <h3>More about Polynomials</h3>
+
+            <ol>
+                <li>(a) Division algorithm: Dividend = Divisor × Quotient + Remainder<br />
+                    e.g., <math display="inline" style="font-size:12px;">
+                        <mn>7</mn>
+                        <mo>=</mo>
+                        <mn>2</mn>
+                        <mo>×</mo>
+                        <mn>3</mn>
+                        <mo>+</mo>
+                        <mn>1</mn>
+                    </math><br />
+                    Let remainder be <math display="inline" style="font-size:12px;">
+                        <mi>R</mi>
+                    </math> [constant] or <math display="inline" style="font-size:12px;">
+                        <mi>Ax</mi>
+                        <mo>+</mo>
+                        <mi>B</mi>
+                    </math> [linear] or <math display="inline" style="font-size:12px;">
+                        <mi>A</mi>
+                        <msup>
+                            <mi>x</mi>
+                            <mn>2</mn>
+                        </msup>
+                        <mo>+</mo>
+                        <mi>Bx</mi>
+                        <mo>+</mo>
+                        <mi>C</mi>
+                    </math> [Quadratic]</li>
+
+                <li>(b) A polynomial <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>x</mi>
+                        <mo>)</mo>
+                    </math> is divided by <math display="inline" style="font-size:12px;">
+                        <mi>ax</mi>
+                        <mo>-</mo>
+                        <mi>b</mi>
+                    </math>, the remainder <math display="inline" style="font-size:12px;">
+                        <mi>R</mi>
+                    </math> is <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mfrac>
+                            <mi>b</mi>
+                            <mi>a</mi>
+                        </mfrac>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(c) Long Division</li>
+            </ol>
+
+            <h3>Exponential and Logarithmic Functions</h3>
+
+            <ol>
+                <li>(a) <math display="inline" style="font-size:12px;">
+                        <msup>
+                            <mi>a</mi>
                             <mfrac>
-                                <mi>b</mi>
-                                <mrow>
-                                    <mn>2</mn>
-                                    <mi>a</mi>
-                                </mrow>
+                                <mi>m</mi>
+                                <mi>n</mi>
                             </mfrac>
-                            <mo>)</mo>
-                            <msup>
-                                <mrow />
-                                <mn>2</mn>
-                            </msup>
-                            <mo>+</mo>
-                            <mi>c</mi>
-                            <mo>-</mo>
-                            <mfrac>
+                        </msup>
+                        <mo>=</mo>
+                        <mroot>
+                            <mrow>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                            </mrow>
+                            <mi>n</mi>
+                        </mroot>
+                    </math>, where <math display="inline" style="font-size:12px;">
+                        <mi>m</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>n</mi>
+                    </math> are integers and <math display="inline" style="font-size:12px;">
+                        <mi>n</mi>
+                        <mo>></mo>
+                        <mn>0</mn>
+                    </math>
+                </li>
+
+                <li>(b) Laws of indices:
+                    <ol>
+                        <li>(i) <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>×</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mi>m</mi>
+                                        <mo>+</mo>
+                                        <mi>n</mi>
+                                    </mrow>
+                                </msup>
+                            </math>
+                        </li>
+                        <li>(ii) <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>÷</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mi>m</mi>
+                                        <mo>-</mo>
+                                        <mi>n</mi>
+                                    </mrow>
+                                </msup>
+                            </math>
+                        </li>
+                        <li>(iii) <math display="inline" style="font-size:12px;">
+                                <mo>(</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>)</mo>
+                                <msup>
+                                    <mrow />
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mi>mn</mi>
+                                    </mrow>
+                                </msup>
+                            </math>
+                        </li>
+                        <li>(iv) <math display="inline" style="font-size:12px;">
+                                <mo>(</mo>
+                                <mi>ab</mi>
+                                <mo>)</mo>
+                                <msup>
+                                    <mrow />
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
                                 <msup>
                                     <mi>b</mi>
+                                    <mi>m</mi>
+                                </msup>
+                            </math>
+                        </li>
+                        <li>(v) <math display="inline" style="font-size:12px;">
+                                <mo>(</mo>
+                                <mfrac>
+                                    <mi>a</mi>
+                                    <mi>b</mi>
+                                </mfrac>
+                                <mo>)</mo>
+                                <msup>
+                                    <mrow />
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <msup>
+                                        <mi>a</mi>
+                                        <mi>m</mi>
+                                    </msup>
+                                    <msup>
+                                        <mi>b</mi>
+                                        <mi>m</mi>
+                                    </msup>
+                                </mfrac>
+                            </math>
+                        </li>
+                    </ol>
+
+                    5 methods to solve:
+                    <ol>
+                        <li>
+                            <math display="inline" style="font-size:12px;">
+                                <mo>log</mo>
+                                <mi>x</mi>
+                                <mo>=</mo>
+                                <mo>log</mo>
+                                <mi>A</mi>
+                            </math> → <math display="inline" style="font-size:12px;">
+                                <mi>x</mi>
+                                <mo>=</mo>
+                                <mi>A</mi>
+                            </math>
+                        </li>
+                        <li>
+                            <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>x</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math> → <math display="inline" style="font-size:12px;">
+                                <mi>x</mi>
+                                <mo>log</mo>
+                                <mi>A</mi>
+                                <mo>=</mo>
+                                <mo>log</mo>
+                                <mi>B</mi>
+                            </math>
+                        </li>
+                        <li>
+                            <math display="inline" style="font-size:12px;">
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>A</mi>
+                                </msub>
+                                <mi>x</mi>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math> → <math display="inline" style="font-size:12px;">
+                                <mi>x</mi>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>B</mi>
+                                </msup>
+                            </math>
+                        </li>
+                        <li>
+                            <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>A</mi>
+                                    <mrow>
+                                        <mi>x</mi>
+                                        <mo>+</mo>
+                                        <mn>1</mn>
+                                    </mrow>
+                                </msup>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>x</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math> → Factorize: <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>x</mi>
+                                </msup>
+                                <mo>(</mo>
+                                <mi>A</mi>
+                                <mo>+</mo>
+                                <mn>1</mn>
+                                <mo>)</mo>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math>
+                        </li>
+                        <li>
+                            <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>A</mi>
+                                    <mrow>
+                                        <mn>2</mn>
+                                        <mi>x</mi>
+                                        <mo>+</mo>
+                                        <mn>1</mn>
+                                    </mrow>
+                                </msup>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>x</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math> → Let <math display="inline" style="font-size:12px;">
+                                <mi>y</mi>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>A</mi>
+                                    <mi>x</mi>
+                                </msup>
+                            </math>: <math display="inline" style="font-size:12px;">
+                                <mi>A</mi>
+                                <msup>
+                                    <mi>y</mi>
                                     <mn>2</mn>
                                 </msup>
-                                <mrow>
-                                    <mn>4</mn>
-                                    <mi>a</mi>
-                                </mrow>
-                            </mfrac>
-                        </math>
-                    </li>
-                    <li>Important Skill: Write down all coordinates. Sub those points lying on the graph into the
-                        equations one by one.</li>
-                </ol>
-
-                <h3>Equation of Straight Lines</h3>
-                <p>Find slope first.</p>
-
-                <ol>
-                    <li>(a) For the line passing through a point <math display="inline" style="font-size:12px;">
-                            <mo>(</mo>
-                            <msub>
-                                <mi>x</mi>
-                                <mn>1</mn>
-                            </msub>
-                            <mo>,</mo>
-                            <msub>
+                                <mo>+</mo>
                                 <mi>y</mi>
-                                <mn>1</mn>
-                            </msub>
-                            <mo>)</mo>
-                        </math> with slope <math display="inline" style="font-size:12px;">
-                            <mi>m</mi>
-                        </math>:<br />
-                        equation of the straight line: <math display="inline" style="font-size:12px;">
-                            <mi>y</mi>
-                            <mo>-</mo>
-                            <msub>
-                                <mi>y</mi>
-                                <mn>1</mn>
-                            </msub>
-                            <mo>=</mo>
-                            <mi>m</mi>
-                            <mo>(</mo>
-                            <mi>x</mi>
-                            <mo>-</mo>
-                            <msub>
-                                <mi>x</mi>
-                                <mn>1</mn>
-                            </msub>
-                            <mo>)</mo>
-                        </math>
-                    </li>
+                                <mo>=</mo>
+                                <mi>B</mi>
+                            </math>
+                        </li>
+                    </ol>
+                </li>
 
-                    <li>(b) <math display="inline" style="font-size:12px;">
-                            <mi>y</mi>
-                            <mo>=</mo>
-                            <mi>mx</mi>
-                            <mo>+</mo>
-                            <mi>c</mi>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mi>m</mi>
-                        </math> is the slope, <math display="inline" style="font-size:12px;">
-                            <mi>c</mi>
-                        </math> is the y-intercept</li>
-
-                    <li>(c) For an equation of the straight line <math display="inline" style="font-size:12px;">
-                            <mi>Ax</mi>
-                            <mo>+</mo>
-                            <mi>By</mi>
-                            <mo>+</mo>
-                            <mi>C</mi>
-                            <mo>=</mo>
-                            <mn>0</mn>
-                        </math>:
-                        <ul>
-                            <li>slope = <math display="inline" style="font-size:12px;">
-                                    <mo>-</mo>
-                                    <mfrac>
-                                        <mi>A</mi>
-                                        <mi>B</mi>
-                                    </mfrac>
-                                </math>
-                            </li>
-                            <li>y-intercept = <math display="inline" style="font-size:12px;">
-                                    <mo>-</mo>
-                                    <mfrac>
-                                        <mi>C</mi>
-                                        <mi>B</mi>
-                                    </mfrac>
-                                </math>
-                            </li>
-                            <li>x-intercept = <math display="inline" style="font-size:12px;">
-                                    <mo>-</mo>
-                                    <mfrac>
-                                        <mi>C</mi>
-                                        <mi>A</mi>
-                                    </mfrac>
-                                </math>
-                            </li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <p>Find intersection point: Solve equations <math display="inline" style="font-size:12px;">
-                        <msub>
-                            <mi>L</mi>
-                            <mn>1</mn>
-                        </msub>
+                <li>(c) For <math display="inline" style="font-size:12px;">
+                        <mi>M</mi>
+                        <mo>,</mo>
+                        <mi>N</mi>
+                        <mo>></mo>
+                        <mn>0</mn>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mi>a</mi>
+                        <mo>></mo>
+                        <mn>0</mn>
                     </math> and <math display="inline" style="font-size:12px;">
-                        <msub>
-                            <mi>L</mi>
-                            <mn>2</mn>
-                        </msub>
-                    </math>.</p>
-
-                <h3>More about Polynomials</h3>
-
-                <ol>
-                    <li>(a) Division algorithm: Dividend = Divisor × Quotient + Remainder<br />
-                        e.g., <math display="inline" style="font-size:12px;">
-                            <mn>7</mn>
-                            <mo>=</mo>
-                            <mn>2</mn>
-                            <mo>×</mo>
-                            <mn>3</mn>
-                            <mo>+</mo>
-                            <mn>1</mn>
-                        </math><br />
-                        Let remainder be <math display="inline" style="font-size:12px;">
-                            <mi>R</mi>
-                        </math> [constant] or <math display="inline" style="font-size:12px;">
-                            <mi>Ax</mi>
-                            <mo>+</mo>
-                            <mi>B</mi>
-                        </math> [linear] or <math display="inline" style="font-size:12px;">
-                            <mi>A</mi>
-                            <msup>
-                                <mi>x</mi>
-                                <mn>2</mn>
-                            </msup>
-                            <mo>+</mo>
-                            <mi>Bx</mi>
-                            <mo>+</mo>
-                            <mi>C</mi>
-                        </math> [Quadratic]</li>
-
-                    <li>(b) A polynomial <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>x</mi>
-                            <mo>)</mo>
-                        </math> is divided by <math display="inline" style="font-size:12px;">
-                            <mi>ax</mi>
-                            <mo>-</mo>
-                            <mi>b</mi>
-                        </math>, the remainder <math display="inline" style="font-size:12px;">
-                            <mi>R</mi>
-                        </math> is <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mfrac>
-                                <mi>b</mi>
-                                <mi>a</mi>
-                            </mfrac>
-                            <mo>)</mo>
-                        </math>
-                    </li>
-
-                    <li>(c) Long Division</li>
-                </ol>
-
-                <h3>Exponential and Logarithmic Functions</h3>
-
-                <ol>
-                    <li>(a) <math display="inline" style="font-size:12px;">
-                            <msup>
-                                <mi>a</mi>
-                                <mfrac>
-                                    <mi>m</mi>
-                                    <mi>n</mi>
-                                </mfrac>
-                            </msup>
-                            <mo>=</mo>
-                            <mroot>
-                                <mrow>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                </mrow>
-                                <mi>n</mi>
-                            </mroot>
-                        </math>, where <math display="inline" style="font-size:12px;">
-                            <mi>m</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>n</mi>
-                        </math> are integers and <math display="inline" style="font-size:12px;">
-                            <mi>n</mi>
-                            <mo>></mo>
-                            <mn>0</mn>
-                        </math>
-                    </li>
-
-                    <li>(b) Laws of indices:
-                        <ol>
-                            <li>(i) <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>×</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>m</mi>
-                                            <mo>+</mo>
-                                            <mi>n</mi>
-                                        </mrow>
-                                    </msup>
-                                </math>
-                            </li>
-                            <li>(ii) <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>÷</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>m</mi>
-                                            <mo>-</mo>
-                                            <mi>n</mi>
-                                        </mrow>
-                                    </msup>
-                                </math>
-                            </li>
-                            <li>(iii) <math display="inline" style="font-size:12px;">
-                                    <mo>(</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>)</mo>
-                                    <msup>
-                                        <mrow />
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>mn</mi>
-                                        </mrow>
-                                    </msup>
-                                </math>
-                            </li>
-                            <li>(iv) <math display="inline" style="font-size:12px;">
-                                    <mo>(</mo>
-                                    <mi>ab</mi>
-                                    <mo>)</mo>
-                                    <msup>
-                                        <mrow />
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                </math>
-                            </li>
-                            <li>(v) <math display="inline" style="font-size:12px;">
-                                    <mo>(</mo>
-                                    <mfrac>
-                                        <mi>a</mi>
-                                        <mi>b</mi>
-                                    </mfrac>
-                                    <mo>)</mo>
-                                    <msup>
-                                        <mrow />
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <msup>
-                                            <mi>a</mi>
-                                            <mi>m</mi>
-                                        </msup>
-                                        <msup>
-                                            <mi>b</mi>
-                                            <mi>m</mi>
-                                        </msup>
-                                    </mfrac>
-                                </math>
-                            </li>
-                        </ol>
-
-                        5 methods to solve:
-                        <ol>
-                            <li>
-                                <math display="inline" style="font-size:12px;">
-                                    <mo>log</mo>
-                                    <mi>x</mi>
-                                    <mo>=</mo>
-                                    <mo>log</mo>
-                                    <mi>A</mi>
-                                </math> → <math display="inline" style="font-size:12px;">
-                                    <mi>x</mi>
-                                    <mo>=</mo>
-                                    <mi>A</mi>
-                                </math>
-                            </li>
-                            <li>
-                                <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>x</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math> → <math display="inline" style="font-size:12px;">
-                                    <mi>x</mi>
-                                    <mo>log</mo>
-                                    <mi>A</mi>
-                                    <mo>=</mo>
-                                    <mo>log</mo>
-                                    <mi>B</mi>
-                                </math>
-                            </li>
-                            <li>
-                                <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>A</mi>
-                                    </msub>
-                                    <mi>x</mi>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math> → <math display="inline" style="font-size:12px;">
-                                    <mi>x</mi>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>B</mi>
-                                    </msup>
-                                </math>
-                            </li>
-                            <li>
-                                <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mrow>
-                                            <mi>x</mi>
-                                            <mo>+</mo>
-                                            <mn>1</mn>
-                                        </mrow>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>x</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math> → Factorize: <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>x</mi>
-                                    </msup>
-                                    <mo>(</mo>
-                                    <mi>A</mi>
-                                    <mo>+</mo>
-                                    <mn>1</mn>
-                                    <mo>)</mo>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math>
-                            </li>
-                            <li>
-                                <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mrow>
-                                            <mn>2</mn>
-                                            <mi>x</mi>
-                                            <mo>+</mo>
-                                            <mn>1</mn>
-                                        </mrow>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>x</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math> → Let <math display="inline" style="font-size:12px;">
-                                    <mi>y</mi>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>A</mi>
-                                        <mi>x</mi>
-                                    </msup>
-                                </math>: <math display="inline" style="font-size:12px;">
-                                    <mi>A</mi>
-                                    <msup>
-                                        <mi>y</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <mi>y</mi>
-                                    <mo>=</mo>
-                                    <mi>B</mi>
-                                </math>
-                            </li>
-                        </ol>
-                    </li>
-
-                    <li>(c) For <math display="inline" style="font-size:12px;">
-                            <mi>M</mi>
-                            <mo>,</mo>
-                            <mi>N</mi>
-                            <mo>></mo>
-                            <mn>0</mn>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mi>a</mi>
-                            <mo>></mo>
-                            <mn>0</mn>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>a</mi>
-                            <mo>≠</mo>
-                            <mn>1</mn>
-                        </math>:
-                        <ol>
-                            <li>(i) <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mo>(</mo>
-                                    <mi>MN</mi>
-                                    <mo>)</mo>
-                                    <mo>=</mo>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>M</mi>
-                                    <mo>+</mo>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>N</mi>
-                                </math>
-                            </li>
-                            <li>(ii) <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mo>(</mo>
-                                    <mfrac>
-                                        <mi>M</mi>
-                                        <mi>N</mi>
-                                    </mfrac>
-                                    <mo>)</mo>
-                                    <mo>=</mo>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>M</mi>
-                                    <mo>-</mo>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>N</mi>
-                                </math>
-                            </li>
-                            <li>(iii) <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mo>(</mo>
-                                    <msup>
-                                        <mi>M</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>)</mo>
-                                    <mo>=</mo>
-                                    <mi>n</mi>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>M</mi>
-                                </math>
-                            </li>
-                            <li>(iv) <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mn>1</mn>
-                                    <mo>=</mo>
-                                    <mn>0</mn>
-                                </math>
-                            </li>
-                            <li>(v) <math display="inline" style="font-size:12px;">
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>a</mi>
-                                    </msub>
-                                    <mi>a</mi>
-                                    <mo>=</mo>
-                                    <mn>1</mn>
-                                </math>
-                            </li>
-                        </ol>
-
-                        [Change Base] <math display="inline" style="font-size:12px;">
-                            <msub>
-                                <mo>log</mo>
-                                <mi>a</mi>
-                            </msub>
-                            <mi>b</mi>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mrow>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>c</mi>
-                                    </msub>
-                                    <mi>b</mi>
-                                </mrow>
-                                <mrow>
-                                    <msub>
-                                        <mo>log</mo>
-                                        <mi>c</mi>
-                                    </msub>
-                                    <mi>a</mi>
-                                </mrow>
-                            </mfrac>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mrow>
-                                    <mo>log</mo>
-                                    <mi>b</mi>
-                                </mrow>
-                                <mrow>
-                                    <mo>log</mo>
-                                    <mi>a</mi>
-                                </mrow>
-                            </mfrac>
-                        </math>
-                    </li>
-
-                    <li>(d) <math display="inline" style="font-size:12px;">
-                            <mi>L</mi>
-                            <mo>=</mo>
-                            <msub>
-                                <mo>log</mo>
-                                <mn>10</mn>
-                            </msub>
-                            <mo>(</mo>
-                            <mfrac>
-                                <mi>I</mi>
+                        <mi>a</mi>
+                        <mo>≠</mo>
+                        <mn>1</mn>
+                    </math>:
+                    <ol>
+                        <li>(i) <math display="inline" style="font-size:12px;">
                                 <msub>
-                                    <mi>I</mi>
-                                    <mn>0</mn>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
                                 </msub>
-                            </mfrac>
-                            <mo>)</mo>
-                        </math>, where <math display="inline" style="font-size:12px;">
+                                <mo>(</mo>
+                                <mi>MN</mi>
+                                <mo>)</mo>
+                                <mo>=</mo>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>M</mi>
+                                <mo>+</mo>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>N</mi>
+                            </math>
+                        </li>
+                        <li>(ii) <math display="inline" style="font-size:12px;">
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mo>(</mo>
+                                <mfrac>
+                                    <mi>M</mi>
+                                    <mi>N</mi>
+                                </mfrac>
+                                <mo>)</mo>
+                                <mo>=</mo>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>M</mi>
+                                <mo>-</mo>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>N</mi>
+                            </math>
+                        </li>
+                        <li>(iii) <math display="inline" style="font-size:12px;">
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mo>(</mo>
+                                <msup>
+                                    <mi>M</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>)</mo>
+                                <mo>=</mo>
+                                <mi>n</mi>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>M</mi>
+                            </math>
+                        </li>
+                        <li>(iv) <math display="inline" style="font-size:12px;">
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mn>1</mn>
+                                <mo>=</mo>
+                                <mn>0</mn>
+                            </math>
+                        </li>
+                        <li>(v) <math display="inline" style="font-size:12px;">
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>a</mi>
+                                </msub>
+                                <mi>a</mi>
+                                <mo>=</mo>
+                                <mn>1</mn>
+                            </math>
+                        </li>
+                    </ol>
+
+                    [Change Base] <math display="inline" style="font-size:12px;">
+                        <msub>
+                            <mo>log</mo>
+                            <mi>a</mi>
+                        </msub>
+                        <mi>b</mi>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>c</mi>
+                                </msub>
+                                <mi>b</mi>
+                            </mrow>
+                            <mrow>
+                                <msub>
+                                    <mo>log</mo>
+                                    <mi>c</mi>
+                                </msub>
+                                <mi>a</mi>
+                            </mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mo>log</mo>
+                                <mi>b</mi>
+                            </mrow>
+                            <mrow>
+                                <mo>log</mo>
+                                <mi>a</mi>
+                            </mrow>
+                        </mfrac>
+                    </math>
+                </li>
+
+                <li>(d) <math display="inline" style="font-size:12px;">
+                        <mi>L</mi>
+                        <mo>=</mo>
+                        <msub>
+                            <mo>log</mo>
+                            <mn>10</mn>
+                        </msub>
+                        <mo>(</mo>
+                        <mfrac>
                             <mi>I</mi>
-                        </math> is the intensity of sound and <math display="inline" style="font-size:12px;">
                             <msub>
                                 <mi>I</mi>
                                 <mn>0</mn>
                             </msub>
-                        </math> is the minimum audible sound intensity</li>
-
-                    <li>(e) <math display="inline" style="font-size:12px;">
-                            <mo>log</mo>
-                            <mi>E</mi>
-                            <mo>=</mo>
-                            <mn>4.8</mn>
-                            <mo>+</mo>
-                            <mn>1.5</mn>
-                            <mi>R</mi>
-                        </math>, where <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> is the energy released (in joules (J)) from an earthquake</li>
-                </ol>
-
-                <h3>More about Trigonometry</h3>
-
-                <ol>
-                    <li>(a) Trigonometric identities:
-                        <ol>
-                            <li>(i) <math display="inline" style="font-size:12px;">
-                                    <mn>90</mn>
-                                    <mo>°</mo>
-                                </math>, <math display="inline" style="font-size:12px;">
-                                    <mn>270</mn>
-                                    <mo>°</mo>
-                                </math> changed: sin ↔ cos, cos ↔ sin, tan ↔ 1/tan</li>
-                            <li>(ii) <math display="inline" style="font-size:12px;">
-                                    <mn>0</mn>
-                                    <mo>°</mo>
-                                </math>, <math display="inline" style="font-size:12px;">
-                                    <mn>180</mn>
-                                    <mo>°</mo>
-                                </math>, <math display="inline" style="font-size:12px;">
-                                    <mn>360</mn>
-                                    <mo>°</mo>
-                                </math> unchanged: sin ↔ sin, cos ↔ cos, tan ↔ tan</li>
-                        </ol>
-                    </li>
-
-                    <li>(b)
-                        <ol>
-                            <li>(i) area of <math display="inline" style="font-size:12px;">
-                                    <mo>△</mo>
-                                    <mi>ABC</mi>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <mn>2</mn>
-                                    </mfrac>
-                                    <mi>ab</mi>
-                                    <mo>sin</mo>
-                                    <mi>C</mi>
-                                </math>
-                            </li>
-                            <li>(ii) Heron's Formula: area of <math display="inline" style="font-size:12px;">
-                                    <mo>△</mo>
-                                    <mi>ABC</mi>
-                                    <mo>=</mo>
-                                    <msqrt>
-                                        <mrow>
-                                            <mi>s</mi>
-                                            <mo>(</mo>
-                                            <mi>s</mi>
-                                            <mo>-</mo>
-                                            <mi>a</mi>
-                                            <mo>)</mo>
-                                            <mo>(</mo>
-                                            <mi>s</mi>
-                                            <mo>-</mo>
-                                            <mi>b</mi>
-                                            <mo>)</mo>
-                                            <mo>(</mo>
-                                            <mi>s</mi>
-                                            <mo>-</mo>
-                                            <mi>c</mi>
-                                            <mo>)</mo>
-                                        </mrow>
-                                    </msqrt>
-                                </math>, where <math display="inline" style="font-size:12px;">
-                                    <mi>s</mi>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <mn>2</mn>
-                                    </mfrac>
-                                    <mo>(</mo>
-                                    <mi>a</mi>
-                                    <mo>+</mo>
-                                    <mi>b</mi>
-                                    <mo>+</mo>
-                                    <mi>c</mi>
-                                    <mo>)</mo>
-                                </math>
-                            </li>
-                            <li>(iii) Sine Formula: <math display="inline" style="font-size:12px;">
-                                    <mfrac>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mo>sin</mo>
-                                            <mi>A</mi>
-                                        </mrow>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mi>b</mi>
-                                        <mrow>
-                                            <mo>sin</mo>
-                                            <mi>B</mi>
-                                        </mrow>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mi>c</mi>
-                                        <mrow>
-                                            <mo>sin</mo>
-                                            <mi>C</mi>
-                                        </mrow>
-                                    </mfrac>
-                                </math>
-                            </li>
-                            <li>(iv) Cosine Formula: <math display="inline" style="font-size:12px;">
-                                    <msup>
-                                        <mi>c</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>-</mo>
-                                    <mn>2</mn>
-                                    <mi>ab</mi>
-                                    <mo>cos</mo>
-                                    <mi>C</mi>
-                                </math> or <math display="inline" style="font-size:12px;">
-                                    <mo>cos</mo>
-                                    <mi>C</mi>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mrow>
-                                            <msup>
-                                                <mi>a</mi>
-                                                <mn>2</mn>
-                                            </msup>
-                                            <mo>+</mo>
-                                            <msup>
-                                                <mi>b</mi>
-                                                <mn>2</mn>
-                                            </msup>
-                                            <mo>-</mo>
-                                            <msup>
-                                                <mi>c</mi>
-                                                <mn>2</mn>
-                                            </msup>
-                                        </mrow>
-                                        <mrow>
-                                            <mn>2</mn>
-                                            <mi>ab</mi>
-                                        </mrow>
-                                    </mfrac>
-                                </math>
-                            </li>
-                        </ol>
-
-                        <math display="inline" style="font-size:12px;">
-                            <mi>a</mi>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mi>b</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>c</mi>
-                        </math> are the opposite sides of <math display="inline" style="font-size:12px;">
-                            <mo>∠</mo>
-                            <mi>A</mi>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mo>∠</mo>
-                            <mi>B</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mo>∠</mo>
-                            <mi>C</mi>
-                        </math> respectively.
-                    </li>
-                </ol>
-
-                <h3>Variation</h3>
-                <ul>
-                    <li>Directly: <math display="inline" style="font-size:12px;">
-                            <mi>k</mi>
-                            <mo>×</mo>
-                        </math>
-                    </li>
-                    <li>Inversely: <math display="inline" style="font-size:12px;">
-                            <mi>k</mi>
-                            <mo>÷</mo>
-                        </math>
-                    </li>
-                    <li>Partly: <math display="inline" style="font-size:12px;">
-                            <msub>
-                                <mi>k</mi>
-                                <mn>1</mn>
-                            </msub>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <msub>
-                                <mi>k</mi>
-                                <mn>2</mn>
-                            </msub>
-                        </math> constant</li>
-                    <li>square: <math display="inline" style="font-size:12px;">
-                            <mo>(</mo>
-                            <mo>)</mo>
-                            <msup>
-                                <mrow />
-                                <mn>2</mn>
-                            </msup>
-                        </math>
-                    </li>
-                    <li>square root: <math display="inline" style="font-size:12px;">
-                            <msqrt>
-                                <mrow />
-                            </msqrt>
-                        </math>
-                    </li>
-                    <li>cube: <math display="inline" style="font-size:12px;">
-                            <mo>(</mo>
-                            <mo>)</mo>
-                            <msup>
-                                <mrow />
-                                <mn>3</mn>
-                            </msup>
-                        </math>
-                    </li>
-                    <li>cubic root: <math display="inline" style="font-size:12px;">
-                            <mroot>
-                                <mrow />
-                                <mn>3</mn>
-                            </mroot>
-                        </math>
-                    </li>
-                </ul>
-
-                <h3>Permutation and Combination</h3>
-
-                <ol>
-                    <li>(a) The number of permutations of <math display="inline" style="font-size:12px;">
-                            <mi>r</mi>
-                        </math> objects from <math display="inline" style="font-size:12px;">
-                            <mi>n</mi>
-                        </math> distinct objects without repetition = <math display="inline" style="font-size:12px;">
-                            <mmultiscripts>
-                                <mi>P</mi>
-                                <mi>r</mi>
-                                <none />
-                                <mprescripts />
-                                <mi>n</mi>
-                                <none />
-                            </mmultiscripts>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mrow>
-                                    <mi>n</mi>
-                                    <mo>!</mo>
-                                </mrow>
-                                <mrow>
-                                    <mo>(</mo>
-                                    <mi>n</mi>
-                                    <mo>-</mo>
-                                    <mi>r</mi>
-                                    <mo>)</mo>
-                                    <mo>!</mo>
-                                </mrow>
-                            </mfrac>
-                        </math> [Consider Order]</li>
-
-                    <li>(b) The number of combinations of <math display="inline" style="font-size:12px;">
-                            <mi>r</mi>
-                        </math> objects from <math display="inline" style="font-size:12px;">
-                            <mi>n</mi>
-                        </math> distinct objects without repetition = <math display="inline" style="font-size:12px;">
-                            <mmultiscripts>
-                                <mi>C</mi>
-                                <mi>r</mi>
-                                <none />
-                                <mprescripts />
-                                <mi>n</mi>
-                                <none />
-                            </mmultiscripts>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mrow>
-                                    <mmultiscripts>
-                                        <mi>P</mi>
-                                        <mi>r</mi>
-                                        <none />
-                                        <mprescripts />
-                                        <mi>n</mi>
-                                        <none />
-                                    </mmultiscripts>
-                                </mrow>
-                                <mrow>
-                                    <mi>r</mi>
-                                    <mo>!</mo>
-                                </mrow>
-                            </mfrac>
-                            <mo>=</mo>
-                            <mfrac>
-                                <mrow>
-                                    <mi>n</mi>
-                                    <mo>!</mo>
-                                </mrow>
-                                <mrow>
-                                    <mi>r</mi>
-                                    <mo>!</mo>
-                                    <mo>(</mo>
-                                    <mi>n</mi>
-                                    <mo>-</mo>
-                                    <mi>r</mi>
-                                    <mo>)</mo>
-                                    <mo>!</mo>
-                                </mrow>
-                            </mfrac>
-                        </math> [Not Consider Order]</li>
-                </ol>
-
-                <h3>More about Probability</h3>
-
-                <ol>
-                    <li>(a) If two events <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>F</mi>
-                        </math> are mutually exclusive, then <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mtext> or </mtext>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                            <mo>=</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                            <mo>+</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                        </math>
-                    </li>
-
-                    <li>(b) For any two events <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>F</mi>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mtext> or </mtext>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                            <mo>=</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                            <mo>+</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                            <mo>-</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mtext> and </mtext>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                        </math>
-                    </li>
-
-                    <li>(c) The complementary event of <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> is denoted by <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                            <mo>'</mo>
-                        </math>. <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>'</mo>
-                            <mo>)</mo>
-                            <mo>=</mo>
-                            <mn>1</mn>
-                            <mo>-</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                        </math>
-                    </li>
-
-                    <li>(d) If two events <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>F</mi>
-                        </math> are independent, then <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mtext> and </mtext>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                            <mo>=</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                            <mo>×</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                        </math>
-                    </li>
-
-                    <li>(e) Conditional probability: For any two events <math display="inline" style="font-size:12px;">
-                            <mi>E</mi>
-                        </math> and <math display="inline" style="font-size:12px;">
-                            <mi>F</mi>
-                        </math>, <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mtext> and </mtext>
-                            <mi>F</mi>
-                            <mo>)</mo>
-                            <mo>=</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                            <mo>×</mo>
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>F</mi>
-                            <mtext> after </mtext>
-                            <mi>E</mi>
-                            <mtext> has occurred</mtext>
-                            <mo>)</mo>
-                        </math>, where <math display="inline" style="font-size:12px;">
-                            <mi>P</mi>
-                            <mo>(</mo>
-                            <mi>E</mi>
-                            <mo>)</mo>
-                            <mo>></mo>
+                        </mfrac>
+                        <mo>)</mo>
+                    </math>, where <math display="inline" style="font-size:12px;">
+                        <mi>I</mi>
+                    </math> is the intensity of sound and <math display="inline" style="font-size:12px;">
+                        <msub>
+                            <mi>I</mi>
                             <mn>0</mn>
-                        </math>
-                    </li>
-                </ol>
+                        </msub>
+                    </math> is the minimum audible sound intensity</li>
 
-                <h3>More about Statistics</h3>
+                <li>(e) <math display="inline" style="font-size:12px;">
+                        <mo>log</mo>
+                        <mi>E</mi>
+                        <mo>=</mo>
+                        <mn>4.8</mn>
+                        <mo>+</mo>
+                        <mn>1.5</mn>
+                        <mi>R</mi>
+                    </math>, where <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> is the energy released (in joules (J)) from an earthquake</li>
+            </ol>
 
-                <ol>
-                    <li>
-                        <mtext>(a) Range</mtext>
-                        <mtext>Range = Largest value − Smallest value</mtext>
-                        <mtext>Range = Highest class boundary − Lowest class boundary</mtext>
-                    </li>
-                    <li>
-                        <mtext>(b) Inter-quartile range</mtext>
-                        <mtext>Inter-quartile range = Upper quartile − Lower quartile</mtext>
-                    </li>
-                    <li>
-                        <mtext>(c) Standard deviation</mtext>
-                        <math display="inline" style="font-size:12px;">
-                            <mi>&#x3C3;</mi>
-                            <mo>=</mo>
-                            <msqrt>
+            <h3>More about Trigonometry</h3>
+
+            <ol>
+                <li>(a) Trigonometric identities:
+                    <ol>
+                        <li>(i) <math display="inline" style="font-size:12px;">
+                                <mn>90</mn>
+                                <mo>°</mo>
+                            </math>, <math display="inline" style="font-size:12px;">
+                                <mn>270</mn>
+                                <mo>°</mo>
+                            </math> changed: sin ↔ cos, cos ↔ sin, tan ↔ 1/tan</li>
+                        <li>(ii) <math display="inline" style="font-size:12px;">
+                                <mn>0</mn>
+                                <mo>°</mo>
+                            </math>, <math display="inline" style="font-size:12px;">
+                                <mn>180</mn>
+                                <mo>°</mo>
+                            </math>, <math display="inline" style="font-size:12px;">
+                                <mn>360</mn>
+                                <mo>°</mo>
+                            </math> unchanged: sin ↔ sin, cos ↔ cos, tan ↔ tan</li>
+                    </ol>
+                </li>
+
+                <li>(b)
+                    <ol>
+                        <li>(i) area of <math display="inline" style="font-size:12px;">
+                                <mo>△</mo>
+                                <mi>ABC</mi>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <mn>2</mn>
+                                </mfrac>
+                                <mi>ab</mi>
+                                <mo>sin</mo>
+                                <mi>C</mi>
+                            </math>
+                        </li>
+                        <li>(ii) Heron's Formula: area of <math display="inline" style="font-size:12px;">
+                                <mo>△</mo>
+                                <mi>ABC</mi>
+                                <mo>=</mo>
+                                <msqrt>
+                                    <mrow>
+                                        <mi>s</mi>
+                                        <mo>(</mo>
+                                        <mi>s</mi>
+                                        <mo>-</mo>
+                                        <mi>a</mi>
+                                        <mo>)</mo>
+                                        <mo>(</mo>
+                                        <mi>s</mi>
+                                        <mo>-</mo>
+                                        <mi>b</mi>
+                                        <mo>)</mo>
+                                        <mo>(</mo>
+                                        <mi>s</mi>
+                                        <mo>-</mo>
+                                        <mi>c</mi>
+                                        <mo>)</mo>
+                                    </mrow>
+                                </msqrt>
+                            </math>, where <math display="inline" style="font-size:12px;">
+                                <mi>s</mi>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <mn>2</mn>
+                                </mfrac>
+                                <mo>(</mo>
+                                <mi>a</mi>
+                                <mo>+</mo>
+                                <mi>b</mi>
+                                <mo>+</mo>
+                                <mi>c</mi>
+                                <mo>)</mo>
+                            </math>
+                        </li>
+                        <li>(iii) Sine Formula: <math display="inline" style="font-size:12px;">
+                                <mfrac>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mo>sin</mo>
+                                        <mi>A</mi>
+                                    </mrow>
+                                </mfrac>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mi>b</mi>
+                                    <mrow>
+                                        <mo>sin</mo>
+                                        <mi>B</mi>
+                                    </mrow>
+                                </mfrac>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mi>c</mi>
+                                    <mrow>
+                                        <mo>sin</mo>
+                                        <mi>C</mi>
+                                    </mrow>
+                                </mfrac>
+                            </math>
+                        </li>
+                        <li>(iv) Cosine Formula: <math display="inline" style="font-size:12px;">
+                                <msup>
+                                    <mi>c</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>b</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>-</mo>
+                                <mn>2</mn>
+                                <mi>ab</mi>
+                                <mo>cos</mo>
+                                <mi>C</mi>
+                            </math> or <math display="inline" style="font-size:12px;">
+                                <mo>cos</mo>
+                                <mi>C</mi>
+                                <mo>=</mo>
                                 <mfrac>
                                     <mrow>
                                         <msup>
-                                            <mrow>
-                                                <mo>(</mo>
-                                                <msub>
-                                                    <mi>x</mi>
-                                                    <mn>1</mn>
-                                                </msub>
-                                                <mo>-</mo>
-                                                <mover>
-                                                    <mi>x</mi>
-                                                    <mo>&#xAF;</mo>
-                                                </mover>
-                                                <mo>)</mo>
-                                            </mrow>
+                                            <mi>a</mi>
                                             <mn>2</mn>
                                         </msup>
                                         <mo>+</mo>
                                         <msup>
-                                            <mrow>
-                                                <mo>(</mo>
-                                                <msub>
-                                                    <mi>x</mi>
-                                                    <mn>2</mn>
-                                                </msub>
-                                                <mo>-</mo>
-                                                <mover>
-                                                    <mi>x</mi>
-                                                    <mo>&#xAF;</mo>
-                                                </mover>
-                                                <mo>)</mo>
-                                            </mrow>
+                                            <mi>b</mi>
                                             <mn>2</mn>
                                         </msup>
-                                        <mo>+\cdots+</mo>
+                                        <mo>-</mo>
                                         <msup>
-                                            <mrow>
-                                                <mo>(</mo>
-                                                <msub>
-                                                    <mi>x</mi>
-                                                    <mi>n</mi>
-                                                </msub>
-                                                <mo>-</mo>
-                                                <mover>
-                                                    <mi>x</mi>
-                                                    <mo>&#xAF;</mo>
-                                                </mover>
-                                                <mo>)</mo>
-                                            </mrow>
+                                            <mi>c</mi>
                                             <mn>2</mn>
                                         </msup>
                                     </mrow>
-                                    <mi>n</mi>
+                                    <mrow>
+                                        <mn>2</mn>
+                                        <mi>ab</mi>
+                                    </mrow>
                                 </mfrac>
-                            </msqrt>
-                        </math>
-                        <mtext>where <mover>
-                                <mi>x</mi>
-                                <mo>&#xAF;</mo>
-                            </mover> is the mean and <mi>n</mi> is the total number of data.</mtext>
+                            </math>
+                        </li>
+                    </ol>
 
-                    </li>
-                    <li>
-                        (d) Standard score =
-                        <math display="inline" style="font-size:12px;">
+                    <math display="inline" style="font-size:12px;">
+                        <mi>a</mi>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mi>b</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>c</mi>
+                    </math> are the opposite sides of <math display="inline" style="font-size:12px;">
+                        <mo>∠</mo>
+                        <mi>A</mi>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mo>∠</mo>
+                        <mi>B</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mo>∠</mo>
+                        <mi>C</mi>
+                    </math> respectively.
+                </li>
+            </ol>
+
+            <h3>Variation</h3>
+            <ul>
+                <li>Directly: <math display="inline" style="font-size:12px;">
+                        <mi>k</mi>
+                        <mo>×</mo>
+                    </math>
+                </li>
+                <li>Inversely: <math display="inline" style="font-size:12px;">
+                        <mi>k</mi>
+                        <mo>÷</mo>
+                    </math>
+                </li>
+                <li>Partly: <math display="inline" style="font-size:12px;">
+                        <msub>
+                            <mi>k</mi>
+                            <mn>1</mn>
+                        </msub>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <msub>
+                            <mi>k</mi>
+                            <mn>2</mn>
+                        </msub>
+                    </math> constant</li>
+                <li>square: <math display="inline" style="font-size:12px;">
+                        <mo>(</mo>
+                        <mo>)</mo>
+                        <msup>
+                            <mrow />
+                            <mn>2</mn>
+                        </msup>
+                    </math>
+                </li>
+                <li>square root: <math display="inline" style="font-size:12px;">
+                        <msqrt>
+                            <mrow />
+                        </msqrt>
+                    </math>
+                </li>
+                <li>cube: <math display="inline" style="font-size:12px;">
+                        <mo>(</mo>
+                        <mo>)</mo>
+                        <msup>
+                            <mrow />
+                            <mn>3</mn>
+                        </msup>
+                    </math>
+                </li>
+                <li>cubic root: <math display="inline" style="font-size:12px;">
+                        <mroot>
+                            <mrow />
+                            <mn>3</mn>
+                        </mroot>
+                    </math>
+                </li>
+            </ul>
+
+            <h3>Permutation and Combination</h3>
+
+            <ol>
+                <li>(a) The number of permutations of <math display="inline" style="font-size:12px;">
+                        <mi>r</mi>
+                    </math> objects from <math display="inline" style="font-size:12px;">
+                        <mi>n</mi>
+                    </math> distinct objects without repetition = <math display="inline" style="font-size:12px;">
+                        <mmultiscripts>
+                            <mi>P</mi>
+                            <mi>r</mi>
+                            <none />
+                            <mprescripts />
+                            <mi>n</mi>
+                            <none />
+                        </mmultiscripts>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mi>n</mi>
+                                <mo>!</mo>
+                            </mrow>
+                            <mrow>
+                                <mo>(</mo>
+                                <mi>n</mi>
+                                <mo>-</mo>
+                                <mi>r</mi>
+                                <mo>)</mo>
+                                <mo>!</mo>
+                            </mrow>
+                        </mfrac>
+                    </math> [Consider Order]</li>
+
+                <li>(b) The number of combinations of <math display="inline" style="font-size:12px;">
+                        <mi>r</mi>
+                    </math> objects from <math display="inline" style="font-size:12px;">
+                        <mi>n</mi>
+                    </math> distinct objects without repetition = <math display="inline" style="font-size:12px;">
+                        <mmultiscripts>
+                            <mi>C</mi>
+                            <mi>r</mi>
+                            <none />
+                            <mprescripts />
+                            <mi>n</mi>
+                            <none />
+                        </mmultiscripts>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mmultiscripts>
+                                    <mi>P</mi>
+                                    <mi>r</mi>
+                                    <none />
+                                    <mprescripts />
+                                    <mi>n</mi>
+                                    <none />
+                                </mmultiscripts>
+                            </mrow>
+                            <mrow>
+                                <mi>r</mi>
+                                <mo>!</mo>
+                            </mrow>
+                        </mfrac>
+                        <mo>=</mo>
+                        <mfrac>
+                            <mrow>
+                                <mi>n</mi>
+                                <mo>!</mo>
+                            </mrow>
+                            <mrow>
+                                <mi>r</mi>
+                                <mo>!</mo>
+                                <mo>(</mo>
+                                <mi>n</mi>
+                                <mo>-</mo>
+                                <mi>r</mi>
+                                <mo>)</mo>
+                                <mo>!</mo>
+                            </mrow>
+                        </mfrac>
+                    </math> [Not Consider Order]</li>
+            </ol>
+
+            <h3>More about Probability</h3>
+
+            <ol>
+                <li>(a) If two events <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>F</mi>
+                    </math> are mutually exclusive, then <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mtext> or </mtext>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                        <mo>+</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(b) For any two events <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>F</mi>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mtext> or </mtext>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                        <mo>+</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                        <mo>-</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mtext> and </mtext>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(c) The complementary event of <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> is denoted by <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                        <mo>'</mo>
+                    </math>. <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>'</mo>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mn>1</mn>
+                        <mo>-</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(d) If two events <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>F</mi>
+                    </math> are independent, then <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mtext> and </mtext>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                        <mo>×</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                    </math>
+                </li>
+
+                <li>(e) Conditional probability: For any two events <math display="inline" style="font-size:12px;">
+                        <mi>E</mi>
+                    </math> and <math display="inline" style="font-size:12px;">
+                        <mi>F</mi>
+                    </math>, <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mtext> and </mtext>
+                        <mi>F</mi>
+                        <mo>)</mo>
+                        <mo>=</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                        <mo>×</mo>
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>F</mi>
+                        <mtext> after </mtext>
+                        <mi>E</mi>
+                        <mtext> has occurred</mtext>
+                        <mo>)</mo>
+                    </math>, where <math display="inline" style="font-size:12px;">
+                        <mi>P</mi>
+                        <mo>(</mo>
+                        <mi>E</mi>
+                        <mo>)</mo>
+                        <mo>></mo>
+                        <mn>0</mn>
+                    </math>
+                </li>
+            </ol>
+
+            <h3>More about Statistics</h3>
+
+            <ol>
+                <li>
+                    <mtext>(a) Range</mtext>
+                    <mtext>Range = Largest value − Smallest value</mtext>
+                    <mtext>Range = Highest class boundary − Lowest class boundary</mtext>
+                </li>
+                <li>
+                    <mtext>(b) Inter-quartile range</mtext>
+                    <mtext>Inter-quartile range = Upper quartile − Lower quartile</mtext>
+                </li>
+                <li>
+                    <mtext>(c) Standard deviation</mtext>
+                    <math display="inline" style="font-size:12px;">
+                        <mi>&#x3C3;</mi>
+                        <mo>=</mo>
+                        <msqrt>
                             <mfrac>
                                 <mrow>
-                                    <mi>x</mi>
-                                    <mo>-</mo>
-                                    <mover>
-                                        <mi>x</mi>
-                                        <mo>&#xAF;</mo>
-                                    </mover>
+                                    <msup>
+                                        <mrow>
+                                            <mo>(</mo>
+                                            <msub>
+                                                <mi>x</mi>
+                                                <mn>1</mn>
+                                            </msub>
+                                            <mo>-</mo>
+                                            <mover>
+                                                <mi>x</mi>
+                                                <mo>&#xAF;</mo>
+                                            </mover>
+                                            <mo>)</mo>
+                                        </mrow>
+                                        <mn>2</mn>
+                                    </msup>
+                                    <mo>+</mo>
+                                    <msup>
+                                        <mrow>
+                                            <mo>(</mo>
+                                            <msub>
+                                                <mi>x</mi>
+                                                <mn>2</mn>
+                                            </msub>
+                                            <mo>-</mo>
+                                            <mover>
+                                                <mi>x</mi>
+                                                <mo>&#xAF;</mo>
+                                            </mover>
+                                            <mo>)</mo>
+                                        </mrow>
+                                        <mn>2</mn>
+                                    </msup>
+                                    <mo>+\cdots+</mo>
+                                    <msup>
+                                        <mrow>
+                                            <mo>(</mo>
+                                            <msub>
+                                                <mi>x</mi>
+                                                <mi>n</mi>
+                                            </msub>
+                                            <mo>-</mo>
+                                            <mover>
+                                                <mi>x</mi>
+                                                <mo>&#xAF;</mo>
+                                            </mover>
+                                            <mo>)</mo>
+                                        </mrow>
+                                        <mn>2</mn>
+                                    </msup>
                                 </mrow>
-                                <mi>&#x3C3;</mi>
+                                <mi>n</mi>
                             </mfrac>
-                        </math>
-                        <mtext>, where x is the value of the datum.</mtext>
-                    </li>
-                    <li>
-                        <mtext>Normal distribution: 34%, 13.5%, 2.35%, 0.15%</mtext>
-                    </li>
-                    <li>
-                        <mtext>If each datum is added/subtracted by k:</mtext>
-                        <mtext>mean, mode, median → add/subtract k</mtext>
-                        <mtext>Range, IQR, S.D., Variance → no change</mtext>
-                    </li>
-                    <li>
-                        <mtext>If each datum is multiplied/divided by k:</mtext>
-                        <mtext>mean, mode, median → multiply/divide by k</mtext>
-                        <mtext>Range, IQR, S.D. → multiply/divide by k</mtext>
-                        <mtext>Variance → multiply/divide by k squared</mtext>
-                    </li>
-                </ol>
+                        </msqrt>
+                    </math>
+                    <mtext>where <mover>
+                            <mi>x</mi>
+                            <mo>&#xAF;</mo>
+                        </mover> is the mean and <mi>n</mi> is the total number of data.</mtext>
 
-                <h3>Equations of Circles</h3>
-                <ol>
-                    <li>
-                        <mtext>For a circle with the centre (h, k) and radius r, the equation of the circle: (x - h)^2 +
-                            (y - k)^2 = r^2</mtext>
-                    </li>
-                    <li>
-                        <mtext>For an equation of a circle x^2 + y^2 + Dx + Ey + F = 0,</mtext>
-                        <mtext>centre = ( -D/2, -E/2 )</mtext>
-                        <mtext>radius = sqrt{ (D/2)^2 + (E/2)^2 - F }</mtext>
-                    </li>
-                    <li>
-                        <mtext>Real Circle: r > 0</mtext>
-                        <mtext>Point Circle: r = 0</mtext>
-                        <mtext>Imaginary Circle: r < 0</mtext>
-                    </li>
-                    <li>
-                        <mtext>*Equation of Tangent: Let y = mx + c. Sub y = mx + c into x^2 + y^2 + Dx + Ey + F
-                            = 0,
-                            find Δ = b^2 − 4ac.</mtext>
-                    </li>
-                    <li>
-                        <mtext>*Geometric Relationships:</mtext>
-                        <mtext>Collinear: A, B, C forms a straight line.</mtext>
-                        <mtext>Concyclic: A, B, C, D forms a circle.</mtext>
-                        <mtext>Perpendicular bisector: straight line passes through mid-point of AB and
-                            perpendicular to
-                            AB.</mtext>
-                        <mtext>Angle bisector: two straight lines pass through intersection of AB and CD, and
-                            divide
-                            angles equally.</mtext>
-                        <mtext>Parallel: slope of straight line = slope of AB.</mtext>
-                        <mtext>Perpendicular: (slope of line) × (slope of AB) = -1.</mtext>
-                    </li>
-
-                </ol>
-                <h3>Arithmetic and Geometric Sequences</h3>
-                <ol>
-                    <li>
-                        <mtext>Arithmetic sequence (AS):</mtext>
-                    </li>
-                    <li>
-                        <mtext>a = first term, d = common difference, n = number of terms, l = last term</mtext>
-                    </li>
-                    <li>
-                        <mtext>General term: T(n) = a + (n - 1)d</mtext>
-                    </li>
-                    <li>
-                        <mtext>Sum: S(n) = n/2 [2a + (n - 1)d] or S(n) = n/2 (a + l)</mtext>
-                    </li>
-                    <li>
-                        <mtext>Geometric sequence (GS):</mtext>
-                    </li>
-                    <li>
-                        <mtext>a = first term, r = common ratio, n = no. of terms</mtext>
-                    </li>
-                    <li>
-                        <mtext>General term: T(n) = a r^{n-1}</mtext>
-                    </li>
-                    <li>
-                        <mtext>Sum: S(n) = [a(r^n - 1)]/(r - 1) or S(n) = [a(1 - r^n)]/(1 - r)</mtext>
-                    </li>
-                    <li>
-                        <mtext>If <math>
-                                <mo>-1</mo>
-                                <mi>
-                                    < r <</mi>
-                                        <mo>1</mo>
-                            </math>, sum to infinity: S(∞)=a/(1 - r)</mtext>
-                    </li>
-                </ol>
-                <h3>Compound Inequality</h3>
-                <ol>
-                    <li>
-                        <mtext>“And”: overlap， "Or": All</mtext>
-                    </li>
-                    <li>
-                        <mtext>a is positive：</mtext>
-                    </li>
-                    <li>
-                        <mtext>ax^2 + bx + c < 0， roots α < x < β</mtext>
-                    </li>
-                    <li>
-                        <mtext>ax^2 + bx + c ≤ 0， α ≤ x ≤ β</mtext>
-                    </li>
-                    <li>
-                        <mtext>ax^2 + bx + c > 0, x < α or x> β</mtext>
-                    </li>
-                    <li>
-                        <mtext>ax^2 + bx + c ≥ 0， x ≤ α or x ≥ β</mtext>
-                    </li>
-                </ol>
-
-
-                <!-- Percentages -->
-                <mtext>Percentage change = (New value − Original value) / Original value × 100%</mtext>
-                <mtext>New value = Original value × (1 + Percentage increase)</mtext>
-                <mtext>New value = Original value × (1 − Percentage decrease)</mtext>
-                <mtext>Profit and loss Percentage = (Selling price − Cost price) / Cost price × 100%</mtext>
-                <mtext>If the percentage change > 0, there is a profit; if < 0, there is a loss.</mtext>
-                        <mtext>Selling price = Cost price × (1 + Profit percentage)</mtext>
-                        <mtext>Selling price = Cost price × (1 − Loss percentage)</mtext>
-                        <mtext>Discount percentage = (Marked price − Selling price) / Marked price × 100%</mtext>
-                        <mtext>Selling price = Marked price × (1 − Discount percentage)</mtext>
-
-                        <!-- Mensuration -->
-                        <mtext>Square: Perimeter = 4 × Side length; Area = (Side length)^2</mtext>
-                        <mtext>Rectangle: Perimeter = 2 × (Length + Width); Area = Length × Width</mtext>
-                        <mtext>Triangle: Perimeter = sum of three sides; Area = (1/2) × Base × Height</mtext>
-                        <mtext>Parallelogram: Perimeter = 2 × (sum of 2 sides); Area = Base × Height</mtext>
-                        <mtext>Trapezium: Perimeter = sum of 4 sides;</mtext>
-                        <mtext>Area = (1/2) × (sum of two bases) × Height</mtext>
-                        <mtext>Rhombus: Perimeter = 4 × Side length; Area = Base × Height</mtext>
-                        <mtext>Cube: Surface area = 6 × (Side length)^2; Volume = (Side length)^3</mtext>
-                        <mtext>Cuboid: Surface area = 2(Length × Width + Width × Height + Height × Length); Volume =
-                            Length × Width × Height</mtext>
-                        <mtext>Prism: Surface area = All lateral faces + 2 × Base area; Volume = Base area × Height
-                        </mtext>
-
-                        <!-- Coordinate -->
-                        <mtext>Rotation 90°: (x, y) → (±y, ±x)</mtext>
-                        <mtext>Rectangular to polar: r = sqrt(x^2 + y^2), θ = arctan(y/x)</mtext>
-                        <mtext>Polar to rectangular: x = r cos θ, y = r sin θ</mtext>
-
-                        <!-- Statistics Pie Chart -->
-                        <mtext>Pie Chart: θ° / 360° = ?% / 100% = Part / Total</mtext>
-
-
-
-
-
-                        <!-- F.2 Estimation, Approximation and Errors -->
-                        <mtext>F.2 Estimation, Approximation and Errors</mtext>
-                        <math display="inline" style="font-size:12px;">
+                </li>
+                <li>
+                    (d) Standard score =
+                    <math display="inline" style="font-size:12px;">
+                        <mfrac>
                             <mrow>
-                                <mi>a)</mi>
-                                <mtext>Absolute error = estimated value - exact value</mtext>
+                                <mi>x</mi>
+                                <mo>-</mo>
+                                <mover>
+                                    <mi>x</mi>
+                                    <mo>&#xAF;</mo>
+                                </mover>
                             </mrow>
+                            <mi>&#x3C3;</mi>
+                        </mfrac>
+                    </math>
+                    <mtext>, where x is the value of the datum.</mtext>
+                </li>
+                <li>
+                    <mtext>Normal distribution: 34%, 13.5%, 2.35%, 0.15%</mtext>
+                </li>
+                <li>
+                    <mtext>If each datum is added/subtracted by k:</mtext>
+                    <mtext>mean, mode, median → add/subtract k</mtext>
+                    <mtext>Range, IQR, S.D., Variance → no change</mtext>
+                </li>
+                <li>
+                    <mtext>If each datum is multiplied/divided by k:</mtext>
+                    <mtext>mean, mode, median → multiply/divide by k</mtext>
+                    <mtext>Range, IQR, S.D. → multiply/divide by k</mtext>
+                    <mtext>Variance → multiply/divide by k squared</mtext>
+                </li>
+            </ol>
+
+            <h3>Equations of Circles</h3>
+            <ol>
+                <li>
+                    <mtext>For a circle with the centre (h, k) and radius r, the equation of the circle: (x - h)^2 +
+                        (y - k)^2 = r^2</mtext>
+                </li>
+                <li>
+                    <mtext>For an equation of a circle x^2 + y^2 + Dx + Ey + F = 0,</mtext>
+                    <mtext>centre = ( -D/2, -E/2 )</mtext>
+                    <mtext>radius = sqrt{ (D/2)^2 + (E/2)^2 - F }</mtext>
+                </li>
+                <li>
+                    <mtext>Real Circle: r > 0</mtext>
+                    <mtext>Point Circle: r = 0</mtext>
+                    <mtext>Imaginary Circle: r < 0</mtext>
+                </li>
+                <li>
+                    <mtext>*Equation of Tangent: Let y = mx + c. Sub y = mx + c into x^2 + y^2 + Dx + Ey + F
+                        = 0,
+                        find Δ = b^2 − 4ac.</mtext>
+                </li>
+                <li>
+                    <mtext>*Geometric Relationships:</mtext>
+                    <mtext>Collinear: A, B, C forms a straight line.</mtext>
+                    <mtext>Concyclic: A, B, C, D forms a circle.</mtext>
+                    <mtext>Perpendicular bisector: straight line passes through mid-point of AB and
+                        perpendicular to
+                        AB.</mtext>
+                    <mtext>Angle bisector: two straight lines pass through intersection of AB and CD, and
+                        divide
+                        angles equally.</mtext>
+                    <mtext>Parallel: slope of straight line = slope of AB.</mtext>
+                    <mtext>Perpendicular: (slope of line) × (slope of AB) = -1.</mtext>
+                </li>
+
+            </ol>
+            <h3>Arithmetic and Geometric Sequences</h3>
+            <ol>
+                <li>
+                    <mtext>Arithmetic sequence (AS):</mtext>
+                </li>
+                <li>
+                    <mtext>a = first term, d = common difference, n = number of terms, l = last term</mtext>
+                </li>
+                <li>
+                    <mtext>General term: T(n) = a + (n - 1)d</mtext>
+                </li>
+                <li>
+                    <mtext>Sum: S(n) = n/2 [2a + (n - 1)d] or S(n) = n/2 (a + l)</mtext>
+                </li>
+                <li>
+                    <mtext>Geometric sequence (GS):</mtext>
+                </li>
+                <li>
+                    <mtext>a = first term, r = common ratio, n = no. of terms</mtext>
+                </li>
+                <li>
+                    <mtext>General term: T(n) = a r^{n-1}</mtext>
+                </li>
+                <li>
+                    <mtext>Sum: S(n) = [a(r^n - 1)]/(r - 1) or S(n) = [a(1 - r^n)]/(1 - r)</mtext>
+                </li>
+                <li>
+                    <mtext>If <math>
+                            <mo>-1</mo>
+                            <mi>
+                                < r <</mi>
+                                    <mo>1</mo>
+                        </math>, sum to infinity: S(∞)=a/(1 - r)</mtext>
+                </li>
+            </ol>
+            <h3>Compound Inequality</h3>
+            <ol>
+                <li>
+                    <mtext>“And”: overlap， "Or": All</mtext>
+                </li>
+                <li>
+                    <mtext>a is positive：</mtext>
+                </li>
+                <li>
+                    <mtext>ax^2 + bx + c < 0， roots α < x < β</mtext>
+                </li>
+                <li>
+                    <mtext>ax^2 + bx + c ≤ 0， α ≤ x ≤ β</mtext>
+                </li>
+                <li>
+                    <mtext>ax^2 + bx + c > 0, x < α or x> β</mtext>
+                </li>
+                <li>
+                    <mtext>ax^2 + bx + c ≥ 0， x ≤ α or x ≥ β</mtext>
+                </li>
+            </ol>
+
+
+            <!-- Percentages -->
+            <mtext>Percentage change = (New value − Original value) / Original value × 100%</mtext>
+            <mtext>New value = Original value × (1 + Percentage increase)</mtext>
+            <mtext>New value = Original value × (1 − Percentage decrease)</mtext>
+            <mtext>Profit and loss Percentage = (Selling price − Cost price) / Cost price × 100%</mtext>
+            <mtext>If the percentage change > 0, there is a profit; if < 0, there is a loss.</mtext>
+                    <mtext>Selling price = Cost price × (1 + Profit percentage)</mtext>
+                    <mtext>Selling price = Cost price × (1 − Loss percentage)</mtext>
+                    <mtext>Discount percentage = (Marked price − Selling price) / Marked price × 100%</mtext>
+                    <mtext>Selling price = Marked price × (1 − Discount percentage)</mtext>
+
+                    <!-- Mensuration -->
+                    <mtext>Square: Perimeter = 4 × Side length; Area = (Side length)^2</mtext>
+                    <mtext>Rectangle: Perimeter = 2 × (Length + Width); Area = Length × Width</mtext>
+                    <mtext>Triangle: Perimeter = sum of three sides; Area = (1/2) × Base × Height</mtext>
+                    <mtext>Parallelogram: Perimeter = 2 × (sum of 2 sides); Area = Base × Height</mtext>
+                    <mtext>Trapezium: Perimeter = sum of 4 sides;</mtext>
+                    <mtext>Area = (1/2) × (sum of two bases) × Height</mtext>
+                    <mtext>Rhombus: Perimeter = 4 × Side length; Area = Base × Height</mtext>
+                    <mtext>Cube: Surface area = 6 × (Side length)^2; Volume = (Side length)^3</mtext>
+                    <mtext>Cuboid: Surface area = 2(Length × Width + Width × Height + Height × Length); Volume =
+                        Length × Width × Height</mtext>
+                    <mtext>Prism: Surface area = All lateral faces + 2 × Base area; Volume = Base area × Height
+                    </mtext>
+
+                    <!-- Coordinate -->
+                    <mtext>Rotation 90°: (x, y) → (±y, ±x)</mtext>
+                    <mtext>Rectangular to polar: r = sqrt(x^2 + y^2), θ = arctan(y/x)</mtext>
+                    <mtext>Polar to rectangular: x = r cos θ, y = r sin θ</mtext>
+
+                    <!-- Statistics Pie Chart -->
+                    <mtext>Pie Chart: θ° / 360° = ?% / 100% = Part / Total</mtext>
+
+
+
+
+
+                    <!-- F.2 Estimation, Approximation and Errors -->
+                    <mtext>F.2 Estimation, Approximation and Errors</mtext>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>a)</mi>
+                            <mtext>Absolute error = estimated value - exact value</mtext>
+                        </mrow>
+                        <mrow>
+                            <mi>b)</mi>
+                            <mtext>Maximum absolute error = scale ± 2</mtext>
+                        </mrow>
+                        <mrow>
+                            <mi>c)</mi>
+                            <mfrac>
+                                <mtext>Relative error</mtext>
+                                <mtext>Measured absolute error</mtext>
+                            </mfrac>
+                            <mtext>or</mtext>
+                            <mfrac>
+                                <mtext>Absolute error</mtext>
+                                <mtext>Exact value</mtext>
+                            </mfrac>
+                        </mrow>
+                        <mrow>
+                            <mi>d)</mi>
+                            <mtext>Percentage error = Relative error × 100%</mtext>
+                        </mrow>
+                    </math>
+                    <!-- F.2 Identities -->
+                    <mtext>F.2 Identities</mtext>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>a)</mi>
                             <mrow>
-                                <mi>b)</mi>
-                                <mtext>Maximum absolute error = scale ± 2</mtext>
-                            </mrow>
-                            <mrow>
-                                <mi>c)</mi>
-                                <mfrac>
-                                    <mtext>Relative error</mtext>
-                                    <mtext>Measured absolute error</mtext>
-                                </mfrac>
-                                <mtext>or</mtext>
-                                <mfrac>
-                                    <mtext>Absolute error</mtext>
-                                    <mtext>Exact value</mtext>
-                                </mfrac>
-                            </mrow>
-                            <mrow>
-                                <mi>d)</mi>
-                                <mtext>Percentage error = Relative error × 100%</mtext>
-                            </mrow>
-                        </math>
-                        <!-- F.2 Identities -->
-                        <mtext>F.2 Identities</mtext>
-                        <math display="inline" style="font-size:12px;">
-                            <mrow>
-                                <mi>a)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mi>(a + b)</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <mn>2ab</mn>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>b)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mi>(a - b)</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>-</mo>
-                                    <mn>2ab</mn>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>c)</mi>
-                                <mrow>
+                                <msup>
+                                    <mi>(a + b)</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
                                     <mi>a</mi>
-                                    <mo>-</mo>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>+</mo>
+                                <mn>2ab</mn>
+                                <mo>+</mo>
+                                <msup>
                                     <mi>b</mi>
-                                    <mo>=</mo>
+                                    <mn>2</mn>
+                                </msup>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>b)</mi>
+                            <mrow>
+                                <msup>
+                                    <mi>(a - b)</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>-</mo>
+                                <mn>2ab</mn>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>b</mi>
+                                    <mn>2</mn>
+                                </msup>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>c)</mi>
+                            <mrow>
+                                <mi>a</mi>
+                                <mo>-</mo>
+                                <mi>b</mi>
+                                <mo>=</mo>
+                                <mrow>
+                                    <mo>(</mo>
+                                    <mi>a</mi>
+                                    <mo>+</mo>
+                                    <mi>b</mi>
+                                    <mo>)</mo>
                                     <mrow>
                                         <mo>(</mo>
                                         <mi>a</mi>
-                                        <mo>+</mo>
+                                        <mo>-</mo>
                                         <mi>b</mi>
                                         <mo>)</mo>
-                                        <mrow>
-                                            <mo>(</mo>
-                                            <mi>a</mi>
-                                            <mo>-</mo>
-                                            <mi>b</mi>
-                                            <mo>)</mo>
-                                        </mrow>
                                     </mrow>
                                 </mrow>
                             </mrow>
-                        </math>
+                        </mrow>
+                    </math>
 
 
-                        <!-- F.2 Laws of Indices -->
-                        <mtext>F.2 Laws of Indices</mtext>
-                        <math display="inline" style="font-size:12px;">
+                    <!-- F.2 Laws of Indices -->
+                    <mtext>F.2 Laws of Indices</mtext>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>i)</mi>
                             <mrow>
-                                <mi>i)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mi>a</mi>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>×</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
                                         <mi>m</mi>
-                                    </msup>
-                                    <mo>×</mo>
-                                    <msup>
-                                        <mi>a</mi>
+                                        <mo>+</mo>
                                         <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>m</mi>
-                                            <mo>+</mo>
-                                            <mi>n</mi>
-                                        </mrow>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>ii)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>m</mi>
-                                    </msup>
-                                    <mo>÷</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>m</mi>
-                                            <mo>-</mo>
-                                            <mi>n</mi>
-                                        </mrow>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>iii)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mrow>
-                                            <mo>(</mo>
-                                            <msup>
-                                                <mi>a</mi>
-                                                <mi>m</mi>
-                                            </msup>
-                                            <mo>)</mo>
-                                        </mrow>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mrow>
-                                            <mi>m</mi>
-                                            <mo>×</mo>
-                                            <mi>n</mi>
-                                        </mrow>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>iv)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mrow>
-                                            <mo>(</mo>
-                                            <mi>ab</mi>
-                                            <mo>)</mo>
-                                        </mrow>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>a</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                    <mo>×</mo>
-                                    <msup>
-                                        <mi>b</mi>
-                                        <mi>n</mi>
-                                    </msup>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>v)</mi>
-                                <mrow>
-                                    <mfrac>
-                                        <msup>
-                                            <mi>a</mi>
-                                            <mi>m</mi>
-                                        </msup>
-                                        <msup>
-                                            <mi>b</mi>
-                                            <mi>m</mi>
-                                        </msup>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mrow>
-                                            <mo>(
-                                        </mrow>
-                                        <mfrac>
-                                            <mi>a</mi>
-                                            <mi>b</mi>
-                                        </mfrac>
-                                        <mo>)</mo>
-                                </mrow>
-                                <mi>m</mi>
+                                    </mrow>
                                 </msup>
                             </mrow>
-                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>ii)</mi>
                             <mrow>
-                                <mi>vi)</mi>
-                                <mrow>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>m</mi>
+                                </msup>
+                                <mo>÷</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mi>m</mi>
+                                        <mo>-</mo>
+                                        <mi>n</mi>
+                                    </mrow>
+                                </msup>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>iii)</mi>
+                            <mrow>
+                                <msup>
+                                    <mrow>
+                                        <mo>(</mo>
+                                        <msup>
+                                            <mi>a</mi>
+                                            <mi>m</mi>
+                                        </msup>
+                                        <mo>)</mo>
+                                    </mrow>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mi>m</mi>
+                                        <mo>×</mo>
+                                        <mi>n</mi>
+                                    </mrow>
+                                </msup>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>iv)</mi>
+                            <mrow>
+                                <msup>
+                                    <mrow>
+                                        <mo>(</mo>
+                                        <mi>ab</mi>
+                                        <mo>)</mo>
+                                    </mrow>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mi>n</mi>
+                                </msup>
+                                <mo>×</mo>
+                                <msup>
+                                    <mi>b</mi>
+                                    <mi>n</mi>
+                                </msup>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>v)</mi>
+                            <mrow>
+                                <mfrac>
+                                    <msup>
+                                        <mi>a</mi>
+                                        <mi>m</mi>
+                                    </msup>
+                                    <msup>
+                                        <mi>b</mi>
+                                        <mi>m</mi>
+                                    </msup>
+                                </mfrac>
+                                <mo>=</mo>
+                                <msup>
+                                    <mrow>
+                                        <mo>(
+                                    </mrow>
+                                    <mfrac>
+                                        <mi>a</mi>
+                                        <mi>b</mi>
+                                    </mfrac>
+                                    <mo>)</mo>
+                            </mrow>
+                            <mi>m</mi>
+                            </msup>
+                        </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>vi)</mi>
+                            <mrow>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mrow>
+                                        <mo>-</mo>
+                                        <mi>n</mi>
+                                    </mrow>
+                                </msup>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <msup>
+                                        <mi>a</mi>
+                                        <mi>n</mi>
+                                    </msup>
+                                </mfrac>
+                                <mo>=</mo>
+                                <mfrac>
+                                    <mn>1</mn>
                                     <msup>
                                         <mi>a</mi>
                                         <mrow>
@@ -2155,245 +2181,227 @@
                                             <mi>n</mi>
                                         </mrow>
                                     </msup>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <msup>
-                                            <mi>a</mi>
-                                            <mi>n</mi>
-                                        </msup>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <msup>
-                                            <mi>a</mi>
-                                            <mrow>
-                                                <mo>-</mo>
-                                                <mi>n</mi>
-                                            </mrow>
-                                        </msup>
-                                    </mfrac>
-                                </mrow>
+                                </mfrac>
                             </mrow>
-                        </math>
+                        </mrow>
+                    </math>
 
-                        <!-- F.2 Surds -->
-                        <mtext>F.2 Surds</mtext>
-                        <math display="inline" style="font-size:12px;">
+                    <!-- F.2 Surds -->
+                    <mtext>F.2 Surds</mtext>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>a)</mi>
                             <mrow>
-                                <mi>a)</mi>
-                                <mrow>
-                                    <msqrt>
-                                        <mi>ab</mi>
-                                    </msqrt>
-                                    <mo>=</mo>
+                                <msqrt>
+                                    <mi>ab</mi>
+                                </msqrt>
+                                <mo>=</mo>
+                                <msqrt>
+                                    <mi>a</mi>
+                                </msqrt>
+                                <msqrt>
+                                    <mi>b</mi>
+                                </msqrt>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>b)</mi>
+                            <mrow>
+                                <mfrac>
                                     <msqrt>
                                         <mi>a</mi>
                                     </msqrt>
                                     <msqrt>
                                         <mi>b</mi>
                                     </msqrt>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>b)</mi>
-                                <mrow>
+                                </mfrac>
+                                <mo>=</mo>
+                                <msqrt>
                                     <mfrac>
-                                        <msqrt>
-                                            <mi>a</mi>
-                                        </msqrt>
-                                        <msqrt>
-                                            <mi>b</mi>
-                                        </msqrt>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <msqrt>
-                                        <mfrac>
-                                            <mi>a</mi>
-                                            <mi>b</mi>
-                                        </mfrac>
-                                    </msqrt>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>c)</mi>
-                                <mrow>
-                                    <msup>
                                         <mi>a</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>+</mo>
-                                    <msup>
                                         <mi>b</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mo>=</mo>
-                                    <msup>
-                                        <mi>c</mi>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mtext>(Pyth. Thm)</mtext>
-                                </mrow>
+                                    </mfrac>
+                                </msqrt>
                             </mrow>
-                        </math>
-
-                        <!-- F.2 More about Trigonometry -->
-                        <mtext>F.2 More about Trigonometry</mtext>
-                        <math display="inline" style="font-size:12px;">
-
+                        </mrow>
+                        <mrow>
+                            <mi>c)</mi>
                             <mrow>
-                                <mtext>sin θ =</mtext>
+                                <msup>
+                                    <mi>a</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>+</mo>
+                                <msup>
+                                    <mi>b</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mo>=</mo>
+                                <msup>
+                                    <mi>c</mi>
+                                    <mn>2</mn>
+                                </msup>
+                                <mtext>(Pyth. Thm)</mtext>
+                            </mrow>
+                        </mrow>
+                    </math>
+
+                    <!-- F.2 More about Trigonometry -->
+                    <mtext>F.2 More about Trigonometry</mtext>
+                    <math display="inline" style="font-size:12px;">
+
+                        <mrow>
+                            <mtext>sin θ =</mtext>
+                            <mfrac>
+                                <mtext>opposite</mtext>
+                                <mtext>H</mtext>
+                            </mfrac>
+                            <mo>,</mo>
+                            <mtext>cos θ =</mtext>
+                            <mfrac>
+                                <mtext>adjacent</mtext>
+                                <mtext>H</mtext>
+                            </mfrac>
+                            <mo>,</mo>
+                            <mtext>tan θ =</mtext>
+                            <mfrac>
+                                <mtext>opposite</mtext>
+                                <mtext>adjacent</mtext>
+                            </mfrac>
+                        </mrow>
+                        <mrow>
+                            <mi>i)</mi>
+                            <mrow>
+                                <msup>
+                                    <mtext>sin</mtext>
+                                    <mn>2</mn>
+                                </msup>
+                                <mi>θ</mi>
+                                <mo>+</mo>
+                                <msup>
+                                    <mtext>cos</mtext>
+                                    <mn>2</mn>
+                                </msup>
+                                <mi>θ</mi>
+                                <mo>=</mo>
+                                <mn>1</mn>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>ii)</mi>
+                            <mrow>
+                                <mtext>tan θ</mtext>
+                                <mo>=</mo>
                                 <mfrac>
-                                    <mtext>opposite</mtext>
-                                    <mtext>H</mtext>
-                                </mfrac>
-                                <mo>,</mo>
-                                <mtext>cos θ =</mtext>
-                                <mfrac>
-                                    <mtext>adjacent</mtext>
-                                    <mtext>H</mtext>
-                                </mfrac>
-                                <mo>,</mo>
-                                <mtext>tan θ =</mtext>
-                                <mfrac>
-                                    <mtext>opposite</mtext>
-                                    <mtext>adjacent</mtext>
+                                    <mtext>sin θ</mtext>
+                                    <mtext>cos θ</mtext>
                                 </mfrac>
                             </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>iii)</mi>
+                            <mrow>
+                                <mtext>sin(90° - θ) = cos θ</mtext>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>iv)</mi>
+                            <mrow>
+                                <mtext>cos(90° - θ) = sin θ</mtext>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>v)</mi>
+                            <mrow>
+                                <mtext>tan(90° - θ) =</mtext>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <mtext>tan θ</mtext>
+                                </mfrac>
+                            </mrow>
+                        </mrow>
+
+                        <mrow>
+                            <mtext>Others:</mtext>
+                            <mrow>
+                                <mn>1 - sin² θ = cos² θ</mn>
+                            </mrow>
+                            <mrow>
+                                <mn>1 - cos² θ = sin² θ</mn>
+                            </mrow>
+                            <mrow>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <mtext>sin θ</mtext>
+                                </mfrac>
+                                <mo>=</mo>
+                                <mtext>cosec θ</mtext>
+                            </mrow>
+                            <mrow>
+                                <mfrac>
+                                    <mn>1</mn>
+                                    <mtext>tan(90° - θ)</mtext>
+                                </mfrac>
+                                <mo>=</mo>
+                                <mtext>tan θ</mtext>
+                            </mrow>
+                        </mrow>
+                    </math>
+
+                    <!-- F.2 Mensuration -->
+                    <mtext>F.2 Mensuration</mtext>
+                    <math display="inline" style="font-size:12px;">
+
+                        <mrow>
+                            <mi>a)</mi>
+                            <mtext>Circle</mtext>
                             <mrow>
                                 <mi>i)</mi>
-                                <mrow>
-                                    <msup>
-                                        <mtext>sin</mtext>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mi>θ</mi>
-                                    <mo>+</mo>
-                                    <msup>
-                                        <mtext>cos</mtext>
-                                        <mn>2</mn>
-                                    </msup>
-                                    <mi>θ</mi>
-                                    <mo>=</mo>
-                                    <mn>1</mn>
-                                </mrow>
+                                <mtext>Perimeter = 2 × π × Radius</mtext>
                             </mrow>
                             <mrow>
                                 <mi>ii)</mi>
-                                <mrow>
-                                    <mtext>tan θ</mtext>
-                                    <mo>=</mo>
-                                    <mfrac>
-                                        <mtext>sin θ</mtext>
-                                        <mtext>cos θ</mtext>
-                                    </mfrac>
-                                </mrow>
+                                <mtext>Area = π × (Radius)²</mtext>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>b)</mi>
+                            <mtext>Sector</mtext>
+                            <mrow>
+                                <mi>i)</mi>
+                                <mtext>Arc length = 2 × π × Radius ×</mtext>
+                                <mfrac>
+                                    <mtext>Angle at centre</mtext>
+                                    <mn>360°</mn>
+                                </mfrac>
+                            </mrow>
+                            <mrow>
+                                <mi>ii)</mi>
+                                <mtext>Area = π × (Radius)² ×</mtext>
+                                <mfrac>
+                                    <mtext>Angle at centre</mtext>
+                                    <mn>360°</mn>
+                                </mfrac>
+                            </mrow>
+                        </mrow>
+                        <mrow>
+                            <mi>c)</mi>
+                            <mtext>Cylinder</mtext>
+                            <mtext>Let r and h be base radius and height of the cylinder respectively.</mtext>
+                            <mrow>
+                                <mi>i)</mi>
+                                <mtext>Curved surface area = 2πrh</mtext>
+                            </mrow>
+                            <mrow>
+                                <mi>ii)</mi>
+                                <mtext>Total surface area = 2πrh + 2πr²</mtext>
                             </mrow>
                             <mrow>
                                 <mi>iii)</mi>
-                                <mrow>
-                                    <mtext>sin(90° - θ) = cos θ</mtext>
-                                </mrow>
+                                <mtext>Volume = πr²h</mtext>
                             </mrow>
-                            <mrow>
-                                <mi>iv)</mi>
-                                <mrow>
-                                    <mtext>cos(90° - θ) = sin θ</mtext>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>v)</mi>
-                                <mrow>
-                                    <mtext>tan(90° - θ) =</mtext>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <mtext>tan θ</mtext>
-                                    </mfrac>
-                                </mrow>
-                            </mrow>
-
-                            <mrow>
-                                <mtext>Others:</mtext>
-                                <mrow>
-                                    <mn>1 - sin² θ = cos² θ</mn>
-                                </mrow>
-                                <mrow>
-                                    <mn>1 - cos² θ = sin² θ</mn>
-                                </mrow>
-                                <mrow>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <mtext>sin θ</mtext>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <mtext>cosec θ</mtext>
-                                </mrow>
-                                <mrow>
-                                    <mfrac>
-                                        <mn>1</mn>
-                                        <mtext>tan(90° - θ)</mtext>
-                                    </mfrac>
-                                    <mo>=</mo>
-                                    <mtext>tan θ</mtext>
-                                </mrow>
-                            </mrow>
-                        </math>
-
-                        <!-- F.2 Mensuration -->
-                        <mtext>F.2 Mensuration</mtext>
-                        <math display="inline" style="font-size:12px;">
-
-                            <mrow>
-                                <mi>a)</mi>
-                                <mtext>Circle</mtext>
-                                <mrow>
-                                    <mi>i)</mi>
-                                    <mtext>Perimeter = 2 × π × Radius</mtext>
-                                </mrow>
-                                <mrow>
-                                    <mi>ii)</mi>
-                                    <mtext>Area = π × (Radius)²</mtext>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>b)</mi>
-                                <mtext>Sector</mtext>
-                                <mrow>
-                                    <mi>i)</mi>
-                                    <mtext>Arc length = 2 × π × Radius ×</mtext>
-                                    <mfrac>
-                                        <mtext>Angle at centre</mtext>
-                                        <mn>360°</mn>
-                                    </mfrac>
-                                </mrow>
-                                <mrow>
-                                    <mi>ii)</mi>
-                                    <mtext>Area = π × (Radius)² ×</mtext>
-                                    <mfrac>
-                                        <mtext>Angle at centre</mtext>
-                                        <mn>360°</mn>
-                                    </mfrac>
-                                </mrow>
-                            </mrow>
-                            <mrow>
-                                <mi>c)</mi>
-                                <mtext>Cylinder</mtext>
-                                <mtext>Let r and h be base radius and height of the cylinder respectively.</mtext>
-                                <mrow>
-                                    <mi>i)</mi>
-                                    <mtext>Curved surface area = 2πrh</mtext>
-                                </mrow>
-                                <mrow>
-                                    <mi>ii)</mi>
-                                    <mtext>Total surface area = 2πrh + 2πr²</mtext>
-                                </mrow>
-                                <mrow>
-                                    <mi>iii)</mi>
-                                    <mtext>Volume = πr²h</mtext>
-                                </mrow>
-                            </mrow>
-                        </math>
+                        </mrow>
+                    </math>
 
 
 
@@ -2403,16 +2411,15 @@
 
 
 
+                    <div class="page-header">
+                        <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
+                            Menu</button>
+                        <h2>公式 Formulas</h2>
+                    </div>
 
-
-
-
-
-
-
-
-            </div>
         </div>
+
+
 
         <!-- 二次方程求解器 Quadratic Equation Solver -->
         <div id="quadratic" class="page">
