@@ -1447,6 +1447,9 @@ function tokenize(expr) {
         } else if (char === ')') {
             tokens.push({ type: 'RPAREN', value: char });
             i++;
+        } else if (char === ',') {
+            tokens.push({ type: 'COMMA', value: char });
+            i++;
         } else {
             throw new Error(`未知符號：${char}`);
         }
@@ -1538,6 +1541,12 @@ function parseExpression(tokens) {
             consume();
             const arg = parseAddSub();
 
+            let arg2;
+            if (peek() && peek().type === 'COMMA') { // 檢查是否有第二個參數
+                consume(); // consume ','
+                arg2 = parseAddSub();
+            }
+
             if (!peek() || peek().type !== 'RPAREN') {
                 insertAtCursor(')');
                 calculateResult();
@@ -1546,7 +1555,11 @@ function parseExpression(tokens) {
 
             consume();
 
-            return evaluateFunction(funcName, arg);
+            if (arg2 === undefined) {
+                return evaluateFunction(funcName, arg);
+            } else {
+                return evaluateFunction(funcName, arg, arg2);
+            }
         }
 
         if (token.type === 'LPAREN') {
@@ -1577,7 +1590,7 @@ function parseExpression(tokens) {
     return result;
 }
 
-function evaluateFunction(funcName, arg) {
+function evaluateFunction(funcName, arg, arg2) {
     switch (funcName) {
         case 'sin':
             return Math.sin(angleMode === 'DEG' ? arg * Math.PI / 180 : arg);
@@ -1605,6 +1618,38 @@ function evaluateFunction(funcName, arg) {
         case 'sqrt':
             if (arg < 0) throw new Error('平方根的參數不能為負數');
             return Math.sqrt(arg);
+        //20251011.1010
+        case 'factorial':
+            if (arg === undefined) throw new Error('必須提供參數');
+            if (arg < 0) throw new Error('階乘的參數不能為負數');
+            if (!Number.isInteger(arg)) throw new Error('階乘的參數必須是整數');
+            if (arg === 0 || arg === 1) return 1;
+            let f = 1;
+            for (let i = 2; i <= arg; i++) f *= i;
+            return f;
+        case 'P':
+            if (arg === undefined || arg2 === undefined)
+                throw new Error('排列需要兩個參數');
+            if (arg < 0 || arg2 < 0) throw new Error('排列參數不能為負數');
+            if (!Number.isInteger(arg) || !Number.isInteger(arg2)) throw new Error('排列參數必須是整數');
+            if (arg2 > arg) throw new Error('r不可大於n');
+            let perm = 1;
+            for (let i = 0; i < arg2; i++) perm *= (arg - i);
+            return perm;
+        case 'C':
+            if (arg === undefined || arg2 === undefined)
+                throw new Error('組合需要兩個參數');
+            if (arg < 0 || arg2 < 0) throw new Error('組合參數不能為負數');
+            if (!Number.isInteger(arg) || !Number.isInteger(arg2)) throw new Error('組合參數必須是整數');
+            if (arg2 > arg) throw new Error('r不可大於n');
+            let comb = 1, denom = 1;
+            for (let i = 1; i <= arg2; i++) {
+                comb *= (arg - i + 1);
+                denom *= i;
+            }
+            return comb / denom;
+        //20251011.1010
+
         default:
             throw new Error(`未知函數：${funcName}`);
     }
