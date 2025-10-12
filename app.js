@@ -40,7 +40,8 @@ const MATH_CONSTANTS = {
 };
 
 // Multi-variable polynomial support
-const SUPPORTED_VARIABLES = ['x', 'y', 'z', 'a', 'b', 'c', 'd', 'k', 't', 'u', 'v', 'w'];
+//const SUPPORTED_VARIABLES = ['x', 'y', 'z', 'a', 'b', 'c', 'd', 'k', 't', 'u', 'v', 'w'];
+const SUPPORTED_VARIABLES = ['x', 'y', 'z', 'a', 'b', 'd', 'k', 't', 'u', 'v', 'w'];
 
 // Page navigation - Fixed to work properly
 function showPage(pageId) {
@@ -1656,6 +1657,7 @@ function evaluateFunction(funcName, arg, arg2) {
                 comb2 *= (arg - i + 1);
                 denom2 *= i;
             }
+            return comb2 / denom2;
         case 'C':
             if (arg === undefined || arg2 === undefined)
                 throw new Error('組合需要兩個參數');
@@ -1666,8 +1668,8 @@ function evaluateFunction(funcName, arg, arg2) {
             for (let i = 1; i <= arg2; i++) {
                 comb *= (arg - i + 1);
                 denom *= i;
-                return comb / denom;
             }
+            return comb / denom;
         default:
             throw new Error(`未知函數：${funcName}`);
     }
