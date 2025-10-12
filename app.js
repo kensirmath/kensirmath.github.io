@@ -1636,6 +1636,26 @@ function evaluateFunction(funcName, arg, arg2) {
             let perm = 1;
             for (let i = 0; i < arg2; i++) perm *= (arg - i);
             return perm;
+        case 'p':
+            if (arg === undefined || arg2 === undefined)
+                throw new Error('排列需要兩個參數');
+            if (arg < 0 || arg2 < 0) throw new Error('排列參數不能為負數');
+            if (!Number.isInteger(arg) || !Number.isInteger(arg2)) throw new Error('排列參數必須是整數');
+            if (arg2 > arg) throw new Error('r不可大於n');
+            let perm2 = 1;
+            for (let i = 0; i < arg2; i++) perm2 *= (arg - i);
+            return perm2;
+        case 'c':
+            if (arg === undefined || arg2 === undefined)
+                throw new Error('組合需要兩個參數');
+            if (arg < 0 || arg2 < 0) throw new Error('組合參數不能為負數');
+            if (!Number.isInteger(arg) || !Number.isInteger(arg2)) throw new Error('組合參數必須是整數');
+            if (arg2 > arg) throw new Error('r不可大於n');
+            let comb2 = 1, denom2 = 1;
+            for (let i = 1; i <= arg2; i++) {
+                comb2 *= (arg - i + 1);
+                denom2 *= i;
+            }
         case 'C':
             if (arg === undefined || arg2 === undefined)
                 throw new Error('組合需要兩個參數');
@@ -1646,14 +1666,13 @@ function evaluateFunction(funcName, arg, arg2) {
             for (let i = 1; i <= arg2; i++) {
                 comb *= (arg - i + 1);
                 denom *= i;
+                return comb / denom;
             }
-            return comb / denom;
-        //20251011.1010
-
         default:
             throw new Error(`未知函數：${funcName}`);
     }
 }
+//20251011.1010
 
 // Helper functions
 function calculateCubicDiscriminant(a, b, c, d) {
@@ -1843,7 +1862,7 @@ function handleCalculatorKeyboard(e) {
             calculateResult();
             e.stopImmediatePropagation()
             e.preventDefault();
-        } else if (key === 'Escape' || key === 'c' || key === 'C') {
+        } else if (key === 'Escape' || key === 'q' || key === 'Q' || key === '@') {
             clearCalculator();
             e.stopImmediatePropagation()
             e.preventDefault();
