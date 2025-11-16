@@ -1888,3 +1888,20 @@ function handleCalculatorKeyboard(e) {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>複數計算器</title>
+    <link rel="stylesheet" href="ComplexNumberStyle.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>複數計算器</h1>
+            <p>計算複數 (a+bi) 的加法、減法、乘法、除法</p>
+        </div>
+
+        <div class="calculator-card">
+            <!-- 第一個複數輸入 -->
+            <div class="complex-input-group">
+                <label class="complex-label">第一個複數</label>
+                <div class="input-row">
+                    <div class="input-wrapper">
+                        <input type="text" id="real1" class="form-control" placeholder="實部 (a)" aria-label="第一個複數的實部">
+                        <span class="operator-label">+</span>
+                        <input type="text" id="imag1" class="form-control" placeholder="虛部 (b)" aria-label="第一個複數的虛部">
+                        <span class="input-label">i</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二個複數輸入 -->
+            <div class="complex-input-group">
+                <label class="complex-label">第二個複數</label>
+                <div class="input-row">
+                    <div class="input-wrapper">
+                        <input type="text" id="real2" class="form-control" placeholder="實部 (c)" aria-label="第二個複數的實部">
+                        <span class="operator-label">+</span>
+                        <input type="text" id="imag2" class="form-control" placeholder="虛部 (d)" aria-label="第二個複數的虛部">
+                        <span class="input-label">i</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 運算選擇 -->
+            <div class="operation-group">
+                <label class="complex-label">選擇運算</label>
+                <div class="operation-buttons">
+                    <button class="btn-operation" data-operation="add" aria-label="加法">+</button>
+                    <button class="btn-operation" data-operation="subtract" aria-label="減法">−</button>
+                    <button class="btn-operation" data-operation="multiply" aria-label="乘法">×</button>
+                    <button class="btn-operation" data-operation="divide" aria-label="除法">÷</button>
+                </div>
+            </div>
+
+            <!-- 計算按鈕 -->
+            <button class="btn btn--primary" id="calculateBtn">計算結果</button>
+
+            <!-- 錯誤訊息 -->
+            <div id="errorMessage" class="error-message hidden"></div>
+
+            <!-- 結果顯示 -->
+            <div id="resultSection" class="result-section hidden">
+                <div class="result-card">
+                    <div class="result-label">計算結果</div>
+                    <div class="result-value" id="resultValue"></div>
+                    <div class="result-details">
+                        <div class="result-part">
+                            <span class="result-part-label">實部</span>
+                            <span class="result-part-value" id="realPart"></span>
+                        </div>
+                        <div class="result-part">
+                            <span class="result-part-label">虛部</span>
+                            <span class="result-part-value" id="imagPart"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>複數計算器 Complex Number Calculator</h2>
+    </div>
+
+    <script src="ComplexNumberScript.js"></script>
+</body>
+
+</html>

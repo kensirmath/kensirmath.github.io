@@ -56,14 +56,15 @@
                         <span class="btn-subtitle">具因式分解功能 Factorization</span>
                     </div>
                 </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
+
+                <!--<button class="btn btn--primary menu-btn" onclick="showPage('complex')">-->
+                <button class="btn btn--primary menu-btn" onclick="window.location.href='ComplexNumberIndex.html'">
                     <div class="btn-content">
-                        <span class="btn-symbol">√</span>
-                        <span class="btn-title">根式化簡器 Surd simplifier</span>
-                        <span class="btn-subtitle">√(a²)=a,√(ab)=√a√b,√(a²b)=a√b</span>
+                        <span class="btn-symbol">i</span>
+                        <span class="btn-title">複數計算器 Complex Number Calculator</span>
+                        <span class="btn-subtitle">i=i,i²=-1,i³=-i,i<sup>4</sup>=1</span>
                     </div>
                 </button>
-
 
                 <button class="btn btn--primary menu-btn" onclick="showPage('formulas')">
                     <div class="btn-content">
@@ -1893,53 +1894,117 @@
 
 
             <!-- Percentages -->
-            <mtext>Percentage change = (New value − Original value) / Original value × 100%</mtext>
-            <mtext>New value = Original value × (1 + Percentage increase)</mtext>
-            <mtext>New value = Original value × (1 − Percentage decrease)</mtext>
-            <mtext>Profit and loss Percentage = (Selling price − Cost price) / Cost price × 100%</mtext>
-            <mtext>If the percentage change > 0, there is a profit; if < 0, there is a loss.</mtext>
+            <h3>Percentages</h3>
+            <ol>
+                <li>
+                    <mtext>Percentage change = (New value − Original value) / Original value × 100%</mtext>
+                </li>
+                <li>
+                    <mtext>New value = Original value × (1 + Percentage increase)</mtext>
+                </li>
+                <li>
+                    <mtext>New value = Original value × (1 − Percentage decrease)</mtext>
+                </li>
+                <li>
+                    <mtext>Profit and loss Percentage = (Selling price − Cost price) / Cost price × 100%</mtext>
+                </li>
+                <li>
+                    <mtext>If the percentage change > 0, there is a profit; if < 0, there is a loss.</mtext>
+                </li>
+                <li>
                     <mtext>Selling price = Cost price × (1 + Profit percentage)</mtext>
+                </li>
+                <li>
                     <mtext>Selling price = Cost price × (1 − Loss percentage)</mtext>
+                </li>
+                <li>
                     <mtext>Discount percentage = (Marked price − Selling price) / Marked price × 100%</mtext>
+                </li>
+                <li>
                     <mtext>Selling price = Marked price × (1 − Discount percentage)</mtext>
+                </li>
+            </ol>
 
-                    <!-- Mensuration -->
+            <!-- Mensuration -->
+            <h3>Mensuration</h3>
+            <ol>
+                <li>
                     <mtext>Square: Perimeter = 4 × Side length; Area = (Side length)^2</mtext>
+                </li>
+                <li>
                     <mtext>Rectangle: Perimeter = 2 × (Length + Width); Area = Length × Width</mtext>
+                </li>
+                <li>
                     <mtext>Triangle: Perimeter = sum of three sides; Area = (1/2) × Base × Height</mtext>
+                </li>
+                <li>
                     <mtext>Parallelogram: Perimeter = 2 × (sum of 2 sides); Area = Base × Height</mtext>
+                </li>
+                <li>
                     <mtext>Trapezium: Perimeter = sum of 4 sides;</mtext>
+                </li>
+                <li>
                     <mtext>Area = (1/2) × (sum of two bases) × Height</mtext>
+                </li>
+                <li>
                     <mtext>Rhombus: Perimeter = 4 × Side length; Area = Base × Height</mtext>
+                </li>
+                <li>
                     <mtext>Cube: Surface area = 6 × (Side length)^2; Volume = (Side length)^3</mtext>
+                </li>
+                <li>
                     <mtext>Cuboid: Surface area = 2(Length × Width + Width × Height + Height × Length); Volume =
                         Length × Width × Height</mtext>
-                    <mtext>Prism: Surface area = All lateral faces + 2 × Base area; Volume = Base area × Height
-                    </mtext>
+                </li>
+                <li>
+                    <mtext>Prism: Surface area = All lateral faces + 2 × Base area; Volume = Base area × Height</mtext>
+                </li>
+            </ol>
 
-                    <!-- Coordinate -->
+            <!-- Coordinate -->
+            <h3>Coordinate</h3>
+            <ol>
+                <li>
                     <mtext>Rotation 90°: (x, y) → (±y, ±x)</mtext>
+                </li>
+                <li>
                     <mtext>Rectangular to polar: r = sqrt(x^2 + y^2), θ = arctan(y/x)</mtext>
+                </li>
+                <li>
                     <mtext>Polar to rectangular: x = r cos θ, y = r sin θ</mtext>
+                </li>
+            </ol>
 
-                    <!-- Statistics Pie Chart -->
+            <!-- Statistics Pie Chart -->
+            <h3>Statistics Pie Chart</h3>
+            <ol>
+                <li>
                     <mtext>Pie Chart: θ° / 360° = ?% / 100% = Part / Total</mtext>
+                </li>
+            </ol>
 
 
-
-
-
-                    <!-- F.2 Estimation, Approximation and Errors -->
-                    <mtext>F.2 Estimation, Approximation and Errors</mtext>
+            <!-- Estimation, Approximation and Errors -->
+            <h3>Estimation, Approximation and Errors</h3>
+            <ol>
+                <li>
                     <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>a)</mi>
                             <mtext>Absolute error = estimated value - exact value</mtext>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>b)</mi>
                             <mtext>Maximum absolute error = scale ± 2</mtext>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>c)</mi>
                             <mfrac>
@@ -1952,13 +2017,22 @@
                                 <mtext>Exact value</mtext>
                             </mfrac>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>d)</mi>
                             <mtext>Percentage error = Relative error × 100%</mtext>
                         </mrow>
                     </math>
-                    <!-- F.2 Identities -->
-                    <mtext>F.2 Identities</mtext>
+                </li>
+            </ol>
+
+            <!-- Identities -->
+            <h3>Identities</h3>
+            <ol>
+                <li>
                     <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>a)</mi>
@@ -1981,6 +2055,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>b)</mi>
                             <mrow>
@@ -2002,6 +2080,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>c)</mi>
                             <mrow>
@@ -2026,10 +2108,14 @@
                             </mrow>
                         </mrow>
                     </math>
+                </li>
+            </ol>
 
 
-                    <!-- F.2 Laws of Indices -->
-                    <mtext>F.2 Laws of Indices</mtext>
+            <!-- Laws of Indices -->
+            <h3>Laws of Indices</h3>
+            <ol>
+                <li>
                     <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>i)</mi>
@@ -2054,6 +2140,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>ii)</mi>
                             <mrow>
@@ -2077,6 +2167,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>iii)</mi>
                             <mrow>
@@ -2102,6 +2196,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>iv)</mi>
                             <mrow>
@@ -2125,6 +2223,10 @@
                                 </msup>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>v)</mi>
                             <mrow>
@@ -2153,6 +2255,10 @@
                             </msup>
                         </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>vi)</mi>
                             <mrow>
@@ -2185,9 +2291,13 @@
                             </mrow>
                         </mrow>
                     </math>
+                </li>
+            </ol>
 
-                    <!-- F.2 Surds -->
-                    <mtext>F.2 Surds</mtext>
+            <!-- Surds -->
+            <h3>Surds</h3>
+            <ol>
+                <li>
                     <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>a)</mi>
@@ -2204,6 +2314,10 @@
                                 </msqrt>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>b)</mi>
                             <mrow>
@@ -2224,6 +2338,10 @@
                                 </msqrt>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>c)</mi>
                             <mrow>
@@ -2245,9 +2363,13 @@
                             </mrow>
                         </mrow>
                     </math>
+                </li>
+            </ol>
 
-                    <!-- F.2 More about Trigonometry -->
-                    <mtext>F.2 More about Trigonometry</mtext>
+            <!-- More about Trigonometry -->
+            <h3>More about Trigonometry</h3>
+            <ol>
+                <li>
                     <math display="inline" style="font-size:12px;">
 
                         <mrow>
@@ -2269,6 +2391,10 @@
                                 <mtext>adjacent</mtext>
                             </mfrac>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>i)</mi>
                             <mrow>
@@ -2287,6 +2413,10 @@
                                 <mn>1</mn>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>ii)</mi>
                             <mrow>
@@ -2298,18 +2428,30 @@
                                 </mfrac>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>iii)</mi>
                             <mrow>
                                 <mtext>sin(90° - θ) = cos θ</mtext>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>iv)</mi>
                             <mrow>
                                 <mtext>cos(90° - θ) = sin θ</mtext>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>v)</mi>
                             <mrow>
@@ -2320,38 +2462,57 @@
                                 </mfrac>
                             </mrow>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
 
                         <mrow>
                             <mtext>Others:</mtext>
                             <mrow>
                                 <mn>1 - sin² θ = cos² θ</mn>
                             </mrow>
-                            <mrow>
-                                <mn>1 - cos² θ = sin² θ</mn>
-                            </mrow>
-                            <mrow>
-                                <mfrac>
-                                    <mn>1</mn>
-                                    <mtext>sin θ</mtext>
-                                </mfrac>
-                                <mo>=</mo>
-                                <mtext>cosec θ</mtext>
-                            </mrow>
-                            <mrow>
-                                <mfrac>
-                                    <mn>1</mn>
-                                    <mtext>tan(90° - θ)</mtext>
-                                </mfrac>
-                                <mo>=</mo>
-                                <mtext>tan θ</mtext>
-                            </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mn>1 - cos² θ = sin² θ</mn>
                         </mrow>
                     </math>
-
-                    <!-- F.2 Mensuration -->
-                    <mtext>F.2 Mensuration</mtext>
+                </li>
+                <li>
                     <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mfrac>
+                                <mn>1</mn>
+                                <mtext>sin θ</mtext>
+                            </mfrac>
+                            <mo>=</mo>
+                            <mtext>cosec θ</mtext>
+                        </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mfrac>
+                                <mn>1</mn>
+                                <mtext>tan(90° - θ)</mtext>
+                            </mfrac>
+                            <mo>=</mo>
+                            <mtext>tan θ</mtext>
+                        </mrow>
+                        </mrow>
+                    </math>
+                </li>
+            </ol>
 
+            <!-- F.2 Mensuration -->
+            <h3>Mensuration</h3>
+            <ol>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>a)</mi>
                             <mtext>Circle</mtext>
@@ -2359,49 +2520,83 @@
                                 <mi>i)</mi>
                                 <mtext>Perimeter = 2 × π × Radius</mtext>
                             </mrow>
-                            <mrow>
-                                <mi>ii)</mi>
-                                <mtext>Area = π × (Radius)²</mtext>
-                            </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>ii)</mi>
+                            <mtext>Area = π × (Radius)²</mtext>
                         </mrow>
+                        </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>b)</mi>
                             <mtext>Sector</mtext>
-                            <mrow>
-                                <mi>i)</mi>
-                                <mtext>Arc length = 2 × π × Radius ×</mtext>
-                                <mfrac>
-                                    <mtext>Angle at centre</mtext>
-                                    <mn>360°</mn>
-                                </mfrac>
-                            </mrow>
-                            <mrow>
-                                <mi>ii)</mi>
-                                <mtext>Area = π × (Radius)² ×</mtext>
-                                <mfrac>
-                                    <mtext>Angle at centre</mtext>
-                                    <mn>360°</mn>
-                                </mfrac>
-                            </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>i)</mi>
+                            <mtext>Arc length = 2 × π × Radius ×</mtext>
+                            <mfrac>
+                                <mtext>Angle at centre</mtext>
+                                <mn>360°</mn>
+                            </mfrac>
                         </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>ii)</mi>
+                            <mtext>Area = π × (Radius)² ×</mtext>
+                            <mfrac>
+                                <mtext>Angle at centre</mtext>
+                                <mn>360°</mn>
+                            </mfrac>
+                        </mrow>
+                        </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
                         <mrow>
                             <mi>c)</mi>
                             <mtext>Cylinder</mtext>
                             <mtext>Let r and h be base radius and height of the cylinder respectively.</mtext>
-                            <mrow>
-                                <mi>i)</mi>
-                                <mtext>Curved surface area = 2πrh</mtext>
-                            </mrow>
-                            <mrow>
-                                <mi>ii)</mi>
-                                <mtext>Total surface area = 2πrh + 2πr²</mtext>
-                            </mrow>
-                            <mrow>
-                                <mi>iii)</mi>
-                                <mtext>Volume = πr²h</mtext>
-                            </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>i)</mi>
+                            <mtext>Curved surface area = 2πrh</mtext>
                         </mrow>
                     </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>ii)</mi>
+                            <mtext>Total surface area = 2πrh + 2πr²</mtext>
+                        </mrow>
+                    </math>
+                </li>
+                <li>
+                    <math display="inline" style="font-size:12px;">
+                        <mrow>
+                            <mi>iii)</mi>
+                            <mtext>Volume = πr²h</mtext>
+                        </mrow>
+                        </mrow>
+                    </math>
+                </li>
+            </ol>
 
 
 
@@ -2409,13 +2604,12 @@
 
 
 
-
-
-                    <div class="page-header">
-                        <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
-                            Menu</button>
-                        <h2>公式 Formulas</h2>
-                    </div>
+            <div class="page-header">
+                <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return
+                    to
+                    Menu</button>
+                <h2>公式 Formulas</h2>
+            </div>
 
         </div>
 
@@ -2595,6 +2789,7 @@
             </div>
 
         </div>
+
 
 
         <!--testing delete 1 here-->
