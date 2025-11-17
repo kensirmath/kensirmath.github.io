@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>複數計算器</title>
+  <style>
+    :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  /* RGB versions for opacity control */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  /* Background color tokens (Light Mode) */
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  /* Common style patterns */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+
+  /* RGB versions for opacity control */
+  --color-success-rgb: 33, 128, 141;
+  --color-error-rgb: 192, 21, 47;
+  --color-warning-rgb: 168, 75, 47;
+  --color-info-rgb: 98, 108, 113;
+
+  /* Typography */
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --letter-spacing-tight: -0.01em;
+
+  /* Spacing */
+  --space-0: 0;
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
+    0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+
+  /* Animation */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+}
+
+/* Dark mode colors */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-400-rgb: 119, 124, 124;
+    --color-teal-300-rgb: 50, 184, 198;
+    --color-gray-300-rgb: 167, 169, 169;
+    --color-gray-200-rgb: 245, 245, 245;
+
+    --color-bg-1: rgba(29, 78, 216, 0.15);
+    --color-bg-2: rgba(180, 83, 9, 0.15);
+    --color-bg-3: rgba(21, 128, 61, 0.15);
+    --color-bg-4: rgba(185, 28, 28, 0.15);
+    --color-bg-5: rgba(107, 33, 168, 0.15);
+    --color-bg-6: rgba(194, 65, 12, 0.15);
+    --color-bg-7: rgba(190, 24, 93, 0.15);
+    --color-bg-8: rgba(8, 145, 178, 0.15);
+
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-primary-active: var(--color-teal-800);
+    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+    --color-error: var(--color-red-400);
+    --color-success: var(--color-teal-300);
+    --color-warning: var(--color-orange-400);
+    --color-info: var(--color-gray-300);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+    --color-success-rgb: var(--color-teal-300-rgb);
+    --color-error-rgb: var(--color-red-400-rgb);
+    --color-warning-rgb: var(--color-orange-400-rgb);
+    --color-info-rgb: var(--color-gray-300-rgb);
+  }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
+    format('woff2');
+}
+
+/* Base styles */
+html {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+}
+h2 {
+  font-size: var(--font-size-3xl);
+}
+h3 {
+  font-size: var(--font-size-2xl);
+}
+
+/* Custom Styles */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-32) var(--space-16);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-32);
+}
+
+.header h1 {
+  margin-bottom: var(--space-8);
+}
+
+.header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  margin: 0;
+}
+
+.calculator-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-24);
+}
+
+.complex-input-group {
+  margin-bottom: var(--space-24);
+}
+
+.complex-label {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-12);
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  flex: 1;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: var(--space-12);
+  font-size: var(--font-size-md);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.form-control:focus {
+  border-color: var(--color-primary);
+  outline: var(--focus-outline);
+}
+
+.input-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  min-width: 20px;
+}
+
+.operator-label {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.operation-group {
+  margin-bottom: var(--space-24);
+}
+
+.operation-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+.btn-operation {
+  padding: var(--space-12);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.btn-operation:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+.btn-operation.active {
+  background-color: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border-color: var(--color-primary);
+}
+
+.btn-operation:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-24);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+  border: none;
+  text-decoration: none;
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn--primary:active {
+  background: var(--color-primary-active);
+}
+
+.btn--primary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.result-section {
+  margin-top: var(--space-24);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-card-border-inner);
+}
+
+.result-card {
+  background-color: var(--color-bg-1);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-base);
+  padding: var(--space-16);
+  text-align: center;
+}
+
+.result-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-12);
+  font-family: var(--font-family-mono);
+}
+
+.result-details {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-24);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.result-part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.result-part-label {
+  font-weight: var(--font-weight-medium);
+}
+
+.result-part-value {
+  font-family: var(--font-family-mono);
+  color: var(--color-text);
+}
+
+.error-message {
+  background-color: rgba(var(--color-error-rgb), 0.1);
+  border: 1px solid rgba(var(--color-error-rgb), 0.25);
+  color: var(--color-error);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  margin-top: var(--space-16);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .operation-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .result-value {
+    font-size: var(--font-size-2xl);
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>複數計算器</h1>
+      <p>計算複數 (a+bi) 的加法、減法、乘法、除法</p>
+    </div>
+
+    <div class="calculator-card">
+      <!-- 第一個複數輸入 -->
+      <div class="complex-input-group">
+        <label class="complex-label">第一個複數</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="real1" 
+              class="form-control" 
+              placeholder="實部 (a)"
+              aria-label="第一個複數的實部"
+            >
+            <span class="operator-label">+</span>
+            <input 
+              type="text" 
+              id="imag1" 
+              class="form-control" 
+              placeholder="虛部 (b)"
+              aria-label="第一個複數的虛部"
+            >
+            <span class="input-label">i</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第二個複數輸入 -->
+      <div class="complex-input-group">
+        <label class="complex-label">第二個複數</label>
+        <div class="input-row">
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="real2" 
+              class="form-control" 
+              placeholder="實部 (c)"
+              aria-label="第二個複數的實部"
+            >
+            <span class="operator-label">+</span>
+            <input 
+              type="text" 
+              id="imag2" 
+              class="form-control" 
+              placeholder="虛部 (d)"
+              aria-label="第二個複數的虛部"
+            >
+            <span class="input-label">i</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 運算選擇 -->
+      <div class="operation-group">
+        <label class="complex-label">選擇運算</label>
+        <div class="operation-buttons">
+          <button class="btn-operation" data-operation="add" aria-label="加法">+</button>
+          <button class="btn-operation" data-operation="subtract" aria-label="減法">−</button>
+          <button class="btn-operation" data-operation="multiply" aria-label="乘法">×</button>
+          <button class="btn-operation" data-operation="divide" aria-label="除法">÷</button>
+        </div>
+      </div>
+
+      <!-- 計算按鈕 -->
+      <button class="btn btn--primary" id="calculateBtn">計算結果</button>
+
+      <!-- 錯誤訊息 -->
+      <div id="errorMessage" class="error-message hidden"></div>
+
+      <!-- 結果顯示 -->
+      <div id="resultSection" class="result-section hidden">
+        <div class="result-card">
+          <div class="result-label">計算結果</div>
+          <div class="result-value" id="resultValue"></div>
+          <div class="result-details">
+            <div class="result-part">
+              <span class="result-part-label">實部</span>
+              <span class="result-part-value" id="realPart"></span>
+            </div>
+            <div class="result-part">
+              <span class="result-part-label">虛部</span>
+              <span class="result-part-value" id="imagPart"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let selectedOperation = null;
+
+    // DOM elements
+    const real1Input = document.getElementById('real1');
+    const imag1Input = document.getElementById('imag1');
+    const real2Input = document.getElementById('real2');
+    const imag2Input = document.getElementById('imag2');
+    const operationButtons = document.querySelectorAll('.btn-operation');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const resultSection = document.getElementById('resultSection');
+    const resultValue = document.getElementById('resultValue');
+    const realPart = document.getElementById('realPart');
+    const imagPart = document.getElementById('imagPart');
+
+    // Operation button handlers
+    operationButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        operationButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedOperation = button.dataset.operation;
+        hideError();
+      });
+    });
+
+    // Calculate button handler
+    calculateBtn.addEventListener('click', calculate);
+
+    // Enter key handler for inputs
+    [real1Input, imag1Input, real2Input, imag2Input].forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          calculate();
+        }
+      });
+    });
+
+    function calculate() {
+      hideError();
+      hideResult();
+
+      // Validate operation selected
+      if (!selectedOperation) {
+        showError('請選擇運算類型');
+        return;
+      }
+
+      // Get input values
+      const a = real1Input.value.trim();
+      const b = imag1Input.value.trim();
+      const c = real2Input.value.trim();
+      const d = imag2Input.value.trim();
+
+      // Validate inputs
+      if (a === '' || b === '' || c === '' || d === '') {
+        showError('請填寫所有欄位');
+        return;
+      }
+
+      // Convert to numbers
+      const real1 = parseFloat(a);
+      const imag1 = parseFloat(b);
+      const real2 = parseFloat(c);
+      const imag2 = parseFloat(d);
+
+      // Validate numbers
+      if (isNaN(real1) || isNaN(imag1) || isNaN(real2) || isNaN(imag2)) {
+        showError('請輸入有效的數字');
+        return;
+      }
+
+      // Perform calculation
+      let resultReal, resultImag;
+
+      switch (selectedOperation) {
+        case 'add':
+          resultReal = real1 + real2;
+          resultImag = imag1 + imag2;
+          break;
+        case 'subtract':
+          resultReal = real1 - real2;
+          resultImag = imag1 - imag2;
+          break;
+        case 'multiply':
+          resultReal = real1 * real2 - imag1 * imag2;
+          resultImag = real1 * imag2 + imag1 * real2;
+          break;
+        case 'divide':
+          const denominator = real2 * real2 + imag2 * imag2;
+          if (denominator === 0) {
+            showError('除數不能為零');
+            return;
+          }
+          resultReal = (real1 * real2 + imag1 * imag2) / denominator;
+          resultImag = (imag1 * real2 - real1 * imag2) / denominator;
+          break;
+      }
+
+      // Display result
+      displayResult(resultReal, resultImag);
+    }
+
+    function displayResult(real, imag) {
+      // Round to 6 decimal places to avoid floating point errors
+      real = Math.round(real * 1000000) / 1000000;
+      imag = Math.round(imag * 1000000) / 1000000;
+
+      // Format result string
+      let resultStr = '';
+      
+      if (real !== 0) {
+        resultStr = real.toString();
+      }
+      
+      if (imag !== 0) {
+        if (imag > 0 && real !== 0) {
+          resultStr += ' + ';
+        } else if (imag < 0) {
+          resultStr += real !== 0 ? ' - ' : '-';
+          imag = Math.abs(imag);
+        }
+        
+        if (imag === 1) {
+          resultStr += 'i';
+        } else {
+          resultStr += imag + 'i';
+        }
+      }
+      
+      if (real === 0 && imag === 0) {
+        resultStr = '0';
+      }
+
+      resultValue.textContent = resultStr;
+      realPart.textContent = real;
+      imagPart.textContent = Math.round(Math.abs(imag === Math.abs(imag) ? imag : -imag) * 1000000) / 1000000;
+
+      resultSection.classList.remove('hidden');
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.remove('hidden');
+    }
+
+    function hideError() {
+      errorMessage.classList.add('hidden');
+    }
+
+    function hideResult() {
+      resultSection.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
