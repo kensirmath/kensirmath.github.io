@@ -103,8 +103,8 @@ function calculate() {
 
 function displayResult(real, imag) {
     // Round to 6 decimal places to avoid floating point errors
-    real = Math.round(real * 1000000) / 1000000;
-    imag = Math.round(imag * 1000000) / 1000000;
+//    real = Math.round(real * 1000000) / 1000000;
+//    imag = Math.round(imag * 1000000) / 1000000;
 
     // Format result string
     let resultStr = '';
