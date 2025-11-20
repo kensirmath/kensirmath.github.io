@@ -103,8 +103,8 @@ function calculate() {
 
 function displayResult(real, imag) {
     // Round to 6 decimal places to avoid floating point errors
-//    real = Math.round(real * 1000000) / 1000000;
-//    imag = Math.round(imag * 1000000) / 1000000;
+    //    real = Math.round(real * 1000000) / 1000000;
+    //    imag = Math.round(imag * 1000000) / 1000000;
 
     // Format result string
     let resultStr = '';
@@ -140,14 +140,14 @@ function displayResult(real, imag) {
 
     // Check if result is rational using enhanced detection
     if (isRationalNumber(real)) {
-        const fraction = decimalToFraction(real);
+        const realfraction = decimalToFraction(real);
 
-        if (fraction.denominator === 1) {
+        if (realfraction.denominator === 1) {
             // Integer result
             realPart.textContent = real;
-        } else if (Math.abs(fraction.denominator) <= 10000) {
+        } else if (Math.abs(realfraction.denominator) <= 10000) {
             // Rational number - show both decimal and fraction
-            realPart.textContent = `${fraction.numerator}/${fraction.denominator}`;
+            realPart.textContent = `${realfraction.numerator}/${realfraction.denominator}`;
         } else {
             // Rational but denominator too large
             realPart.textContent = real;
