@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode Symbol Lookup</title>
+    <style>
+        :root {
+            /* Primitive Color Tokens */
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+
+            /* RGB versions for opacity control */
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+
+            /* Background color tokens (Light Mode) */
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+
+            /* Semantic Color Tokens (Light Mode) */
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+            /* Typography */
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
+                BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            --letter-spacing-tight: -0.01em;
+
+            /* Spacing */
+            --space-4: 4px;
+            --space-6: 6px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
+                0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+            /* Animation */
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+
+                --color-bg-1: rgba(29, 78, 216, 0.15);
+                --color-bg-2: rgba(180, 83, 9, 0.15);
+                --color-bg-3: rgba(21, 128, 61, 0.15);
+                --color-bg-4: rgba(185, 28, 28, 0.15);
+                --color-bg-5: rgba(107, 33, 168, 0.15);
+                --color-bg-6: rgba(194, 65, 12, 0.15);
+                --color-bg-7: rgba(190, 24, 93, 0.15);
+                --color-bg-8: rgba(8, 145, 178, 0.15);
+
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-primary-active: var(--color-teal-800);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-info: var(--color-gray-300);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+            }
+        }
+
+        @font-face {
+            font-family: 'FKGroteskNeue';
+            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-32) var(--space-16);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-32);
+        }
+
+        .header h1 {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            letter-spacing: var(--letter-spacing-tight);
+            margin-bottom: var(--space-8);
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-lg);
+        }
+
+        .search-section {
+            margin-bottom: var(--space-32);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--space-16);
+            font-size: var(--font-size-lg);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            transition: border-color var(--duration-fast) var(--ease-standard);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-focus-ring);
+        }
+
+        .quick-access {
+            margin-bottom: var(--space-32);
+        }
+
+        .quick-access h2 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-16);
+        }
+
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-8);
+        }
+
+        .quick-btn {
+            padding: var(--space-8) var(--space-16);
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            color: var(--color-text);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+
+        .quick-btn:hover {
+            background-color: var(--color-secondary-hover);
+            transform: translateY(-1px);
+        }
+
+        .quick-btn:active {
+            background-color: var(--color-secondary-active);
+            transform: translateY(0);
+        }
+
+        .results-info {
+            margin-bottom: var(--space-16);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-base);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-16);
+        }
+
+        .symbol-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+
+        .symbol-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .symbol-display {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: var(--space-16);
+            padding: var(--space-16);
+            background-color: var(--color-bg-1);
+            border-radius: var(--radius-base);
+            user-select: all;
+        }
+
+        .symbol-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .symbol-name {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            margin-bottom: var(--space-4);
+        }
+
+        .symbol-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--font-size-sm);
+            padding: var(--space-6) 0;
+            border-bottom: 1px solid var(--color-card-border-inner);
+        }
+
+        .symbol-detail:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .detail-value {
+            color: var(--color-text);
+            font-family: var(--font-family-base);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: var(--space-4) var(--space-12);
+            background-color: var(--color-bg-2);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            margin-top: var(--space-8);
+        }
+
+        .copy-btn {
+            width: 100%;
+            margin-top: var(--space-12);
+            padding: var(--space-8);
+            background-color: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: background-color var(--duration-fast) var(--ease-standard);
+        }
+
+        .copy-btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .copy-btn:active {
+            background-color: var(--color-primary-active);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--color-success);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: var(--space-32);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-lg);
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+
+            .header h1 {
+                font-size: var(--font-size-3xl);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Unicode Symbol Lookup</h1>
+            <p>Search thousands of Unicode symbols by name</p>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="searchInput" class="search-input"
+                placeholder="Search symbols (e.g., alpha, infinity, arrow, heart)..." autocomplete="off">
+        </div>
+
+        <div class="quick-access">
+            <h2>Popular Symbols</h2>
+            <div class="quick-buttons">
+                <!--<button class="quick-btn" onclick="quickSearch('alpha')">α Alpha</button>
+                <button class="quick-btn" onclick="quickSearch('pi')">π Pi</button>
+                <button class="quick-btn" onclick="quickSearch('infinity')">∞ Infinity</button>
+                <button class="quick-btn" onclick="quickSearch('arrow')">→ Arrows</button>
+                <button class="quick-btn" onclick="quickSearch('heart')">♥ Heart</button>
+                <button class="quick-btn" onclick="quickSearch('degree')">° Degree</button>
+                <button class="quick-btn" onclick="quickSearch('copyright')">© Copyright</button>
+                <button class="quick-btn" onclick="quickSearch('euro')">€ Euro</button>
+                <button class="quick-btn" onclick="quickSearch('check')">✓ Check</button>-->
+
+                <button class="quick-btn" onclick="quickSearch('Greek Letters')">Greek Letter α</button>
+                <button class="quick-btn" onclick="quickSearch('Mathematical')">Mathematics π</button>
+                <button class="quick-btn" onclick="quickSearch('Physics')">Physics E=mc<sup>2</sup></button>
+                <button class="quick-btn" onclick="quickSearch('Arrow')">Arrow →</button>
+                <button class="quick-btn" onclick="quickSearch('Currency')">Currency €</button>
+                <button class="quick-btn" onclick="quickSearch('Common')">Common ✓</button>
+                <button class="quick-btn" onclick="quickSearch('Shape')">Shape ♥</button>
+                <button class="quick-btn" onclick="quickSearch('Emoji')">Emoji 👍</button>
+            </div>
+        </div>
+
+        <div id="resultsInfo" class="results-info"></div>
+        <div id="resultsGrid" class="results-grid"></div>
+    </div>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>矢量計算器 Vector Calculator</h2>
+    </div>
+
+    <script>
+        // Comprehensive symbol database
+        const symbolDatabase = [
+            // Greek Letters
+            { name: "alpha", symbol: "α", unicode: "U+03B1", decimal: 945, html: "&alpha;", category: "Greek Letters" },
+            { name: "beta", symbol: "β", unicode: "U+03B2", decimal: 946, html: "&beta;", category: "Greek Letters" },
+            { name: "gamma", symbol: "γ", unicode: "U+03B3", decimal: 947, html: "&gamma;", category: "Greek Letters" },
+            { name: "delta", symbol: "δ", unicode: "U+03B4", decimal: 948, html: "&delta;", category: "Greek Letters" },
+            { name: "epsilon", symbol: "ε", unicode: "U+03B5", decimal: 949, html: "&epsilon;", category: "Greek Letters" },
+            { name: "zeta", symbol: "ζ", unicode: "U+03B6", decimal: 950, html: "&zeta;", category: "Greek Letters" },
+            { name: "eta", symbol: "η", unicode: "U+03B7", decimal: 951, html: "&eta;", category: "Greek Letters" },
+            { name: "theta", symbol: "θ", unicode: "U+03B8", decimal: 952, html: "&theta;", category: "Greek Letters" },
+            { name: "iota", symbol: "ι", unicode: "U+03B9", decimal: 953, html: "&iota;", category: "Greek Letters" },
+            { name: "kappa", symbol: "κ", unicode: "U+03BA", decimal: 954, html: "&kappa;", category: "Greek Letters" },
+            { name: "lambda", symbol: "λ", unicode: "U+03BB", decimal: 955, html: "&lambda;", category: "Greek Letters" },
+            { name: "mu", symbol: "μ", unicode: "U+03BC", decimal: 956, html: "&mu;", category: "Greek Letters" },
+            { name: "nu", symbol: "ν", unicode: "U+03BD", decimal: 957, html: "&nu;", category: "Greek Letters" },
+            { name: "xi", symbol: "ξ", unicode: "U+03BE", decimal: 958, html: "&xi;", category: "Greek Letters" },
+            { name: "omicron", symbol: "ο", unicode: "U+03BF", decimal: 959, html: "&omicron;", category: "Greek Letters" },
+            { name: "pi", symbol: "π", unicode: "U+03C0", decimal: 960, html: "&pi;", category: "Greek Letters" },
+            { name: "rho", symbol: "ρ", unicode: "U+03C1", decimal: 961, html: "&rho;", category: "Greek Letters" },
+            { name: "sigma", symbol: "σ", unicode: "U+03C3", decimal: 963, html: "&sigma;", category: "Greek Letters" },
+            { name: "tau", symbol: "τ", unicode: "U+03C4", decimal: 964, html: "&tau;", category: "Greek Letters" },
+            { name: "upsilon", symbol: "υ", unicode: "U+03C5", decimal: 965, html: "&upsilon;", category: "Greek Letters" },
+            { name: "phi", symbol: "φ", unicode: "U+03C6", decimal: 966, html: "&phi;", category: "Greek Letters" },
+            { name: "chi", symbol: "χ", unicode: "U+03C7", decimal: 967, html: "&chi;", category: "Greek Letters" },
+            { name: "psi", symbol: "ψ", unicode: "U+03C8", decimal: 968, html: "&psi;", category: "Greek Letters" },
+            { name: "omega", symbol: "ω", unicode: "U+03C9", decimal: 969, html: "&omega;", category: "Greek Letters" },
+
+            // Uppercase variants
+            { name: "Alpha", symbol: "Α", unicode: "U+0391", decimal: 913, html: "&Alpha;", category: "Greek Letters" },
+            { name: "Beta", symbol: "Β", unicode: "U+0392", decimal: 914, html: "&Beta;", category: "Greek Letters" },
+            { name: "Gamma", symbol: "Γ", unicode: "U+0393", decimal: 915, html: "&Gamma;", category: "Greek Letters" },
+            { name: "Delta", symbol: "Δ", unicode: "U+0394", decimal: 916, html: "&Delta;", category: "Greek Letters" },
+            { name: "Epsilon", symbol: "Ε", unicode: "U+0395", decimal: 917, html: "&Epsilon;", category: "Greek Letters" },
+            { name: "Zeta", symbol: "Ζ", unicode: "U+0396", decimal: 918, html: "&Zeta;", category: "Greek Letters" },
+            { name: "Eta", symbol: "Η", unicode: "U+0397", decimal: 919, html: "&Eta;", category: "Greek Letters" },
+            { name: "Theta", symbol: "Θ", unicode: "U+0398", decimal: 920, html: "&Theta;", category: "Greek Letters" },
+            { name: "Iota", symbol: "Ι", unicode: "U+0399", decimal: 921, html: "&Iota;", category: "Greek Letters" },
+            { name: "Kappa", symbol: "Κ", unicode: "U+039A", decimal: 922, html: "&Kappa;", category: "Greek Letters" },
+            { name: "Lambda", symbol: "Λ", unicode: "U+039B", decimal: 923, html: "&Lambda;", category: "Greek Letters" },
+            { name: "Mu", symbol: "Μ", unicode: "U+039C", decimal: 924, html: "&Mu;", category: "Greek Letters" },
+            { name: "Nu", symbol: "Ν", unicode: "U+039D", decimal: 925, html: "&Nu;", category: "Greek Letters" },
+            { name: "Xi", symbol: "Ξ", unicode: "U+039E", decimal: 926, html: "&Xi;", category: "Greek Letters" },
+            { name: "Omicron", symbol: "Ο", unicode: "U+039F", decimal: 927, html: "&Omicron;", category: "Greek Letters" },
+            { name: "Pi", symbol: "Π", unicode: "U+03A0", decimal: 928, html: "&Pi;", category: "Greek Letters" },
+            { name: "Rho", symbol: "Ρ", unicode: "U+03A1", decimal: 929, html: "&Rho;", category: "Greek Letters" },
+            { name: "Sigma", symbol: "Σ", unicode: "U+03A3", decimal: 931, html: "&Sigma;", category: "Greek Letters" },
+            { name: "Tau", symbol: "Τ", unicode: "U+03A4", decimal: 932, html: "&Tau;", category: "Greek Letters" },
+            { name: "Upsilon", symbol: "Υ", unicode: "U+03A5", decimal: 933, html: "&Upsilon;", category: "Greek Letters" },
+            { name: "Phi", symbol: "Φ", unicode: "U+03A6", decimal: 934, html: "&Phi;", category: "Greek Letters" },
+            { name: "Chi", symbol: "Χ", unicode: "U+03A7", decimal: 935, html: "&Chi;", category: "Greek Letters" },
+            { name: "Psi", symbol: "Ψ", unicode: "U+03A8", decimal: 936, html: "&Psi;", category: "Greek Letters" },
+            { name: "Omega", symbol: "Ω", unicode: "U+03A9", decimal: 937, html: "&Omega;", category: "Greek Letters" },
+
+
+            // Mathematical Symbols
+            { name: "plus", symbol: "+", unicode: "U+002B", decimal: 43, html: "+", category: "Mathematical" },
+            { name: "minus", symbol: "−", unicode: "U+2212", decimal: 8722, html: "&minus;", category: "Mathematical" },
+            { name: "multiply", symbol: "×", unicode: "U+00D7", decimal: 215, html: "&times;", category: "Mathematical" },
+            { name: "divide", symbol: "÷", unicode: "U+00F7", decimal: 247, html: "&divide;", category: "Mathematical" },
+            { name: "equals", symbol: "=", unicode: "U+003D", decimal: 61, html: "=", category: "Mathematical" },
+            { name: "not equal", symbol: "≠", unicode: "U+2260", decimal: 8800, html: "&ne;", category: "Mathematical" },
+            { name: "less than", symbol: "<", unicode: "U+003C", decimal: 60, html: "&lt;", category: "Mathematical" },
+            { name: "greater than", symbol: ">", unicode: "U+003E", decimal: 62, html: "&gt;", category: "Mathematical" },
+            { name: "less than or equal", symbol: "≤", unicode: "U+2264", decimal: 8804, html: "&le;", category: "Mathematical" },
+            { name: "greater than or equal", symbol: "≥", unicode: "U+2265", decimal: 8805, html: "&ge;", category: "Mathematical" },
+            { name: "approximately equal", symbol: "≈", unicode: "U+2248", decimal: 8776, html: "&asymp;", category: "Mathematical" },
+            { name: "identical to", symbol: "≡", unicode: "U+2261", decimal: 8801, html: "&equiv;", category: "Mathematical" },
+            { name: "plus or minus", symbol: "±", unicode: "U+00B1", decimal: 177, html: "&plusmn;", category: "Mathematical" },
+            { name: "square root", symbol: "√", unicode: "U+221A", decimal: 8730, html: "&radic;", category: "Mathematical" },
+            { name: "cube root", symbol: "∛", unicode: "U+221B", decimal: 8731, html: "∛", category: "Mathematical" },
+            { name: "infinity", symbol: "∞", unicode: "U+221E", decimal: 8734, html: "&infin;", category: "Mathematical" },
+            { name: "integral", symbol: "∫", unicode: "U+222B", decimal: 8747, html: "&int;", category: "Mathematical" },
+            { name: "summation", symbol: "∑", unicode: "U+2211", decimal: 8721, html: "&sum;", category: "Mathematical" },
+            { name: "product", symbol: "∏", unicode: "U+220F", decimal: 8719, html: "&prod;", category: "Mathematical" },
+            { name: "partial derivative", symbol: "∂", unicode: "U+2202", decimal: 8706, html: "&part;", category: "Mathematical" },
+            { name: "for all", symbol: "∀", unicode: "U+2200", decimal: 8704, html: "&forall;", category: "Mathematical" },
+            { name: "there exists", symbol: "∃", unicode: "U+2203", decimal: 8707, html: "&exist;", category: "Mathematical" },
+            { name: "element of", symbol: "∈", unicode: "U+2208", decimal: 8712, html: "&isin;", category: "Mathematical" },
+            { name: "not element of", symbol: "∉", unicode: "U+2209", decimal: 8713, html: "&notin;", category: "Mathematical" },
+            { name: "subset", symbol: "⊂", unicode: "U+2282", decimal: 8834, html: "&sub;", category: "Mathematical" },
+            { name: "superset", symbol: "⊃", unicode: "U+2283", decimal: 8835, html: "&sup;", category: "Mathematical" },
+            { name: "union", symbol: "∪", unicode: "U+222A", decimal: 8746, html: "&cup;", category: "Mathematical" },
+            { name: "intersection", symbol: "∩", unicode: "U+2229", decimal: 8745, html: "&cap;", category: "Mathematical" },
+            { name: "logical and", symbol: "∧", unicode: "U+2227", decimal: 8743, html: "&and;", category: "Mathematical" },
+            { name: "logical or", symbol: "∨", unicode: "U+2228", decimal: 8744, html: "&or;", category: "Mathematical" },
+            { name: "logical not", symbol: "¬", unicode: "U+00AC", decimal: 172, html: "&not;", category: "Mathematical" },
+            { name: "angle", symbol: "∠", unicode: "U+2220", decimal: 8736, html: "&ang;", category: "Mathematical" },
+            { name: "right angle", symbol: "∟", unicode: "U+221F", decimal: 8735, html: "∟", category: "Mathematical" },
+            { name: "perpendicular", symbol: "⊥", unicode: "U+22A5", decimal: 8869, html: "&perp;", category: "Mathematical" },
+            { name: "parallel", symbol: "∥", unicode: "U+2225", decimal: 8741, html: "∥", category: "Mathematical" },
+            { name: "empty set", symbol: "∅", unicode: "U+2205", decimal: 8709, html: "&empty;", category: "Mathematical" },
+
+            { name: "plus", symbol: "+", unicode: "U+002B", decimal: 43, html: "+", category: "Mathematical" },
+            { name: "minus", symbol: "−", unicode: "U+2212", decimal: 8722, html: "&minus;", category: "Mathematical" },
+            { name: "multiplication", symbol: "×", unicode: "U+00D7", decimal: 215, html: "&times;", category: "Mathematical" },
+            { name: "division", symbol: "÷", unicode: "U+00F7", decimal: 247, html: "&divide;", category: "Mathematical" },
+            { name: "equals", symbol: "=", unicode: "U+003D", decimal: 61, html: "=", category: "Mathematical" },
+            { name: "not equal", symbol: "≠", unicode: "U+2260", decimal: 8800, html: "&ne;", category: "Mathematical" },
+            { name: "less than", symbol: "<", unicode: "U+003C", decimal: 60, html: "&lt;", category: "Mathematical" },
+            { name: "greater than", symbol: ">", unicode: "U+003E", decimal: 62, html: "&gt;", category: "Mathematical" },
+            { name: "less than or equal", symbol: "≤", unicode: "U+2264", decimal: 8804, html: "&le;", category: "Mathematical" },
+            { name: "greater than or equal", symbol: "≥", unicode: "U+2265", decimal: 8805, html: "&ge;", category: "Mathematical" },
+            { name: "identical to", symbol: "≡", unicode: "U+2261", decimal: 8801, html: "&equiv;", category: "Mathematical" },
+            { name: "approximately equal", symbol: "≈", unicode: "U+2248", decimal: 8776, html: "&asymp;", category: "Mathematical" },
+            { name: "plus or minus", symbol: "±", unicode: "U+00B1", decimal: 177, html: "&plusmn;", category: "Mathematical" },
+            { name: "times", symbol: "·", unicode: "U+00B7", decimal: 183, html: "&middot;", category: "Mathematical" },
+            { name: "square root", symbol: "√", unicode: "U+221A", decimal: 8730, html: "&radic;", category: "Mathematical" },
+            { name: "cube root", symbol: "∛", unicode: "U+221B", decimal: 8731, html: "∛", category: "Mathematical" },
+            { name: "infinity", symbol: "∞", unicode: "U+221E", decimal: 8734, html: "&infin;", category: "Mathematical" },
+            { name: "integral", symbol: "∫", unicode: "U+222B", decimal: 8747, html: "&int;", category: "Mathematical" },
+            { name: "double integral", symbol: "∬", unicode: "U+222C", decimal: 8748, html: "∬", category: "Mathematical" },
+            { name: "triple integral", symbol: "∭", unicode: "U+222D", decimal: 8749, html: "∭", category: "Mathematical" },
+            { name: "summation", symbol: "∑", unicode: "U+2211", decimal: 8721, html: "&sum;", category: "Mathematical" },
+            { name: "product", symbol: "∏", unicode: "U+220F", decimal: 8719, html: "&prod;", category: "Mathematical" },
+            { name: "partial differential", symbol: "∂", unicode: "U+2202", decimal: 8706, html: "&part;", category: "Mathematical" },
+            { name: "for all", symbol: "∀", unicode: "U+2200", decimal: 8704, html: "&forall;", category: "Mathematical" },
+            { name: "there exists", symbol: "∃", unicode: "U+2203", decimal: 8707, html: "&exist;", category: "Mathematical" },
+            { name: "element of", symbol: "∈", unicode: "U+2208", decimal: 8712, html: "&isin;", category: "Mathematical" },
+            { name: "not element of", symbol: "∉", unicode: "U+2209", decimal: 8713, html: "&notin;", category: "Mathematical" },
+            { name: "subset of", symbol: "⊂", unicode: "U+2282", decimal: 8834, html: "&sub;", category: "Mathematical" },
+            { name: "superset of", symbol: "⊃", unicode: "U+2283", decimal: 8835, html: "&sup;", category: "Mathematical" },
+            { name: "union", symbol: "∪", unicode: "U+222A", decimal: 8746, html: "&cup;", category: "Mathematical" },
+            { name: "intersection", symbol: "∩", unicode: "U+2229", decimal: 8745, html: "&cap;", category: "Mathematical" },
+            { name: "logical and", symbol: "∧", unicode: "U+2227", decimal: 8743, html: "&and;", category: "Mathematical" },
+            { name: "logical or", symbol: "∨", unicode: "U+2228", decimal: 8744, html: "&or;", category: "Mathematical" },
+            { name: "logical not", symbol: "¬", unicode: "U+00AC", decimal: 172, html: "&not;", category: "Mathematical" },
+            { name: "angle", symbol: "∠", unicode: "U+2220", decimal: 8736, html: "&ang;", category: "Mathematical" },
+            { name: "empty set", symbol: "∅", unicode: "U+2205", decimal: 8709, html: "&empty;", category: "Mathematical" },
+
+            //Physics
+            { name: "planck constant, h-bar", symbol: "ħ", unicode: "U+0127", decimal: 311, html: "&#311;", category: "Physics" },
+            { name: "lambda (wavelength)", symbol: "λ", unicode: "U+03BB", decimal: 955, html: "&lambda;", category: "Physics" },
+            { name: "psi (wave function)", symbol: "ψ", unicode: "U+03C8", decimal: 968, html: "&psi;", category: "Physics" },
+            { name: "omega (angular frequency)", symbol: "ω", unicode: "U+03C9", decimal: 969, html: "&omega;", category: "Physics" },
+            { name: "mu (micro, reduced mass)", symbol: "μ", unicode: "U+03BC", decimal: 956, html: "&mu;", category: "Physics" },
+            { name: "nu (frequency)", symbol: "ν", unicode: "U+03BD", decimal: 957, html: "&nu;", category: "Physics" },
+            { name: "epsilon naught (permittivity)", symbol: "ε", unicode: "U+03B5", decimal: 949, html: "&epsilon;", category: "Physics" },
+            { name: "rho (density)", symbol: "ρ", unicode: "U+03C1", decimal: 961, html: "&rho;", category: "Physics" },
+            { name: "phi (magnetic/electric flux)", symbol: "ϕ", unicode: "U+03D5", decimal: 981, html: "&phi;", category: "Physics" },
+            { name: "delta (change/difference)", symbol: "Δ", unicode: "U+0394", decimal: 916, html: "&Delta;", category: "Physics" },
+            { name: "partial derivative", symbol: "∂", unicode: "U+2202", decimal: 8706, html: "&part;", category: "Physics" },
+            { name: "summation", symbol: "∑", unicode: "U+2211", decimal: 8721, html: "&sum;", category: "Physics" },
+            { name: "integral", symbol: "∫", unicode: "U+222B", decimal: 8747, html: "&int;", category: "Physics" },
+            { name: "infinity", symbol: "∞", unicode: "U+221E", decimal: 8734, html: "&infin;", category: "Physics" },
+            { name: "proportional to", symbol: "∝", unicode: "U+221D", decimal: 8733, html: "&prop;", category: "Physics" },
+            { name: "nabla (del, gradient)", symbol: "∇", unicode: "U+2207", decimal: 8711, html: "&nabla;", category: "Physics" },
+            { name: "perpendicular", symbol: "⊥", unicode: "U+22A5", decimal: 8869, html: "&perp;", category: "Physics" },
+            { name: "parallel", symbol: "∥", unicode: "U+2225", decimal: 8741, html: "&#8741;", category: "Physics" },
+            { name: "angle", symbol: "∠", unicode: "U+2220", decimal: 8736, html: "&ang;", category: "Physics" },
+            { name: "degree", symbol: "°", unicode: "U+00B0", decimal: 176, html: "&deg;", category: "Physics" },
+
+
+            // Arrows
+            { name: "left arrow", symbol: "←", unicode: "U+2190", decimal: 8592, html: "&larr;", category: "Arrows" },
+            { name: "right arrow", symbol: "→", unicode: "U+2192", decimal: 8594, html: "&rarr;", category: "Arrows" },
+            { name: "up arrow", symbol: "↑", unicode: "U+2191", decimal: 8593, html: "&uarr;", category: "Arrows" },
+            { name: "down arrow", symbol: "↓", unicode: "U+2193", decimal: 8595, html: "&darr;", category: "Arrows" },
+            { name: "left-right arrow", symbol: "↔", unicode: "U+2194", decimal: 8596, html: "&harr;", category: "Arrows" },
+            { name: "up-down arrow", symbol: "↕", unicode: "U+2195", decimal: 8597, html: "&varr;", category: "Arrows" },
+            { name: "double left arrow", symbol: "⇐", unicode: "U+21D0", decimal: 8656, html: "&lArr;", category: "Arrows" },
+            { name: "double right arrow", symbol: "⇒", unicode: "U+21D2", decimal: 8658, html: "&rArr;", category: "Arrows" },
+            { name: "double up arrow", symbol: "⇑", unicode: "U+21D1", decimal: 8657, html: "&uArr;", category: "Arrows" },
+            { name: "double down arrow", symbol: "⇓", unicode: "U+21D3", decimal: 8659, html: "&dArr;", category: "Arrows" },
+            { name: "double left-right arrow", symbol: "⇔", unicode: "U+21D4", decimal: 8660, html: "&hArr;", category: "Arrows" },
+            { name: "upper left arrow", symbol: "↖", unicode: "U+2196", decimal: 8598, html: "↖", category: "Arrows" },
+            { name: "upper right arrow", symbol: "↗", unicode: "U+2197", decimal: 8599, html: "↗", category: "Arrows" },
+            { name: "lower left arrow", symbol: "↙", unicode: "U+2199", decimal: 8601, html: "↙", category: "Arrows" },
+            { name: "lower right arrow", symbol: "↘", unicode: "U+2198", decimal: 8600, html: "↘", category: "Arrows" },
+
+
+
+            // Common Symbols
+            { name: "copyright", symbol: "©", unicode: "U+00A9", decimal: 169, html: "&copy;", category: "Common" },
+            { name: "registered", symbol: "®", unicode: "U+00AE", decimal: 174, html: "&reg;", category: "Common" },
+            { name: "trademark", symbol: "™", unicode: "U+2122", decimal: 8482, html: "&trade;", category: "Common" },
+            { name: "degree", symbol: "°", unicode: "U+00B0", decimal: 176, html: "&deg;", category: "Common" },
+            { name: "paragraph", symbol: "¶", unicode: "U+00B6", decimal: 182, html: "&para;", category: "Common" },
+            { name: "section", symbol: "§", unicode: "U+00A7", decimal: 167, html: "&sect;", category: "Common" },
+            { name: "dagger", symbol: "†", unicode: "U+2020", decimal: 8224, html: "&dagger;", category: "Common" },
+            { name: "double dagger", symbol: "‡", unicode: "U+2021", decimal: 8225, html: "&Dagger;", category: "Common" },
+            { name: "bullet", symbol: "•", unicode: "U+2022", decimal: 8226, html: "&bull;", category: "Common" },
+            { name: "ellipsis", symbol: "…", unicode: "U+2026", decimal: 8230, html: "&hellip;", category: "Common" },
+            { name: "micro", symbol: "µ", unicode: "U+00B5", decimal: 181, html: "&micro;", category: "Common" },
+            { name: "ohm", symbol: "Ω", unicode: "U+03A9", decimal: 937, html: "&Omega;", category: "Common" },
+            { name: "check mark", symbol: "✓", unicode: "U+2713", decimal: 10003, html: "✓", category: "Common" },
+            { name: "cross mark", symbol: "✗", unicode: "U+2717", decimal: 10007, html: "✗", category: "Common" },
+
+            // currency
+            { name: "dollar", symbol: "$", unicode: "U+0024", decimal: 36, html: "&dollar;", category: "Currency" },
+            { name: "cent", symbol: "¢", unicode: "U+00A2", decimal: 162, html: "&cent;", category: "Currency" },
+            { name: "pound", symbol: "£", unicode: "U+00A3", decimal: 163, html: "&pound;", category: "Currency" },
+            { name: "currency", symbol: "¤", unicode: "U+00A4", decimal: 164, html: "&curren;", category: "Currency" },
+            { name: "yen", symbol: "¥", unicode: "U+00A5", decimal: 165, html: "&yen;", category: "Currency" },
+            { name: "euro", symbol: "€", unicode: "U+20AC", decimal: 8364, html: "&euro;", category: "Currency" },
+            { name: "indian rupee", symbol: "₹", unicode: "U+20B9", decimal: 8377, html: "&#8377;", category: "Currency" },
+            { name: "won", symbol: "₩", unicode: "U+20A9", decimal: 8361, html: "&#8361;", category: "Currency" },
+            { name: "ruble", symbol: "₽", unicode: "U+20BD", decimal: 8381, html: "&#8381;", category: "Currency" },
+            { name: "peso", symbol: "₱", unicode: "U+20B1", decimal: 8369, html: "&#8369;", category: "Currency" },
+            { name: "new shekel", symbol: "₪", unicode: "U+20AA", decimal: 8362, html: "&#8362;", category: "Currency" },
+            { name: "dong", symbol: "₫", unicode: "U+20AB", decimal: 8363, html: "&#8363;", category: "Currency" },
+            { name: "naira", symbol: "₦", unicode: "U+20A6", decimal: 8358, html: "&#8358;", category: "Currency" },
+            { name: "baht", symbol: "฿", unicode: "U+0E3F", decimal: 3647, html: "&#3647;", category: "Currency" },
+            { name: "turkish lira", symbol: "₺", unicode: "U+20BA", decimal: 8378, html: "&#8378;", category: "Currency" },
+            { name: "manat", symbol: "₼", unicode: "U+20BC", decimal: 8380, html: "&#8380;", category: "Currency" },
+            { name: "lari", symbol: "₾", unicode: "U+20BE", decimal: 8382, html: "&#8382;", category: "Currency" },
+            { name: "bitcoin", symbol: "₿", unicode: "U+20BF", decimal: 8383, html: "&#8383;", category: "Currency" },
+            { name: "renminbi", symbol: "¥", unicode: "U+00A5", decimal: 165, html: "&yen;", category: "Currency" },
+            { name: "yuan", symbol: "￥", unicode: "U+FFE5", decimal: 65509, html: "&#65509;", category: "Currency" },
+
+
+            // Shapes
+            { name: "black circle", symbol: "●", unicode: "U+25CF", decimal: 9679, html: "●", category: "Shapes" },
+            { name: "white circle", symbol: "○", unicode: "U+25CB", decimal: 9675, html: "○", category: "Shapes" },
+            { name: "black square", symbol: "■", unicode: "U+25A0", decimal: 9632, html: "■", category: "Shapes" },
+            { name: "white square", symbol: "□", unicode: "U+25A1", decimal: 9633, html: "□", category: "Shapes" },
+            { name: "black triangle", symbol: "▲", unicode: "U+25B2", decimal: 9650, html: "▲", category: "Shapes" },
+            { name: "white triangle", symbol: "△", unicode: "U+25B3", decimal: 9651, html: "△", category: "Shapes" },
+            { name: "black diamond", symbol: "◆", unicode: "U+25C6", decimal: 9670, html: "◆", category: "Shapes" },
+            { name: "white diamond", symbol: "◇", unicode: "U+25C7", decimal: 9671, html: "◇", category: "Shapes" },
+            { name: "star", symbol: "★", unicode: "U+2605", decimal: 9733, html: "★", category: "Shapes" },
+            { name: "heart", symbol: "♥", unicode: "U+2665", decimal: 9829, html: "&hearts;", category: "Shapes" },
+            { name: "spade", symbol: "♠", unicode: "U+2660", decimal: 9824, html: "&spades;", category: "Shapes" },
+            { name: "club", symbol: "♣", unicode: "U+2663", decimal: 9827, html: "&clubs;", category: "Shapes" },
+            { name: "diamond", symbol: "♦", unicode: "U+2666", decimal: 9830, html: "&diams;", category: "Shapes" },
+
+            // Emojis
+            { name: "grinning face", symbol: "😀", unicode: "U+1F600", decimal: 128512, html: "&#128512;", category: "Emoji" },
+            { name: "face with tears of joy", symbol: "😂", unicode: "U+1F602", decimal: 128514, html: "&#128514;", category: "Emoji" },
+            { name: "red heart", symbol: "❤️", unicode: "U+2764", decimal: 10084, html: "&#10084;", category: "Emoji" },
+            { name: "thumbs up", symbol: "👍", unicode: "U+1F44D", decimal: 128077, html: "&#128077;", category: "Emoji" },
+            { name: "fire", symbol: "🔥", unicode: "U+1F525", decimal: 128293, html: "&#128293;", category: "Emoji" },
+            { name: "star", symbol: "⭐", unicode: "U+2B50", decimal: 11088, html: "&#11088;", category: "Emoji" },
+            { name: "smiling face with heart-eyes", symbol: "😍", unicode: "U+1F60D", decimal: 128525, html: "&#128525;", category: "Emoji" },
+            { name: "face screaming in fear", symbol: "😱", unicode: "U+1F631", decimal: 128561, html: "&#128561;", category: "Emoji" },
+            { name: "folded hands", symbol: "🙏", unicode: "U+1F64F", decimal: 128591, html: "&#128591;", category: "Emoji" },
+            { name: "pile of poo", symbol: "💩", unicode: "U+1F4A9", decimal: 128169, html: "&#128169;", category: "Emoji" },
+            { name: "party popper", symbol: "🎉", unicode: "U+1F389", decimal: 127881, html: "&#127881;", category: "Emoji" },
+            { name: "clapping hands", symbol: "👏", unicode: "U+1F44F", decimal: 128079, html: "&#128079;", category: "Emoji" },
+            { name: "rocket", symbol: "🚀", unicode: "U+1F680", decimal: 128640, html: "&#128640;", category: "Emoji" },
+            { name: "earth globe americas", symbol: "🌎", unicode: "U+1F30E", decimal: 127758, html: "&#127758;", category: "Emoji" },
+            { name: "sparkles", symbol: "✨", unicode: "U+2728", decimal: 10024, html: "&#10024;", category: "Emoji" },
+            { name: "winking face", symbol: "😉", unicode: "U+1F609", decimal: 128521, html: "&#128521;", category: "Emoji" }
+
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const resultsInfo = document.getElementById('resultsInfo');
+
+        // Search functionality
+        function searchSymbols(query) {
+            if (!query || query.trim() === '') {
+                displayResults([]);
+                return;
+            }
+
+            const searchTerm = query.toLowerCase().trim();
+            const results = symbolDatabase.filter(symbol =>
+                symbol.name.toLowerCase().includes(searchTerm) ||
+                symbol.category.toLowerCase().includes(searchTerm) ||
+                symbol.symbol === searchTerm
+            );
+
+            displayResults(results, query);
+        }
+
+        // Display results
+        function displayResults(results, query = '') {
+            if (results.length === 0) {
+                if (query) {
+                    resultsInfo.textContent = `No results found for "${query}"`;
+                    resultsGrid.innerHTML = '<div class="no-results">Try searching for "alpha", "arrow", "infinity", or browse popular symbols above.</div>';
+                } else {
+                    resultsInfo.textContent = '';
+                    resultsGrid.innerHTML = '';
+                }
+                return;
+            }
+
+            resultsInfo.textContent = `Found ${results.length} symbol${results.length !== 1 ? 's' : ''}`;
+
+            resultsGrid.innerHTML = results.map(symbol => `
+                <div class="symbol-card">
+                    <div class="symbol-display">${symbol.symbol}</div>
+                    <div class="symbol-info">
+                        <div class="symbol-name">${symbol.name}</div>
+                        <div class="symbol-detail">
+                            <span class="detail-label">Unicode:</span>
+                            <span class="detail-value">${symbol.unicode}</span>
+                        </div>
+                        <div class="symbol-detail">
+                            <span class="detail-label">Decimal:</span>
+                            <span class="detail-value">${symbol.decimal}</span>
+                        </div>
+                        <div class="symbol-detail">
+                            <span class="detail-label">HTML Entity:</span>
+                            <span class="detail-value">${symbol.html}</span>
+                        </div>
+                        <div class="category-badge">${symbol.category}</div>
+                        <button class="copy-btn" onclick="copySymbol('${symbol.symbol}', this)">Copy Symbol</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Copy symbol to clipboard
+        function copySymbol(symbol, button) {
+            navigator.clipboard.writeText(symbol).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Quick search function
+        function quickSearch(term) {
+            searchInput.value = term;
+            searchSymbols(term);
+            searchInput.focus();
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', (e) => {
+            searchSymbols(e.target.value);
+        });
+
+        // Show all symbols on initial load
+        displayResults(symbolDatabase.slice(0, 12));
+        resultsInfo.textContent = 'Showing popular symbols';
+    </script>
+</body>
+
+</html>
