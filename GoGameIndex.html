@@ -520,7 +520,7 @@
 
         // ========== LESSON 3: LIBERTIES INTERACTIVE DEMO ==========
         const demoLiberties = document.getElementById('demo-liberties');
-        const libertiesSize = 9;
+        const libertiesSize = 5;
         let libertiesBoard = Array(libertiesSize).fill(null).map(() => Array(libertiesSize).fill(null));
         let selectedStone = null;
 
@@ -1106,7 +1106,7 @@
         // ========== PRACTICE AREA ==========
         const practiceCanvas = document.getElementById('practice-board');
         //        const practice_size = 9;
-        const practice_size = 5;
+        const practice_size = 9;
         let board = []; // 2D array: 9x9
         let turn = 'B'; // 'B'黑, 'W'白
         let captured = { B: 0, W: 0 };
