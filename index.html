@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>科學計算機及數學程式 Scientific Calculator and Mathematical Programs</title>
+    <title>計算機及程式 Calculator and Programs</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,7 +12,7 @@
     <div class="container">
         <!-- 主選單 Menu -->
         <div id="main-menu" class="page active">
-            <h1 class="app-title">科學計算機及數學程式 Scientific Calculator and Mathematical Programs</h1>
+            <h1 class="app-title">計算機及程式 Calculator and Programs</h1>
             <div class="menu-buttons">
                 <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
                     <div class="btn-content">
@@ -54,10 +54,18 @@
                     </div>
                 </button>
 
+                <button class="btn btn--primary menu-btn" onclick="showPage('radical')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">√</span>
+                        <span class="btn-title">F.2: 根式 Surd</span>
+                        <span class="btn-subtitle"></span>
+                    </div>
+                </button>
+
                 <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
                     <div class="btn-content">
                         <span class="btn-symbol">(x+y)(x-y)=(x)²-(y)²</span>
-                        <span class="btn-title">多項式展開 Polynomial Expansion</span>
+                        <span class="btn-title">展開 Expansion</span>
                         <span class="btn-subtitle">e.g. (-2)(x+3)(x+3)(4x+5)</span>
                     </div>
                 </button>
@@ -84,7 +92,7 @@
                     <div class="btn-content">
                         <span class="btn-symbol">M1</span>
                         <span class="btn-title">正態分佈 Normal Distribution</span>
-                        <span class="btn-subtitle">P(z≤k)=A; z->A; A->z</span>
+                        <span class="btn-subtitle">P(z≤k)=A; z↔A</span>
                     </div>
                 </button>
 
@@ -98,9 +106,9 @@
 
                 <button class="btn btn--primary menu-btn" onclick="window.location.href='VectorIndex.html'">
                     <div class="btn-content">
-                        <span class="btn-symbol">M2: a = i + j + k</span>
+                        <span class="btn-symbol">M2: i·i=1, i·j=0, i×j=k, j×i=-k</span>
                         <span class="btn-title">矢量 Vector</span>
-                        <span class="btn-subtitle">area = |a cross b|; volume = |(a cross b) dot c|</span>
+                        <span class="btn-subtitle">Area = |a × b|; Volume = |(a × b) · c|</span>
                     </div>
                 </button>
 
@@ -115,7 +123,7 @@
                 <button class="btn btn--primary menu-btn" onclick="showPage('formulas')">
                     <div class="btn-content">
                         <span class="btn-symbol">5**</span>
-                        <span class="btn-title">Important Formulas</span>
+                        <span class="btn-title">Important Formulas 重要公式</span>
                         <!--<span class="btn-subtitle">x=[-b+-√(b²-4ac)] / (2a)</span>-->
                     </div>
                 </button>
@@ -2693,7 +2701,7 @@
             <div class="page-header">
                 <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
                     Menu</button>
-                <h2>二次方程求解器 Quadratic Equation Solver</h2>
+                <h2>二次方程 Quadratic Equation</h2>
             </div>
 
         </div>
@@ -2803,7 +2811,7 @@
             <div class="page-header">
                 <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
                     Menu</button>
-                <h2>聯立方程求解器 Simultaneous Equation Solver</h2>
+                <h2>聯立方程 Simultaneous Equation</h2>
             </div>
 
         </div>
@@ -2831,7 +2839,7 @@
             <div class="page-header">
                 <button class="btn btn--outline back-btn" onclick="showPage('main-menu')">← 返回主選單 Return to
                     Menu</button>
-                <h2>根式化簡器 Surd Simplifier</h2>
+                <h2>根式 Surd</h2>
             </div>
 
         </div>
@@ -2883,14 +2891,14 @@
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('(')">(</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor(')')">)</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sqrt(')">√</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('^')">x^y</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('^(')">x^y</button>
 
                     <!-- 數字按鈕 -->
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('7')">7</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('8')">8</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">9</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*')
-                        ;insertAtCursor('1');insertAtCursor('0');insertAtCursor('^')">x10^</button>
+                        ;insertAtCursor('1');insertAtCursor('0');insertAtCursor('^(')">x10^</button>
 
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">4</button>
                     <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">5</button>
@@ -2918,13 +2926,13 @@
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sin(')">sin</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('cos(')">cos</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('tan(')">tan</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('pi')">π(pi)</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*pi')">π (pi)</button>
 
                     <!-- 第四行：對數和指數 -->
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('log(')">log</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('ln(')">ln</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('e')">e</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('e')">e</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*e')">e</button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*e')">e</button>
                     <!--<button class="btn btn--secondary calc-btn" onclick="insertAtCursor('exp(')">exp</button>-->
 
 
@@ -2935,7 +2943,7 @@
                         onclick="insertAtCursor('acos(')">cos<sup>-1</sup></button>
                     <button class="btn btn--secondary calc-btn"
                         onclick="insertAtCursor('atan(')">tan<sup>-1</sup></button>
-                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC(qQ@)</button>
+                    <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC (qQ@)</button>
 
 
                     <!-- 最尾行：其他 -->
