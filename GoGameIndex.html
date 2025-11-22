@@ -275,7 +275,7 @@
             <p><strong>氣（Liberties）：</strong>棋子周圍的空位稱為「氣」。當一組棋子沒有氣時會被吃掉。</p>
             <h3>互動示範：點擊棋子查看其「氣」</h3>
             <div class="board-container">
-                <canvas id="demo-liberties" width="1000" height="1000"></canvas>
+                <canvas id="demo-liberties" width="360" height="360"></canvas>
             </div>
             <p style="text-align:center; color: var(--color-text-secondary);">點擊棋子查看其周圍的「氣」（綠色圓圈）</p>
 
@@ -510,19 +510,16 @@
 
         // ========== LESSON 3: LIBERTIES INTERACTIVE DEMO ==========
         const demoLiberties = document.getElementById('demo-liberties');
-        const libertiesSize = 9;
+        const libertiesSize = 5;
         let libertiesBoard = Array(libertiesSize).fill(null).map(() => Array(libertiesSize).fill(null));
         let selectedStone = null;
 
         // Setup: Various stones to demonstrate liberties
-        libertiesBoard[2][2] = 'B'; // Corner stone - 2 liberties
-        libertiesBoard[2][6] = 'W'; // Edge stone - 3 liberties  
-        libertiesBoard[4][4] = 'B'; // Center stone - 4 liberties
-        libertiesBoard[6][3] = 'W';
-        libertiesBoard[6][4] = 'B';
-        libertiesBoard[6][5] = 'W'; // Stones in a row
-        libertiesBoard[8][5] = 'W'; // Stones in a edge
-        libertiesBoard[8][8] = 'W'; // Stones in corner
+        libertiesBoard[0][0] = 'B'; // Corner stone - 2 liberties
+        libertiesBoard[0][2] = 'W'; // Edge stone - 3 liberties  
+        libertiesBoard[2][2] = 'B'; // Center stone - 4 liberties
+        libertiesBoard[3][3] = 'W';
+        libertiesBoard[3][4] = 'B';
 
         function drawLiberties() {
             const { padding, gridSize } = drawBoard(demoLiberties, libertiesSize, libertiesBoard);
