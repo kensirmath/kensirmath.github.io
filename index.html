@@ -16,77 +16,91 @@
             <div class="menu-buttons">
                 <button class="btn btn--primary menu-btn" onclick="showPage('scientific')">
                     <div class="btn-content">
-                        <span class="btn-symbol">EXE</span>
-                        <span class="btn-title">科學計算機 Scientific Calculator</span>
-                        <span class="btn-subtitle">具分數顯示功能 Support fraction display</span>
+                        <span class="btn-symbol">Mode 1: COMP</span>
+                        <span class="btn-title">計算機 Calculator</span>
+                        <span class="btn-subtitle"></span>
                     </div>
                 </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
-                    <div class="btn-content">
-                        <span class="btn-symbol">x=?,y=?</span>
-                        <span class="btn-title">聯立方程求解器 Simultaneous Equation Solver</span>
-                        <span class="btn-subtitle">支援分數及小數輸入 Support fraction and decimal number</span>
-                    </div>
-                </button>
+
                 <button class="btn btn--primary menu-btn" onclick="showPage('quadratic')">
                     <div class="btn-content">
-                        <span class="btn-symbol">ax²+bx+c=0</span>
-                        <span class="btn-title">二次方程求解器 Quadratic Equation Solver</span>
+                        <span class="btn-symbol">FMLA 01: ax²+bx+c=0</span>
+                        <span class="btn-title">F.4: 二次方程 Quadratic Equation</span>
                         <span class="btn-subtitle">不含因式分解功能 Without Factorization</span>
                     </div>
                 </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
+
+                <button class="btn btn--primary menu-btn" onclick="showPage('quadratic99')">
                     <div class="btn-content">
-                        <span class="btn-symbol">ax³+bx²+cx+d=0</span>
-                        <span class="btn-title">三次方程求解器 Cubic Equation Solver</span>
-                        <span class="btn-subtitle">因式分解功能 Factorization</span>
+                        <span class="btn-symbol">FMLA 01: ax²+bx+c</span>
+                        <span class="btn-title">F.2-F.3: 二次多項式 Quadratic Polynomial</span>
+                        <span class="btn-subtitle"></span>
                     </div>
                 </button>
+
+                <button class="btn btn--primary menu-btn" onclick="showPage('linear')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">Prog 1: x=?,y=?</span>
+                        <span class="btn-title">F.2: 聯立方程 Simultaneous Equation</span>
+                        <span class="btn-subtitle"></span>
+                    </div>
+                </button>
+
+                <button class="btn btn--primary menu-btn" onclick="showPage('cubic')">
+                    <div class="btn-content">
+                        <span class="btn-symbol">Prog 2: ax³+bx²+cx+d=0</span>
+                        <span class="btn-title">F.4: 三次方程 Cubic Equation</span>
+                        <span class="btn-subtitle"></span>
+                    </div>
+                </button>
+
                 <button class="btn btn--primary menu-btn" onclick="showPage('polynomial')">
                     <div class="btn-content">
                         <span class="btn-symbol">(x+y)(x-y)=(x)²-(y)²</span>
                         <span class="btn-title">多項式展開 Polynomial Expansion</span>
-                        <span class="btn-subtitle">e.g. (2)(x+1),(x+1)(x+1),(x+1)(x+2),etc</span>
+                        <span class="btn-subtitle">e.g. (-2)(x+3)(x+3)(4x+5)</span>
                     </div>
                 </button>
-                <button class="btn btn--primary menu-btn" onclick="showPage('quadratic99')">
-                    <div class="btn-content">
-                        <span class="btn-symbol">ax²+bx+c</span>
-                        <span class="btn-title">二次多項式 Quadratic Polynomial</span>
-                        <span class="btn-subtitle">具因式分解功能 Factorization</span>
-                    </div>
-                </button>
+
 
                 <!--<button class="btn btn--primary menu-btn" onclick="showPage('complex')">-->
                 <button class="btn btn--primary menu-btn" onclick="window.location.href='ComplexNumberIndex.html'">
                     <div class="btn-content">
-                        <span class="btn-symbol">i</span>
-                        <span class="btn-title">複數計算器 Complex Number Calculator</span>
+                        <span class="btn-symbol">Mode 2 i</span>
+                        <span class="btn-title">複數 Complex Number</span>
                         <span class="btn-subtitle">i=i,i²=-1,i³=-i,i<sup>4</sup>=1</span>
+                    </div>
+                </button>
+
+                <button class="btn btn--primary menu-btn" onclick="window.location.href='StatisticsIndex.html'">
+                    <div class="btn-content">
+                        <span class="btn-symbol">Mode 4 SD</span>
+                        <span class="btn-title">統計 Statistics</span>
+                        <span class="btn-subtitle"></span>
+                    </div>
+                </button>
+
+                <button class="btn btn--primary menu-btn" onclick="window.location.href='NormalDistributionIndex.html'">
+                    <div class="btn-content">
+                        <span class="btn-symbol">M1</span>
+                        <span class="btn-title">正態分佈 Normal Distribution</span>
+                        <span class="btn-subtitle">P(z≤k)=A; z->A; A->z</span>
                     </div>
                 </button>
 
                 <button class="btn btn--primary menu-btn" onclick="window.location.href='MatrixCalculatorIndex.html'">
                     <div class="btn-content">
-                        <span class="btn-symbol">[a,b;c,d]</span>
-                        <span class="btn-title">矩陣計算器 Matirx Calculator</span>
+                        <span class="btn-symbol">M2: [a,b;c,d]</span>
+                        <span class="btn-title">矩陣 Matirx</span>
                         <span class="btn-subtitle">AB &#8800; BA; If AB=BA=I, then B=A<sup>-1</sup>.</span>
                     </div>
                 </button>
 
                 <button class="btn btn--primary menu-btn" onclick="window.location.href='VectorIndex.html'">
                     <div class="btn-content">
-                        <span class="btn-symbol">a = i + j + k</span>
-                        <span class="btn-title">矢量計算器 Vector Calculator</span>
+                        <span class="btn-symbol">M2: a = i + j + k</span>
+                        <span class="btn-title">矢量 Vector</span>
                         <span class="btn-subtitle">area = |a cross b|; volume = |(a cross b) dot c|</span>
-                    </div>
-                </button>
-
-                <button class="btn btn--primary menu-btn" onclick="window.location.href='NormalDistributionIndex.html'">
-                    <div class="btn-content">
-                        <span class="btn-symbol">P(z≤k)=A</span>
-                        <span class="btn-title">正態分佈計算器 Normal Distribution Calculator</span>
-                        <span class="btn-subtitle">z->A; A->z</span>
                     </div>
                 </button>
 

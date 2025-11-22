@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統計計算器</title>
+    <style>
+        :root {
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-btn-primary-text: var(--color-cream-50);
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(167, 169, 169, 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-border: rgba(119, 124, 124, 0.3);
+                --color-card-border: rgba(119, 124, 124, 0.2);
+                --color-btn-primary-text: var(--color-slate-900);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            padding: var(--space-24);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-24);
+            font-size: 14px;
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            padding: var(--space-24);
+            margin-bottom: var(--space-20);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-20);
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: var(--space-8);
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        textarea {
+            width: 100%;
+            padding: var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-family: var(--font-family-base);
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        textarea:focus {
+            outline: 2px solid var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .example {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: var(--space-8);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-12) var(--space-24);
+            background-color: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn:active {
+            background-color: var(--color-primary-active);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-16);
+        }
+
+        .result-item {
+            padding: var(--space-16);
+            background-color: var(--color-background);
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-border);
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .error {
+            color: #ff5459;
+            font-size: 14px;
+            margin-top: var(--space-8);
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .data-preview {
+            margin-top: var(--space-16);
+            padding: var(--space-12);
+            background-color: var(--color-background);
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-border);
+        }
+
+        .data-preview-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+        }
+
+        .data-preview-content {
+            font-size: 14px;
+            color: var(--color-text);
+            word-wrap: break-word;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-8);
+            margin-top: var(--space-12);
+            margin-bottom: var(--space-12);
+        }
+
+        .key-btn {
+            padding: var(--space-12);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .key-btn:hover {
+            background-color: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+        }
+
+        .key-special {
+            background-color: rgba(var(--color-teal-500-rgb), 0.1);
+        }
+
+        .key-delete {
+            background-color: rgba(255, 84, 89, 0.1);
+            color: #ff5459;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>統計計算器</h1>
+        <p class="subtitle">輸入數據並計算各種統計量</p>
+
+        <div class="card">
+            <div class="form-group">
+                <label for="dataInput">數據輸入</label>
+                <textarea id="dataInput"
+                    placeholder="輸入格式: 數值;頻率, 數值;頻率, ... 或 數值, 數值, ...&#10;例如: 1;4, 2;3, 3;5 或 1, 2, 3"></textarea>
+
+                <div class="keypad">
+                    <button class="key-btn" onclick="insertText('1')">1</button>
+                    <button class="key-btn" onclick="insertText('2')">2</button>
+                    <button class="key-btn" onclick="insertText('3')">3</button>
+                    <button class="key-btn" onclick="insertText('4')">4</button>
+                    <button class="key-btn" onclick="insertText('5')">5</button>
+                    <button class="key-btn" onclick="insertText('6')">6</button>
+                    <button class="key-btn" onclick="insertText('7')">7</button>
+                    <button class="key-btn" onclick="insertText('8')">8</button>
+                    <button class="key-btn" onclick="insertText('9')">9</button>
+                    <button class="key-btn" onclick="insertText('0')">0</button>
+                    <button class="key-btn" onclick="insertText('.')">.</button>
+                    <button class="key-btn key-special" onclick="insertText('/')">/</button>
+                    <button class="key-btn key-special" onclick="insertText(',')">,</button>
+                    <button class="key-btn key-special" onclick="insertText(';')">;</button>
+                    <button class="key-btn key-delete" onclick="deleteLastChar()">⌫</button>
+                </div>
+
+                <p class="example">
+                    例子: "1;4, 2;3, 3;5" 代表 4個「1」、3個「2」、5個「3」<br>
+                    或 "1, 2, 3" 代表各1個「1」、「2」、「3」（頻率預設為1）<br>
+                    支援分數: "1/2, 3/4" 或 "1/2;3, 2/3;2"
+                </p>
+                <p class="error" id="error"></p>
+            </div>
+
+            <button class="btn" onclick="calculate()">計算統計量</button>
+
+            <div class="data-preview" id="dataPreview" style="display: none;">
+                <div class="data-preview-label">數據陣列 (共 <span id="dataCount"></span> 個數據):</div>
+                <div class="data-preview-content">
+                    <div style="margin-bottom: 8px;"><strong>分數:</strong> <span id="dataArrayFraction"></span></div>
+                    <div><strong>小數:</strong> <span id="dataArrayDecimal"></span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="card">
+                <h2 style="margin-bottom: var(--space-20); font-size: 20px;">計算結果</h2>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">平均數 (Mean)</div>
+                        <div class="result-value" id="mean">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">中位數 (Median)</div>
+                        <div class="result-value" id="median">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">眾數 (Mode)</div>
+                        <div class="result-value" id="mode">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">範圍 (Range)</div>
+                        <div class="result-value" id="range">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">四分位距 (IQR)</div>
+                        <div class="result-value" id="iqr">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">標準差 (SD)</div>
+                        <div class="result-value" id="stddev">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">方差 (Variance)</div>
+                        <div class="result-value" id="variance">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>Mode 4 統計 Statistics</h2>
+    </div>
+
+    <script>
+        function parseFraction(str) {
+            str = str.trim();
+
+            // Check if it's a fraction
+            if (str.includes('/')) {
+                const parts = str.split('/');
+                if (parts.length !== 2) {
+                    throw new Error('格式錯誤：分數格式應為「分子/分母」');
+                }
+
+                const numerator = parseFloat(parts[0].trim());
+                const denominator = parseFloat(parts[1].trim());
+
+                if (isNaN(numerator) || isNaN(denominator)) {
+                    throw new Error('格式錯誤：分數的分子和分母必須是有效的數字');
+                }
+
+                if (denominator === 0) {
+                    throw new Error('格式錯誤：分母不能為 0');
+                }
+
+                return numerator / denominator;
+            } else {
+                const value = parseFloat(str);
+                if (isNaN(value)) {
+                    throw new Error('格式錯誤：數值必須是有效的數字或分數');
+                }
+                return value;
+            }
+        }
+
+        function parseInput(input) {
+            const pairs = input.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            const data = [];
+
+            for (const pair of pairs) {
+                const parts = pair.split(';');
+
+                // If no semicolon, treat as value with frequency 1
+                if (parts.length === 1) {
+                    const value = parseFraction(parts[0]);
+                    data.push(value);
+                } else if (parts.length === 2) {
+                    const value = parseFraction(parts[0]);
+                    const frequency = parseInt(parts[1].trim());
+
+                    if (isNaN(frequency)) {
+                        throw new Error('格式錯誤：頻率必須是有效的數字');
+                    }
+
+                    if (frequency <= 0) {
+                        throw new Error('格式錯誤：頻率必須大於 0');
+                    }
+
+                    for (let i = 0; i < frequency; i++) {
+                        data.push(value);
+                    }
+                } else {
+                    throw new Error('格式錯誤：每組數據必須是「數值」或「數值;頻率」的格式');
+                }
+            }
+
+            if (data.length === 0) {
+                throw new Error('請輸入至少一組數據');
+            }
+
+            return data;
+        }
+
+        function gcd(a, b) {
+            a = Math.abs(Math.round(a));
+            b = Math.abs(Math.round(b));
+            while (b !== 0) {
+                const t = b;
+                b = a % b;
+                a = t;
+            }
+            return a;
+        }
+
+        function toFraction(decimal, tolerance = 1e-6) {
+            if (Number.isInteger(decimal)) {
+                return decimal.toString();
+            }
+
+            const sign = decimal < 0 ? '-' : '';
+            decimal = Math.abs(decimal);
+
+            let numerator = 1;
+            let denominator = 1;
+            let error = Math.abs(decimal - numerator / denominator);
+
+            for (let d = 2; d <= 10000; d++) {
+                const n = Math.round(decimal * d);
+                const currentError = Math.abs(decimal - n / d);
+
+                if (currentError < error) {
+                    numerator = n;
+                    denominator = d;
+                    error = currentError;
+
+                    if (error < tolerance) break;
+                }
+            }
+
+            const divisor = gcd(numerator, denominator);
+            numerator /= divisor;
+            denominator /= divisor;
+
+            if (denominator === 1) {
+                return sign + numerator;
+            }
+
+            return sign + numerator + '/' + denominator;
+        }
+
+        function toRadicalForm(decimal, tolerance = 1e-9) {
+            if (Number.isInteger(decimal)) {
+                return decimal.toString();
+            }
+
+            const sign = decimal < 0 ? '-' : '';
+            decimal = Math.abs(decimal);
+
+            // Check if it's a square root form: a√b / c
+            for (let c = 1; c <= 1000; c++) {
+                for (let a = 1; a <= 100; a++) {
+                    for (let b = 2; b <= 1000; b++) {
+                        const value = (a * Math.sqrt(b)) / c;
+                        if (Math.abs(value - decimal) < tolerance) {
+                            // Simplify the radical
+                            let radicand = b;
+                            let coefficient = a;
+
+                            // Extract perfect squares from radicand
+                            for (let i = 2; i * i <= radicand; i++) {
+                                while (radicand % (i * i) === 0) {
+                                    radicand /= (i * i);
+                                    coefficient *= i;
+                                }
+                            }
+
+                            // Simplify coefficient and denominator
+                            const g = gcd(coefficient, c);
+                            coefficient /= g;
+                            const denom = c / g;
+
+                            if (denom === 1) {
+                                if (coefficient === 1) {
+                                    return sign + '√' + radicand;
+                                } else {
+                                    return sign + coefficient + '√' + radicand;
+                                }
+                            } else {
+                                if (coefficient === 1) {
+                                    return sign + '√' + radicand + '/' + denom;
+                                } else {
+                                    return sign + coefficient + '√' + radicand + '/' + denom;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // If no radical form found, return regular fraction
+            return toFraction(decimal, tolerance);
+        }
+
+        function formatDecimal(value) {
+            // Handle zero explicitly
+            if (value === 0) {
+                return '0';
+            }
+
+            // Check if the number is a terminating decimal
+            let str = value.toString();
+
+            // If it's in scientific notation, convert it
+            if (str.includes('e')) {
+                str = value.toFixed(15);
+            }
+
+            // Remove trailing zeros
+            str = str.replace(/\.?0+$/, '');
+
+            // If the decimal part is longer than 10 digits, round to 10
+            const parts = str.split('.');
+            if (parts[1] && parts[1].length > 10) {
+                return value.toFixed(10);
+            }
+
+            return str;
+        }
+
+        function formatNumber(value, useRadical = false) {
+            // Handle zero explicitly
+            if (value === 0) {
+                return '0';
+            }
+
+            const decimal = formatDecimal(value);
+
+            if (useRadical) {
+                const radical = toRadicalForm(value);
+                if (radical.includes('√')) {
+                    return `${radical} (${decimal})`;
+                }
+            }
+
+            const fraction = toFraction(value);
+
+            if (fraction.includes('/') || fraction.includes('√')) {
+                return `${fraction} (${decimal})`;
+            }
+            return decimal;
+        }
+
+        function calculateMean(data) {
+            const sum = data.reduce((acc, val) => acc + val, 0);
+            return sum / data.length;
+        }
+
+        function calculateMedian(sortedData) {
+            const n = sortedData.length;
+            if (n % 2 === 0) {
+                return (sortedData[n / 2 - 1] + sortedData[n / 2]) / 2;
+            } else {
+                return sortedData[Math.floor(n / 2)];
+            }
+        }
+
+        function calculateMode(data) {
+            const frequency = {};
+            let maxFreq = 0;
+
+            for (const value of data) {
+                frequency[value] = (frequency[value] || 0) + 1;
+                maxFreq = Math.max(maxFreq, frequency[value]);
+            }
+
+            const modes = Object.keys(frequency)
+                .filter(key => frequency[key] === maxFreq)
+                .map(Number);
+
+            if (modes.length === Object.keys(frequency).length) {
+                return '無眾數';
+            }
+
+            // Format modes with fractions
+            return modes.sort((a, b) => a - b).map(m => formatNumber(m)).join(', ');
+        }
+
+        function calculateRange(sortedData) {
+            return sortedData[sortedData.length - 1] - sortedData[0];
+        }
+
+        function calculateQuartile(sortedData, q) {
+            const pos = (sortedData.length - 1) * q;
+            const base = Math.floor(pos);
+            const rest = pos - base;
+
+            if (sortedData[base + 1] !== undefined) {
+                return sortedData[base] + rest * (sortedData[base + 1] - sortedData[base]);
+            } else {
+                return sortedData[base];
+            }
+        }
+
+        function calculateIQR(sortedData) {
+            const q1 = calculateQuartile(sortedData, 0.25);
+            const q3 = calculateQuartile(sortedData, 0.75);
+            return q3 - q1;
+        }
+
+        function calculateVariance(data, mean) {
+            const squaredDiffs = data.map(value => Math.pow(value - mean, 2));
+            return squaredDiffs.reduce((acc, val) => acc + val, 0) / data.length;
+        }
+
+        function calculateStdDev(variance) {
+            return Math.sqrt(variance);
+        }
+
+        function calculate() {
+            const input = document.getElementById('dataInput').value;
+            const errorEl = document.getElementById('error');
+            const resultsEl = document.getElementById('results');
+            const dataPreviewEl = document.getElementById('dataPreview');
+
+            errorEl.classList.remove('show');
+            errorEl.textContent = '';
+
+            try {
+                const data = parseInput(input);
+                const sortedData = [...data].sort((a, b) => a - b);
+
+                // Display data preview with fractions and decimals on separate lines
+                document.getElementById('dataCount').textContent = data.length;
+                const fractionArray = sortedData.map(v => toFraction(v)).join(', ');
+                const decimalArray = sortedData.map(v => formatDecimal(v)).join(', ');
+                document.getElementById('dataArrayFraction').textContent = fractionArray;
+                document.getElementById('dataArrayDecimal').textContent = decimalArray;
+                dataPreviewEl.style.display = 'block';
+
+                // Calculate statistics
+                const mean = calculateMean(data);
+                const median = calculateMedian(sortedData);
+                const mode = calculateMode(data);
+                const range = calculateRange(sortedData);
+                const iqr = calculateIQR(sortedData);
+                const variance = calculateVariance(data, mean);
+                const stddev = calculateStdDev(variance);
+
+                // Display results with fractions
+                document.getElementById('mean').textContent = formatNumber(mean);
+                document.getElementById('median').textContent = formatNumber(median);
+                document.getElementById('mode').textContent = mode;
+                document.getElementById('range').textContent = formatNumber(range);
+                document.getElementById('iqr').textContent = formatNumber(iqr);
+                document.getElementById('variance').textContent = formatNumber(variance);
+                document.getElementById('stddev').textContent = formatNumber(stddev, true);
+
+                resultsEl.classList.add('show');
+
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.add('show');
+                resultsEl.classList.remove('show');
+                dataPreviewEl.style.display = 'none';
+            }
+        }
+
+        function insertText(char) {
+            const textarea = document.getElementById('dataInput');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
+            textarea.value = text.substring(0, start) + char + text.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + 1;
+            textarea.focus();
+        }
+
+        function deleteLastChar() {
+            const textarea = document.getElementById('dataInput');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
+            if (start !== end) {
+                // Delete selected text
+                textarea.value = text.substring(0, start) + text.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start;
+            } else if (start > 0) {
+                // Delete one character before cursor
+                textarea.value = text.substring(0, start - 1) + text.substring(start);
+                textarea.selectionStart = textarea.selectionEnd = start - 1;
+            }
+
+            textarea.focus();
+        }
+
+        // Allow Enter key to trigger calculation (Ctrl+Enter in textarea)
+        document.getElementById('dataInput').addEventListener('keydown', function (e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+
+</html>
