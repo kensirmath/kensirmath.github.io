@@ -397,11 +397,11 @@
         <!-- Free Practice Area -->
         <div class="card">
             <h2>自由練習區 &amp; 比目法計分 (Free Practice &amp; Scoring)</h2>
-            <p>請在9×9棋盤上自由落子，系統會即時計算雙方的子數、地數、被吃的子，並顯示最終得分。</p>
-            <p>Play freely on the 9×9 board. The system calculates stones, territory, captures, and final scores in
+            <p>請在5×5棋盤上自由落子，系統會即時計算雙方的子數、地數、被吃的子，並顯示最終得分。</p>
+            <p>Play freely on the 5×5 board. The system calculates stones, territory, captures, and final scores in
                 real-time.</p>
             <div class="board-container">
-                <canvas id="practice-board" width="1000" height="1000"></canvas>
+                <canvas id="practice-board" width="400" height="400"></canvas>
             </div>
             <div>
                 <button class="btn" id="reset-btn">重置棋盤 (Reset)</button>
@@ -415,6 +415,7 @@
                 <!-- Scores will be dynamically injected here -->
             </div>
         </div>
+
     </div>
     <script>
         // ========== UTILITY FUNCTIONS ==========
@@ -1095,7 +1096,8 @@
 
         // ========== PRACTICE AREA ==========
         const practiceCanvas = document.getElementById('practice-board');
-        const practice_size = 9;
+        //        const practice_size = 9;
+        const practice_size = 5;
         let board = []; // 2D array: 9x9
         let turn = 'B'; // 'B'黑, 'W'白
         let captured = { B: 0, W: 0 };
