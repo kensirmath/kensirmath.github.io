@@ -476,10 +476,19 @@
 
         function getBoardCoords(canvas, size, evt) {
             const rect = canvas.getBoundingClientRect();
+            //            const padding = 30;
             const padding = 30;
             const gridSize = (canvas.width - 2 * padding) / (size - 1);
-            const x = evt.clientX - rect.left;
-            const y = evt.clientY - rect.top;
+            // 兼容 mouse event 和 touch event
+            const point = evt.touches ? evt.touches[0] : evt;
+            // touch 用 touches[0]，mouse 就用原本的 evt [web:59][web:101]
+
+            const x = point.clientX - rect.left;           // 轉成相對 canvas 左上角的 X 座標 [web:81][web:83]
+            const y = point.clientY - rect.top;            // 轉成相對 canvas 左上角的 Y 座標 [web:81][web:83]
+
+
+            //const x = evt.clientX - rect.left;
+            //const y = evt.clientY - rect.top;
             const gx = Math.round((x - padding) / gridSize);
             const gy = Math.round((y - padding) / gridSize);
             if (gx >= 0 && gx < size && gy >= 0 && gy < size) {
@@ -1227,12 +1236,9 @@
             return { stones, libs };
         }
 
-        //        practiceCanvas.addEventListener('click', (e) => {
-        //            const coords = getBoardCoords(practiceCanvas, practice_size, e);
-        //            if (!coords) return;
         practiceCanvas.addEventListener('click', (e) => {
-            const pt = getCanvasPoint(practiceCanvas, e);  // 算好 canvas 內座標 [web:41][web:42]
-            const coords = getBoardCoordsFromPoint(practiceCanvas, practice_size, pt);
+            const coords = getBoardCoords(practiceCanvas, practice_size, e);
+            if (!coords) return;
 
             const warningMsg = document.getElementById('warning-message');
 
