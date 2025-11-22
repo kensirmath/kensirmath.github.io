@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>標準常態分佈計算器</title>
+    <style>
+        :root {
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            margin: 0;
+            padding: var(--space-20);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 var(--space-8) 0;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-32);
+            font-size: 14px;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 var(--space-16) 0;
+            color: var(--color-text);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-20);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 16px;
+            font-family: var(--font-family-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        button {
+            width: 100%;
+            padding: var(--space-12) var(--space-20);
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--color-primary-hover);
+        }
+
+        button:active {
+            background: var(--color-primary-active);
+        }
+
+        .result {
+            margin-top: var(--space-20);
+            padding: var(--space-16);
+            background: var(--color-background);
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-border);
+        }
+
+        .result-label {
+            font-size: 13px;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .info-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-top: var(--space-32);
+        }
+
+        .info-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 var(--space-16) 0;
+            color: var(--color-text);
+        }
+
+        .info-section p {
+            margin: 0 0 var(--space-12) 0;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-section ul {
+            margin: 0;
+            padding-left: var(--space-20);
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .info-section li {
+            margin-bottom: var(--space-8);
+        }
+
+        .error {
+            color: #c0152f;
+            font-size: 13px;
+            margin-top: var(--space-8);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>標準常態分佈計算器</h1>
+        <p class="subtitle">計算 Z 值與機率之間的轉換（從 x=0 到 x=z 的面積）</p>
+
+        <div class="calculator-grid">
+            <div class="card">
+                <h2>1. Z 值 → 面積</h2>
+                <form id="zToAreaForm">
+                    <div class="form-group">
+                        <label for="zValue">輸入 Z 值：</label>
+                        <input type="number" id="zValue" step="0.0001" placeholder="例如：1.9600" required>
+                    </div>
+                    <button type="submit">計算面積</button>
+                </form>
+                <div id="areaResult" class="result hidden">
+                    <div class="result-label">從 x=0 到 x=z 的面積</div>
+                    <div class="result-value" id="areaValue"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. 面積 → Z 值</h2>
+                <form id="areaToZForm">
+                    <div class="form-group">
+                        <label for="areaInput">輸入面積（0 到 0.5）：</label>
+                        <input type="number" id="areaInput" step="0.0001" min="0" max="0.5" placeholder="例如：0.475"
+                            required>
+                        <div id="areaError" class="error hidden">請輸入 0 到 0.5 之間的值</div>
+                    </div>
+                    <button type="submit">計算 Z 值</button>
+                </form>
+                <div id="zResult" class="result hidden">
+                    <div class="result-label">Z 值</div>
+                    <div class="result-value" id="zResultValue"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>關於標準常態分佈</h3>
+            <p>標準常態分佈（Standard Normal Distribution）是一種特殊的常態分佈，其平均數為 0，標準差為 1。</p>
+            <p><strong>此計算器計算的面積範圍：</strong></p>
+            <ul>
+                <li>從 x=0（平均數）到 x=z 的曲線下面積</li>
+                <li>對於正的 z 值：計算右側面積（0 到 z）</li>
+                <li>對於負的 z 值：計算左側面積（z 到 0）</li>
+                <li>面積範圍：0 到 0.5（因為只計算從中心到一側的面積）</li>
+            </ul>
+            <p><strong>常用 Z 值參考：</strong></p>
+            <ul>
+                <li>z = 1.96：面積 ≈ 0.475（95% 信賴區間的一半）</li>
+                <li>z = 1.645：面積 ≈ 0.45（90% 信賴區間的一半）</li>
+                <li>z = 2.576：面積 ≈ 0.495（99% 信賴區間的一半）</li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Error function approximation using Abramowitz and Stegun formula
+        function erf(x) {
+            const sign = x >= 0 ? 1 : -1;
+            x = Math.abs(x);
+
+            const a1 = 0.254829592;
+            const a2 = -0.284496736;
+            const a3 = 1.421413741;
+            const a4 = -1.453152027;
+            const a5 = 1.061405429;
+            const p = 0.3275911;
+
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+            return sign * y;
+        }
+
+        // Standard normal CDF
+        function normalCDF(x) {
+            return 0.5 * (1 + erf(x / Math.sqrt(2)));
+        }
+
+        // Calculate area from 0 to z
+        function areaFrom0ToZ(z) {
+            if (z >= 0) {
+                return normalCDF(z) - 0.5;
+            } else {
+                return 0.5 - normalCDF(z);
+            }
+        }
+
+        // Inverse normal CDF using improved approximation
+        function inverseNormalCDF(p) {
+            if (p <= 0 || p >= 1) {
+                throw new Error("Probability must be between 0 and 1");
+            }
+
+            // Use Beasley-Springer-Moro algorithm for better accuracy
+            const a = [
+                -3.969683028665376e+01,
+                2.209460984245205e+02,
+                -2.759285104469687e+02,
+                1.383577518672690e+02,
+                -3.066479806614716e+01,
+                2.506628277459239e+00
+            ];
+
+            const b = [
+                -5.447609879822406e+01,
+                1.615858368580409e+02,
+                -1.556989798598866e+02,
+                6.680131188771972e+01,
+                -1.328068155288572e+01
+            ];
+
+            const c = [
+                -7.784894002430293e-03,
+                -3.223964580411365e-01,
+                -2.400758277161838e+00,
+                -2.549732539343734e+00,
+                4.374664141464968e+00,
+                2.938163982698783e+00
+            ];
+
+            const d = [
+                7.784695709041462e-03,
+                3.224671290700398e-01,
+                2.445134137142996e+00,
+                3.754408661907416e+00
+            ];
+
+            const pLow = 0.02425;
+            const pHigh = 1 - pLow;
+
+            let x, q, r;
+
+            if (p < pLow) {
+                // Lower region
+                q = Math.sqrt(-2 * Math.log(p));
+                x = (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+                    ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+            } else if (p <= pHigh) {
+                // Central region
+                q = p - 0.5;
+                r = q * q;
+                x = (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+                    (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+            } else {
+                // Upper region
+                q = Math.sqrt(-2 * Math.log(1 - p));
+                x = -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+                    ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+            }
+
+            // Refine with one iteration of Newton-Raphson
+            const e = normalCDF(x) - p;
+            const pdf = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x * x);
+            x = x - e / pdf;
+
+            return x;
+        }
+
+        // Calculate z from area (0 to z)
+        function zFromArea(area) {
+            if (area < 0 || area > 0.5) {
+                throw new Error("Area must be between 0 and 0.5");
+            }
+
+            // Convert area from 0 to z into cumulative probability
+            // Area from 0 to z means we need CDF(z) = 0.5 + area
+            const p = 0.5 + area;
+
+            return inverseNormalCDF(p);
+        }
+
+        // Handle Z to Area form
+        document.getElementById('zToAreaForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const zValue = parseFloat(document.getElementById('zValue').value);
+            const area = areaFrom0ToZ(zValue);
+
+            document.getElementById('areaValue').textContent = area.toFixed(6);
+            document.getElementById('areaResult').classList.remove('hidden');
+        });
+
+        // Handle Area to Z form
+        document.getElementById('areaToZForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const areaInput = parseFloat(document.getElementById('areaInput').value);
+            const errorElement = document.getElementById('areaError');
+
+            if (areaInput < 0 || areaInput > 0.5) {
+                errorElement.classList.remove('hidden');
+                document.getElementById('zResult').classList.add('hidden');
+                return;
+            }
+
+            errorElement.classList.add('hidden');
+
+            try {
+                const z = zFromArea(areaInput);
+                document.getElementById('zResultValue').textContent = z.toFixed(4);
+                document.getElementById('zResult').classList.remove('hidden');
+            } catch (error) {
+                alert('計算錯誤：' + error.message);
+            }
+        });
+    </script>
+
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>正態分佈計算器 Normal Distribution Calculator</h2>
+    </div>
+
+</body>
+
+</html>
