@@ -1227,9 +1227,13 @@
             return { stones, libs };
         }
 
-        practiceCanvas.addEventListener('click', (e) => {
-            const coords = getBoardCoords(practiceCanvas, practice_size, e);
-            if (!coords) return;
+        //        practiceCanvas.addEventListener('click', (e) => {
+        //            const coords = getBoardCoords(practiceCanvas, practice_size, e);
+        //            if (!coords) return;
+
+        practiceCanvas.addEventListener('touchstart', (e) => {
+            const pt = getCanvasPoint(practiceCanvas, e);  // 支援 touches[0] [web:41][web:59]
+            const coords = getBoardCoordsFromPoint(practiceCanvas, practice_size, pt);
 
             const warningMsg = document.getElementById('warning-message');
 
