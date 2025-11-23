@@ -371,7 +371,9 @@
             <div class="board-container">
                 <canvas id="demo-eyes" width="360" height="360"></canvas>
             </div>
-            <p style="text-align:center; color: var(--color-text-secondary);">左側：真眼（完全包圍）｜右側：假眼（有缺口）</p>
+            <p style="text-align:center; color: var(--color-text-secondary);">
+                左側：黑子的真眼（不能被吃）｜右側：白子的假眼（有缺口）｜下方：黑子的雙真眼（必定能活）
+            </p>
 
             <h3>重要性</h3>
             <ul>
@@ -581,8 +583,8 @@
         libertiesBoard[0][0] = 'B'; // Corner stone - 2 liberties
         libertiesBoard[0][2] = 'W'; // Edge stone - 3 liberties  
         libertiesBoard[2][2] = 'B'; // Center stone - 4 liberties
-        libertiesBoard[3][3] = 'W';
-        libertiesBoard[3][4] = 'B';
+        libertiesBoard[3][1] = 'W';
+        libertiesBoard[3][0] = 'B';
 
         function drawLiberties() {
             const { padding, gridSize } = drawBoard(demoLiberties, libertiesSize, libertiesBoard);
@@ -1045,27 +1047,36 @@
         let eyesBoard = Array(eyesSize).fill(null).map(() => Array(eyesSize).fill(null));
 
         // Left side: True eye example (black group with 2 true eyes)
-        for (let x = 1; x <= 4; x++) {
-            eyesBoard[2][x] = 'B';
-            eyesBoard[5][x] = 'B';
-        }
-        for (let y = 2; y <= 5; y++) {
-            eyesBoard[y][1] = 'B';
-            eyesBoard[y][4] = 'B';
-        }
+        eyesBoard[1][1] = 'B';
+        eyesBoard[1][2] = 'B';
+        eyesBoard[2][1] = 'B';
+        eyesBoard[2][3] = 'B';
+        eyesBoard[3][1] = 'B';
         eyesBoard[3][2] = 'B';
         eyesBoard[3][3] = 'B';
-        // Empty points at (2,3), (2,4), (4,3), (4,4) are true eyes
+        // Empty point at (2,2) is a true eye
 
         // Right side: False eye example (incomplete enclosure)
-        for (let x = 5; x <= 7; x++) {
-            eyesBoard[2][x] = 'W';
-            eyesBoard[5][x] = 'W';
-        }
-        for (let y = 3; y <= 4; y++) {
-            eyesBoard[y][5] = 'W';
-        }
-        // Missing stone at (4,7) creates a false eye
+        eyesBoard[1][5] = 'W';
+        eyesBoard[1][6] = 'W';
+        eyesBoard[2][5] = 'W';
+        eyesBoard[2][7] = 'W';
+        eyesBoard[3][5] = 'W';
+        eyesBoard[3][6] = 'W';
+        // Missing stone at (6,2) creates a false eye
+
+        // Bottom: Double true eye example (must stay alive)
+        eyesBoard[5][2] = 'B';
+        eyesBoard[5][3] = 'B';
+        eyesBoard[6][1] = 'B';
+        eyesBoard[6][3] = 'B';
+        eyesBoard[6][4] = 'B';
+        eyesBoard[7][1] = 'B';
+        eyesBoard[7][2] = 'B';
+        eyesBoard[7][4] = 'B';
+        eyesBoard[8][2] = 'B';
+        eyesBoard[8][3] = 'B';
+        // Empty points at (6,2) and (7,3) are two true eyes
 
         drawBoard(demoEyes, eyesSize, eyesBoard);
 
