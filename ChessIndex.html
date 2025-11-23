@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國際象棋教學 / Chess Tutorial</title>
+    <style>
+        :root {
+            /* Primitive Color Tokens */
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+            --focus-ring: 0 0 0 3px var(--color-focus-ring);
+            --focus-outline: 2px solid var(--color-primary);
+
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+
+                --color-bg-1: rgba(29, 78, 216, 0.15);
+                --color-bg-2: rgba(180, 83, 9, 0.15);
+                --color-bg-3: rgba(21, 128, 61, 0.15);
+                --color-bg-4: rgba(185, 28, 28, 0.15);
+                --color-bg-5: rgba(107, 33, 168, 0.15);
+                --color-bg-6: rgba(194, 65, 12, 0.15);
+                --color-bg-7: rgba(190, 24, 93, 0.15);
+                --color-bg-8: rgba(8, 145, 178, 0.15);
+
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-primary-active: var(--color-teal-800);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-info: var(--color-gray-300);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            font-size: var(--font-size-base);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-20);
+        }
+
+        /* Navigation */
+        .nav {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-16) 0;
+            margin-bottom: var(--space-32);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-20);
+        }
+
+        .nav-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: var(--space-8);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: var(--space-8) var(--space-16);
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            transition: all var(--duration-fast) var(--ease-standard);
+            font-family: var(--font-family-base);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--color-secondary-hover);
+        }
+
+        .nav-btn.active {
+            background-color: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Pieces Section */
+        .pieces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-20);
+            margin-top: var(--space-24);
+        }
+
+        .piece-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .piece-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-16);
+            margin-bottom: var(--space-16);
+        }
+
+        .piece-symbol {
+            font-size: 48px;
+        }
+
+        .piece-info h3 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-4);
+        }
+
+        .piece-value {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .piece-moves {
+            margin-bottom: var(--space-12);
+        }
+
+        .piece-moves p {
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+
+        .piece-special {
+            background-color: var(--color-bg-1);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            margin-top: var(--space-12);
+        }
+
+        .piece-special p {
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-4);
+        }
+
+        /* Board Basics */
+        .board-basics-content {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-top: var(--space-24);
+        }
+
+        .board-basics-content h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-16);
+        }
+
+        .board-basics-content p {
+            margin-bottom: var(--space-12);
+            line-height: 1.6;
+        }
+
+        .notation-board {
+            margin: var(--space-24) auto;
+            width: fit-content;
+        }
+
+        /* Opening Principles */
+        .principles-grid {
+            display: grid;
+            gap: var(--space-20);
+            margin-top: var(--space-24);
+        }
+
+        .principle-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .principle-card h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-16);
+            color: var(--color-primary);
+        }
+
+        .principle-card p {
+            line-height: 1.6;
+            margin-bottom: var(--space-8);
+        }
+
+        /* Practice Section */
+        .practice-exercises {
+            display: grid;
+            gap: var(--space-24);
+            margin-top: var(--space-24);
+        }
+
+        .exercise-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .exercise-card h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-16);
+        }
+
+        .exercise-instruction {
+            background-color: var(--color-bg-2);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-20);
+        }
+
+        .exercise-instruction p {
+            margin-bottom: var(--space-4);
+        }
+
+        .exercise-board {
+            margin: var(--space-20) auto;
+            width: fit-content;
+        }
+
+        .exercise-feedback {
+            margin-top: var(--space-20);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+            display: none;
+        }
+
+        .exercise-feedback.show {
+            display: block;
+        }
+
+        .exercise-feedback.correct {
+            background-color: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .exercise-feedback.incorrect {
+            background-color: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+
+        .exercise-controls {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-20);
+            justify-content: center;
+        }
+
+        .btn {
+            padding: var(--space-8) var(--space-16);
+            background-color: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            transition: all var(--duration-fast) var(--ease-standard);
+            font-family: var(--font-family-base);
+        }
+
+        .btn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-secondary-hover);
+        }
+
+        /* Chess Board */
+        .chessboard {
+            display: inline-grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            border: 2px solid var(--color-border);
+            box-shadow: var(--shadow-md);
+        }
+
+        .square {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 54px;
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            user-select: none;
+        }
+
+        .square.light {
+            background-color: #f0d9b5;
+        }
+
+        .square.dark {
+            background-color: #b58863;
+        }
+
+        .square.selected {
+            background-color: #f7ec6f !important;
+            box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .square.valid-move {
+            background-color: #9acd32 !important;
+        }
+
+        .square.under-attack {
+            background-color: #ff6b6b !important;
+        }
+
+        .square:hover {
+            opacity: 0.8;
+        }
+
+        /* Game Section */
+        .game-container {
+            margin-top: var(--space-24);
+        }
+
+        .game-board {
+            display: flex;
+            gap: var(--space-32);
+            flex-wrap: wrap;
+            width: 100%;
+
+        }
+
+        .board-wrapper {
+            display: flex;
+            flex: 1;
+            min-width: 400px;
+            width: 100%;
+
+        }
+
+        .game-info {
+            flex: 0.5;
+            min-width: 300px;
+            width: 100%;
+        }
+
+        .info-card {
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-20);
+            margin-bottom: var(--space-16);
+        }
+
+        .info-card h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-12);
+        }
+
+        .game-status {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-8);
+        }
+
+        .turn-indicator {
+            padding: var(--space-8);
+            border-radius: var(--radius-base);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-12);
+        }
+
+        .turn-indicator.white {
+            background-color: var(--color-bg-1);
+        }
+
+        .turn-indicator.black {
+            background-color: var(--color-bg-4);
+        }
+
+        .move-history {
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: var(--color-background);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            font-family: monospace;
+            font-size: var(--font-size-sm);
+        }
+
+        .captured-pieces {
+            display: flex;
+            gap: var(--space-8);
+            flex-wrap: wrap;
+            font-size: 24px;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: var(--space-12);
+            flex-wrap: wrap;
+        }
+
+        .game-message {
+            margin-top: var(--space-16);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+            display: none;
+        }
+
+        .game-message.show {
+            display: block;
+        }
+
+        .game-message.check {
+            background-color: rgba(var(--color-orange-500-rgb), 0.15);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+
+        .game-message.checkmate {
+            background-color: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+
+        .game-message.checkmate h3 {
+            color: var(--color-error);
+        }
+
+        .game-message.checkmate p {
+            margin-bottom: var(--space-8);
+        }
+
+        .game-message.checkmate .btn {
+            margin-top: var(--space-12);
+        }
+
+        /* Larger board for play section */
+        .play-section .chessboard {
+            grid-template-columns: repeat(8, 80px);
+            grid-template-rows: repeat(8, 80px);
+        }
+
+        .play-section .square {
+            width: 80px;
+            height: 80px;
+            font-size: 72px;
+        }
+
+        /* Options section for exercise 2 */
+        .exercise-options {
+            display: grid;
+            gap: var(--space-12);
+            margin: var(--space-20) 0;
+        }
+
+        .option-btn {
+            padding: var(--space-16);
+            background-color: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            text-align: left;
+            transition: all var(--duration-fast);
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+        }
+
+        .option-btn:hover {
+            background-color: var(--color-secondary);
+            border-color: var(--color-primary);
+        }
+
+        .option-btn.selected {
+            background-color: var(--color-bg-1);
+            border-color: var(--color-primary);
+        }
+
+        .option-btn.correct {
+            background-color: rgba(var(--color-teal-500-rgb), 0.15);
+            border-color: var(--color-success);
+        }
+
+        .option-btn.incorrect {
+            background-color: rgba(var(--color-red-500-rgb), 0.15);
+            border-color: var(--color-error);
+        }
+
+        .option-move {
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-8);
+        }
+
+        .option-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Promotion Dialog */
+        .promotion-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .promotion-dialog.show {
+            display: flex;
+        }
+
+        .promotion-content {
+            background-color: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .promotion-content h3 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-20);
+        }
+
+        .promotion-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-12);
+            margin-top: var(--space-16);
+        }
+
+        .promotion-option {
+            padding: var(--space-16);
+            background-color: var(--color-secondary);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all var(--duration-fast);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-8);
+        }
+
+        .promotion-option:hover {
+            background-color: var(--color-secondary-hover);
+            border-color: var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        .promotion-option .piece-symbol {
+            font-size: 48px;
+        }
+
+        .promotion-option .piece-name {
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-base);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .square.light {
+                background-color: #6d9146;
+            }
+
+            .square.dark {
+                background-color: #3e5c2e;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <h1 class="nav-title">國際象棋教學 / Chess Tutorial</h1>
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-section="pieces">棋子和走法 / Pieces &amp; Moves</button>
+                <button class="nav-btn" data-section="board">棋盤基礎 / Board Basics</button>
+                <button class="nav-btn" data-section="opening">開局原則 / Opening Principles</button>
+                <button class="nav-btn" data-section="practice">練習 / Practice</button>
+                <button class="nav-btn" data-section="play">對局 / Play Game</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Promotion Dialog -->
+    <div class="promotion-dialog" id="promotion-dialog">
+        <div class="promotion-content">
+            <h3>選擇升變棋子 / Choose Promotion Piece</h3>
+            <div class="promotion-options" id="promotion-options"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Pieces Section -->
+        <section id="pieces-section" class="section active">
+            <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24);">棋子和走法 / Pieces &amp; Moves</h2>
+            <div class="pieces-grid" id="pieces-grid"></div>
+        </section>
+
+        <!-- Board Basics Section -->
+        <section id="board-section" class="section">
+            <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24);">棋盤基礎 / Board Basics</h2>
+            <div class="board-basics-content">
+                <h3>8×8 棋盤 / 8×8 Board</h3>
+                <p>國際象棋棋盤由64個格子組成，排列為8行8列。每個格子有一個字母（縱列）和數字（橫行）。</p>
+                <p>The chess board consists of 64 squares arranged in 8 rows and 8 columns. Each square has a letter
+                    (file) and number (rank).</p>
+
+                <h3 style="margin-top: var(--space-24);">代數記譜法 / Algebraic Notation</h3>
+                <p>縱列：a、b、c、d、e、f、g、h（從左到右）</p>
+                <p>Files: a, b, c, d, e, f, g, h (left to right)</p>
+                <p>橫行：1、2、3、4、5、6、7、8（從下到上）</p>
+                <p>Ranks: 1, 2, 3, 4, 5, 6, 7, 8 (bottom to top)</p>
+
+                <div class="notation-board">
+                    <div class="chessboard" id="notation-board"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Opening Principles Section -->
+        <section id="opening-section" class="section">
+            <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24);">開局原則 / Opening Principles</h2>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <h3>控制中心 / Control the Center</h3>
+                    <p>中心格子（d4、e4、d5、e5）非常重要。用兵和棋子控制它們。</p>
+                    <p>The center squares (d4, e4, d5, e5) are very important. Control them with pawns and pieces.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>發展棋子 / Develop Your Pieces</h3>
+                    <p>在遊戲初期將馬和象向中心移動。不要多次移動同一棋子。</p>
+                    <p>Move your knights and bishops toward the center early. Don't move the same piece twice.</p>
+                </div>
+                <div class="principle-card">
+                    <h3>保護國王 / Protect Your King</h3>
+                    <p>儘早進行易位以保護國王。保持國王遠離攻擊。</p>
+                    <p>Castle early to move your king to safety. Keep your king protected from attacks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice-section" class="section">
+            <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24);">練習 / Practice</h2>
+            <div class="practice-exercises">
+                <!-- Exercise 1: Move Knight -->
+                <div class="exercise-card">
+                    <h3>練習 1：移動馬 / Exercise 1: Move the Knight</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的馬移到f3</strong></p>
+                        <p><strong>Move the White Knight to f3</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 1b: Move Rook -->
+                <div class="exercise-card">
+                    <h3>練習 1b：移動城堡 / Exercise 1b: Move the Rook</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的城堡移到e4</strong></p>
+                        <p><strong>Move the White Rook to e4</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1b-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1b-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1b()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 1c: Move Bishop -->
+                <div class="exercise-card">
+                    <h3>練習 1c：移動象 / Exercise 1c: Move the Bishop</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的象移到g5</strong></p>
+                        <p><strong>Move the White Bishop to g5</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1c-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1c-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1c()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 1d: Move Pawn -->
+                <div class="exercise-card">
+                    <h3>練習 1d：移動兵 / Exercise 1d: Move the Pawn</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的兵移到e4</strong></p>
+                        <p><strong>Move the White Pawn to e4</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1d-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1d-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1d()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 1e: Move Queen -->
+                <div class="exercise-card">
+                    <h3>練習 1e：移動皇后 / Exercise 1e: Move the Queen</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的皇后移到d4</strong></p>
+                        <p><strong>Move the White Queen to d4</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1e-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1e-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1e()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 1f: Move King -->
+                <div class="exercise-card">
+                    <h3>練習 1f：移動國王 / Exercise 1f: Move the King</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>把白方的國王移到e2</strong></p>
+                        <p><strong>Move the White King to e2</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise1f-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise1f-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise1f()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 2: Best Opening Move -->
+                <div class="exercise-card">
+                    <h3>練習 2：最佳開局走法 / Exercise 2: Best Opening Move</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>白方最好的第一步走法是什麼？</strong></p>
+                        <p><strong>What is the best first move for White?</strong></p>
+                    </div>
+                    <div class="exercise-options" id="exercise2-options"></div>
+                    <div class="exercise-feedback" id="exercise2-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise2()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 3a: Castling -->
+                <div class="exercise-card">
+                    <h3>練習 3a：易位 / Exercise 3a: Castling</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>練習易位 - 移動國王進行王翼易位或后翼易位</strong></p>
+                        <p><strong>Practice Castling - Move the King to castle kingside or queenside</strong></p>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-sm);">
+                            將國王向右移動兩格（到g1）進行王翼易位，或向左移動兩格（到c1）進行后翼易位。</p>
+                        <p style="font-size: var(--font-size-sm);">Move the King TWO squares to the right (to g1) for
+                            kingside castling, or TWO squares to the left (to c1) for queenside castling.</p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise3a-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise3a-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise3a()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 3b: Pawn Promotion -->
+                <div class="exercise-card">
+                    <h3>練習 3b：兵升變 / Exercise 3b: Pawn Promotion</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>練習兵升變 - 將白兵移到最後一行</strong></p>
+                        <p><strong>Practice Pawn Promotion - Move the White Pawn to the last rank</strong></p>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-sm);">
+                            將白兵從e7移到e8，然後選擇升變成：皇后、城堡、象或馬。</p>
+                        <p style="font-size: var(--font-size-sm);">Move the White Pawn from e7 to e8, then choose which
+                            piece to promote to: Queen, Rook, Bishop, or Knight.</p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise3b-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise3b-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise3b()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 4a: Knight Captures -->
+                <div class="exercise-card">
+                    <h3>練習 4a：馬的吃子 / Exercise 4a: Knight Captures</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>用白方的馬吃掉黑方的棋子</strong></p>
+                        <p><strong>Use the White Knight to capture the Black piece</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise4a-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise4a-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise4a()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 4b: Rook Captures -->
+                <div class="exercise-card">
+                    <h3>練習 4b：城堡的吃子 / Exercise 4b: Rook Captures</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>用白方的城堡吃掉黑方的棋子</strong></p>
+                        <p><strong>Use the White Rook to capture the Black piece</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise4b-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise4b-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise4b()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 4c: Bishop Captures -->
+                <div class="exercise-card">
+                    <h3>練習 4c：象的吃子 / Exercise 4c: Bishop Captures</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>用白方的象吃掉黑方的棋子</strong></p>
+                        <p><strong>Use the White Bishop to capture the Black piece</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise4c-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise4c-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise4c()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 4d: Pawn Captures -->
+                <div class="exercise-card">
+                    <h3>練習 4d：兵的吃子 / Exercise 4d: Pawn Captures</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>用白方的兵吃掉黑方的棋子</strong></p>
+                        <p><strong>Use the White Pawn to capture the Black piece</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise4d-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise4d-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise4d()">重新開始 / Reset</button>
+                    </div>
+                </div>
+
+                <!-- Exercise 4e: Queen Captures -->
+                <div class="exercise-card">
+                    <h3>練習 4e：皇后的吃子 / Exercise 4e: Queen Captures</h3>
+                    <div class="exercise-instruction">
+                        <p><strong>用白方的皇后吃掉黑方的棋子</strong></p>
+                        <p><strong>Use the White Queen to capture the Black piece</strong></p>
+                    </div>
+                    <div class="exercise-board">
+                        <div class="chessboard" id="exercise4e-board"></div>
+                    </div>
+                    <div class="exercise-feedback" id="exercise4e-feedback"></div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-secondary" onclick="resetExercise4e()">重新開始 / Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Play Game Section -->
+        <section id="play-section" class="section play-section">
+            <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24);">對局 / Play Game</h2>
+            <div class="game-container">
+                <div class="game-board">
+                    <div class="board-wrapper">
+                        <div class="chessboard" id="game-board"></div>
+                    </div>
+                    <div class="game-info">
+                        <div class="info-card">
+                            <h3>遊戲狀態 / Game Status</h3>
+                            <div class="turn-indicator white" id="turn-indicator">白方回合 / White's Turn</div>
+                            <div class="game-message" id="game-message"></div>
+                        </div>
+                        <div class="info-card">
+                            <h3>走步記錄 / Move History</h3>
+                            <div class="move-history" id="move-history">開始新遊戲 / New game started</div>
+                        </div>
+                        <div class="info-card">
+                            <h3>被吃棋子 / Captured Pieces</h3>
+                            <div><strong>白方 White:</strong></div>
+                            <div class="captured-pieces" id="captured-white"></div>
+                            <div style="margin-top: var(--space-12);"><strong>黑方 Black:</strong></div>
+                            <div class="captured-pieces" id="captured-black"></div>
+                        </div>
+                        <div class="game-controls">
+                            <button class="btn" onclick="resetGame()">重新開始 / Reset</button>
+                            <button class="btn btn-secondary" onclick="undoMove()">撤銷 / Undo</button>
+                            <button class="btn btn-secondary" onclick="flipBoard()">翻轉 / Flip</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="ChessApp.js"></script>
+</body>
+
+</html>
