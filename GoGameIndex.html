@@ -358,8 +358,10 @@
                 <div class="board-container">
                     <canvas id="forbidden-example3" width="360" height="360"></canvas>
                 </div>
-                <p style="text-align:center; color: var(--color-text-secondary); font-size: 12px;">紅點：禁著點（自殺）｜
-                    綠點：合法落子（可吃掉對方）<br />Red dots: Forbidden (suicide) ｜ Green dot: Legal (can capture opponent)</p>
+                <p style="text-align:center; color: var(--color-text-secondary); font-size: 12px;">紅點：黑子的禁著點（自殺）｜
+                    綠點：黑子合法落子（可吃掉白子）<br />Red dots: Black stone's Forbidden (suicide) ｜ Green dot: Black stone's Legal
+                    (Black stones
+                    can capture white stones)</p>
             </div>
 
             <h3>眼（Eyes）</h3>
@@ -1008,23 +1010,25 @@
         let forbidden3Board = Array(forbidden3Size).fill(null).map(() => Array(forbidden3Size).fill(null));
 
         // Setup: White group with one liberty, and a suicide point
-        forbidden3Board[3][3] = 'W';
+        forbidden3Board[2][5] = 'W';
         forbidden3Board[3][4] = 'W';
-        forbidden3Board[4][3] = 'W';
-        forbidden3Board[4][4] = 'W';
-        forbidden3Board[2][3] = 'B';
+        forbidden3Board[3][6] = 'W';
+        forbidden3Board[4][5] = 'W';
+
+        forbidden3Board[1][5] = 'B';
         forbidden3Board[2][4] = 'B';
-        forbidden3Board[3][2] = 'B';
-        forbidden3Board[4][2] = 'B';
-        forbidden3Board[5][3] = 'B';
-        forbidden3Board[5][4] = 'B';
-        forbidden3Board[3][5] = 'B';
+        forbidden3Board[2][6] = 'B';
+        forbidden3Board[3][3] = 'B';
+        forbidden3Board[3][7] = 'B';
+        forbidden3Board[4][4] = 'B';
+        forbidden3Board[4][6] = 'B';
+        forbidden3Board[5][5] = 'B';
         // (4,5) is the last liberty of white - black CAN play here (captures white)
-        // (6,6) surrounded by black - black CANNOT play here (suicide)
-        forbidden3Board[5][6] = 'B';
-        forbidden3Board[6][5] = 'B';
-        forbidden3Board[7][6] = 'B';
-        forbidden3Board[6][7] = 'B';
+        // (6,6) surrounded by white - black CANNOT play here (suicide)
+        forbidden3Board[5][6] = 'W';
+        forbidden3Board[6][5] = 'W';
+        forbidden3Board[7][6] = 'W';
+        forbidden3Board[6][7] = 'W';
 
         const { padding: f3p, gridSize: f3g } = drawBoard(forbidden3Canvas, forbidden3Size, forbidden3Board);
         const f3ctx = forbidden3Canvas.getContext('2d');
@@ -1032,7 +1036,7 @@
         // Mark legal move (green)
         f3ctx.fillStyle = 'rgba(46, 125, 50, 0.7)';
         f3ctx.beginPath();
-        f3ctx.arc(f3p + 5 * f3g, f3p + 4 * f3g, f3g * 0.25, 0, Math.PI * 2);
+        f3ctx.arc(f3p + 5 * f3g, f3p + 3 * f3g, f3g * 0.25, 0, Math.PI * 2);
         f3ctx.fill();
 
         // Mark illegal move (red)
