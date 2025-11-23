@@ -474,28 +474,81 @@
             return { padding, gridSize };
         }
 
+
+        //暫時停止，測使自加版
+        if (1 == 0) {
+            function getBoardCoords(canvas, size, evt) {
+                const rect = canvas.getBoundingClientRect();
+                //            const padding = 30;
+                const padding = 10;
+                const gridSize = (canvas.width - 2 * padding) / (size - 1);
+
+
+                // 兼容 mouse event 和 touch event
+                const point = evt.touches ? evt.touches[0] : evt;
+                // touch 用 touches[0]，mouse 就用原本的 evt [web:59][web:101]
+
+                const x = point.clientX - rect.left;           // 轉成相對 canvas 左上角的 X 座標 [web:81][web:83]
+                const y = point.clientY - rect.top;            // 轉成相對 canvas 左上角的 Y 座標 [web:81][web:83]
+
+                //const x = evt.clientX - rect.left;
+                //const y = evt.clientY - rect.top;
+                const gx = Math.round((x - padding) / gridSize);
+                const gy = Math.round((y - padding) / gridSize);
+                if (gx >= 0 && gx < size && gy >= 0 && gy < size) {
+                    return { x: gx, y: gy };
+                }
+                return null;
+            }
+        }
+
+        //自加開始20251123.0946
         function getBoardCoords(canvas, size, evt) {
             const rect = canvas.getBoundingClientRect();
-            //            const padding = 30;
-            const padding = 10;
+
+            const padding = 30;
             const gridSize = (canvas.width - 2 * padding) / (size - 1);
-            // 兼容 mouse event 和 touch event
+
+            // 兼容滑鼠和觸控
             const point = evt.touches ? evt.touches[0] : evt;
-            // touch 用 touches[0]，mouse 就用原本的 evt [web:59][web:101]
 
-            const x = point.clientX - rect.left;           // 轉成相對 canvas 左上角的 X 座標 [web:81][web:83]
-            const y = point.clientY - rect.top;            // 轉成相對 canvas 左上角的 Y 座標 [web:81][web:83]
+            // 轉成相對 canvas 左上角的座標
+            const x = point.clientX - rect.left;
+            const y = point.clientY - rect.top;
 
-
-            //const x = evt.clientX - rect.left;
-            //const y = evt.clientY - rect.top;
+            // snap 到最近交叉點的 index
             const gx = Math.round((x - padding) / gridSize);
             const gy = Math.round((y - padding) / gridSize);
-            if (gx >= 0 && gx < size && gy >= 0 && gy < size) {
-                return { x: gx, y: gy };
+
+            // 先檢查 index 是否在棋盤內
+            if (gx < 0 || gx >= size || gy < 0 || gy >= size) {
+                return null;
             }
-            return null;
+
+            // ===== 新增：距離交叉點的實際距離判斷 =====
+
+            // 最近交叉點實際像素座標（棋盤內）
+            const ix = padding + gx * gridSize;
+            const iy = padding + gy * gridSize;
+
+            // 手指/滑鼠點擊點與最近交叉點的距離
+            const dx = x - ix;
+            const dy = y - iy;
+            const dist = Math.sqrt(dx * dx + dy * dy);  // 歐氏距離
+
+            // 設定一個允許半徑，例如 0.35 格（你可以微調）
+            const maxRadius = gridSize * 0.35;
+
+            // 如果點得太遠，就當作沒有點中任何交叉點
+            if (dist > maxRadius) {
+                return null;
+            }
+
+            // 真的有點在交叉點附近才回傳
+            return { x: gx, y: gy };
         }
+        //自加完結20251123.0946
+
 
         // ========== LESSON 2: PLACEMENT DEMO ==========
         const demoPlacement = document.getElementById('demo-placement');
