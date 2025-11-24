@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国象棋新手教学 | Chinese Chess Tutorial</title>
+    <style>
+        :root {
+            /* Primitive Color Tokens */
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-md: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-btn-primary-text: var(--color-slate-900);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            font-size: var(--font-size-base);
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-20) var(--space-32);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-12);
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-lg);
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-12) var(--space-32);
+            overflow-x: auto;
+            position: sticky;
+            top: 88px;
+            z-index: 99;
+        }
+
+        .nav-buttons {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: var(--space-8);
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: var(--space-8) var(--space-16);
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            transition: all var(--duration-fast) var(--ease-standard);
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .nav-btn.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-32);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+        }
+
+        h3 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-12);
+            color: var(--color-text);
+        }
+
+        .bilingual {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .zh {
+            font-weight: var(--font-weight-medium);
+        }
+
+        .en {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Board Styles */
+        .board-container {
+            display: flex;
+            justify-content: center;
+            margin: var(--space-24) 0;
+            padding: var(--space-20);
+            background: var(--color-bg-2);
+            border-radius: var(--radius-lg);
+        }
+
+        .xiangqi-board {
+            background: var(--color-bg-1);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-16);
+        }
+
+        /* Piece Info Card */
+        .piece-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            margin-bottom: var(--space-20);
+        }
+
+        @media (max-width: 768px) {
+            .piece-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            padding: var(--space-12);
+            background: var(--color-bg-3);
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-border);
+        }
+
+        .info-label {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-4);
+        }
+
+        .info-value {
+            color: var(--color-text);
+            font-size: var(--font-size-base);
+        }
+
+        /* Interactive Board */
+        .interactive-section {
+            background: var(--color-bg-4);
+            padding: var(--space-20);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            margin: var(--space-20) 0;
+        }
+
+        .board-feedback {
+            text-align: center;
+            margin-top: var(--space-16);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .board-feedback.success {
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .board-feedback.error {
+            background: rgba(var(--color-red-500-rgb), 0.15);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+
+        .board-feedback.info {
+            background: var(--color-bg-5);
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--space-12) var(--space-20);
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+
+        .btn:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-16);
+            flex-wrap: wrap;
+        }
+
+        /* Quiz Styles */
+        .quiz-card {
+            background: var(--color-bg-6);
+            padding: var(--space-20);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            margin: var(--space-20) 0;
+        }
+
+        .quiz-question {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-16);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .quiz-option {
+            padding: var(--space-12) var(--space-16);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+
+        .quiz-option:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-primary);
+        }
+
+        .quiz-option.correct {
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            border-color: var(--color-success);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(var(--color-red-500-rgb), 0.15);
+            border-color: var(--color-error);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: var(--space-16);
+            justify-content: center;
+            margin-top: var(--space-16);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            font-size: var(--font-size-sm);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Welcome Section */
+        .language-selector {
+            display: flex;
+            gap: var(--space-8);
+            background: var(--color-secondary);
+            padding: var(--space-4);
+            border-radius: var(--radius-base);
+        }
+
+        .lang-btn {
+            padding: var(--space-8) var(--space-16);
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+
+        .lang-btn:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .lang-btn.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+
+        .welcome-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-16);
+            margin-top: var(--space-24);
+        }
+
+        .welcome-card {
+            background: var(--color-bg-7);
+            padding: var(--space-20);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+
+        .welcome-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            margin-bottom: var(--space-12);
+        }
+
+        .welcome-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-8);
+        }
+
+        .game-container {
+            margin-top: var(--space-24);
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-20);
+            flex-wrap: wrap;
+            gap: var(--space-16);
+        }
+
+        .turn-indicator {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: var(--space-24);
+        }
+
+        @media (max-width: 968px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .board-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
+        }
+
+        .sidebar-section {
+            background: var(--color-bg-1);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-16);
+        }
+
+        .sidebar-section h4 {
+            margin-bottom: var(--space-12);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .move-list {
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: var(--font-family-mono);
+            font-size: var(--font-size-sm);
+        }
+
+        .move-entry {
+            padding: var(--space-8);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .move-entry:last-child {
+            border-bottom: none;
+        }
+
+        .move-entry.highlight {
+            background: var(--color-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .captured-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .captured-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .captured-pieces {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+            min-height: 24px;
+        }
+
+        .captured-piece {
+            font-size: var(--font-size-sm);
+            padding: var(--space-4) var(--space-8);
+            background: var(--color-secondary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .material-display {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            text-align: center;
+            padding: var(--space-16);
+            background: var(--color-bg-3);
+            border-radius: var(--radius-base);
+        }
+
+        .check-warning {
+            background: rgba(var(--color-error-rgb), 0.15) !important;
+            color: var(--color-error) !important;
+            border-color: var(--color-error) !important;
+            font-weight: var(--font-weight-bold);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .game-over-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--color-surface);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-32);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @font-face {
+            font-family: 'FKGroteskNeue';
+            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <h1><span data-lang="title">中国象棋新手教学</span></h1>
+                    <div class="subtitle" data-lang="subtitle">Learn the Ancient Game of Strategy</div>
+                </div>
+                <div class="language-selector">
+                    <button class="lang-btn" data-lang-code="en">English</button>
+                    <button class="lang-btn active" data-lang-code="zh-cn">简体</button>
+                    <button class="lang-btn" data-lang-code="zh-tw">繁體</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-section="home"><span data-nav="home"></span></button>
+            <button class="nav-btn" data-section="board"><span data-nav="board_setup"></span></button>
+            <button class="nav-btn" data-section="general"><span data-nav="general"></span></button>
+            <button class="nav-btn" data-section="advisor"><span data-nav="advisor"></span></button>
+            <button class="nav-btn" data-section="elephant"><span data-nav="elephant"></span></button>
+            <button class="nav-btn" data-section="horse"><span data-nav="horse"></span></button>
+            <button class="nav-btn" data-section="chariot"><span data-nav="chariot"></span></button>
+            <button class="nav-btn" data-section="cannon"><span data-nav="cannon"></span></button>
+            <button class="nav-btn" data-section="soldier"><span data-nav="soldier"></span></button>
+            <button class="nav-btn" data-section="rules"><span data-nav="rules"></span></button>
+            <button class="nav-btn" data-section="fullgame"><span data-nav="full_game"></span></button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="card">
+                <h2>欢迎 Welcome</h2>
+                <div class="bilingual">
+                    <p class="zh">欢迎来到中国象棋新手教学！中国象棋是一种拥有数千年历史的策略棋类游戏，深受世界各地玩家的喜爱。</p>
+                    <p class="en">Welcome to the Chinese Chess (Xiangqi) Beginner Tutorial! Chinese Chess is a strategic
+                        board game with thousands of years of history, beloved by players worldwide.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>关于象棋 About Xiangqi</h3>
+                <div class="bilingual">
+                    <p class="zh">象棋是两人对弈的棋类游戏，红方和黑方各有16枚棋子。游戏目标是将死对方的将（帅）。棋子在棋盘的交叉点上移动，每种棋子都有独特的移动规则。</p>
+                    <p class="en">Xiangqi is a two-player strategy game where Red and Black sides each have 16 pieces.
+                        The objective is to checkmate the opponent's General. Pieces move on the intersections of the
+                        board, and each piece type has unique movement rules.</p>
+                </div>
+            </div>
+
+            <div class="welcome-grid">
+                <div class="welcome-card" onclick="navigateTo('board')">
+                    <div class="welcome-icon">📋</div>
+                    <div class="welcome-title">棋盘设置<br>Board Setup</div>
+                    <p class="en" style="margin-top: 8px;">Learn about the board</p>
+                </div>
+                <div class="welcome-card" onclick="navigateTo('general')">
+                    <div class="welcome-icon">👑</div>
+                    <div class="welcome-title">学习棋子<br>Learn Pieces</div>
+                    <p class="en" style="margin-top: 8px;">Study each piece type</p>
+                </div>
+                <div class="welcome-card" onclick="navigateTo('practice')">
+                    <div class="welcome-icon">🎯</div>
+                    <div class="welcome-title">互动练习<br>Practice</div>
+                    <p class="en" style="margin-top: 8px;">Test your knowledge</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOARD SECTION -->
+        <section id="board" class="section">
+            <div class="card">
+                <h2>棋盘与设置 Board and Setup</h2>
+                <div class="bilingual">
+                    <p class="zh">中国象棋使用9条竖线和10条横线组成的棋盘，共有90个交叉点。棋子放置并移动在这些交叉点上。</p>
+                    <p class="en">Chinese Chess uses a board with 9 vertical lines and 10 horizontal lines, creating 90
+                        intersection points. Pieces are placed and move on these intersections.</p>
+                </div>
+
+                <div class="board-container">
+                    <canvas id="setupBoard" width="450" height="500"></canvas>
+                </div>
+
+                <h3>棋盘特征 Board Features</h3>
+
+                <div class="info-item" style="margin-bottom: 16px;">
+                    <div class="info-label">宫殿 Palace (九宫)</div>
+                    <div class="bilingual">
+                        <p class="zh">在每个玩家一侧中心的3x3区域。只有将帅和士必须保持在这个区域内。其他棋子可以进入，但不需要留在该区域。</p>
+                        <p class="en">A 3x3 area in the center of each player's side. Only the General and Advisors must
+                            stay within this area. Other pieces can enter but are not required to stay.</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">河界 River (楚河汉界)</div>
+                    <div class="bilingual">
+                        <p class="zh">棋盘中间的水平带，分隔两侧。象不能越过它。卒越过它后获得更强的机动性。</p>
+                        <p class="en">A horizontal band in the middle of the board that separates the two sides.
+                            Elephants cannot cross it. Soldiers gain mobility after crossing it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GENERAL SECTION -->
+        <section id="general" class="section">
+            <div class="card">
+                <h2>将 / 帅 (Shuai / Jiang) - General</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">将 (黑方) / 帅 (红方)</div>
+                        <div class="info-value en">Jiāng (Black) / Shuài (Red)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">无限 Infinite</div>
+                        <div class="info-value en">(Game-winning piece)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">正交移动1步</div>
+                        <div class="info-value en">1 step orthogonally</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">限制 Restrictions</div>
+                        <div class="info-value">必须留在宫殿内</div>
+                        <div class="info-value en">Must stay in palace</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">最重要的棋子。将它吃掉可以赢得比赛。它可以在任何正交方向上移动一个点，但必须始终保持在宫殿范围内。</p>
+                    <p class="en">The most important piece. Capturing it wins the game. It moves one point in any
+                        orthogonal direction but must always stay within the palace boundaries.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <p class="bilingual" style="margin-bottom: 16px;">
+                        <span class="zh">点击将帅查看可移动位置，然后点击目标位置移动。</span>
+                        <span class="en">Click the General to see valid moves, then click a target position to
+                            move.</span>
+                    </p>
+                    <div class="board-container">
+                        <canvas id="generalBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="generalFeedback" class="board-feedback info">
+                        点击将帅开始 Click the General to start
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('general')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 防守練習 Defense Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用將帥躲避威脅。將帥只能在宮內正交方向移動一步。</p>
+                        <p class="en">Practice using the General to avoid threats. It moves 1 step orthogonally within
+                            palace.</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="generalCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="generalCaptureFeedback" class="board-feedback info">
+                        移動將帥躲避威脅！Move the General to avoid threat!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('generalCapture')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="quiz-card">
+                    <h3>小测验 Quiz</h3>
+                    <div class="quiz-question">
+                        <div class="zh">将帅可以移动到宫殿外吗？</div>
+                        <div class="en">Can the General move outside the palace?</div>
+                    </div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'general-q1')">
+                            <div class="zh">可以 Yes</div>
+                        </div>
+                        <div class="quiz-option" onclick="checkQuizAnswer(this, true, 'general-q1')">
+                            <div class="zh">不可以 No</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADVISOR SECTION -->
+        <section id="advisor" class="section">
+            <div class="card">
+                <h2>士 / 仕 (Shì) - Advisor</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">士 (黑方) / 仕 (红方)</div>
+                        <div class="info-value en">Shì (Guard)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">2分 2 points</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">对角线移动1步</div>
+                        <div class="info-value en">1 step diagonally</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">限制 Restrictions</div>
+                        <div class="info-value">必须留在宫殿内</div>
+                        <div class="info-value en">Must stay in palace</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">防守棋子，保护将帅。它向对角线方向移动一步，但仅限于宫殿内，只能占据5个特定的对角交点。</p>
+                    <p class="en">A defensive piece that protects the general. It moves one diagonal step but is
+                        confined to the palace and can only occupy 5 specific diagonal intersections.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <div class="board-container">
+                        <canvas id="advisorBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="advisorFeedback" class="board-feedback info">
+                        点击士查看可移动位置 Click the Advisor to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('advisor')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用士吃掉對方的棋子。士只能在宮內對角線移動。</p>
+                        <p class="en">Practice capturing opponent pieces with the Advisor. It can only move diagonally
+                            within the palace.</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="advisorCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="advisorCaptureFeedback" class="board-feedback info">
+                        吃掉黑方的卒！Capture the black soldier!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('advisorCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ELEPHANT SECTION -->
+        <section id="elephant" class="section">
+            <div class="card">
+                <h2>象 / 相 (Xiàng) - Elephant</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">象 (黑方) / 相 (红方)</div>
+                        <div class="info-value en">Xiàng (Minister)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">2分 2 points</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">对角线移动2步</div>
+                        <div class="info-value en">Exactly 2 diagonal steps</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">限制 Restrictions</div>
+                        <div class="info-value">不能过河，可被阻挡</div>
+                        <div class="info-value en">Cannot cross river</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">防守棋子，控制你的棋盘一半。它向对角线移动两个点，但不能越过河流，可能被路径上的任何棋子阻挡。</p>
+                    <p class="en">A defensive piece that controls your half of the board. It moves exactly two diagonal
+                        points but cannot cross the river and can be blocked by any piece in its path.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <div class="board-container">
+                        <canvas id="elephantBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="elephantFeedback" class="board-feedback info">
+                        点击象查看可移动位置 Click the Elephant to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('elephant')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用象吃掉對方的棋子。象走田字形，不能過河，可能被塞象眼。</p>
+                        <p class="en">Practice capturing with the Elephant. It moves 2 diagonal steps, cannot cross
+                            river, can be blocked.</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="elephantCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="elephantCaptureFeedback" class="board-feedback info">
+                        吃掉黑方的兵！Capture the black soldier!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('elephantCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HORSE SECTION -->
+        <section id="horse" class="section">
+            <div class="card">
+                <h2>马 (Mǎ) - Horse</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">马</div>
+                        <div class="info-value en">Mǎ (Horse/Knight)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">4分 4 points</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">日字形移动</div>
+                        <div class="info-value en">L-shape (1 orthogonal + 1 diagonal)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">限制 Restrictions</div>
+                        <div class="info-value">可被蹩脚</div>
+                        <div class="info-value en">Can be blocked (hobbled)</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">中等距离攻击棋子。它先正交移动一个点，然后在同一方向上对角线移动一个点（L形），但如果有棋子与其正交相邻，则可能被阻挡。</p>
+                    <p class="en">A mid-range attacking piece. It moves one point orthogonally first, then one point
+                        diagonally in the same direction (L-shape), but can be blocked if a piece is adjacent to it
+                        orthogonally.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <p style="color: var(--color-warning); margin-bottom: 16px;">
+                        ⚠️ 注意：马腿旁有棋子会阻挡移动 | Note: Pieces adjacent to the horse can block its movement
+                    </p>
+                    <div class="board-container">
+                        <canvas id="horseBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="horseFeedback" class="board-feedback info">
+                        点击马查看可移动位置 Click the Horse to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('horse')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用馬吃掉對方的棋子。馬走日字形，但可能被號馬腿。</p>
+                        <p class="en">Practice capturing with the Horse. It moves in L-shape but can be blocked (hobbled
+                            leg).</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="horseCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="horseCaptureFeedback" class="board-feedback info">
+                        吃掉黑方的兵！Capture the black soldier!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('horseCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHARIOT SECTION -->
+        <section id="chariot" class="section">
+            <div class="card">
+                <h2>车 (Jū) - Chariot</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">车</div>
+                        <div class="info-value en">Jū (Chariot/Rook)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">9分 9 points</div>
+                        <div class="info-value en">(Most powerful)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">横竖任意距离</div>
+                        <div class="info-value en">Any distance orthogonally</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">限制 Restrictions</div>
+                        <div class="info-value">不能跳过棋子</div>
+                        <div class="info-value en">Cannot jump over pieces</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">仅次于将帅最强大的棋子。它可以像国际象棋车一样在水平或垂直方向上移动任何距离，但不能跳过棋子。它可以控制棋盘的大片区域。</p>
+                    <p class="en">The most powerful piece after the general. It moves any distance horizontally or
+                        vertically like a chess rook, but cannot jump over pieces. It can control large areas of the
+                        board.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <div class="board-container">
+                        <canvas id="chariotBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="chariotFeedback" class="board-feedback info">
+                        点击车查看可移动位置 Click the Chariot to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('chariot')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用車吃掉對方的棋子。車可以橫窪移動任意距離，但不能跳過棋子。</p>
+                        <p class="en">Practice capturing with the Chariot. It moves any distance orthogonally but cannot
+                            jump over pieces.</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="chariotCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="chariotCaptureFeedback" class="board-feedback info">
+                        吃掉黑方的馬！Capture the black horse!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('chariotCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CANNON SECTION -->
+        <section id="cannon" class="section">
+            <div class="card">
+                <h2>炮 / 砲 (Pào) - Cannon</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">炮 (黑方) / 砲 (红方)</div>
+                        <div class="info-value en">Pào (Cannon)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">4.5分 (开局) / 4分 (残局)</div>
+                        <div class="info-value en">4.5 (opening) / 4 (endgame)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">移动 Movement</div>
+                        <div class="info-value">横竖任意距离</div>
+                        <div class="info-value en">Any distance orthogonally</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">吃子规则 Capture Rule</div>
+                        <div class="info-value">必须跳过一个棋子</div>
+                        <div class="info-value en">Must jump over 1 piece</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">具有独特吃子机制的强大攻击棋子。正常移动时，它可以像车一样在水平或垂直方向上移动任何距离。但是，要吃掉敌方棋子，它必须跳过恰好一个棋子（'炮架'），落在其后的敌方棋子上。
+                    </p>
+                    <p class="en">A powerful attacking piece with unique capture mechanics. When moving normally, it
+                        moves like a chariot any distance horizontally or vertically. However, to capture an enemy
+                        piece, it must jump over exactly one piece (the 'mount'), landing on the enemy piece beyond.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <p style="color: var(--color-warning); margin-bottom: 16px;">
+                        💡 绿色：普通移动 | 黄色：可吃子位置（需炮架）<br>
+                        💡 Green: Normal move | Yellow: Can capture (with mount)
+                    </p>
+                    <div class="board-container">
+                        <canvas id="cannonBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="cannonFeedback" class="board-feedback info">
+                        点击炮查看可移动位置 Click the Cannon to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('cannon')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用砲吃掉對方的棋子。記住：砲必須跳過恰好一個棋子（砲架）才能吃子！</p>
+                        <p class="en">Practice capturing with the Cannon. Remember: Must jump over EXACTLY one piece
+                            (mount) to capture!</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="cannonCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="cannonCaptureFeedback" class="board-feedback info">
+                        使用砲架吃掉黑方的象！Use the mount to capture black elephant!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('cannonCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLDIER SECTION -->
+        <section id="soldier" class="section">
+            <div class="card">
+                <h2>兵 / 卒 (Bīng / Zú) - Soldier</h2>
+
+                <div class="piece-info">
+                    <div class="info-item">
+                        <div class="info-label">名称 Name</div>
+                        <div class="info-value">兵 (红方) / 卒 (黑方)</div>
+                        <div class="info-value en">Bīng / Zú (Soldier/Pawn)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">价值 Value</div>
+                        <div class="info-value">1分 (过河前) / 2分 (过河后)</div>
+                        <div class="info-value en">1 (before) / 2 (after river)</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">过河前 Before River</div>
+                        <div class="info-value">只能向前</div>
+                        <div class="info-value en">Forward only</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">过河后 After River</div>
+                        <div class="info-value">向前或左右</div>
+                        <div class="info-value en">Forward, left, or right</div>
+                    </div>
+                </div>
+
+                <div class="bilingual">
+                    <p class="zh">越过河流后获得更强机动性的攻击棋子。越过前只能向前移动一点。越过河流后，它可以每回合向前或侧向移动一点，但永远不能向后退。</p>
+                    <p class="en">An attacking piece that gains mobility after crossing the river. Before crossing, it
+                        can only move forward one point. After crossing the river, it can move forward or sideways
+                        (left/right) one point each turn, but it can never retreat backward.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <p style="color: var(--color-info); margin-bottom: 16px;">
+                        🌊 试试让兵过河，看看它的移动能力如何变化！<br>
+                        🌊 Try crossing the river with the soldier to see how its movement changes!
+                    </p>
+                    <div class="board-container">
+                        <canvas id="soldierBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="soldierFeedback" class="board-feedback info">
+                        点击兵查看可移动位置 Click the Soldier to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('soldier')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: var(--space-24); background: var(--color-bg-5);">
+                    <h3>🎯 吃子練習 Capture Practice</h3>
+                    <div class="bilingual">
+                        <p class="zh">練習使用兵吃掉對方的棋子。兵過河前只能向前，過河後可向前和左右移動。</p>
+                        <p class="en">Practice capturing with the Soldier. Before river: forward only. After river:
+                            forward and sideways.</p>
+                    </div>
+                    <div class="board-container">
+                        <canvas id="soldierCaptureBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="soldierCaptureFeedback" class="board-feedback info">
+                        讓兵過河後吃掉黑方的卒！Cross the river then capture black soldier!
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('soldierCapture')">重置 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPECIAL RULES SECTION -->
+        <section id="rules" class="section">
+            <div class="card">
+                <h2>特殊规则 Special Rules</h2>
+
+                <h3>1. 飞将规则 Flying General Rule</h3>
+                <div class="bilingual">
+                    <p class="zh">两个将帅不能在同一条竖线上直接对面，中间没有任何棋子。如果一方移动后导致将帅对面，则该移动非法。</p>
+                    <p class="en">The two Generals cannot face each other directly on the same file with no pieces in
+                        between. If a move results in the Generals facing each other, that move is illegal.</p>
+                </div>
+
+                <div class="interactive-section">
+                    <h3>互动示例 Interactive Example</h3>
+                    <p style="margin-bottom: 16px;">
+                        <span class="zh">尝试移动红方将帅，看看哪些移动是合法的。</span><br>
+                        <span class="en">Try moving the Red General to see which moves are legal.</span>
+                    </p>
+                    <div class="board-container">
+                        <canvas id="flyingGeneralBoard" width="450" height="500"></canvas>
+                    </div>
+                    <div id="flyingGeneralFeedback" class="board-feedback info">
+                        点击红将查看可移动位置 Click the Red General to see valid moves
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetBoard('flyingGeneral')">重置 Reset</button>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 32px;">2. 宫殿限制 Palace Boundaries</h3>
+                <div class="bilingual">
+                    <p class="zh">将帅和士必须始终留在各自的宫殿内（3x3区域）。它们不能离开这个区域。</p>
+                    <p class="en">Generals and Advisors must always stay within their respective palaces (3x3 area).
+                        They cannot leave this area.</p>
+                </div>
+
+                <h3 style="margin-top: 32px;">3. 河界效果 River Effects</h3>
+                <div class="bilingual">
+                    <p class="zh">象不能越过河界到对方领域。兵/卒在越过河界后获得横向移动能力。</p>
+                    <p class="en">Elephants cannot cross the river to the opponent's territory. Soldiers gain sideways
+                        movement ability after crossing the river.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FULL GAME PRACTICE SECTION -->
+        <section id="fullgame" class="section">
+            <div class="card">
+                <h2 data-lang="fullgame-title">完整棋局練習 Full Game Practice</h2>
+                <div class="bilingual">
+                    <p class="zh">在這裡進行完整的象棋對局。所有棋子都已擺好，紅方先手。</p>
+                    <p class="en">Play a complete Xiangqi game here. All pieces are set up, Red moves first.</p>
+                </div>
+
+                <div class="game-container">
+                    <div class="game-controls">
+                        <div class="btn-group">
+                            <button class="btn" onclick="newGame()" data-lang="btn-newgame">新遊戲</button>
+                            <button class="btn btn-secondary" onclick="undoMove()" data-lang="btn-undo">悔棋</button>
+                            <button class="btn btn-secondary" onclick="swapColors()" data-lang="btn-swap">交換棋位</button>
+                        </div>
+                        <div class="turn-indicator">
+                            <span data-lang="current-turn">當前回合</span>: <strong id="currentTurn"
+                                style="color: var(--color-error);">RED</strong>
+                        </div>
+                    </div>
+
+                    <div class="game-layout">
+                        <div class="board-area">
+                            <div class="board-container">
+                                <canvas id="fullGameBoard" width="450" height="500"></canvas>
+                            </div>
+                            <div id="gameStatus" class="board-feedback info">
+                                <span data-lang="game-ready">準備開始遊戲</span>
+                            </div>
+                        </div>
+
+                        <div class="game-sidebar">
+                            <div class="sidebar-section">
+                                <h4 data-lang="move-history">著法記錄</h4>
+                                <div id="moveHistory" class="move-list"></div>
+                            </div>
+
+                            <div class="sidebar-section">
+                                <h4 data-lang="captured-pieces">被吃的棋子</h4>
+                                <div class="captured-container">
+                                    <div class="captured-group">
+                                        <strong style="color: var(--color-error);">Red:</strong>
+                                        <div id="capturedRed" class="captured-pieces"></div>
+                                    </div>
+                                    <div class="captured-group">
+                                        <strong>Black:</strong>
+                                        <div id="capturedBlack" class="captured-pieces"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-section">
+                                <h4 data-lang="material-count">物質優勢</h4>
+                                <div id="materialCount" class="material-display">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+
+    <script src="ChineseChessApp.js"></script>
+</body>
+
+</html>
