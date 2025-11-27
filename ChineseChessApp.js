@@ -1007,9 +1007,9 @@ function initFlyingGeneralBoard() {
 
     const ctx = canvas.getContext('2d');
     const pieces = [
-        { ...PIECES.RED_GENERAL, x: 4, y: 8 },
+        { ...PIECES.RED_GENERAL, x: 5, y: 8 },
         { ...PIECES.BLACK_GENERAL, x: 4, y: 1 },
-        { ...PIECES.RED_SOLDIER, x: 4, y: 5 } // Piece between generals
+        //        { ...PIECES.RED_SOLDIER, x: 4, y: 5 } // Piece between generals
     ];
 
     initBoardState('flyingGeneral', pieces);
@@ -1253,6 +1253,32 @@ function updateGameDisplay() {
 
     const statusEl = document.getElementById('gameStatus');
     if (statusEl) {
+
+
+
+        //自加開始20251124.2300
+        function generalsFacing() {
+            const rg = redGeneral;   // {x, y}
+            const bg = blackGeneral; // {x, y}
+
+            // 不在同一路，直接不是飛公情況
+            if (rg.x !== bg.x) return false;
+
+            const file = rg.x;
+            const yStart = Math.min(rg.y, bg.y) + 1;
+            const yEnd = Math.max(rg.y, bg.y) - 1;
+
+            // 檢查中間是否有棋子
+            for (let y = yStart; y <= yEnd; y++) {
+                if (board[y][file] != null) {
+                    return false; // 有子擋住，就不是飛公
+                }
+            }
+            return true; // 同一路且中間無子 → 兩將相望
+        }
+        //自加結束20251124.2300
+        // || generalsFacing()
+
         if (gameState.isCheckmate) {
             statusEl.className = 'board-feedback error';
             const winner = gameState.currentPlayer === 'red' ? textContent[currentLanguage].black_wins : textContent[currentLanguage].red_wins;
@@ -1496,3 +1522,11 @@ function checkQuizAnswer(element, isCorrect, quizId) {
         }, 500);
     }
 }
+
+
+
+
+
+
+
+
