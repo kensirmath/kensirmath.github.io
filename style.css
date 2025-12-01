@@ -1573,7 +1573,8 @@ body {
 
     .calculator {
         max-width: none;
-        padding: var(--space-16);
+        /*        padding: var(--space-16); */
+        padding: var(--space-1);
     }
 
     .display-input {
