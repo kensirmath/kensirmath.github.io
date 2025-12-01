@@ -1623,7 +1623,8 @@ body {
 
     .calc-btn {
         height: 40px;
-        font-size: var(--font-size-xs);
+        /*        font-size: var(--font-size-xs); */
+        font-size: var(--font-size-2xl);
     }
 
     .display-input {

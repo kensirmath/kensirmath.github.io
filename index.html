@@ -2905,40 +2905,88 @@
                     -->
                 </div>
 
+
+                <div id="calc-result" class="calculator-result hidden">
+                    <div class="result-label">計算結果</div>
+                    <div id="calc-output" class="result-value"></div>
+                </div>
+
                 <div class="calculator-buttons">
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">+</button>
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">-</button>
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">×</button>
-                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">÷</button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('+')">
+                        <p style="font-size: 28px;">+</p>
+                    </button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('-')">
+                        <p style="font-size: 28px;">-</p>
+                    </button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('*')">
+                        <p style="font-size: 28px;">×</p>
+                    </button>
+                    <button class="btn btn--primary calc-btn" onclick="insertAtCursor('/')">
+                        <p style="font-size: 28px;">÷</p>
+                    </button>
 
                     <!-- 第一行：清除和退格 -->
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('(')">(</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor(')')">)</button>
-                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sqrt(')">√</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('(')">
+                        <p style="font-size: 28px;">(</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor(')')">
+                        <p style="font-size: 28px;">)</p>
+                    </button>
+                    <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('sqrt(')">
+                        <p style="font-size: 28px;">√</p>
+                    </button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('^(')">x^y</button>
 
                     <!-- 數字按鈕 -->
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('7')">7</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('8')">8</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">9</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('7')">
+                        <p style="font-size: 28px;">7</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('8')">
+                        <p style="font-size: 28px;">8</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('9')">
+                        <p style="font-size: 28px;">9</p>
+                    </button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('*')
                         ;insertAtCursor('1');insertAtCursor('0');insertAtCursor('^(')">x10^</button>
 
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">4</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">5</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('6')">6</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('4')">
+                        <p style="font-size: 28px;">4</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('5')">
+                        <p style="font-size: 28px;">5</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('6')">
+                        <p style="font-size: 28px;">6</p>
+                    </button>
                     <button class="btn btn--secondary calc-btn"
-                        onclick="insertAtCursor('/');insertAtCursor('1');insertAtCursor('0');insertAtCursor('0')">%</button>
+                        onclick="insertAtCursor('/');insertAtCursor('1');insertAtCursor('0');insertAtCursor('0')">
+                        <p style="font-size: 28px;">%</p>
+                    </button>
 
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('1')">1</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('2')">2</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('3')">3</button>
-                    <button class="btn btn--outline calc-btn" onclick="backspaceAtCursor()">←</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('1')">
+                        <p style="font-size: 28px;">1</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('2')">
+                        <p style="font-size: 28px;">2</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('3')">
+                        <p style="font-size: 28px;">3</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="backspaceAtCursor()">
+                        <p style="font-size: 28px;">←</p>
+                    </button>
 
                     <!--<button class="btn btn--outline calc-btn zero-btn" onclick="insertAtCursor('0')">0</button>-->
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('0')">0</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('.')">.</button>
-                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('00')">00</button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('0')">
+                        <p style="font-size: 28px;">0</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('.')">
+                        <p style="font-size: 28px;">.</p>
+                    </button>
+                    <button class="btn btn--outline calc-btn" onclick="insertAtCursor('00')">
+                        <p style="font-size: 28px;">00</p>
+                    </button>
 
                     <!--<button class="btn btn--primary calc-btn equals-btn" onclick="calculateResult()"
                         rowspan="2">EXE</button>-->
@@ -2974,14 +3022,9 @@
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('P(')">P(n,r)</button>
                     <button class="btn btn--secondary calc-btn" onclick="insertAtCursor('C(')">C(n,r)</button>
                     <button class="btn btn--secondary calc-btn"
-                        onclick="insertAtCursor('factorial(')">factorial(n)</button>
+                        onclick="insertAtCursor('factorial(')">factorial</button>
                     <button class="btn btn--outline calc-btn" onclick="clearCalculator()">AC(qQ@)</button>
 
-                </div>
-
-                <div id="calc-result" class="calculator-result hidden">
-                    <div class="result-label">計算結果</div>
-                    <div id="calc-output" class="result-value"></div>
                 </div>
             </div>
 
