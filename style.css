@@ -424,7 +424,8 @@ pre code {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-8) var(--space-16);
+    /*    padding: var(--space-8) var(--space-16);*/
+    padding: var(--space-1) var(--space-1);
     border-radius: var(--radius-base);
     font-size: var(--font-size-base);
     font-weight: 500;
@@ -478,13 +479,15 @@ pre code {
 }
 
 .btn--sm {
-    padding: var(--space-4) var(--space-12);
+    /*    padding: var(--space-4) var(--space-12); */
+    padding: var(--space-1) var(--space-1);
     font-size: var(--font-size-sm);
     border-radius: var(--radius-sm);
 }
 
 .btn--lg {
-    padding: var(--space-10) var(--space-20);
+    /*    padding: var(--space-10) var(--space-20);  */
+    padding: var(--space-1) var(--space-1);
     font-size: var(--font-size-lg);
     border-radius: var(--radius-md);
 }
@@ -789,7 +792,8 @@ body {
 .container {
     max-width: 900px;
     margin: 0 auto;
-    padding: var(--space-24);
+    /*    padding: var(--space-24);   */
+    padding: var(--space-1);
 }
 
 /* Page Management */
@@ -1223,9 +1227,11 @@ body {
 /* Scientific Calculator Styles */
 .calculator {
     background: var(--color-surface);
-    border-radius: var(--radius-lg);
+    /*    border-radius: var(--radius-lg);    */
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-card-border);
-    padding: var(--space-24);
+    /*    padding: var(--space-24);   */
+    padding: var(--space-1);
     max-width: 500px;
     margin: 0 auto;
     box-shadow: var(--shadow-lg);
@@ -1619,13 +1625,16 @@ body {
     }
 
     .calculator-buttons {
-        gap: var(--space-6);
+        /*        gap: var(--space-6);  */
+        gap: var(--space-1);
     }
 
     .calc-btn {
         height: 40px;
         /*        font-size: var(--font-size-xs); */
         font-size: var(--font-size-2xl);
+        gap: var(--space-1);
+        display: flex;
     }
 
     .display-input {
