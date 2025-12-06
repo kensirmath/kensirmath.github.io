@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>函數</title>
+    <style>
+        :root {
+            --color-primary: #2180a1;
+            --color-primary-hover: #1a6485;
+            --color-surface: #ffffff;
+            --color-background: #f5f5f3;
+            --color-text: #134252;
+            --color-text-secondary: #666666;
+            --color-border: #d4c5b9;
+            --color-error: #c01530;
+            --color-success: #218095;
+            --color-focus: rgba(33, 128, 160, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.5;
+            color: var(--color-text);
+            background-color: var(--color-background);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: var(--color-text);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            transition: border-color 250ms cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-focus);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn--primary:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--color-focus);
+        }
+
+        .btn--secondary {
+            background: rgba(33, 128, 160, 0.1);
+            color: var(--color-primary);
+            width: 48%;
+        }
+
+        .btn--secondary:hover {
+            background: rgba(33, 128, 160, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .variables-section {
+            margin-top: 24px;
+        }
+
+        .variables-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .variable-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .variable-input-group label {
+            margin-bottom: 0;
+            min-width: 30px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .variable-input-group input {
+            flex: 1;
+        }
+
+        .result-section {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: rgba(33, 200, 160, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(33, 200, 160, 0.2);
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-success);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .result-expression {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .error-message {
+            padding: 12px 16px;
+            background-color: rgba(192, 21, 47, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(192, 21, 47, 0.2);
+            color: var(--color-error);
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            padding: 12px 16px;
+            background-color: rgba(33, 128, 160, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(33, 128, 160, 0.2);
+            color: var(--color-success);
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .variables-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>函數 Function f(x)</h1>
+            <p class="subtitle">輸入代數式並計算結果</p>
+        </div>
+
+        <div class="card">
+            <form id="calculatorForm">
+                <div class="form-group">
+                    <label for="expression">函數 Function</label>
+                    <input type="text" id="expression" class="form-control" placeholder="例如: 2*x + 3*y - 5" required>
+                    <div class="hint">支援的運算: +, -, *, /, ^(次方), sqrt, sin, cos, tan, log, ln, abs, arcsin, arccos,
+                        arctan (角度制), factorial, combination(n,r), permutation(n,r), 常數: pi, e</div>
+                </div>
+
+                <div class="variables-section">
+                    <label>變數值設定</label>
+                    <div class="variables-grid" id="variablesContainer"></div>
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn--primary">計算結果</button>
+                    <button type="button" class="btn btn--secondary" id="clearBtn">重置</button>
+                </div>
+            </form>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-label">計算結果</div>
+                <div class="result-value" id="resultValue"></div>
+                <div class="result-expression" id="resultExpression"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const expressionInput = document.getElementById('expression');
+        const variablesContainer = document.getElementById('variablesContainer');
+        const calculatorForm = document.getElementById('calculatorForm');
+        const clearBtn = document.getElementById('clearBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const resultSection = document.getElementById('resultSection');
+        const resultValue = document.getElementById('resultValue');
+        const resultExpression = document.getElementById('resultExpression');
+
+        let currentVariables = new Set();
+
+        // 偵測表達式中的變數
+        function extractVariables(expression) {
+            // 所有函數和常數名稱（不應被識別為變數）
+            const reservedNames = [
+                'sqrt', 'sin', 'cos', 'tan', 'log', 'ln', 'abs', 'exp', 'min', 'max', 'pow',
+                'arcsin', 'arccos', 'arctan', 'factorial', 'combination', 'permutation',
+                'floor', 'ceil', 'round'
+            ];
+
+            let variables = new Set();
+            let temp = expression;
+
+            // 第一步：提取括號內的內容（包括函數參數和所有表達式部分）
+            // 保留括號內容以便提取變數
+            let allContent = temp + ' ';
+
+            // 第二步：移除常數名稱 (pi, e, PI, E)
+            allContent = allContent.replace(/\b(pi|e|PI|E)\b/gi, '');
+
+            // 第三步：提取所有字母序列
+            const matches = allContent.match(/[a-zA-Z]+/g);
+            if (matches) {
+                matches.forEach(match => {
+                    const lowerMatch = match.toLowerCase();
+                    // 排除函數名稱
+                    if (!reservedNames.includes(lowerMatch)) {
+                        // 只添加單個字母作為變數
+                        for (let char of match) {
+                            if (/[a-zA-Z]/.test(char)) {
+                                variables.add(char);
+                            }
+                        }
+                    }
+                });
+            }
+
+            return variables;
+        }
+
+        // 更新變數輸入欄位
+        function updateVariableInputs() {
+            const expression = expressionInput.value.trim();
+            const variables = extractVariables(expression);
+
+            // 檢查變數是否改變
+            if (JSON.stringify([...variables].sort()) !== JSON.stringify([...currentVariables].sort())) {
+                currentVariables = variables;
+                variablesContainer.innerHTML = '';
+
+                if (variables.size === 0) {
+                    variablesContainer.innerHTML = '<p style="color: var(--color-text-secondary); grid-column: 1/-1;">請輸入包含變數的代數式</p>';
+                    return;
+                }
+
+                [...variables].sort().forEach(variable => {
+                    const group = document.createElement('div');
+                    group.className = 'variable-input-group';
+                    group.innerHTML = `
+                        <label for="var-${variable}">${variable} =</label>
+                        <input 
+                            type="number" 
+                            id="var-${variable}" 
+                            class="form-control" 
+                            placeholder="0"
+                            step="any"
+                            value="0"
+                        >
+                    `;
+                    variablesContainer.appendChild(group);
+                });
+            }
+        }
+
+        // 隱藏訊息
+        function hideMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        // 顯示錯誤
+        function showError(message) {
+            hideMessages();
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            resultSection.classList.remove('show');
+        }
+
+        // 計算表達式
+        function calculateExpression() {
+            hideMessages();
+            const expression = expressionInput.value.trim();
+
+            if (!expression) {
+                showError('請輸入代數式');
+                return;
+            }
+
+            // 取得所有變數值
+            const variableValues = {};
+            const variables = extractVariables(expression);
+
+            if (variables.size === 0) {
+                showError('代數式中沒有找到變數');
+                return;
+            }
+
+            [...variables].forEach(variable => {
+                const input = document.getElementById(`var-${variable}`);
+                if (input) {
+                    variableValues[variable] = parseFloat(input.value) || 0;
+                }
+            });
+
+            try {
+                // 構建安全的計算函式
+                let safeExpression = expression;
+
+                // 第一步：先替換常數 pi 和 e
+                // 替換 pi 常數（不區分大小寫）
+                safeExpression = safeExpression.replace(/\bpi\b/gi, 'PI');
+                // 替換 e 常數（不區分大小寫），但要小心不要替換 exp, min, max 等函數中的 e
+                safeExpression = safeExpression.replace(/\be\b/gi, 'E');
+
+                // 第二步：替換變數為其值
+                [...variables].sort((a, b) => b.length - a.length).forEach(variable => {
+                    // 使用更精確的正規表達式替換變數
+                    safeExpression = safeExpression.replace(
+                        new RegExp(`\\b${variable}\\b`, 'g'),
+                        `(${variableValues[variable]})`
+                    );
+                });
+
+                // 階乘函數
+                const factorial = (n) => {
+                    if (n < 0) throw new Error('階乘不支援負數');
+                    if (n === 0 || n === 1) return 1;
+                    let result = 1;
+                    for (let i = 2; i <= n; i++) {
+                        result *= i;
+                    }
+                    return result;
+                };
+
+                // 組合函數 C(n,r) = n! / (r!(n-r)!)
+                const combination = (n, r) => {
+                    if (r > n) throw new Error('組合中 r 不能大於 n');
+                    if (r < 0 || n < 0) throw new Error('組合不支援負數');
+                    if (r === 0 || r === n) return 1;
+                    if (r > n - r) r = n - r; // 最佳化計算
+                    let result = 1;
+                    for (let i = 0; i < r; i++) {
+                        result *= (n - i) / (i + 1);
+                    }
+                    return Math.round(result);
+                };
+
+                // 排列函數 P(n,r) = n! / (n-r)!
+                const permutation = (n, r) => {
+                    if (r > n) throw new Error('排列中 r 不能大於 n');
+                    if (r < 0 || n < 0) throw new Error('排列不支援負數');
+                    let result = 1;
+                    for (let i = 0; i < r; i++) {
+                        result *= (n - i);
+                    }
+                    return result;
+                };
+
+                // 角度制三角函數（輸入角度，返回值）
+                const sin_deg = (angle) => {
+                    const rad = angle * Math.PI / 180;
+                    const result = Math.sin(rad);
+                    // 處理浮點精度問題
+                    return Math.round(result * 1e10) / 1e10;
+                };
+                const cos_deg = (angle) => {
+                    const rad = angle * Math.PI / 180;
+                    const result = Math.cos(rad);
+                    return Math.round(result * 1e10) / 1e10;
+                };
+                const tan_deg = (angle) => {
+                    const rad = angle * Math.PI / 180;
+                    return Math.tan(rad);
+                };
+
+                // 反三角函數（輸入值，返回角度）
+                const arcsin_deg = (value) => {
+                    if (value < -1 || value > 1) throw new Error('arcsin 的輸入必須在 [-1, 1] 之間');
+                    return Math.asin(value) * 180 / Math.PI;
+                };
+                const arccos_deg = (value) => {
+                    if (value < -1 || value > 1) throw new Error('arccos 的輸入必須在 [-1, 1] 之間');
+                    return Math.acos(value) * 180 / Math.PI;
+                };
+                const arctan_deg = (value) => {
+                    return Math.atan(value) * 180 / Math.PI;
+                };
+
+                // 支援的數學函數映射
+                const mathFunctions = {
+                    sqrt: Math.sqrt,
+                    sin: sin_deg,
+                    cos: cos_deg,
+                    tan: tan_deg,
+                    log: Math.log10,
+                    ln: Math.log,
+                    abs: Math.abs,
+                    arcsin: arcsin_deg,
+                    arccos: arccos_deg,
+                    arctan: arctan_deg,
+                    exp: Math.exp,
+                    min: Math.min,
+                    max: Math.max,
+                    pow: Math.pow,
+                    floor: Math.floor,
+                    ceil: Math.ceil,
+                    round: Math.round,
+                    factorial: factorial,
+                    combination: combination,
+                    permutation: permutation,
+                    PI: Math.PI,
+                    E: Math.E
+                };
+
+                // 構建安全的函數作用域
+                const scope = {
+                    ...mathFunctions
+                };
+
+                // 替換 ^ 為 **
+                safeExpression = safeExpression.replace(/\^/g, '**');
+
+                // 提取所有函數調用並用括號括住參數（用於多參數函數）
+                // 支援 combination(n,r), permutation(n,r) 的格式
+                safeExpression = safeExpression.replace(
+                    /\b(combination|permutation)\s*\(\s*([^,]+)\s*,\s*([^)]+)\s*\)/gi,
+                    (match, func, n, r) => `${func}(${n},${r})`
+                );
+
+                // 使用 Function 構造函數安全地計算
+                const calculateFunc = new Function(...Object.keys(scope), `return (${safeExpression})`);
+                const result = calculateFunc(...Object.values(scope));
+
+                // 驗證結果
+                if (typeof result !== 'number' || isNaN(result)) {
+                    showError('計算結果無效');
+                    return;
+                }
+
+                if (!isFinite(result)) {
+                    showError('計算結果超出範圍或無效');
+                    return;
+                }
+
+                // 顯示結果
+                resultSection.classList.add('show');
+
+                // 格式化結果
+                let formattedResult;
+                if (Math.abs(result) < 0.0001 && result !== 0) {
+                    formattedResult = result.toExponential(6);
+                } else if (Number.isInteger(result)) {
+                    formattedResult = result.toString();
+                } else {
+                    formattedResult = result.toFixed(6).replace(/\.?0+$/, '');
+                }
+
+                resultValue.textContent = formattedResult;
+
+                // 顯示代入過程
+                let variableList = [...variables].sort()
+                    .map(v => `${v} = ${variableValues[v]}`)
+                    .join(', ');
+                resultExpression.textContent = `代入: ${variableList}`;
+
+                successMessage.textContent = '✓ 計算成功！';
+                successMessage.classList.add('show');
+
+            } catch (error) {
+                showError(`計算錯誤: ${error.message}`);
+            }
+        }
+
+        // 事件監聽
+        expressionInput.addEventListener('input', updateVariableInputs);
+        calculatorForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            calculateExpression();
+        });
+        clearBtn.addEventListener('click', () => {
+            expressionInput.value = '';
+            variablesContainer.innerHTML = '';
+            currentVariables.clear();
+            hideMessages();
+            resultSection.classList.remove('show');
+            expressionInput.focus();
+        });
+
+        // 初始化
+        updateVariableInputs();
+    </script>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>Function 函數</h2>
+    </div>
+
+</body>
+
+</html>
