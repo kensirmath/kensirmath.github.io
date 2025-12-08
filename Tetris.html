@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +11,7 @@
             box-sizing: border-box;
         }
 
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -197,6 +195,64 @@
             transform: translateY(-2px);
         }
 
+        /* 虛擬觸控按鍵樣式 */
+        .touch-controls {
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .touch-controls.show {
+            display: grid;
+        }
+
+        .touch-btn {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.1s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            grid-column: span 1;
+        }
+
+        .touch-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .touch-btn-left {
+            grid-column: 1;
+        }
+
+        .touch-btn-down {
+            grid-column: 2;
+        }
+
+        .touch-btn-right {
+            grid-column: 3;
+        }
+
+        .touch-btn-rotate {
+            grid-column: 1;
+            background: linear-gradient(135deg, #9d4edd 0%, #7b2cbf 100%);
+        }
+
+        .touch-btn-drop {
+            grid-column: 2 / 4;
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
         .controls {
             text-align: center;
             color: #666;
@@ -207,6 +263,26 @@
 
         .controls strong {
             color: #667eea;
+        }
+
+        .touch-toggle {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .touch-toggle label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .touch-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
         .game-over-modal {
@@ -277,10 +353,14 @@
                 font-size: 0.75em;
                 min-width: 70px;
             }
+
+            .touch-btn {
+                padding: 12px;
+                font-size: 1em;
+            }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>🎮 俄羅斯方塊</h1>
@@ -323,6 +403,22 @@
             </div>
         </div>
 
+        <!-- 虛擬觸控按鍵 -->
+        <div class="touch-toggle">
+            <label>
+                <input type="checkbox" id="touchToggle">
+                啟用虛擬按鍵（手機模式）
+            </label>
+        </div>
+
+        <div class="touch-controls" id="touchControls">
+            <button class="touch-btn touch-btn-rotate" id="rotateBtn">⬆️ 旋轉</button>
+            <button class="touch-btn touch-btn-left" id="leftBtn">⬅️ 左</button>
+            <button class="touch-btn touch-btn-down" id="downBtn">⬇️ 下</button>
+            <button class="touch-btn touch-btn-right" id="rightBtn">➡️ 右</button>
+            <button class="touch-btn touch-btn-drop" id="dropBtn">⬇️⬇️ 直接落下</button>
+        </div>
+
         <!-- 控制說明 -->
         <div class="controls">
             <p><strong>⬅️ ➡️ ⬇️</strong> 移動 | <strong>⬆️</strong> 旋轉 | <strong>空白</strong> 落下</p>
@@ -348,7 +444,7 @@
 
         const COLS = 10;
         const ROWS = 20;
-        const BLOCK_SIZE = 28;  // 280 / 10 = 28
+        const BLOCK_SIZE = 28;
 
         const PIECES = [
             { shape: [[1, 1, 1, 1]], color: '#00d4ff' }, // I
@@ -640,10 +736,61 @@
         document.getElementById('pauseBtn').addEventListener('click', togglePause);
         document.getElementById('restartBtn').addEventListener('click', restartGame);
 
+        // 虛擬按鍵事件監聽
+        document.getElementById('leftBtn').addEventListener('mousedown', () => {
+            if (gameActive && !gamePaused) moveLeft();
+        });
+        document.getElementById('leftBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameActive && !gamePaused) moveLeft();
+        });
+
+        document.getElementById('rightBtn').addEventListener('mousedown', () => {
+            if (gameActive && !gamePaused) moveRight();
+        });
+        document.getElementById('rightBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameActive && !gamePaused) moveRight();
+        });
+
+        document.getElementById('downBtn').addEventListener('mousedown', () => {
+            if (gameActive && !gamePaused) moveDown();
+        });
+        document.getElementById('downBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameActive && !gamePaused) moveDown();
+        });
+
+        document.getElementById('rotateBtn').addEventListener('mousedown', () => {
+            if (gameActive && !gamePaused) rotatePiece();
+        });
+        document.getElementById('rotateBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameActive && !gamePaused) rotatePiece();
+        });
+
+        document.getElementById('dropBtn').addEventListener('mousedown', () => {
+            if (gameActive && !gamePaused) hardDrop();
+        });
+        document.getElementById('dropBtn').addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (gameActive && !gamePaused) hardDrop();
+        });
+
+        // 觸控按鍵開關
+        document.getElementById('touchToggle').addEventListener('change', (e) => {
+            const touchControls = document.getElementById('touchControls');
+            if (e.target.checked) {
+                touchControls.classList.add('show');
+            } else {
+                touchControls.classList.remove('show');
+            }
+        });
+
         document.addEventListener('keydown', (e) => {
             if (!gameActive || gamePaused) return;
 
-            switch (e.key) {
+            switch(e.key) {
                 case 'ArrowLeft':
                     moveLeft();
                     e.preventDefault();
@@ -679,13 +826,5 @@
         draw();
         gameLoop();
     </script>
-
-    <div class="page-header">
-        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
-            Menu</button>
-        <h2>俄羅斯方塊 Tetris</h2>
-    </div>
-
 </body>
-
 </html>
