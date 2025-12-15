@@ -1846,42 +1846,42 @@ function handleCalculatorKeyboard(e) {
     if (1 === 0) {
         if (/[0-9]/.test(key)) {
             insertAtCursor(key);
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (['+', '-', '*', '/'].includes(key)) {
             insertAtCursor(key);
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (key === '.') {
             insertAtCursor('.');
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (key === '(' || key === ')') {
             insertAtCursor(key);
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (key === 'Enter') {
             calculateResult();
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         } else if (key === 'Escape' || key === 'q' || key === 'Q' || key === '@') {
             clearCalculator();
-            e.stopImmediatePropagation()
-            e.preventDefault();
+            //            e.stopImmediatePropagation()
+            //            e.preventDefault();
         }
     }
     if (key === 'Enter') {
         calculateResult();
     } else if (key === '=') {
         calculateResult();
-        e.stopImmediatePropagation()
-        e.preventDefault();
+        //            e.stopImmediatePropagation()
+        //            e.preventDefault();
     } else if (key === 'Escape') {
         clearCalculator();
     } else if (key === '@' || key === 'q' || key === 'Q') {
         clearCalculator();
-        e.stopImmediatePropagation()
-        e.preventDefault();
+        //            e.stopImmediatePropagation()
+        //            e.preventDefault();
     } else if (key === '%') {
         insertAtCursor('/100');
         backspaceAtCursor()
