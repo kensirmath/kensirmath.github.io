@@ -1296,8 +1296,8 @@ function solveLinear() {
     html += '</div>';
 
     if (Math.abs(determinant) > 1e-10) {
-        const x = (c * e - b * f) / determinant;
-        const y = (a * f - c * d) / determinant;
+        const x = (-c * e + b * f) / determinant;
+        const y = (-a * f + c * d) / determinant;
 
         html += '<div class="result-item">';
         html += '<div class="result-label">解的情況</div>';
@@ -1307,10 +1307,10 @@ function solveLinear() {
         html += '<div class="result-item">';
         html += '<div class="result-label">解</div>';
         html += '<div class="result-formula">';
-        html += `x = (ce - bf) / D = (${c}×${e} - ${b}×${f}) / ${determinant}`;
+        html += `x = (-ce + bf) / D = (${-c}×${e} + ${b}×${f}) / ${determinant}`;
         html += '</div>';
         html += '<div class="result-formula">';
-        html += `y = (af - cd) / D = (${a}×${f} - ${c}×${d}) / ${determinant}`;
+        html += `y = (-af + cd) / D = (${-a}×${f} + ${c}×${d}) / ${determinant}`;
         html += '</div>';
         html += `<div class="result-value">x = ${formatNumber(x)}</div>`;
         html += `<div class="result-value">y = ${formatNumber(y)}</div>`;
