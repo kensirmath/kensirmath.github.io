@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper 2 MC 答案總表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang TC', Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .filter-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            border: 1px solid #dee2e6;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+            font-size: 16px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-select-all {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-select-all:hover {
+            background-color: #218838;
+        }
+
+        .btn-clear {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background-color: #c82333;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th:first-child {
+            background-color: #0056b3;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            background-color: #e7f3ff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Paper 2 MC 答案總表 (Practice, Sample, 2012-2025)</h1>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>選擇年份：</label>
+                <div class="checkbox-container" id="yearFilters">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2010" value="2010">
+                        <label for="year2010">Practice</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2011" value="2011">
+                        <label for="year2011">Sample</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2012" value="2012">
+                        <label for="year2012">2012</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2013" value="2013">
+                        <label for="year2013">2013</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2014" value="2014">
+                        <label for="year2014">2014</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2015" value="2015">
+                        <label for="year2015">2015</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2016" value="2016">
+                        <label for="year2016">2016</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2017" value="2017">
+                        <label for="year2017">2017</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2018" value="2018">
+                        <label for="year2018">2018</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2019" value="2019">
+                        <label for="year2019">2019</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2020" value="2020">
+                        <label for="year2020">2020</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2021" value="2021">
+                        <label for="year2021">2021</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2022" value="2022">
+                        <label for="year2022">2022</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2023" value="2023">
+                        <label for="year2023">2023</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2024" value="2024">
+                        <label for="year2024">2024</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="year2025" value="2025">
+                        <label for="year2025">2025</label>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-select-all" onclick="selectAllYears()">全選年份</button>
+                    <button class="btn-clear" onclick="clearAllYears()">清除年份</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>選擇題號：</label>
+                <div class="checkbox-container" id="questionFilters">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q1" value="1">
+                        <label for="q1">Q1</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q2" value="2">
+                        <label for="q2">Q2</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q3" value="3">
+                        <label for="q3">Q3</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q4" value="4">
+                        <label for="q4">Q4</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q5" value="5">
+                        <label for="q5">Q5</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q6" value="6">
+                        <label for="q6">Q6</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q7" value="7">
+                        <label for="q7">Q7</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q8" value="8">
+                        <label for="q8">Q8</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q9" value="9">
+                        <label for="q9">Q9</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q10" value="10">
+                        <label for="q10">Q10</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q11" value="11">
+                        <label for="q11">Q11</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q12" value="12">
+                        <label for="q12">Q12</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q13" value="13">
+                        <label for="q13">Q13</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q14" value="14">
+                        <label for="q14">Q14</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q15" value="15">
+                        <label for="q15">Q15</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q16" value="16">
+                        <label for="q16">Q16</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q17" value="17">
+                        <label for="q17">Q17</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q18" value="18">
+                        <label for="q18">Q18</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q19" value="19">
+                        <label for="q19">Q19</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q20" value="20">
+                        <label for="q20">Q20</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q21" value="21">
+                        <label for="q21">Q21</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q22" value="22">
+                        <label for="q22">Q22</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q23" value="23">
+                        <label for="q23">Q23</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q24" value="24">
+                        <label for="q24">Q24</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q25" value="25">
+                        <label for="q25">Q25</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q26" value="26">
+                        <label for="q26">Q26</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q27" value="27">
+                        <label for="q27">Q27</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q28" value="28">
+                        <label for="q28">Q28</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q29" value="29">
+                        <label for="q29">Q29</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q30" value="30">
+                        <label for="q30">Q30</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q31" value="31">
+                        <label for="q31">Q31</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q32" value="32">
+                        <label for="q32">Q32</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q33" value="33">
+                        <label for="q33">Q33</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q34" value="34">
+                        <label for="q34">Q34</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q35" value="35">
+                        <label for="q35">Q35</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q36" value="36">
+                        <label for="q36">Q36</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q37" value="37">
+                        <label for="q37">Q37</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q38" value="38">
+                        <label for="q38">Q38</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q39" value="39">
+                        <label for="q39">Q39</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q40" value="40">
+                        <label for="q40">Q40</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q41" value="41">
+                        <label for="q41">Q41</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q42" value="42">
+                        <label for="q42">Q42</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q43" value="43">
+                        <label for="q43">Q43</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q44" value="44">
+                        <label for="q44">Q44</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="q45" value="45">
+                        <label for="q45">Q45</label>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-select-all" onclick="selectAllQuestions()">全選題號</button>
+                    <button class="btn-clear" onclick="clearAllQuestions()">清除題號</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="answerTable">
+                <thead>
+                    <tr>
+                        <th>題號</th>
+                        <th class="year-col" data-year="2010">Practice</th>
+                        <th class="year-col" data-year="2011">Sample</th>
+                        <th class="year-col" data-year="2012">2012</th>
+                        <th class="year-col" data-year="2013">2013</th>
+                        <th class="year-col" data-year="2014">2014</th>
+                        <th class="year-col" data-year="2015">2015</th>
+                        <th class="year-col" data-year="2016">2016</th>
+                        <th class="year-col" data-year="2017">2017</th>
+                        <th class="year-col" data-year="2018">2018</th>
+                        <th class="year-col" data-year="2019">2019</th>
+                        <th class="year-col" data-year="2020">2020</th>
+                        <th class="year-col" data-year="2021">2021</th>
+                        <th class="year-col" data-year="2022">2022</th>
+                        <th class="year-col" data-year="2023">2023</th>
+                        <th class="year-col" data-year="2024">2024</th>
+                        <th class="year-col" data-year="2025">2025</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="question-row" data-question="1">
+                        <td>Q1</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">C(94)</td>
+                        <td class="year-col" data-year="2013">B(69)</td>
+                        <td class="year-col" data-year="2014">B(94)</td>
+                        <td class="year-col" data-year="2015">D(90)</td>
+                        <td class="year-col" data-year="2016">A(47)</td>
+                        <td class="year-col" data-year="2017">A(89)</td>
+                        <td class="year-col" data-year="2018">B(71)</td>
+                        <td class="year-col" data-year="2019">C(67)</td>
+                        <td class="year-col" data-year="2020">C(76)</td>
+                        <td class="year-col" data-year="2021">B(73)</td>
+                        <td class="year-col" data-year="2022">D(77)</td>
+                        <td class="year-col" data-year="2023">C(78)</td>
+                        <td class="year-col" data-year="2024">C(86)</td>
+                        <td class="year-col" data-year="2025">C(88)</td>
+                    </tr>
+                    <tr class="question-row" data-question="2">
+                        <td>Q2</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(74)</td>
+                        <td class="year-col" data-year="2013">D(81)</td>
+                        <td class="year-col" data-year="2014">A(79)</td>
+                        <td class="year-col" data-year="2015">D(93)</td>
+                        <td class="year-col" data-year="2016">A(81)</td>
+                        <td class="year-col" data-year="2017">D(72)</td>
+                        <td class="year-col" data-year="2018">D(80)</td>
+                        <td class="year-col" data-year="2019">D(88)</td>
+                        <td class="year-col" data-year="2020">C(85)</td>
+                        <td class="year-col" data-year="2021">C(87)</td>
+                        <td class="year-col" data-year="2022">B(81)</td>
+                        <td class="year-col" data-year="2023">C(79)</td>
+                        <td class="year-col" data-year="2024">D(78)</td>
+                        <td class="year-col" data-year="2025">B(78)</td>
+                    </tr>
+                    <tr class="question-row" data-question="3">
+                        <td>Q3</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">C(59)</td>
+                        <td class="year-col" data-year="2013">D(85)</td>
+                        <td class="year-col" data-year="2014">B(63)</td>
+                        <td class="year-col" data-year="2015">A(84)</td>
+                        <td class="year-col" data-year="2016">D(65)</td>
+                        <td class="year-col" data-year="2017">A(73)</td>
+                        <td class="year-col" data-year="2018">C(80)</td>
+                        <td class="year-col" data-year="2019">B(90)</td>
+                        <td class="year-col" data-year="2020">A(89)</td>
+                        <td class="year-col" data-year="2021">D(82)</td>
+                        <td class="year-col" data-year="2022">A(64)</td>
+                        <td class="year-col" data-year="2023">A(72)</td>
+                        <td class="year-col" data-year="2024">A(88)</td>
+                        <td class="year-col" data-year="2025">D(79)</td>
+                    </tr>
+                    <tr class="question-row" data-question="4">
+                        <td>Q4</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">B(75)</td>
+                        <td class="year-col" data-year="2013">C(75)</td>
+                        <td class="year-col" data-year="2014">B(67)</td>
+                        <td class="year-col" data-year="2015">D(75)</td>
+                        <td class="year-col" data-year="2016">C(87)</td>
+                        <td class="year-col" data-year="2017">D(90)</td>
+                        <td class="year-col" data-year="2018">A(74)</td>
+                        <td class="year-col" data-year="2019">C(69)</td>
+                        <td class="year-col" data-year="2020">A(85)</td>
+                        <td class="year-col" data-year="2021">B(76)</td>
+                        <td class="year-col" data-year="2022">D(60)</td>
+                        <td class="year-col" data-year="2023">B(87)</td>
+                        <td class="year-col" data-year="2024">A(91)</td>
+                        <td class="year-col" data-year="2025">A(80)</td>
+                    </tr>
+                    <tr class="question-row" data-question="5">
+                        <td>Q5</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">B(78)</td>
+                        <td class="year-col" data-year="2013">A(40)</td>
+                        <td class="year-col" data-year="2014">C(73)</td>
+                        <td class="year-col" data-year="2015">B(65)</td>
+                        <td class="year-col" data-year="2016">A(80)</td>
+                        <td class="year-col" data-year="2017">D(87)</td>
+                        <td class="year-col" data-year="2018">A(61)</td>
+                        <td class="year-col" data-year="2019">A(75)</td>
+                        <td class="year-col" data-year="2020">B(63)</td>
+                        <td class="year-col" data-year="2021">D(74)</td>
+                        <td class="year-col" data-year="2022">A(80)</td>
+                        <td class="year-col" data-year="2023">A(70)</td>
+                        <td class="year-col" data-year="2024">B(93)</td>
+                        <td class="year-col" data-year="2025">A(59)</td>
+                    </tr>
+                    <tr class="question-row" data-question="6">
+                        <td>Q6</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(53)</td>
+                        <td class="year-col" data-year="2013">C(70)</td>
+                        <td class="year-col" data-year="2014">D(53)</td>
+                        <td class="year-col" data-year="2015">A(63)</td>
+                        <td class="year-col" data-year="2016">B(76)</td>
+                        <td class="year-col" data-year="2017">A(73)</td>
+                        <td class="year-col" data-year="2018">D(22)</td>
+                        <td class="year-col" data-year="2019">D(80)</td>
+                        <td class="year-col" data-year="2020">D(75)</td>
+                        <td class="year-col" data-year="2021">D(49)</td>
+                        <td class="year-col" data-year="2022">B(45)</td>
+                        <td class="year-col" data-year="2023">D(77)</td>
+                        <td class="year-col" data-year="2024">A(77)</td>
+                        <td class="year-col" data-year="2025">D(81)</td>
+                    </tr>
+                    <tr class="question-row" data-question="7">
+                        <td>Q7</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">C(59)</td>
+                        <td class="year-col" data-year="2013">B(59)</td>
+                        <td class="year-col" data-year="2014">C(63)</td>
+                        <td class="year-col" data-year="2015">A(59)</td>
+                        <td class="year-col" data-year="2016">A(62)</td>
+                        <td class="year-col" data-year="2017">B(76)</td>
+                        <td class="year-col" data-year="2018">D(73)</td>
+                        <td class="year-col" data-year="2019">B(61)</td>
+                        <td class="year-col" data-year="2020">C(79)</td>
+                        <td class="year-col" data-year="2021">A(76)</td>
+                        <td class="year-col" data-year="2022">A(85)</td>
+                        <td class="year-col" data-year="2023">C(82)</td>
+                        <td class="year-col" data-year="2024">B(46)</td>
+                        <td class="year-col" data-year="2025">D(66)</td>
+                    </tr>
+                    <tr class="question-row" data-question="8">
+                        <td>Q8</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">D(84)</td>
+                        <td class="year-col" data-year="2013">A(59)</td>
+                        <td class="year-col" data-year="2014">A(84)</td>
+                        <td class="year-col" data-year="2015">D(53)</td>
+                        <td class="year-col" data-year="2016">C(82)</td>
+                        <td class="year-col" data-year="2017">A(62)</td>
+                        <td class="year-col" data-year="2018">C(51)</td>
+                        <td class="year-col" data-year="2019">C(69)</td>
+                        <td class="year-col" data-year="2020">A(33)</td>
+                        <td class="year-col" data-year="2021">B(29)</td>
+                        <td class="year-col" data-year="2022">B(60)</td>
+                        <td class="year-col" data-year="2023">D(74)</td>
+                        <td class="year-col" data-year="2024">D(55)</td>
+                        <td class="year-col" data-year="2025">C(85)</td>
+                    </tr>
+                    <tr class="question-row" data-question="9">
+                        <td>Q9</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">A(75)</td>
+                        <td class="year-col" data-year="2013">D(66)</td>
+                        <td class="year-col" data-year="2014">A(63)</td>
+                        <td class="year-col" data-year="2015">B(69)</td>
+                        <td class="year-col" data-year="2016">D(46)</td>
+                        <td class="year-col" data-year="2017">C(44)</td>
+                        <td class="year-col" data-year="2018">D(72)</td>
+                        <td class="year-col" data-year="2019">D(65)</td>
+                        <td class="year-col" data-year="2020">A(46)</td>
+                        <td class="year-col" data-year="2021">A(62)</td>
+                        <td class="year-col" data-year="2022">D(55)</td>
+                        <td class="year-col" data-year="2023">A(43)</td>
+                        <td class="year-col" data-year="2024">C(67)</td>
+                        <td class="year-col" data-year="2025">D(74)</td>
+                    </tr>
+                    <tr class="question-row" data-question="10">
+                        <td>Q10</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">D(63)</td>
+                        <td class="year-col" data-year="2013">A(45)</td>
+                        <td class="year-col" data-year="2014">C(49)</td>
+                        <td class="year-col" data-year="2015">D(68)</td>
+                        <td class="year-col" data-year="2016">C(69)</td>
+                        <td class="year-col" data-year="2017">C(76)</td>
+                        <td class="year-col" data-year="2018">B(72)</td>
+                        <td class="year-col" data-year="2019">A(68)</td>
+                        <td class="year-col" data-year="2020">B(33)</td>
+                        <td class="year-col" data-year="2021">C(68)</td>
+                        <td class="year-col" data-year="2022">A(56)</td>
+                        <td class="year-col" data-year="2023">D(67)</td>
+                        <td class="year-col" data-year="2024">B(70)</td>
+                        <td class="year-col" data-year="2025">C(78)</td>
+                    </tr>
+                    <tr class="question-row" data-question="11">
+                        <td>Q11</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">C(79)</td>
+                        <td class="year-col" data-year="2013">D(65)</td>
+                        <td class="year-col" data-year="2014">A(57)</td>
+                        <td class="year-col" data-year="2015">C(70)</td>
+                        <td class="year-col" data-year="2016">D(81)</td>
+                        <td class="year-col" data-year="2017">B(56)</td>
+                        <td class="year-col" data-year="2018">D(67)</td>
+                        <td class="year-col" data-year="2019">C(79)</td>
+                        <td class="year-col" data-year="2020">A(68)</td>
+                        <td class="year-col" data-year="2021">C(73)</td>
+                        <td class="year-col" data-year="2022">C(76)</td>
+                        <td class="year-col" data-year="2023">B(81)</td>
+                        <td class="year-col" data-year="2024">C(58)</td>
+                        <td class="year-col" data-year="2025">A(52)</td>
+                    </tr>
+                    <tr class="question-row" data-question="12">
+                        <td>Q12</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">B(74)</td>
+                        <td class="year-col" data-year="2013">C(31)</td>
+                        <td class="year-col" data-year="2014">D(59)</td>
+                        <td class="year-col" data-year="2015">D(75)</td>
+                        <td class="year-col" data-year="2016">D(67)</td>
+                        <td class="year-col" data-year="2017">C(84)</td>
+                        <td class="year-col" data-year="2018">A(62)</td>
+                        <td class="year-col" data-year="2019">B(66)</td>
+                        <td class="year-col" data-year="2020">D(83)</td>
+                        <td class="year-col" data-year="2021">B(74)</td>
+                        <td class="year-col" data-year="2022">C(66)</td>
+                        <td class="year-col" data-year="2023">D(39)</td>
+                        <td class="year-col" data-year="2024">A(73)</td>
+                        <td class="year-col" data-year="2025">C(80)</td>
+                    </tr>
+                    <tr class="question-row" data-question="13">
+                        <td>Q13</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">D(79)</td>
+                        <td class="year-col" data-year="2013">C(63)</td>
+                        <td class="year-col" data-year="2014">C(80)</td>
+                        <td class="year-col" data-year="2015">B(92)</td>
+                        <td class="year-col" data-year="2016">A(81)</td>
+                        <td class="year-col" data-year="2017">B(86)</td>
+                        <td class="year-col" data-year="2018">C(69)</td>
+                        <td class="year-col" data-year="2019">A(69)</td>
+                        <td class="year-col" data-year="2020">D(79)</td>
+                        <td class="year-col" data-year="2021">C(83)</td>
+                        <td class="year-col" data-year="2022">B(69)</td>
+                        <td class="year-col" data-year="2023">B(66)</td>
+                        <td class="year-col" data-year="2024">C(74)</td>
+                        <td class="year-col" data-year="2025">A(60)</td>
+                    </tr>
+                    <tr class="question-row" data-question="14">
+                        <td>Q14</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">B(49)</td>
+                        <td class="year-col" data-year="2013">D(21)</td>
+                        <td class="year-col" data-year="2014">D(50)</td>
+                        <td class="year-col" data-year="2015">C(57)</td>
+                        <td class="year-col" data-year="2016">C(92)</td>
+                        <td class="year-col" data-year="2017">B(71)</td>
+                        <td class="year-col" data-year="2018">B(42)</td>
+                        <td class="year-col" data-year="2019">C(91)</td>
+                        <td class="year-col" data-year="2020">B(41)</td>
+                        <td class="year-col" data-year="2021">A(52)</td>
+                        <td class="year-col" data-year="2022">C(86)</td>
+                        <td class="year-col" data-year="2023">B(62)</td>
+                        <td class="year-col" data-year="2024">A(67)</td>
+                        <td class="year-col" data-year="2025">A(53)</td>
+                    </tr>
+                    <tr class="question-row" data-question="15">
+                        <td>Q15</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">A(89)</td>
+                        <td class="year-col" data-year="2013">B(71)</td>
+                        <td class="year-col" data-year="2014">C(81)</td>
+                        <td class="year-col" data-year="2015">C(91)</td>
+                        <td class="year-col" data-year="2016">B(45)</td>
+                        <td class="year-col" data-year="2017">C(53)</td>
+                        <td class="year-col" data-year="2018">D(83)</td>
+                        <td class="year-col" data-year="2019">D(61)</td>
+                        <td class="year-col" data-year="2020">D(42)</td>
+                        <td class="year-col" data-year="2021">C(43)</td>
+                        <td class="year-col" data-year="2022">A(43)</td>
+                        <td class="year-col" data-year="2023">A(50)</td>
+                        <td class="year-col" data-year="2024">D(68)</td>
+                        <td class="year-col" data-year="2025">D(25)</td>
+                    </tr>
+                    <tr class="question-row" data-question="16">
+                        <td>Q16</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">B(82)</td>
+                        <td class="year-col" data-year="2013">B(33)</td>
+                        <td class="year-col" data-year="2014">C(33)</td>
+                        <td class="year-col" data-year="2015">B(70)</td>
+                        <td class="year-col" data-year="2016">D(80)</td>
+                        <td class="year-col" data-year="2017">D(32)</td>
+                        <td class="year-col" data-year="2018">A(39)</td>
+                        <td class="year-col" data-year="2019">D(25)</td>
+                        <td class="year-col" data-year="2020">B(39)</td>
+                        <td class="year-col" data-year="2021">A(34)</td>
+                        <td class="year-col" data-year="2022">D(32)</td>
+                        <td class="year-col" data-year="2023">D(27)</td>
+                        <td class="year-col" data-year="2024">D(55)</td>
+                        <td class="year-col" data-year="2025">B(66)</td>
+                    </tr>
+                    <tr class="question-row" data-question="17">
+                        <td>Q17</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">B(43)</td>
+                        <td class="year-col" data-year="2013">B(56)</td>
+                        <td class="year-col" data-year="2014">D(24)</td>
+                        <td class="year-col" data-year="2015">D(26)</td>
+                        <td class="year-col" data-year="2016">A(55)</td>
+                        <td class="year-col" data-year="2017">D(36)</td>
+                        <td class="year-col" data-year="2018">B(28)</td>
+                        <td class="year-col" data-year="2019">A(58)</td>
+                        <td class="year-col" data-year="2020">C(48)</td>
+                        <td class="year-col" data-year="2021">B(50)</td>
+                        <td class="year-col" data-year="2022">B(38)</td>
+                        <td class="year-col" data-year="2023">B(44)</td>
+                        <td class="year-col" data-year="2024">C(36)</td>
+                        <td class="year-col" data-year="2025">B(40)</td>
+                    </tr>
+                    <tr class="question-row" data-question="18">
+                        <td>Q18</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">A(70)</td>
+                        <td class="year-col" data-year="2013">C(37)</td>
+                        <td class="year-col" data-year="2014">A(39)</td>
+                        <td class="year-col" data-year="2015">A(57)</td>
+                        <td class="year-col" data-year="2016">C(79)</td>
+                        <td class="year-col" data-year="2017">A(45)</td>
+                        <td class="year-col" data-year="2018">B(78)</td>
+                        <td class="year-col" data-year="2019">D(26)</td>
+                        <td class="year-col" data-year="2020">B(43)</td>
+                        <td class="year-col" data-year="2021">B(72)</td>
+                        <td class="year-col" data-year="2022">C(70)</td>
+                        <td class="year-col" data-year="2023">A(59)</td>
+                        <td class="year-col" data-year="2024">C(82)</td>
+                        <td class="year-col" data-year="2025">C(44)</td>
+                    </tr>
+                    <tr class="question-row" data-question="19">
+                        <td>Q19</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">C(51)</td>
+                        <td class="year-col" data-year="2013">C(56)</td>
+                        <td class="year-col" data-year="2014">A(54)</td>
+                        <td class="year-col" data-year="2015">C(63)</td>
+                        <td class="year-col" data-year="2016">A(59)</td>
+                        <td class="year-col" data-year="2017">D(68)</td>
+                        <td class="year-col" data-year="2018">D(24)</td>
+                        <td class="year-col" data-year="2019">A(85)</td>
+                        <td class="year-col" data-year="2020">B(56)</td>
+                        <td class="year-col" data-year="2021">D(36)</td>
+                        <td class="year-col" data-year="2022">D(67)</td>
+                        <td class="year-col" data-year="2023">C(54)</td>
+                        <td class="year-col" data-year="2024">D(51)</td>
+                        <td class="year-col" data-year="2025">D(28)</td>
+                    </tr>
+                    <tr class="question-row" data-question="20">
+                        <td>Q20</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">C(71)</td>
+                        <td class="year-col" data-year="2013">D(58)</td>
+                        <td class="year-col" data-year="2014">B(68)</td>
+                        <td class="year-col" data-year="2015">C(60)</td>
+                        <td class="year-col" data-year="2016">C(51)</td>
+                        <td class="year-col" data-year="2017">D(15)</td>
+                        <td class="year-col" data-year="2018">B(48)</td>
+                        <td class="year-col" data-year="2019">C(51)</td>
+                        <td class="year-col" data-year="2020">D(70)</td>
+                        <td class="year-col" data-year="2021">C(34)</td>
+                        <td class="year-col" data-year="2022">B(69)</td>
+                        <td class="year-col" data-year="2023">A(52)</td>
+                        <td class="year-col" data-year="2024">D(46)</td>
+                        <td class="year-col" data-year="2025">D(39)</td>
+                    </tr>
+                    <tr class="question-row" data-question="21">
+                        <td>Q21</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(45)</td>
+                        <td class="year-col" data-year="2013">C(46)</td>
+                        <td class="year-col" data-year="2014">A(19)</td>
+                        <td class="year-col" data-year="2015">B(73)</td>
+                        <td class="year-col" data-year="2016">B(57)</td>
+                        <td class="year-col" data-year="2017">C(59)</td>
+                        <td class="year-col" data-year="2018">C(45)</td>
+                        <td class="year-col" data-year="2019">B(53)</td>
+                        <td class="year-col" data-year="2020">C(62)</td>
+                        <td class="year-col" data-year="2021">D(40)</td>
+                        <td class="year-col" data-year="2022">B(70)</td>
+                        <td class="year-col" data-year="2023">C(34)</td>
+                        <td class="year-col" data-year="2024">B(36)</td>
+                        <td class="year-col" data-year="2025">B(58)</td>
+                    </tr>
+                    <tr class="question-row" data-question="22">
+                        <td>Q22</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">A(43)</td>
+                        <td class="year-col" data-year="2013">A(48)</td>
+                        <td class="year-col" data-year="2014">C(61)</td>
+                        <td class="year-col" data-year="2015">A(47)</td>
+                        <td class="year-col" data-year="2016">D(54)</td>
+                        <td class="year-col" data-year="2017">D(58)</td>
+                        <td class="year-col" data-year="2018">B(45)</td>
+                        <td class="year-col" data-year="2019">B(59)</td>
+                        <td class="year-col" data-year="2020">C(37)</td>
+                        <td class="year-col" data-year="2021">A(56)</td>
+                        <td class="year-col" data-year="2022">C(41)</td>
+                        <td class="year-col" data-year="2023">B(42)</td>
+                        <td class="year-col" data-year="2024">B(64)</td>
+                        <td class="year-col" data-year="2025">D(41)</td>
+                    </tr>
+                    <tr class="question-row" data-question="23">
+                        <td>Q23</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(42)</td>
+                        <td class="year-col" data-year="2013">B(56)</td>
+                        <td class="year-col" data-year="2014">B(59)</td>
+                        <td class="year-col" data-year="2015">C(59)</td>
+                        <td class="year-col" data-year="2016">A(82)</td>
+                        <td class="year-col" data-year="2017">A(30)</td>
+                        <td class="year-col" data-year="2018">B(75)</td>
+                        <td class="year-col" data-year="2019">A(32)</td>
+                        <td class="year-col" data-year="2020">B(48)</td>
+                        <td class="year-col" data-year="2021">B(65)</td>
+                        <td class="year-col" data-year="2022">C(47)</td>
+                        <td class="year-col" data-year="2023">D(38)</td>
+                        <td class="year-col" data-year="2024">A(56)</td>
+                        <td class="year-col" data-year="2025">C(23)</td>
+                    </tr>
+                    <tr class="question-row" data-question="24">
+                        <td>Q24</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">A(72)</td>
+                        <td class="year-col" data-year="2013">A(54)</td>
+                        <td class="year-col" data-year="2014">D(65)</td>
+                        <td class="year-col" data-year="2015">A(73)</td>
+                        <td class="year-col" data-year="2016">B(64)</td>
+                        <td class="year-col" data-year="2017">A(59)</td>
+                        <td class="year-col" data-year="2018">A(56)</td>
+                        <td class="year-col" data-year="2019">A(65)</td>
+                        <td class="year-col" data-year="2020">D(53)</td>
+                        <td class="year-col" data-year="2021">D(64)</td>
+                        <td class="year-col" data-year="2022">A(47)</td>
+                        <td class="year-col" data-year="2023">C(58)</td>
+                        <td class="year-col" data-year="2024">A(59)</td>
+                        <td class="year-col" data-year="2025">C(26)</td>
+                    </tr>
+                    <tr class="question-row" data-question="25">
+                        <td>Q25</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">C(40)</td>
+                        <td class="year-col" data-year="2013">D(36)</td>
+                        <td class="year-col" data-year="2014">D(51)</td>
+                        <td class="year-col" data-year="2015">B(37)</td>
+                        <td class="year-col" data-year="2016">D(35)</td>
+                        <td class="year-col" data-year="2017">C(57)</td>
+                        <td class="year-col" data-year="2018">D(41)</td>
+                        <td class="year-col" data-year="2019">D(69)</td>
+                        <td class="year-col" data-year="2020">A(70)</td>
+                        <td class="year-col" data-year="2021">C(36)</td>
+                        <td class="year-col" data-year="2022">D(57)</td>
+                        <td class="year-col" data-year="2023">A(56)</td>
+                        <td class="year-col" data-year="2024">C(40)</td>
+                        <td class="year-col" data-year="2025">B(59)</td>
+                    </tr>
+                    <tr class="question-row" data-question="26">
+                        <td>Q26</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">A(56)</td>
+                        <td class="year-col" data-year="2013">A(42)</td>
+                        <td class="year-col" data-year="2014">A(45)</td>
+                        <td class="year-col" data-year="2015">C(70)</td>
+                        <td class="year-col" data-year="2016">B(37)</td>
+                        <td class="year-col" data-year="2017">A(53)</td>
+                        <td class="year-col" data-year="2018">C(40)</td>
+                        <td class="year-col" data-year="2019">D(68)</td>
+                        <td class="year-col" data-year="2020">D(52)</td>
+                        <td class="year-col" data-year="2021">A(43)</td>
+                        <td class="year-col" data-year="2022">A(52)</td>
+                        <td class="year-col" data-year="2023">B(40)</td>
+                        <td class="year-col" data-year="2024">B(55)</td>
+                        <td class="year-col" data-year="2025">B(34)</td>
+                    </tr>
+                    <tr class="question-row" data-question="27">
+                        <td>Q27</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">A(50)</td>
+                        <td class="year-col" data-year="2013">B(68)</td>
+                        <td class="year-col" data-year="2014">B(76)</td>
+                        <td class="year-col" data-year="2015">A(48)</td>
+                        <td class="year-col" data-year="2016">C(56)</td>
+                        <td class="year-col" data-year="2017">B(39)</td>
+                        <td class="year-col" data-year="2018">C(43)</td>
+                        <td class="year-col" data-year="2019">B(56)</td>
+                        <td class="year-col" data-year="2020">C(50)</td>
+                        <td class="year-col" data-year="2021">C(35)</td>
+                        <td class="year-col" data-year="2022">C(50)</td>
+                        <td class="year-col" data-year="2023">C(51)</td>
+                        <td class="year-col" data-year="2024">D(45)</td>
+                        <td class="year-col" data-year="2025">A(53)</td>
+                    </tr>
+                    <tr class="question-row" data-question="28">
+                        <td>Q28</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">B(59)</td>
+                        <td class="year-col" data-year="2013">A(80)</td>
+                        <td class="year-col" data-year="2014">D(72)</td>
+                        <td class="year-col" data-year="2015">B(84)</td>
+                        <td class="year-col" data-year="2016">C(58)</td>
+                        <td class="year-col" data-year="2017">C(84)</td>
+                        <td class="year-col" data-year="2018">A(50)</td>
+                        <td class="year-col" data-year="2019">C(66)</td>
+                        <td class="year-col" data-year="2020">B(54)</td>
+                        <td class="year-col" data-year="2021">D(60)</td>
+                        <td class="year-col" data-year="2022">D(73)</td>
+                        <td class="year-col" data-year="2023">D(65)</td>
+                        <td class="year-col" data-year="2024">C(60)</td>
+                        <td class="year-col" data-year="2025">C(60)</td>
+                    </tr>
+                    <tr class="question-row" data-question="29">
+                        <td>Q29</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">B(71)</td>
+                        <td class="year-col" data-year="2013">D(57)</td>
+                        <td class="year-col" data-year="2014">C(82)</td>
+                        <td class="year-col" data-year="2015">A(91)</td>
+                        <td class="year-col" data-year="2016">B(69)</td>
+                        <td class="year-col" data-year="2017">B(76)</td>
+                        <td class="year-col" data-year="2018">C(78)</td>
+                        <td class="year-col" data-year="2019">B(84)</td>
+                        <td class="year-col" data-year="2020">A(69)</td>
+                        <td class="year-col" data-year="2021">B(88)</td>
+                        <td class="year-col" data-year="2022">A(79)</td>
+                        <td class="year-col" data-year="2023">C(75)</td>
+                        <td class="year-col" data-year="2024">B(87)</td>
+                        <td class="year-col" data-year="2025">A(73)</td>
+                    </tr>
+                    <tr class="question-row" data-question="30">
+                        <td>Q30</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(47)</td>
+                        <td class="year-col" data-year="2013">B(54)</td>
+                        <td class="year-col" data-year="2014">B(31)</td>
+                        <td class="year-col" data-year="2015">B(45)</td>
+                        <td class="year-col" data-year="2016">B(76)</td>
+                        <td class="year-col" data-year="2017">B(51)</td>
+                        <td class="year-col" data-year="2018">A(43)</td>
+                        <td class="year-col" data-year="2019">C(78)</td>
+                        <td class="year-col" data-year="2020">A(49)</td>
+                        <td class="year-col" data-year="2021">A(77)</td>
+                        <td class="year-col" data-year="2022">B(25)</td>
+                        <td class="year-col" data-year="2023">A(84)</td>
+                        <td class="year-col" data-year="2024">D(55)</td>
+                        <td class="year-col" data-year="2025">B(59)</td>
+                    </tr>
+                    <tr class="question-row" data-question="31">
+                        <td>Q31</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">B(55)</td>
+                        <td class="year-col" data-year="2013">B(52)</td>
+                        <td class="year-col" data-year="2014">A(63)</td>
+                        <td class="year-col" data-year="2015">C(63)</td>
+                        <td class="year-col" data-year="2016">C(61)</td>
+                        <td class="year-col" data-year="2017">D(42)</td>
+                        <td class="year-col" data-year="2018">C(66)</td>
+                        <td class="year-col" data-year="2019">B(34)</td>
+                        <td class="year-col" data-year="2020">B(67)</td>
+                        <td class="year-col" data-year="2021">A(65)</td>
+                        <td class="year-col" data-year="2022">C(51)</td>
+                        <td class="year-col" data-year="2023">B(62)</td>
+                        <td class="year-col" data-year="2024">B(70)</td>
+                        <td class="year-col" data-year="2025">D(51)</td>
+                    </tr>
+                    <tr class="question-row" data-question="32">
+                        <td>Q32</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">C(43)</td>
+                        <td class="year-col" data-year="2013">B(40)</td>
+                        <td class="year-col" data-year="2014">C(41)</td>
+                        <td class="year-col" data-year="2015">A(30)</td>
+                        <td class="year-col" data-year="2016">D(40)</td>
+                        <td class="year-col" data-year="2017">D(50)</td>
+                        <td class="year-col" data-year="2018">C(34)</td>
+                        <td class="year-col" data-year="2019">D(35)</td>
+                        <td class="year-col" data-year="2020">B(40)</td>
+                        <td class="year-col" data-year="2021">D(41)</td>
+                        <td class="year-col" data-year="2022">C(34)</td>
+                        <td class="year-col" data-year="2023">D(64)</td>
+                        <td class="year-col" data-year="2024">A(63)</td>
+                        <td class="year-col" data-year="2025">C(35)</td>
+                    </tr>
+                    <tr class="question-row" data-question="33">
+                        <td>Q33</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">A(64)</td>
+                        <td class="year-col" data-year="2013">A(64)</td>
+                        <td class="year-col" data-year="2014">B(54)</td>
+                        <td class="year-col" data-year="2015">A(66)</td>
+                        <td class="year-col" data-year="2016">A(43)</td>
+                        <td class="year-col" data-year="2017">C(53)</td>
+                        <td class="year-col" data-year="2018">D(30)</td>
+                        <td class="year-col" data-year="2019">A(61)</td>
+                        <td class="year-col" data-year="2020">D(40)</td>
+                        <td class="year-col" data-year="2021">C(30)</td>
+                        <td class="year-col" data-year="2022">D(40)</td>
+                        <td class="year-col" data-year="2023">A(39)</td>
+                        <td class="year-col" data-year="2024">B(49)</td>
+                        <td class="year-col" data-year="2025">C(46)</td>
+                    </tr>
+                    <tr class="question-row" data-question="34">
+                        <td>Q34</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">C(49)</td>
+                        <td class="year-col" data-year="2013">D(29)</td>
+                        <td class="year-col" data-year="2014">C(49)</td>
+                        <td class="year-col" data-year="2015">B(63)</td>
+                        <td class="year-col" data-year="2016">B(38)</td>
+                        <td class="year-col" data-year="2017">D(41)</td>
+                        <td class="year-col" data-year="2018">C(35)</td>
+                        <td class="year-col" data-year="2019">D(46)</td>
+                        <td class="year-col" data-year="2020">C(48)</td>
+                        <td class="year-col" data-year="2021">C(46)</td>
+                        <td class="year-col" data-year="2022">A(53)</td>
+                        <td class="year-col" data-year="2023">B(63)</td>
+                        <td class="year-col" data-year="2024">D(54)</td>
+                        <td class="year-col" data-year="2025">D(25)</td>
+                    </tr>
+                    <tr class="question-row" data-question="35">
+                        <td>Q35</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">A(55)</td>
+                        <td class="year-col" data-year="2013">D(46)</td>
+                        <td class="year-col" data-year="2014">D(50)</td>
+                        <td class="year-col" data-year="2015">C(51)</td>
+                        <td class="year-col" data-year="2016">D(47)</td>
+                        <td class="year-col" data-year="2017">B(45)</td>
+                        <td class="year-col" data-year="2018">B(40)</td>
+                        <td class="year-col" data-year="2019">C(53)</td>
+                        <td class="year-col" data-year="2020">D(33)</td>
+                        <td class="year-col" data-year="2021">A(33)</td>
+                        <td class="year-col" data-year="2022">B(38)</td>
+                        <td class="year-col" data-year="2023">D(32)</td>
+                        <td class="year-col" data-year="2024">A(34)</td>
+                        <td class="year-col" data-year="2025">A(41)</td>
+                    </tr>
+                    <tr class="question-row" data-question="36">
+                        <td>Q36</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">D(37)</td>
+                        <td class="year-col" data-year="2013">A(60)</td>
+                        <td class="year-col" data-year="2014">A(45)</td>
+                        <td class="year-col" data-year="2015">D(43)</td>
+                        <td class="year-col" data-year="2016">B(35)</td>
+                        <td class="year-col" data-year="2017">C(66)</td>
+                        <td class="year-col" data-year="2018">A(49)</td>
+                        <td class="year-col" data-year="2019">C(41)</td>
+                        <td class="year-col" data-year="2020">C(34)</td>
+                        <td class="year-col" data-year="2021">A(54)</td>
+                        <td class="year-col" data-year="2022">B(46)</td>
+                        <td class="year-col" data-year="2023">B(40)</td>
+                        <td class="year-col" data-year="2024">C(46)</td>
+                        <td class="year-col" data-year="2025">B(26)</td>
+                    </tr>
+                    <tr class="question-row" data-question="37">
+                        <td>Q37</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">A(43)</td>
+                        <td class="year-col" data-year="2013">C(46)</td>
+                        <td class="year-col" data-year="2014">B(60)</td>
+                        <td class="year-col" data-year="2015">D(27)</td>
+                        <td class="year-col" data-year="2016">A(46)</td>
+                        <td class="year-col" data-year="2017">C(45)</td>
+                        <td class="year-col" data-year="2018">D(44)</td>
+                        <td class="year-col" data-year="2019">A(31)</td>
+                        <td class="year-col" data-year="2020">C(42)</td>
+                        <td class="year-col" data-year="2021">B(27)</td>
+                        <td class="year-col" data-year="2022">D(44)</td>
+                        <td class="year-col" data-year="2023">D(25)</td>
+                        <td class="year-col" data-year="2024">C(41)</td>
+                        <td class="year-col" data-year="2025">A(55)</td>
+                    </tr>
+                    <tr class="question-row" data-question="38">
+                        <td>Q38</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">C(63)</td>
+                        <td class="year-col" data-year="2013">C(47)</td>
+                        <td class="year-col" data-year="2014">A(40)</td>
+                        <td class="year-col" data-year="2015">B(37)</td>
+                        <td class="year-col" data-year="2016">B(49)</td>
+                        <td class="year-col" data-year="2017">A(49)</td>
+                        <td class="year-col" data-year="2018">B(41)</td>
+                        <td class="year-col" data-year="2019">A(35)</td>
+                        <td class="year-col" data-year="2020">A(29)</td>
+                        <td class="year-col" data-year="2021">B(34)</td>
+                        <td class="year-col" data-year="2022">D(47)</td>
+                        <td class="year-col" data-year="2023">C(50)</td>
+                        <td class="year-col" data-year="2024">B(47)</td>
+                        <td class="year-col" data-year="2025">A(45)</td>
+                    </tr>
+                    <tr class="question-row" data-question="39">
+                        <td>Q39</td>
+                        <td class="year-col" data-year="2010">A</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">D(53)</td>
+                        <td class="year-col" data-year="2013">A(29)</td>
+                        <td class="year-col" data-year="2014">D(28)</td>
+                        <td class="year-col" data-year="2015">D(49)</td>
+                        <td class="year-col" data-year="2016">A(35)</td>
+                        <td class="year-col" data-year="2017">A(34)</td>
+                        <td class="year-col" data-year="2018">B(28)</td>
+                        <td class="year-col" data-year="2019">B(49)</td>
+                        <td class="year-col" data-year="2020">A(28)</td>
+                        <td class="year-col" data-year="2021">D(37)</td>
+                        <td class="year-col" data-year="2022">C(39)</td>
+                        <td class="year-col" data-year="2023">A(31)</td>
+                        <td class="year-col" data-year="2024">A(49)</td>
+                        <td class="year-col" data-year="2025">B(39)</td>
+                    </tr>
+                    <tr class="question-row" data-question="40">
+                        <td>Q40</td>
+                        <td class="year-col" data-year="2010">C</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">D(30)</td>
+                        <td class="year-col" data-year="2013">B(21)</td>
+                        <td class="year-col" data-year="2014">D(33)</td>
+                        <td class="year-col" data-year="2015">C(51)</td>
+                        <td class="year-col" data-year="2016">D(38)</td>
+                        <td class="year-col" data-year="2017">B(62)</td>
+                        <td class="year-col" data-year="2018">A(20)</td>
+                        <td class="year-col" data-year="2019">C(38)</td>
+                        <td class="year-col" data-year="2020">D(23)</td>
+                        <td class="year-col" data-year="2021">A(31)</td>
+                        <td class="year-col" data-year="2022">A(29)</td>
+                        <td class="year-col" data-year="2023">A(29)</td>
+                        <td class="year-col" data-year="2024">C(46)</td>
+                        <td class="year-col" data-year="2025">B(36)</td>
+                    </tr>
+                    <tr class="question-row" data-question="41">
+                        <td>Q41</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">C(47)</td>
+                        <td class="year-col" data-year="2013">D(39)</td>
+                        <td class="year-col" data-year="2014">C(43)</td>
+                        <td class="year-col" data-year="2015">B(43)</td>
+                        <td class="year-col" data-year="2016">C(45)</td>
+                        <td class="year-col" data-year="2017">D(21)</td>
+                        <td class="year-col" data-year="2018">D(35)</td>
+                        <td class="year-col" data-year="2019">B(44)</td>
+                        <td class="year-col" data-year="2020">D(33)</td>
+                        <td class="year-col" data-year="2021">C(33)</td>
+                        <td class="year-col" data-year="2022">A(30)</td>
+                        <td class="year-col" data-year="2023">C(33)</td>
+                        <td class="year-col" data-year="2024">A(27)</td>
+                        <td class="year-col" data-year="2025">C(36)</td>
+                    </tr>
+                    <tr class="question-row" data-question="42">
+                        <td>Q42</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">A</td>
+                        <td class="year-col" data-year="2012">B(36)</td>
+                        <td class="year-col" data-year="2013">B(37)</td>
+                        <td class="year-col" data-year="2014">C(43)</td>
+                        <td class="year-col" data-year="2015">A(30)</td>
+                        <td class="year-col" data-year="2016">A(55)</td>
+                        <td class="year-col" data-year="2017">B(71)</td>
+                        <td class="year-col" data-year="2018">A(51)</td>
+                        <td class="year-col" data-year="2019">C(65)</td>
+                        <td class="year-col" data-year="2020">A(61)</td>
+                        <td class="year-col" data-year="2021">D(62)</td>
+                        <td class="year-col" data-year="2022">B(68)</td>
+                        <td class="year-col" data-year="2023">B(45)</td>
+                        <td class="year-col" data-year="2024">C(66)</td>
+                        <td class="year-col" data-year="2025">B(55)</td>
+                    </tr>
+                    <tr class="question-row" data-question="43">
+                        <td>Q43</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">B</td>
+                        <td class="year-col" data-year="2012">B(52)</td>
+                        <td class="year-col" data-year="2013">A(30)</td>
+                        <td class="year-col" data-year="2014">B(67)</td>
+                        <td class="year-col" data-year="2015">C(51)</td>
+                        <td class="year-col" data-year="2016">D(51)</td>
+                        <td class="year-col" data-year="2017">C(59)</td>
+                        <td class="year-col" data-year="2018">C(26)</td>
+                        <td class="year-col" data-year="2019">D(47)</td>
+                        <td class="year-col" data-year="2020">B(56)</td>
+                        <td class="year-col" data-year="2021">D(44)</td>
+                        <td class="year-col" data-year="2022">B(30)</td>
+                        <td class="year-col" data-year="2023">C(40)</td>
+                        <td class="year-col" data-year="2024">D(59)</td>
+                        <td class="year-col" data-year="2025">C(66)</td>
+                    </tr>
+                    <tr class="question-row" data-question="44">
+                        <td>Q44</td>
+                        <td class="year-col" data-year="2010">B</td>
+                        <td class="year-col" data-year="2011">D</td>
+                        <td class="year-col" data-year="2012">D(56)</td>
+                        <td class="year-col" data-year="2013">C(64)</td>
+                        <td class="year-col" data-year="2014">D(57)</td>
+                        <td class="year-col" data-year="2015">D(52)</td>
+                        <td class="year-col" data-year="2016">B(52)</td>
+                        <td class="year-col" data-year="2017">B(78)</td>
+                        <td class="year-col" data-year="2018">B(78)</td>
+                        <td class="year-col" data-year="2019">B(72)</td>
+                        <td class="year-col" data-year="2020">A(45)</td>
+                        <td class="year-col" data-year="2021">C(76)</td>
+                        <td class="year-col" data-year="2022">C(43)</td>
+                        <td class="year-col" data-year="2023">D(60)</td>
+                        <td class="year-col" data-year="2024">D(72)</td>
+                        <td class="year-col" data-year="2025">A(43)</td>
+                    </tr>
+                    <tr class="question-row" data-question="45">
+                        <td>Q45</td>
+                        <td class="year-col" data-year="2010">D</td>
+                        <td class="year-col" data-year="2011">C</td>
+                        <td class="year-col" data-year="2012">A(36)</td>
+                        <td class="year-col" data-year="2013">C(37)</td>
+                        <td class="year-col" data-year="2014">B(57)</td>
+                        <td class="year-col" data-year="2015">B(26)</td>
+                        <td class="year-col" data-year="2016">C(50)</td>
+                        <td class="year-col" data-year="2017">A(48)</td>
+                        <td class="year-col" data-year="2018">A(51)</td>
+                        <td class="year-col" data-year="2019">A(56)</td>
+                        <td class="year-col" data-year="2020">C(50)</td>
+                        <td class="year-col" data-year="2021">B(41)</td>
+                        <td class="year-col" data-year="2022">D(51)</td>
+                        <td class="year-col" data-year="2023">A(47)</td>
+                        <td class="year-col" data-year="2024">B(53)</td>
+                        <td class="year-col" data-year="2025">D(36)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>MC 答案 Answers</h2>
+    </div>
+
+    <script>
+        // Apply filters
+        function applyFilters() {
+            const selectedYears = Array.from(document.querySelectorAll('#yearFilters input:checked')).map(cb => cb.value);
+            const selectedQuestions = Array.from(document.querySelectorAll('#questionFilters input:checked')).map(cb => cb.value);
+
+            // Filter year columns
+            document.querySelectorAll('.year-col').forEach(col => {
+                const year = col.getAttribute('data-year');
+                if (selectedYears.includes(year)) {
+                    col.classList.remove('hidden');
+                } else {
+                    col.classList.add('hidden');
+                }
+            });
+
+            // Filter question rows
+            document.querySelectorAll('.question-row').forEach(row => {
+                const question = row.getAttribute('data-question');
+                if (selectedQuestions.includes(question)) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+        }
+
+        // Year filter functions
+        function selectAllYears() {
+            document.querySelectorAll('#yearFilters input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+            });
+            applyFilters();
+        }
+
+        function clearAllYears() {
+            document.querySelectorAll('#yearFilters input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            applyFilters();
+        }
+
+        // Question filter functions
+        function selectAllQuestions() {
+            document.querySelectorAll('#questionFilters input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+            });
+            applyFilters();
+        }
+
+        function clearAllQuestions() {
+            document.querySelectorAll('#questionFilters input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            applyFilters();
+        }
+
+        // Add event listeners to all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+
+        // Initial load - show all
+        applyFilters();
+    </script>
+</body>
+
+</html>

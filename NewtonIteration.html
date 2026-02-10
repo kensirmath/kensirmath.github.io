@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newton Iteration 牛頓迭代法</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.0.0/math.min.js"></script>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-focus-ring: rgba(33, 128, 141, 0.4);
+
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-family-mono: 'Monaco', 'Courier New', monospace;
+            --font-size-base: 14px;
+            --font-size-sm: 12px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+
+            --space-4: 4px;
+            --space-6: 6px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(167, 169, 169, 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-border: rgba(119, 124, 124, 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-focus-ring: rgba(50, 184, 198, 0.4);
+                --color-btn-primary-text: var(--color-slate-900);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: var(--font-family-base);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            margin: 0;
+            padding: var(--space-20);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-semibold);
+            margin: 0 0 var(--space-8) 0;
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: var(--font-size-base);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-24);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-24);
+            margin-bottom: var(--space-24);
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+            padding: var(--space-24);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-20);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--space-8) var(--space-12);
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-family: var(--font-family-base);
+            transition: border-color var(--duration-fast) var(--ease-standard);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-focus-ring);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+            font-family: var(--font-family-mono);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8) var(--space-20);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            border: none;
+            transition: all var(--duration-normal) var(--ease-standard);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .btn--primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            width: 100%;
+        }
+
+        .btn--primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn--primary:active {
+            background: var(--color-teal-700);
+        }
+
+        .btn--secondary {
+            background: var(--color-border);
+            color: var(--color-text);
+            width: 100%;
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-gray-300);
+        }
+
+        .alert {
+            padding: var(--space-12) var(--space-16);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-sm);
+        }
+
+        .alert--error {
+            background: rgba(192, 21, 47, 0.1);
+            color: var(--color-error);
+            border: 1px solid var(--color-error);
+        }
+
+        .alert--success {
+            background: rgba(33, 128, 141, 0.1);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+
+        .alert--info {
+            background: rgba(33, 128, 141, 0.1);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+
+        .results-section {
+            grid-column: 1 / -1;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+        }
+
+        thead {
+            background: var(--color-background);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        th {
+            padding: var(--space-12);
+            text-align: left;
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+        }
+
+        td {
+            padding: var(--space-8) var(--space-12);
+            border-bottom: 1px solid var(--color-border);
+            font-family: var(--font-family-mono);
+        }
+
+        tbody tr:hover {
+            background: var(--color-background);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .help-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-4);
+        }
+
+        .examples {
+            background: var(--color-background);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            margin-top: var(--space-8);
+            font-size: var(--font-size-sm);
+        }
+
+        .examples-title {
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-6);
+            color: var(--color-text);
+        }
+
+        .example-item {
+            padding: var(--space-4) 0;
+            font-family: var(--font-family-mono);
+            color: var(--color-text-secondary);
+            word-break: break-all;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            margin-bottom: var(--space-20);
+        }
+
+        .stat-box {
+            background: var(--color-background);
+            padding: var(--space-12);
+            border-radius: var(--radius-base);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            font-family: var(--font-family-mono);
+            color: var(--color-text);
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>牛頓迭代法求解器</h1>
+        <p class="subtitle">利用牛頓-拉弗遜方法求解非線性方程：f(x) = 0</p>
+
+        <div class="grid">
+            <!-- 輸入面板 -->
+            <div class="card">
+                <h2 style="font-size: var(--font-size-2xl); margin-top: 0;">方程輸入</h2>
+
+                <div class="form-group">
+                    <label class="form-label">方程 f(x) = 0</label>
+                    <textarea id="equation" class="form-control" placeholder="例如: x^3 - 2*x - 5">x^2 - 2</textarea>
+                    <div class="help-text">輸入關於變量 x 的方程式</div>
+                    <div class="examples">
+                        <div class="examples-title">函數範例：</div>
+                        <div class="example-item">x^2 - 2 (求平方根)</div>
+                        <div class="example-item">x^3 - 8 (求立方根)</div>
+                        <div class="example-item">exp(x) - 3 (指數函數)</div>
+                        <div class="example-item">log(x) - 1 (自然對數)</div>
+                        <div class="example-item">log(x, 10) - 1 (以10為底的對數)</div>
+                        <div class="example-item">sin(x) - 0.5 (三角函數)</div>
+                        <div class="example-item">x*exp(-x) - 0.1 (複雜表達式)</div>
+                    </div>
+                </div>
+
+                <p class="help-text" style="margin-top: var(--space-16); font-weight: var(--font-weight-medium);">
+                    預設三個初始值：</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-12);">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">初始值 x₀₁</label>
+                        <input type="number" id="x0_1" class="form-control" placeholder="初始值1" value="-99" step="0.01">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">初始值 x₀₂</label>
+                        <input type="number" id="x0_2" class="form-control" placeholder="初始值2" value="0.00000000001"
+                            step="any">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">初始值 x₀₃</label>
+                        <input type="number" id="x0_3" class="form-control" placeholder="初始值3" value="99" step="0.01">
+                    </div>
+                </div>
+
+                <button class="btn btn--primary" style="margin-top: var(--space-16);"
+                    onclick="calculateNewton()">開始計算</button>
+            </div>
+
+            <!-- 結果統計 -->
+            <div class="card results-section">
+                <h2 style="font-size: var(--font-size-2xl); margin-top: 0;">計算結果</h2>
+                <div id="alertContainer"></div>
+                <div id="statsContainer" class="hidden">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-20);">
+                        <!-- 第一個初始值的統計 -->
+                        <div>
+                            <h3
+                                style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                                初始值 x₀₁ = -99</h3>
+                            <div class="stats" style="grid-template-columns: 1fr;">
+                                <div class="stat-box">
+                                    <div class="stat-label">收斂根</div>
+                                    <div class="stat-value" id="convergentRoot1">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">函數值 f(x)</div>
+                                    <div class="stat-value" id="functionValue1" style="font-size: var(--font-size-lg);">
+                                        -</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">迭代次數</div>
+                                    <div class="stat-value" id="iterations1">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">最後誤差</div>
+                                    <div class="stat-value" id="error1" style="font-size: var(--font-size-lg);">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 第二個初始值的統計 -->
+                        <div>
+                            <h3
+                                style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                                初始值 x₀₂ = 0.00000000001</h3>
+                            <div class="stats" style="grid-template-columns: 1fr;">
+                                <div class="stat-box">
+                                    <div class="stat-label">收斂根</div>
+                                    <div class="stat-value" id="convergentRoot2">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">函數值 f(x)</div>
+                                    <div class="stat-value" id="functionValue2" style="font-size: var(--font-size-lg);">
+                                        -</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">迭代次數</div>
+                                    <div class="stat-value" id="iterations2">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">最後誤差</div>
+                                    <div class="stat-value" id="error2" style="font-size: var(--font-size-lg);">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 第三個初始值的統計 -->
+                        <div>
+                            <h3
+                                style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                                初始值 x₀₃ = 99</h3>
+                            <div class="stats" style="grid-template-columns: 1fr;">
+                                <div class="stat-box">
+                                    <div class="stat-label">收斂根</div>
+                                    <div class="stat-value" id="convergentRoot3">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">函數值 f(x)</div>
+                                    <div class="stat-value" id="functionValue3" style="font-size: var(--font-size-lg);">
+                                        -</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">迭代次數</div>
+                                    <div class="stat-value" id="iterations3">-</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">最後誤差</div>
+                                    <div class="stat-value" id="error3" style="font-size: var(--font-size-lg);">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果表格 -->
+        <div class="card results-section hidden" id="resultsCard">
+            <h2 style="font-size: var(--font-size-2xl); margin-top: 0;">迭代結果表（50行）</h2>
+
+            <!-- 第一個初始值的表格 -->
+            <div style="margin-bottom: var(--space-24);">
+                <h3 style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                    初始值 x₀₁ = -99</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">迭代 n</th>
+                                <th style="width: 180px;">x<sub>n</sub></th>
+                                <th style="width: 180px;">f(x<sub>n</sub>)</th>
+                                <th style="width: 180px;">|x<sub>n+1</sub> - x<sub>n</sub>|</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTable1">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 第二個初始值的表格 -->
+            <div style="margin-bottom: var(--space-24);">
+                <h3 style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                    初始值 x₀₂ = 0.00000000001</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">迭代 n</th>
+                                <th style="width: 180px;">x<sub>n</sub></th>
+                                <th style="width: 180px;">f(x<sub>n</sub>)</th>
+                                <th style="width: 180px;">|x<sub>n+1</sub> - x<sub>n</sub>|</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTable2">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 第三個初始值的表格 -->
+            <div>
+                <h3 style="font-size: var(--font-size-lg); margin: 0 0 var(--space-12) 0; color: var(--color-primary);">
+                    初始值 x₀₃ = 99</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">迭代 n</th>
+                                <th style="width: 180px;">x<sub>n</sub></th>
+                                <th style="width: 180px;">f(x<sub>n</sub>)</th>
+                                <th style="width: 180px;">|x<sub>n+1</sub> - x<sub>n</sub>|</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTable3">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateNewton() {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '';
+
+            try {
+                const equationStr = document.getElementById('equation').value.trim();
+                const x0_1 = parseFloat(document.getElementById('x0_1').value);
+                const x0_2 = parseFloat(document.getElementById('x0_2').value);
+                const x0_3 = parseFloat(document.getElementById('x0_3').value);
+
+                if (!equationStr) {
+                    showAlert('請輸入方程式', 'error');
+                    return;
+                }
+
+                if (isNaN(x0_1) || isNaN(x0_2) || isNaN(x0_3)) {
+                    showAlert('請輸入有效的初始值', 'error');
+                    return;
+                }
+
+                // 編譯函數
+                const f = math.compile(equationStr);
+
+                // 計算導數 (使用數值微分，自適應步長)
+                const derivative = (x) => {
+                    try {
+                        // 自適應步長選擇
+                        let h;
+                        const absX = Math.abs(x);
+
+                        // 對於接近0的值，使用絕對步長；對於較大的值，使用相對步長
+                        if (absX < 0.1) {
+                            h = 1e-4;
+                        } else if (absX < 1) {
+                            h = 1e-5;
+                        } else {
+                            h = absX * 1e-7;
+                        }
+
+                        // 計算數值導數（中心差分）
+                        const f1 = f.evaluate({ x: x + h });
+                        const f2 = f.evaluate({ x: x - h });
+
+                        // 檢查結果有效性
+                        if (!isFinite(f1) || !isFinite(f2)) {
+                            return null;
+                        }
+
+                        const deriv = (f1 - f2) / (2 * h);
+
+                        // 檢查導數有效性
+                        if (!isFinite(deriv) || Math.abs(deriv) < 1e-15) {
+                            // 嘗試更大的步長
+                            const h_large = Math.max(1e-2, absX * 1e-2);
+                            const f1_large = f.evaluate({ x: x + h_large });
+                            const f2_large = f.evaluate({ x: x - h_large });
+
+                            if (isFinite(f1_large) && isFinite(f2_large)) {
+                                return (f1_large - f2_large) / (2 * h_large);
+                            }
+                        }
+
+                        return deriv;
+                    } catch (e) {
+                        return null;
+                    }
+                };
+
+                // 對三個初始值分別執行牛頓迭代
+                const results1 = performNewtonIteration(f, derivative, x0_1);
+                const results2 = performNewtonIteration(f, derivative, x0_2);
+                const results3 = performNewtonIteration(f, derivative, x0_3);
+
+                if (!results1 || !results2 || !results3) {
+                    showAlert('計算失敗：無法執行迭代過程', 'error');
+                    return;
+                }
+
+                // 檢查是否有錯誤
+                if (results1.hasError || results2.hasError || results3.hasError) {
+                    const errorMsg = '計算遇到問題：可能是初始值導致的定義域錯誤（例如log(負數))或導數無法計算';
+                    showAlert(errorMsg, 'error');
+                    return;
+                }
+
+                // 顯示結果
+                displayResults(results1, results2, results3);
+
+            } catch (error) {
+                showAlert('計算錯誤：' + error.message, 'error');
+            }
+        }
+
+        function performNewtonIteration(f, derivative, x0) {
+            const results = [];
+            let xn = x0;
+            let converged = false;
+            let convergentValue = null;
+            let lastFx = null;
+            let iterationCount = 0;
+            let hasError = false;
+
+            for (let i = 0; i < 50; i++) {
+                try {
+                    // 對於可能含有 log 的函數，在評估前取絕對值
+                    const xn_safe = Math.abs(xn);
+
+                    // 評估函數值
+                    const fx = f.evaluate({ x: xn_safe });
+
+                    // 檢查函數值有效性
+                    if (!isFinite(fx)) {
+                        hasError = true;
+                        break;
+                    }
+
+                    // 計算導數（也使用安全值）
+                    const fpx = derivative(xn_safe);
+
+                    // 檢查導數有效性
+                    if (fpx === null || !isFinite(fpx) || Math.abs(fpx) < 1e-15) {
+                        hasError = true;
+                        break;
+                    }
+
+                    const xnNext = xn_safe - fx / fpx;
+
+                    // 檢查下一個x值有效性
+                    if (!isFinite(xnNext)) {
+                        hasError = true;
+                        break;
+                    }
+
+                    const delta = Math.abs(xnNext - xn_safe);
+
+                    results.push({
+                        n: i,
+                        xn: xn_safe,
+                        fx: fx,
+                        delta: delta,
+                        xnNext: xnNext
+                    });
+
+                    lastFx = fx;
+                    iterationCount = i + 1;
+
+                    // 收斂檢查
+                    if (delta < 1e-15 && Math.abs(fx) < 1e-15) {
+                        converged = true;
+                        convergentValue = xnNext;
+                        break;
+                    }
+
+                    xn = Math.abs(xnNext);
+                } catch (e) {
+                    hasError = true;
+                    break;
+                }
+            }
+
+            return {
+                results: results,
+                x0: x0,
+                root: convergentValue || xn,
+                fx: lastFx,
+                iterations: iterationCount,
+                converged: converged,
+                hasError: hasError
+            };
+        }
+
+        function displayResults(data1, data2, data3) {
+            // 填充三個表格
+            fillTable('resultsTable1', data1.results);
+            fillTable('resultsTable2', data2.results);
+            fillTable('resultsTable3', data3.results);
+
+            // 更新三組統計信息
+            updateStats(data1, '1');
+            updateStats(data2, '2');
+            updateStats(data3, '3');
+
+            // 顯示結果卡片和統計
+            document.getElementById('statsContainer').classList.remove('hidden');
+            document.getElementById('resultsCard').classList.remove('hidden');
+
+            // 顯示成功信息
+            const alertContainer = document.getElementById('alertContainer');
+            showAlert('✓ 計算完成！已顯示三個初始值的結果', 'success');
+        }
+
+        function fillTable(tableId, results) {
+            const tableBody = document.getElementById(tableId);
+            tableBody.innerHTML = '';
+
+            results.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.n}</td>
+                    <td>${formatNumber(row.xn)}</td>
+                    <td>${formatNumber(row.fx)}</td>
+                    <td>${formatNumber(row.delta)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function updateStats(data, suffix) {
+            document.getElementById(`convergentRoot${suffix}`).textContent = formatNumber(data.root);
+            document.getElementById(`functionValue${suffix}`).textContent = formatNumber(data.fx);
+            document.getElementById(`iterations${suffix}`).textContent = data.iterations;
+            document.getElementById(`error${suffix}`).textContent = formatNumber(Math.abs(data.fx));
+        }
+
+        function formatNumber(num) {
+            if (typeof num !== 'number' || isNaN(num)) return 'N/A';
+
+            // 如果是很小的數字，使用科學記號
+            if (Math.abs(num) < 1e-6 && num !== 0) {
+                return num.toExponential(10);
+            }
+
+            // 否則保留15位有效數字
+            return parseFloat(num.toPrecision(15));
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = `alert--${type}`;
+            alertContainer.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+        }
+
+        // 初始化：加載頁面時顯示範例
+        window.addEventListener('load', () => {
+            showAlert('準備就緒！請輸入方程式和初始值，點擊「開始計算」按鈕', 'info');
+        });
+    </script>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>Newton Iteration 牛頓迭代法</h2>
+    </div>
+
+</body>
+
+</html>
