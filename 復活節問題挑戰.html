@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>復活節問題挑戰</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', '微軟正黑體', Arial, sans-serif;
+            background: linear-gradient(135deg, #FFE5B4 0%, #FFDAB9 25%, #FFB6C1 50%, #DDA0DD 75%, #E0FFFF 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 復活節彩蛋裝飾 */
+        .egg-decoration {
+            position: fixed;
+            font-size: 60px;
+            opacity: 0.3;
+            z-index: 1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .egg-1 {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .egg-2 {
+            top: 20%;
+            right: 8%;
+            animation-delay: 1s;
+        }
+
+        .egg-3 {
+            bottom: 15%;
+            left: 12%;
+            animation-delay: 2s;
+        }
+
+        .egg-4 {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+
+        .egg-5 {
+            top: 50%;
+            left: 2%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(20px);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* 主頁面容器 */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #D63384;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* 問題方格網格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border: 3px solid #FF8C00;
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px;
+        }
+
+        .question-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        .question-card.question-b {
+            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+            border-color: #FF1493;
+        }
+
+        .question-card.question-c {
+            background: linear-gradient(135deg, #87CEEB 0%, #4169E1 100%);
+            border-color: #4169E1;
+        }
+
+        .question-card.question-d {
+            background: linear-gradient(135deg, #98FB98 0%, #32CD32 100%);
+            border-color: #32CD32;
+        }
+
+        .question-card.question-e {
+            background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+            border-color: #FF69B4;
+        }
+
+        /* 問題頁面 */
+        .question-page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 100%;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .question-page.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-page h2 {
+            font-size: 24px;
+            color: #D63384;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-page .question-text {
+            font-size: 20px;
+            color: #333;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 5px solid #D63384;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 26px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, #C8E6C9 0%, #DCEDC8 100%);
+            border-color: #2E7D32;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-color: #2E7D32;
+        }
+
+        /* 返回按鈕 */
+        .back-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 查看所有按鈕 */
+        .view-all-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            margin-left: 10px;
+        }
+
+        .view-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .view-all-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 組別輸入欄 */
+        .group-input {
+            width: 100%;
+            max-width: 120px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 14px;
+            border: 2px solid #FFD700;
+            border-radius: 8px;
+            text-align: center;
+            background: #fff9e6;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .group-input:focus {
+            outline: none;
+            border-color: #FF8C00;
+            box-shadow: 0 0 8px rgba(255, 140, 0, 0.3);
+        }
+
+        /* 問題總表 */
+        .summary-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #F5F5F5 0%, #FFFACD 100%);
+            border-left: 5px solid #D63384;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .summary-letter {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary-card:nth-child(2) .summary-letter {
+            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+        }
+
+        .summary-card:nth-child(3) .summary-letter {
+            background: linear-gradient(135deg, #87CEEB 0%, #4169E1 100%);
+        }
+
+        .summary-card:nth-child(4) .summary-letter {
+            background: linear-gradient(135deg, #98FB98 0%, #32CD32 100%);
+        }
+
+        .summary-card:nth-child(5) .summary-letter {
+            background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #D63384;
+            margin-bottom: 8px;
+        }
+
+        .summary-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* 兔子表情 */
+        .bunny-emoji {
+            font-size: 50px;
+            margin: 20px 0;
+            animation: wiggle 0.8s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-5deg);
+            }
+
+            75% {
+                transform: rotate(5deg);
+            }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 36px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .question-card {
+                font-size: 28px;
+                padding: 20px;
+                min-height: 120px;
+            }
+
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 復活節彩蛋裝飾 -->
+    <div class="egg-decoration egg-1">🥚</div>
+    <div class="egg-decoration egg-2">🌷</div>
+    <div class="egg-decoration egg-3">🐰</div>
+    <div class="egg-decoration egg-4">🥚</div>
+    <div class="egg-decoration egg-5">🌷</div>
+
+    <!-- 主頁面 -->
+    <div id="mainPage" class="container">
+        <div class="title">🐰 復活節問題挑戰 🥚</div>
+        <div class="subtitle">點擊下方選擇問題或查看所有問題</div>
+
+        <div class="grid">
+            <div style="text-align: center;">
+                <div class="question-card" onclick="showQuestion('question-a')">點心</div>
+                <input type="text" class="group-input" id="groupA" placeholder="組別" onchange="updateGroupDisplay()">
+            </div>
+            <div style="text-align: center;">
+                <div class="question-card question-b" onclick="showQuestion('question-b')">的士</div>
+                <input type="text" class="group-input" id="groupB" placeholder="組別" onchange="updateGroupDisplay()">
+            </div>
+            <div style="text-align: center;">
+                <div class="question-card question-c" onclick="showQuestion('question-c')">觀塘區</div>
+                <input type="text" class="group-input" id="groupC" placeholder="組別" onchange="updateGroupDisplay()">
+            </div>
+            <div style="text-align: center;">
+                <div class="question-card question-d" onclick="showQuestion('question-d')">港鐵</div>
+                <input type="text" class="group-input" id="groupD" placeholder="組別" onchange="updateGroupDisplay()">
+            </div>
+            <div style="text-align: center;">
+                <div class="question-card question-e" onclick="showQuestion('question-e')">公眾假期</div>
+                <input type="text" class="group-input" id="groupE" placeholder="組別" onchange="updateGroupDisplay()">
+            </div>
+        </div>
+        <button class="view-all-btn" onclick="showSummary()">📋 查看所有問題</button>
+    </div>
+
+    <!-- 問題總表頁面 -->
+    <div id="summaryPage" class="question-page">
+        <h2>📋 所有問題總表</h2>
+        <div class="summary-container">
+            <div class="summary-card">
+                <div class="summary-letter">點心</div>
+                <div style="flex: 1;">
+                    <div class="summary-title">點心 <span style="color: #FF8C00; font-weight: bold;"
+                            id="display-groupA"></span></div>
+                    <div class="summary-text">哪些是香港茶樓常見點心？</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-letter">的士</div>
+                <div style="flex: 1;">
+                    <div class="summary-title">的士<span style="color: #FF8C00; font-weight: bold;"
+                            id="display-groupB"></span></div>
+                    <div class="summary-text">哪幾種是香港傳統的士車身主要顏色？</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-letter">觀塘區</div>
+                <div style="flex: 1;">
+                    <div class="summary-title">觀塘區<span style="color: #FF8C00; font-weight: bold;"
+                            id="display-groupC"></span></div>
+                    <div class="summary-text">哪些地方屬於觀塘區？</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-letter">港鐵</div>
+                <div style="flex: 1;">
+                    <div class="summary-title">港鐵<span style="color: #FF8C00; font-weight: bold;"
+                            id="display-groupD"></span></div>
+                    <div class="summary-text">哪些是港鐵現有路線的正式名稱？</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-letter">公眾假期</div>
+                <div style="flex: 1;">
+                    <div class="summary-title">公眾假期<span style="color: #FF8C00; font-weight: bold;"
+                            id="display-groupE"></span></div>
+                    <div class="summary-text">哪些日子是香港2026年的公眾假期？</div>
+                </div>
+            </div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <!-- 問題A -->
+    <div id="question-a" class="question-page">
+        <h2>點心問題</h2>
+        <div class="bunny-emoji">🐰</div>
+        <div class="question-text">
+            哪些是香港茶樓常見點心？
+        </div>
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">砵仔糕</div>
+            <div class="option" onclick="selectOption(this)">雲吞</div>
+            <div class="option" onclick="selectOption(this)">西多士</div>
+            <div class="option" onclick="selectOption(this)">棉花雞</div>
+            <div class="option" onclick="selectOption(this)">咖哩魚蛋</div>
+            <div class="option" onclick="selectOption(this)">雞蛋仔</div>
+            <div class="option" onclick="selectOption(this)">喳咋</div>
+            <div class="option" onclick="selectOption(this)">豬扒包</div>
+            <div class="option" onclick="selectOption(this)">花卷</div>
+            <div class="option" onclick="selectOption(this)">銀絲卷</div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <!-- 問題B -->
+    <div id="question-b" class="question-page">
+        <h2>的士問題</h2>
+        <div class="bunny-emoji">🗺️</div>
+        <div class="question-text">
+            哪幾種是香港傳統的士車身主要顏色？
+        </div>
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">白</div>
+            <div class="option" onclick="selectOption(this)">橙</div>
+            <div class="option" onclick="selectOption(this)">黑</div>
+            <div class="option" onclick="selectOption(this)">粉紅</div>
+            <div class="option" onclick="selectOption(this)">藍</div>
+            <div class="option" onclick="selectOption(this)">灰</div>
+            <div class="option" onclick="selectOption(this)">紅</div>
+            <div class="option" onclick="selectOption(this)">紫</div>
+            <div class="option" onclick="selectOption(this)">黃</div>
+            <div class="option" onclick="selectOption(this)">綠</div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <!-- 問題C -->
+    <div id="question-c" class="question-page">
+        <h2>觀塘區問題</h2>
+        <div class="bunny-emoji">🥚</div>
+        <div class="question-text">
+            哪些地方屬於觀塘區？
+        </div>
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">啟德</div>
+            <div class="option" onclick="selectOption(this)">茶果嶺</div>
+            <div class="option" onclick="selectOption(this)">彩虹</div>
+            <div class="option" onclick="selectOption(this)">油塘</div>
+            <div class="option" onclick="selectOption(this)">牛池灣</div>
+            <div class="option" onclick="selectOption(this)">調景嶺</div>
+            <div class="option" onclick="selectOption(this)">秀茂坪</div>
+            <div class="option" onclick="selectOption(this)">佐敦谷</div>
+            <div class="option" onclick="selectOption(this)">九龍灣</div>
+            <div class="option" onclick="selectOption(this)">牛頭角</div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <!-- 問題D -->
+    <div id="question-d" class="question-page">
+        <h2>港鐵問題</h2>
+        <div class="bunny-emoji">⛪</div>
+        <div class="question-text">
+            哪些是港鐵現有路線的正式名稱？
+        </div>
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">將軍澳綫</div>
+            <div class="option" onclick="selectOption(this)">港島綫</div>
+            <div class="option" onclick="selectOption(this)">西鐵綫</div>
+            <div class="option" onclick="selectOption(this)">迪士尼綫</div>
+            <div class="option" onclick="selectOption(this)">沙中綫</div>
+            <div class="option" onclick="selectOption(this)">機場快綫</div>
+            <div class="option" onclick="selectOption(this)">南港島綫</div>
+            <div class="option" onclick="selectOption(this)">青衣綫</div>
+            <div class="option" onclick="selectOption(this)">屯馬綫</div>
+            <div class="option" onclick="selectOption(this)">東鐵綫</div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <!-- 問題E -->
+    <div id="question-e" class="question-page">
+        <h2>公眾假期問題</h2>
+        <div class="bunny-emoji">🌷</div>
+        <div class="question-text">
+            哪些日子是香港2026年的公眾假期？
+        </div>
+        <div class="options-container">
+            <div class="option" onclick="selectOption(this)">農曆年三十晚</div>
+            <div class="option" onclick="selectOption(this)">耶穌受難節翌日</div>
+            <div class="option" onclick="selectOption(this)">中秋節</div>
+            <div class="option" onclick="selectOption(this)">平安夜</div>
+            <div class="option" onclick="selectOption(this)">勞動節</div>
+            <div class="option" onclick="selectOption(this)">一月一日</div>
+            <div class="option" onclick="selectOption(this)">農曆年初四</div>
+            <div class="option" onclick="selectOption(this)">耶穌受難節</div>
+            <div class="option" onclick="selectOption(this)">除夕</div>
+            <div class="option" onclick="selectOption(this)">中秋節翌日</div>
+        </div>
+        <button class="back-btn" onclick="backToMain()">← 返回</button>
+    </div>
+
+    <script>
+        function showQuestion(questionId) {
+            // 隱藏主頁面
+            document.getElementById('mainPage').style.display = 'none';
+
+            // 顯示選定的問題頁面
+            const allPages = document.querySelectorAll('.question-page');
+            allPages.forEach(page => page.classList.remove('active'));
+            document.getElementById(questionId).classList.add('active');
+        }
+
+        function showSummary() {
+            // 隱藏主頁面
+            document.getElementById('mainPage').style.display = 'none';
+
+            // 顯示總表頁面
+            const allPages = document.querySelectorAll('.question-page');
+            allPages.forEach(page => page.classList.remove('active'));
+            document.getElementById('summaryPage').classList.add('active');
+        }
+
+        function backToMain() {
+            // 隱藏所有問題頁面
+            document.querySelectorAll('.question-page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 清除所有選中狀態
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 顯示主頁面
+            document.getElementById('mainPage').style.display = 'block';
+        }
+
+        function selectOption(element) {
+            // 移除同一容器內其他選項的選中狀態
+            const container = element.parentElement;
+            container.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 為點擊的選項添加選中狀態
+            element.classList.add('selected');
+        }
+
+        function updateGroupDisplay() {
+            // 更新總表中的組別顯示
+            const groupA = document.getElementById('groupA').value;
+            const groupB = document.getElementById('groupB').value;
+            const groupC = document.getElementById('groupC').value;
+            const groupD = document.getElementById('groupD').value;
+            const groupE = document.getElementById('groupE').value;
+
+            // 在總表中顯示組別
+            document.getElementById('display-groupA').textContent = groupA ? `[${groupA}]` : '';
+            document.getElementById('display-groupB').textContent = groupB ? `[${groupB}]` : '';
+            document.getElementById('display-groupC').textContent = groupC ? `[${groupC}]` : '';
+            document.getElementById('display-groupD').textContent = groupD ? `[${groupD}]` : '';
+            document.getElementById('display-groupE').textContent = groupE ? `[${groupE}]` : '';
+        }
+    </script>
+</body>
+
+</html>
