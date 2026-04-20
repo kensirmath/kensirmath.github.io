@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="zh-HK" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔力橋組合檢查器</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root,
+        [data-theme="light"] {
+            --color-bg: #f5f4f0;
+            --color-surface: #f9f8f5;
+            --color-surface-2: #ffffff;
+            --color-surface-offset: #efede8;
+            --color-surface-dynamic: #e6e3dd;
+            --color-divider: #dcd9d4;
+            --color-border: #d0cdc7;
+            --color-text: #26231c;
+            --color-text-muted: #7a7872;
+            --color-text-faint: #b8b6b0;
+            --color-text-inverse: #f9f8f4;
+            --color-primary: #01696f;
+            --color-primary-hover: #0c4e54;
+            --color-primary-highlight: #cedcd8;
+            --color-success: #437a22;
+            --color-success-highlight: #d4dfcc;
+            --color-error: #b5273c;
+            --color-error-highlight: #f5d0d6;
+            --color-warning: #964219;
+            --color-warning-highlight: #f2ddd0;
+            --color-gold: #b07800;
+            --color-gold-bg: #f0e5c0;
+            --tile-red: #d42b2b;
+            --tile-blue: #1a6acd;
+            --tile-black: #333333;
+            --tile-orange: #e07400;
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+            --shadow-sm: 0 1px 2px rgba(30, 20, 10, 0.07);
+            --shadow-md: 0 4px 12px rgba(30, 20, 10, 0.09);
+            --shadow-lg: 0 12px 32px rgba(30, 20, 10, 0.13);
+            --tr: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+            --font-body: 'Noto Sans HK', sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --text-xs: clamp(0.72rem, 0.68rem + 0.2vw, 0.82rem);
+            --text-sm: clamp(0.875rem, 0.82rem + 0.28vw, 1rem);
+            --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+            --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.4rem);
+            --sp1: 0.25rem;
+            --sp2: 0.5rem;
+            --sp3: 0.75rem;
+            --sp4: 1rem;
+            --sp5: 1.25rem;
+            --sp6: 1.5rem;
+            --sp8: 2rem;
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #171614;
+            --color-surface: #1c1b19;
+            --color-surface-2: #201f1d;
+            --color-surface-offset: #222120;
+            --color-surface-dynamic: #2d2c2a;
+            --color-divider: #262523;
+            --color-border: #393836;
+            --color-text: #cdccca;
+            --color-text-muted: #797876;
+            --color-text-faint: #5a5957;
+            --color-text-inverse: #2b2a28;
+            --color-primary: #4f98a3;
+            --color-primary-hover: #227f8b;
+            --color-primary-highlight: #1e3436;
+            --color-success: #6daa45;
+            --color-success-highlight: #1e2d18;
+            --color-error: #e06070;
+            --color-error-highlight: #2e1820;
+            --color-warning: #bb653b;
+            --color-warning-highlight: #2e2018;
+            --color-gold: #e8af34;
+            --color-gold-bg: #2a2010;
+            --tile-red: #e85555;
+            --tile-blue: #5091e0;
+            --tile-black: #aaaaaa;
+            --tile-orange: #f09030;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            -webkit-text-size-adjust: none;
+            scroll-behavior: smooth
+        }
+
+        body {
+            min-height: 100dvh;
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--color-text);
+            background: var(--color-bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font: inherit;
+            color: inherit
+        }
+
+        * {
+            transition: color var(--tr), background-color var(--tr), border-color var(--tr), box-shadow var(--tr)
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 3px;
+            border-radius: var(--radius-sm)
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-divider);
+            box-shadow: var(--shadow-sm);
+            padding: var(--sp3) var(--sp6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--sp4)
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--sp3)
+        }
+
+        .logo-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            letter-spacing: -0.02em
+        }
+
+        .logo-sub {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            margin-top: -2px
+        }
+
+        .theme-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            background: var(--color-surface-offset);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            flex-shrink: 0
+        }
+
+        .theme-btn:hover {
+            background: var(--color-surface-dynamic);
+            color: var(--color-text)
+        }
+
+        .main {
+            max-width: 920px;
+            margin-inline: auto;
+            padding: var(--sp8) var(--sp4)
+        }
+
+        /* Card */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--sp6);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--sp6)
+        }
+
+        .card-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            margin-bottom: var(--sp4);
+            display: flex;
+            align-items: center;
+            gap: var(--sp2)
+        }
+
+        .card-title .icon {
+            width: 28px;
+            height: 28px;
+            background: var(--color-primary-highlight);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+            flex-shrink: 0
+        }
+
+        /* ===== QUICK INPUT PANEL ===== */
+        .qi-panel {
+            background: var(--color-surface-offset);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--sp4)
+        }
+
+        .qi-colors {
+            display: flex;
+            border-bottom: 1px solid var(--color-border)
+        }
+
+        .qi-color-btn {
+            flex: 1;
+            padding: var(--sp2) var(--sp1);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            border-right: 1px solid var(--color-border);
+            background: var(--color-surface-offset);
+            color: var(--color-text-muted);
+            transition: background var(--tr), color var(--tr)
+        }
+
+        .qi-color-btn:last-child {
+            border-right: none
+        }
+
+        .qi-color-btn .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: var(--radius-full);
+            flex-shrink: 0
+        }
+
+        .qi-color-btn.active {
+            background: var(--color-surface-2);
+            color: var(--color-text);
+            box-shadow: inset 0 -2px 0 var(--active-color)
+        }
+
+        .qi-color-btn:hover:not(.active) {
+            background: var(--color-surface-dynamic)
+        }
+
+        .qi-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--sp1);
+            padding: var(--sp3)
+        }
+
+        @media(max-width:480px) {
+            .qi-grid {
+                grid-template-columns: repeat(5, 1fr)
+            }
+        }
+
+        .qi-num {
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--color-surface-2);
+            border: 1px solid var(--color-border);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: var(--text-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-text-muted);
+            transition: background var(--tr), color var(--tr), border-color var(--tr), transform var(--tr)
+        }
+
+        .qi-num:hover {
+            background: var(--color-surface-dynamic);
+            color: var(--color-text);
+            transform: translateY(-1px);
+            border-color: var(--active-color, var(--color-border))
+        }
+
+        .qi-num:active {
+            transform: translateY(0)
+        }
+
+        /* Color-specific active borders */
+        .qi-color-btn[data-c="red"] {
+            --active-color: var(--tile-red)
+        }
+
+        .qi-color-btn[data-c="blue"] {
+            --active-color: var(--tile-blue)
+        }
+
+        .qi-color-btn[data-c="black"] {
+            --active-color: var(--tile-black)
+        }
+
+        .qi-color-btn[data-c="orange"] {
+            --active-color: var(--tile-orange)
+        }
+
+        .qi-color-btn[data-c="joker"] {
+            --active-color: var(--color-gold)
+        }
+
+        /* Active color themes for number buttons */
+        .qi-panel[data-active="red"] .qi-num:hover {
+            color: var(--tile-red);
+            border-color: var(--tile-red)
+        }
+
+        .qi-panel[data-active="blue"] .qi-num:hover {
+            color: var(--tile-blue);
+            border-color: var(--tile-blue)
+        }
+
+        .qi-panel[data-active="black"] .qi-num:hover {
+            color: var(--tile-black);
+            border-color: var(--tile-black)
+        }
+
+        .qi-panel[data-active="orange"] .qi-num:hover {
+            color: var(--tile-orange);
+            border-color: var(--tile-orange)
+        }
+
+        /* Joker row */
+        .qi-joker-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--sp1);
+            padding: 0 var(--sp3) var(--sp3)
+        }
+
+        .qi-joker-btn {
+            padding: var(--sp1) var(--sp3);
+            border-radius: var(--radius-sm);
+            background: var(--color-gold-bg);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .qi-joker-btn:hover {
+            background: var(--color-gold);
+            color: var(--color-text-inverse)
+        }
+
+        /* ===== TILES AREA ===== */
+        .tiles-area {
+            min-height: 80px;
+            background: var(--color-surface-offset);
+            border: 1px dashed var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp3);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--sp2);
+            align-items: flex-start;
+            margin-bottom: var(--sp4)
+        }
+
+        .tiles-empty {
+            color: var(--color-text-faint);
+            font-size: var(--text-sm);
+            width: 100%;
+            text-align: center;
+            padding: var(--sp4)
+        }
+
+        /* Tile */
+        .tile {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            min-height: 62px;
+            background: var(--color-surface-2);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: transform var(--tr), box-shadow var(--tr)
+        }
+
+        .tile:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md)
+        }
+
+        .tile .tn {
+            font-size: 1.05rem;
+            line-height: 1
+        }
+
+        .tile .tl {
+            font-size: 0.5rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            margin-top: 2px;
+            text-transform: uppercase;
+            color: var(--color-text-muted)
+        }
+
+        .tile .tj {
+            font-size: 0.48rem;
+            letter-spacing: 0.02em;
+            margin-top: 1px;
+            text-transform: none;
+            color: var(--color-text-faint);
+            max-width: 46px;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis
+        }
+
+        .tile .del {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 18px;
+            height: 18px;
+            background: var(--color-error);
+            color: white;
+            border-radius: var(--radius-full);
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity var(--tr);
+            z-index: 1
+        }
+
+        .tile:hover .del {
+            opacity: 1
+        }
+
+        .tile[data-c="red"] {
+            color: var(--tile-red);
+            border-color: rgba(212, 43, 43, 0.3)
+        }
+
+        .tile[data-c="blue"] {
+            color: var(--tile-blue);
+            border-color: rgba(26, 106, 205, 0.3)
+        }
+
+        .tile[data-c="black"] {
+            color: var(--tile-black);
+            border-color: rgba(51, 51, 51, 0.2)
+        }
+
+        .tile[data-c="orange"] {
+            color: var(--tile-orange);
+            border-color: rgba(224, 116, 0, 0.3)
+        }
+
+        .tile[data-c="joker"] {
+            color: var(--color-gold);
+            background: var(--color-gold-bg);
+            border-color: var(--color-gold)
+        }
+
+        .tile[data-c="double-joker"] {
+            color: var(--color-gold);
+            background: var(--color-gold-bg);
+            border: 2px dashed var(--color-gold)
+        }
+
+        .tile[data-c="color-joker"] {
+            background: linear-gradient(135deg, rgba(212, 43, 43, 0.15), rgba(26, 106, 205, 0.15));
+            border-color: var(--color-gold);
+            color: var(--color-gold)
+        }
+
+        .tile[data-c="mirror-joker"] {
+            background: linear-gradient(90deg, var(--color-surface-offset), var(--color-surface-2));
+            border-color: var(--color-text-muted);
+            color: var(--color-text-muted)
+        }
+
+        /* Score row */
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: var(--sp3);
+            padding: var(--sp3) var(--sp4);
+            background: var(--color-surface-offset);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--sp4);
+            flex-wrap: wrap
+        }
+
+        .score-item {
+            font-size: var(--text-sm)
+        }
+
+        .score-num {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: var(--text-base)
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            gap: var(--sp3);
+            flex-wrap: wrap
+        }
+
+        .btn-check {
+            padding: var(--sp3) var(--sp8);
+            background: var(--color-primary);
+            color: var(--color-text-inverse);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: var(--text-base);
+            box-shadow: var(--shadow-sm)
+        }
+
+        .btn-check:hover {
+            background: var(--color-primary-hover)
+        }
+
+        .btn-clear {
+            padding: var(--sp3) var(--sp6);
+            background: var(--color-surface-offset);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: var(--text-sm);
+            color: var(--color-text-muted)
+        }
+
+        .btn-clear:hover {
+            background: var(--color-surface-dynamic);
+            color: var(--color-text)
+        }
+
+        /* Result */
+        .result-box {
+            border-radius: var(--radius-lg);
+            padding: var(--sp4) var(--sp5);
+            margin-top: var(--sp5);
+            display: none;
+            animation: fadeIn 0.22s ease
+        }
+
+        .result-box.show {
+            display: block
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .result-box.valid {
+            background: var(--color-success-highlight);
+            border: 1.5px solid var(--color-success)
+        }
+
+        .result-box.invalid {
+            background: var(--color-error-highlight);
+            border: 1.5px solid var(--color-error)
+        }
+
+        .result-hl {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--sp2);
+            margin-bottom: var(--sp2);
+            flex-wrap: wrap
+        }
+
+        .result-box.valid .result-hl {
+            color: var(--color-success)
+        }
+
+        .result-box.invalid .result-hl {
+            color: var(--color-error)
+        }
+
+        .result-detail {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted)
+        }
+
+        .rtag {
+            display: inline-block;
+            padding: 1px var(--sp2);
+            background: var(--color-surface-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            margin-left: 3px;
+            border: 1px solid var(--color-border);
+            color: var(--color-text)
+        }
+
+        /* Rules */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--sp4)
+        }
+
+        @media(max-width:600px) {
+            .rules-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .rule-card {
+            background: var(--color-surface-2);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--sp4)
+        }
+
+        .rule-title {
+            font-weight: 700;
+            font-size: var(--text-sm);
+            margin-bottom: var(--sp2);
+            display: flex;
+            align-items: center;
+            gap: var(--sp2)
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 600
+        }
+
+        .bg-group {
+            background: rgba(212, 43, 43, 0.1);
+            color: var(--tile-red)
+        }
+
+        .bg-run {
+            background: rgba(26, 106, 205, 0.1);
+            color: var(--tile-blue)
+        }
+
+        .bg-joker {
+            background: var(--color-gold-bg);
+            color: var(--color-gold)
+        }
+
+        .rule-card ul {
+            list-style: none;
+            padding: 0
+        }
+
+        .rule-card li {
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            padding: var(--sp1) 0 var(--sp1) var(--sp4);
+            position: relative;
+            border-bottom: 1px solid var(--color-divider)
+        }
+
+        .rule-card li:last-child {
+            border-bottom: none
+        }
+
+        .rule-card li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: 700
+        }
+
+        .rule-eg {
+            margin-top: var(--sp3);
+            padding: var(--sp2) var(--sp3);
+            background: var(--color-surface-offset);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            line-height: 1.9
+        }
+
+        .er {
+            color: var(--tile-red);
+            font-weight: 700
+        }
+
+        .eb {
+            color: var(--tile-blue);
+            font-weight: 700
+        }
+
+        .ek {
+            color: var(--tile-black);
+            font-weight: 700
+        }
+
+        .eo {
+            color: var(--tile-orange);
+            font-weight: 700
+        }
+
+        .eg {
+            color: var(--color-gold);
+            font-weight: 700
+        }
+
+        /* Joker tiles visual in rules */
+        .jcard {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: var(--text-xs);
+            font-weight: 600;
+            vertical-align: middle
+        }
+
+        .jcard-std {
+            background: var(--color-gold-bg);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold)
+        }
+
+        .jcard-dbl {
+            background: var(--color-gold-bg);
+            border: 1.5px dashed var(--color-gold);
+            color: var(--color-gold)
+        }
+
+        .jcard-cc {
+            background: linear-gradient(90deg, rgba(212, 43, 43, 0.15), rgba(26, 106, 205, 0.15));
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold)
+        }
+
+        .jcard-mir {
+            background: var(--color-surface-offset);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted)
+        }
+
+        .info-box {
+            padding: var(--sp3) var(--sp4);
+            border-radius: var(--radius-md);
+            margin-top: var(--sp4);
+            font-size: var(--text-sm)
+        }
+
+        .info-gold {
+            background: var(--color-gold-bg);
+            border: 1px solid var(--color-gold);
+            color: var(--color-text-muted)
+        }
+
+        .info-gold strong {
+            color: var(--color-gold)
+        }
+
+        .info-teal {
+            background: var(--color-primary-highlight);
+            border: 1px solid var(--color-primary);
+            color: var(--color-text-muted)
+        }
+
+        .info-teal strong {
+            color: var(--color-primary)
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--sp8) var(--sp4);
+            color: var(--color-text-faint);
+            font-size: var(--text-xs);
+            border-top: 1px solid var(--color-divider);
+            margin-top: var(--sp8)
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo-wrap">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-label="魔力橋 Logo">
+                <rect width="36" height="36" rx="8" fill="var(--color-primary)" />
+                <rect x="5" y="9" width="11" height="13" rx="2.5" fill="white" opacity="0.9" />
+                <text x="10.5" y="20" font-family="monospace" font-size="9" font-weight="900" fill="#d42b2b"
+                    text-anchor="middle">7</text>
+                <rect x="20" y="9" width="11" height="13" rx="2.5" fill="white" opacity="0.75" />
+                <text x="25.5" y="20" font-family="monospace" font-size="9" font-weight="900" fill="#1a6acd"
+                    text-anchor="middle">7</text>
+                <rect x="12" y="23" width="12" height="10" rx="2.5" fill="white" opacity="0.55" />
+                <text x="18" y="31" font-family="monospace" font-size="8" font-weight="900" fill="#e07400"
+                    text-anchor="middle">7</text>
+            </svg>
+            <div>
+                <div class="logo-title">魔力橋檢查器</div>
+                <div class="logo-sub">Rummikub Combination Validator</div>
+            </div>
+        </div>
+        <button class="theme-btn" data-theme-toggle aria-label="切換主題">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+        </button>
+    </header>
+
+    <main class="main">
+
+        <!-- Builder -->
+        <div class="card">
+            <h2 class="card-title"><span class="icon">🃏</span>建立組合</h2>
+
+            <!-- Quick Input Panel -->
+            <div class="qi-panel" id="qi-panel" data-active="red">
+                <!-- Color selector tabs -->
+                <div class="qi-colors">
+                    <button class="qi-color-btn active" data-c="red" style="--active-color:var(--tile-red)"
+                        onclick="setColor(this)">
+                        <span class="dot" style="background:var(--tile-red)"></span>紅
+                    </button>
+                    <button class="qi-color-btn" data-c="blue" style="--active-color:var(--tile-blue)"
+                        onclick="setColor(this)">
+                        <span class="dot" style="background:var(--tile-blue)"></span>藍
+                    </button>
+                    <button class="qi-color-btn" data-c="black" style="--active-color:var(--tile-black)"
+                        onclick="setColor(this)">
+                        <span class="dot" style="background:var(--tile-black)"></span>黑
+                    </button>
+                    <button class="qi-color-btn" data-c="orange" style="--active-color:var(--tile-orange)"
+                        onclick="setColor(this)">
+                        <span class="dot" style="background:var(--tile-orange)"></span>橙
+                    </button>
+                    <button class="qi-color-btn" data-c="joker" style="--active-color:var(--color-gold)"
+                        onclick="setColor(this)">
+                        <span class="dot" style="background:var(--color-gold)"></span>百搭
+                    </button>
+                </div>
+
+                <!-- Number grid (hidden when joker tab active) -->
+                <div class="qi-grid" id="qi-nums"></div>
+
+                <!-- Joker type buttons (shown only when joker tab active) -->
+                <div class="qi-joker-row" id="qi-jokers" style="display:none">
+                    <button class="qi-joker-btn" onclick="addJoker('joker')">🃏 標準百搭</button>
+                    <button class="qi-joker-btn" onclick="addJoker('double-joker')">🃏🃏 雙格百搭</button>
+                    <button class="qi-joker-btn" onclick="addJoker('color-joker')">🌈 換色百搭</button>
+                    <button class="qi-joker-btn" onclick="addJoker('mirror-joker')">🪞 鏡像百搭</button>
+                </div>
+            </div>
+
+            <!-- Tiles display -->
+            <div class="tiles-area" id="tiles-area">
+                <div class="tiles-empty" id="tiles-empty">點選上方顏色標籤後按數字加入牌。最少需要 3 塊牌。</div>
+            </div>
+
+            <!-- Score -->
+            <div class="score-row">
+                <div class="score-item">牌數：<span class="score-num" id="tile-count">0</span></div>
+                <div class="score-item">總點數：<span class="score-num" id="tile-score">0</span></div>
+                <div style="margin-left:auto;font-size:var(--text-xs);color:var(--color-text-faint)">百搭不計入顯示點數</div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-check" onclick="checkCombination()">✦ 檢查組合</button>
+                <button class="btn-clear" onclick="clearAll()">清除全部</button>
+            </div>
+
+            <div class="result-box" id="result-box">
+                <div class="result-hl" id="result-hl"></div>
+                <div class="result-detail" id="result-detail"></div>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div class="card">
+            <h2 class="card-title"><span class="icon">📖</span>官方規則參考</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-title"><span class="badge bg-group">組牌 Group</span></div>
+                    <ul>
+                        <li>由 <strong>3 或 4</strong> 塊相同數字組成</li>
+                        <li>每塊牌必須是<strong>不同顏色</strong></li>
+                        <li>同色不能重複出現</li>
+                        <li>百搭牌可代替任何位置</li>
+                    </ul>
+                    <div class="rule-eg">
+                        ✓ <span class="ek">黑7</span> <span class="er">紅7</span> <span class="eb">藍7</span><br>
+                        ✓ <span class="ek">黑7</span> <span class="er">紅7</span> <span class="eb">藍7</span> <span
+                            class="eo">橙7</span><br>
+                        ✗ <span class="er">紅7</span> <span class="er">紅7</span> <span class="eb">藍7</span>（顏色重複）
+                    </div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-title"><span class="badge bg-run">順牌 Run</span></div>
+                    <ul>
+                        <li>由<strong>最少 3</strong> 塊相同顏色組成</li>
+                        <li>數字必須<strong>連續遞增</strong></li>
+                        <li>數字範圍 <strong>1–13</strong>，不能循環</li>
+                        <li>百搭牌可填補空缺位置</li>
+                    </ul>
+                    <div class="rule-eg">
+                        ✓ <span class="eb">藍3</span> <span class="eb">藍4</span> <span class="eb">藍5</span><br>
+                        ✓ <span class="er">紅11</span> <span class="er">紅12</span> <span class="er">紅13</span><br>
+                        ✗ <span class="er">紅5</span> <span class="eb">藍6</span> <span class="er">紅7</span>（顏色不同）
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Jokers -->
+            <div style="margin-top:var(--sp5)">
+                <div
+                    style="font-weight:700;font-size:var(--text-sm);margin-bottom:var(--sp3);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.06em;font-size:var(--text-xs)">
+                    新版特殊百搭牌 · Rummikub With a Twist</div>
+                <div class="rules-grid">
+                    <div class="rule-card">
+                        <div class="rule-title"><span class="jcard jcard-std">🃏</span> 標準百搭</div>
+                        <ul>
+                            <li>可代替任何顏色、任何數字</li>
+                            <li>用於計算初始分時，取其所代替數字的值</li>
+                            <li>可被對應的真實牌換走</li>
+                            <li>持有百搭牌在架上罰 30 分</li>
+                        </ul>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-title"><span class="jcard jcard-dbl">🃏🃏</span> 雙格百搭</div>
+                        <ul>
+                            <li>同時代替<strong>兩塊連續</strong>位置的牌</li>
+                            <li>在組牌中代替兩種缺少的顏色</li>
+                            <li>不能用於 2 號之前或 12 號之後</li>
+                            <li>同組不能有兩塊雙格百搭</li>
+                        </ul>
+                        <div class="rule-eg">✓ <span class="eg">雙搭</span> <span class="eb">藍5</span> <span
+                                class="eb">藍6</span>（代替藍3藍4）<br>✓ <span class="ek">黑3</span> <span class="er">紅3</span>
+                            <span class="eg">雙搭</span>（代替藍3橙3）
+                        </div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-title"><span class="jcard jcard-cc">🌈</span> 換色百搭</div>
+                        <ul>
+                            <li>放在順牌中間，使顏色轉換</li>
+                            <li>兩側的牌必須<strong>各自同色且連續</strong></li>
+                            <li>換色百搭兩邊顏色<strong>不能相同</strong></li>
+                            <li>不能放在順牌的首尾位置</li>
+                        </ul>
+                        <div class="rule-eg">✓ <span class="eb">藍3</span> <span class="eb">藍4</span> <span
+                                class="eg">換色</span> <span class="er">紅6</span> <span
+                                class="er">紅7</span><br>（藍色4接換色再接紅色6，數字連續）</div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="rule-title"><span class="jcard jcard-mir">🪞</span> 鏡像百搭</div>
+                        <ul>
+                            <li>放在中間，兩側牌組必須<strong>鏡像對稱</strong></li>
+                            <li>計分時值為 0</li>
+                            <li>換出鏡像百搭後須立即使用</li>
+                            <li>可與換色百搭配合使用</li>
+                        </ul>
+                        <div class="rule-eg">✓ <span class="eb">藍4</span> <span class="eb">藍5</span> <span
+                                class="eg">鏡像</span> <span class="eb">藍5</span> <span class="eb">藍4</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box info-teal">
+                <strong>❄️ 破冰行動（Initial Meld）</strong><br>
+                首次出牌的數字總和必須達 <strong>30 分或以上</strong>（部分規則版本為 50 分）。完成後才可重組桌面上的牌。
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        基於 Rummikub 官方規則及 Rummikub With a Twist 版本 · 魔力橋® Lemada Light Industries Ltd.
+    </footer>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>魔力橋檢查 Rummikub Checking</h2>
+    </div>
+
+    <script>
+        // ===== STATE =====
+        let tiles = [];
+        let activeColor = 'red';
+
+        const colorNames = {
+            red: '紅', blue: '藍', black: '黑', orange: '橙',
+            joker: '百搭', 'double-joker': '雙搭', 'color-joker': '換色', 'mirror-joker': '鏡像'
+        };
+        const JOKER_TYPES = ['joker', 'double-joker', 'color-joker', 'mirror-joker'];
+        const REAL_COLORS = ['red', 'blue', 'black', 'orange'];
+
+        // ===== THEME =====
+        (function () {
+            const btn = document.querySelector('[data-theme-toggle]'), root = document.documentElement;
+            let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+            root.setAttribute('data-theme', d); setIcon(btn, d);
+            btn && btn.addEventListener('click', () => {
+                d = d === 'dark' ? 'light' : 'dark';
+                root.setAttribute('data-theme', d); setIcon(btn, d);
+            });
+            function setIcon(b, t) {
+                if (!b) return;
+                b.innerHTML = t === 'dark'
+                    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+                    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            }
+        })();
+
+        // ===== NUMBER PAD =====
+        (function () {
+            const grid = document.getElementById('qi-nums');
+            for (let i = 1; i <= 13; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'qi-num'; btn.textContent = i;
+                btn.addEventListener('click', () => addNumberTile(i));
+                grid.appendChild(btn);
+            }
+        })();
+
+        // ===== COLOR SELECTION =====
+        function setColor(btn) {
+            document.querySelectorAll('.qi-color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeColor = btn.dataset.c;
+            document.getElementById('qi-panel').dataset.active = activeColor;
+            const isJoker = activeColor === 'joker';
+            document.getElementById('qi-nums').style.display = isJoker ? 'none' : '';
+            document.getElementById('qi-jokers').style.display = isJoker ? 'flex' : 'none';
+        }
+
+        function addNumberTile(num) {
+            if (activeColor === 'joker') return;
+            tiles.push({ color: activeColor, num });
+            renderTiles(); hideResult();
+        }
+        function addJoker(type) {
+            tiles.push({ color: type, num: 0 });
+            renderTiles(); hideResult();
+        }
+
+        // ===== RENDER =====
+        const _emptyEl = document.getElementById('tiles-empty');
+
+        function renderTiles() {
+            const area = document.getElementById('tiles-area');
+            while (area.firstChild) area.removeChild(area.firstChild);
+            if (tiles.length === 0) {
+                _emptyEl.style.display = '';
+                area.appendChild(_emptyEl);
+            } else {
+                _emptyEl.style.display = 'none';
+                tiles.forEach((t, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'tile';
+                    el.setAttribute('data-c', t.color);
+                    const icons = { joker: '🃏', 'double-joker': '🃏²', 'color-joker': '🌈', 'mirror-joker': '🪞' };
+                    const isJ = JOKER_TYPES.includes(t.color);
+                    el.innerHTML =
+                        '<span class="tn">' + (isJ ? icons[t.color] : t.num) + '</span>' +
+                        '<span class="tl">' + colorNames[t.color] + '</span>' +
+                        '<span class="del" onclick="event.stopPropagation();removeTile(' + i + ')">✕</span>';
+                    el.addEventListener('click', () => removeTile(i));
+                    area.appendChild(el);
+                });
+            }
+            const score = tiles.reduce((s, t) => s + (JOKER_TYPES.includes(t.color) ? 0 : t.num), 0);
+            document.getElementById('tile-count').textContent = tiles.length;
+            document.getElementById('tile-score').textContent = score + (tiles.some(t => JOKER_TYPES.includes(t.color)) ? '+' : '');
+        }
+
+        function removeTile(i) { tiles.splice(i, 1); renderTiles(); hideResult(); }
+        function clearAll() { tiles = []; renderTiles(); hideResult(); }
+
+        // ===================================================================
+        // HELPERS
+        // ===================================================================
+        function isReal(t) { return REAL_COLORS.includes(t.color); }
+        function isStd(t) { return t.color === 'joker'; }
+        function isDbl(t) { return t.color === 'double-joker'; }
+        function isCC(t) { return t.color === 'color-joker'; }
+        function isMir(t) { return t.color === 'mirror-joker'; }
+        function isAnyJoker(t) { return JOKER_TYPES.includes(t.color); }
+
+        function fail(detail) { return { valid: false, detail }; }
+        function okResult(type, detail) { return { valid: true, type, detail }; }
+
+        // Expand tile array into flat slot array.
+        // double-joker → 2 joker slots; others → 1 slot.
+        // CC and Mirror jokers each count as 1 slot.
+        // Returns array of { kind: 'real'|'joker', num?, color? }
+        function expandSlots(ts) {
+            const slots = [];
+            for (const t of ts) {
+                if (isDbl(t)) {
+                    slots.push({ kind: 'joker' });
+                    slots.push({ kind: 'joker' });
+                } else if (isReal(t)) {
+                    slots.push({ kind: 'real', num: t.num, color: t.color });
+                } else {
+                    // std joker, CC joker, mirror joker → 1 slot
+                    slots.push({ kind: 'joker' });
+                }
+            }
+            return slots;
+        }
+
+        // Given expanded slots (joker/real), determine the unique sequence start X
+        // such that slot[i] has number X+i.  Real tile at slot i must equal X+i.
+        // Returns { ok, X, min, max, reason }
+        function resolveSequence(slots) {
+            const n = slots.length;
+            let X = null;
+            const realEntries = slots
+                .map((s, i) => s.kind === 'real' ? { i, num: s.num } : null)
+                .filter(Boolean);
+
+            // Check strictly increasing among real tiles
+            for (let k = 1; k < realEntries.length; k++) {
+                if (realEntries[k].num <= realEntries[k - 1].num) {
+                    return { ok: false, reason: '數字必須嚴格遞增（' + realEntries[k - 1].num + ' 後出現 ' + realEntries[k].num + '）' };
+                }
+            }
+
+            for (const { i, num } of realEntries) {
+                const thisX = num - i;
+                if (X === null) { X = thisX; }
+                else if (X !== thisX) {
+                    return { ok: false, reason: '數字與位置不一致（' + num + ' 在第 ' + (i + 1) + ' 格，與序列起點衝突）' };
+                }
+            }
+
+            if (X === null) {
+                // All jokers — valid for any starting point; default to 1
+                return { ok: true, X: 1, min: 1, max: n };
+            }
+
+            const min = X, max = X + n - 1;
+            if (min < 1) return { ok: false, reason: '序列起始數字 ' + min + ' 低於最小值 1' };
+            if (max > 13) return { ok: false, reason: '序列終止數字 ' + max + ' 超過最大值 13' };
+            return { ok: true, X, min, max };
+        }
+
+        // Check double-joker position constraints given sequence start X.
+        // double-joker occupies 2 consecutive slots; must NOT represent 1 or 13.
+        // i.e., first slot num >= 2 AND second slot num <= 12.
+        function checkDblConstraints(ts, X) {
+            let slotIdx = 0;
+            for (const t of ts) {
+                if (isDbl(t)) {
+                    const n1 = X + slotIdx;
+                    const n2 = X + slotIdx + 1;
+                    if (n1 < 2) return '雙格百搭不能代替數字 1（此處代替 ' + n1 + ' 和 ' + n2 + '）';
+                    if (n2 > 12) return '雙格百搭不能用於 12 之後（此處代替 ' + n1 + ' 和 ' + n2 + '）';
+                    slotIdx += 2;
+                } else {
+                    slotIdx += 1;
+                }
+            }
+            return null;
+        }
+
+        // ===================================================================
+        // TOP-LEVEL VALIDATE
+        // ===================================================================
+        function checkCombination() { showResult(validate(tiles)); }
+
+        function validate(ts) {
+            if (ts.length < 3) return fail('需要最少 3 塊牌（現有 ' + ts.length + ' 塊）');
+
+            const hasMirror = ts.some(isMir);
+            const hasCC = ts.some(isCC);
+
+            if (hasMirror && hasCC) return fail('鏡像百搭不能與換色百搭同時使用');
+            if (hasMirror) return validateMirror(ts);
+            if (hasCC) return validateCCRun(ts);
+
+            // Standard + Double jokers only: try both group and run
+            const g = validateGroup(ts);
+            const r = validateRun(ts);
+            if (g.valid && r.valid) return { valid: true, type: 'both', groupDetail: g.detail, runDetail: r.detail };
+            if (g.valid) return g;
+            if (r.valid) return r;
+            return { valid: false, groupDetail: g.detail, runDetail: r.detail };
+        }
+
+        // ===================================================================
+        // GROUP VALIDATION
+        // 3–4 total color-slots, same number, all different colors.
+        // double-joker = 2 color slots. CC/Mirror NOT allowed.
+        // ===================================================================
+        function validateGroup(ts) {
+            if (ts.some(t => isCC(t) || isMir(t)))
+                return fail('換色百搭及鏡像百搭只能用於順牌');
+
+            const slotCount = ts.reduce((s, t) => s + (isDbl(t) ? 2 : 1), 0);
+            if (slotCount < 3 || slotCount > 4)
+                return fail('組牌需要 3 或 4 個格位（雙搭佔 2 格，現共 ' + slotCount + ' 格）');
+
+            const real = ts.filter(isReal);
+            const nums = real.map(t => t.num);
+            if (nums.length > 0 && !nums.every(x => x === nums[0]))
+                return fail('組牌數字必須全部相同（現有：' + [...new Set(nums)].join('、') + '）');
+
+            const colors = real.map(t => t.color);
+            const dup = colors.find((c, i) => colors.indexOf(c) !== i);
+            if (dup) return fail('組牌不允許重複顏色（' + colorNames[dup] + '色重複）');
+
+            const num = nums.length > 0 ? nums[0] : '？';
+            const ji = ts.filter(isAnyJoker).map(t => colorNames[t.color]).join('、');
+            return okResult('group', '有效組牌：' + slotCount + ' 格位的 ' + num + ' 號牌' + (ji ? '（含 ' + ji + '）' : ''));
+        }
+
+        // ===================================================================
+        // RUN VALIDATION (no CC, no Mirror)
+        // Same color, consecutive numbers 1–13.
+        // double-joker = 2 consecutive slots, cannot represent 1 or 13.
+        // ===================================================================
+        function validateRun(ts) {
+            if (ts.some(t => isCC(t) || isMir(t)))
+                return fail('換色百搭及鏡像百搭需特殊處理');
+
+            const real = ts.filter(isReal);
+            const colorSet = new Set(real.map(t => t.color));
+            if (colorSet.size > 1)
+                return fail('順牌顏色必須相同（現有 ' + [...colorSet].map(c => colorNames[c]).join('、') + '）');
+
+            const slots = expandSlots(ts);
+            const n = slots.length;
+            if (n < 3) return fail('展開後格位不足 3（共 ' + n + ' 格）');
+            if (n > 13) return fail('順牌不能超過 13 格（展開後 ' + n + ' 格）');
+
+            const seq = resolveSequence(slots);
+            if (!seq.ok) return fail(seq.reason);
+
+            const dblErr = checkDblConstraints(ts, seq.X);
+            if (dblErr) return fail(dblErr);
+
+            const colorName = colorSet.size === 1 ? colorNames[[...colorSet][0]] : '（未知）';
+            const ji = ts.filter(isAnyJoker).map(t => colorNames[t.color]).join('、');
+            return okResult('run',
+                '有效順牌：' + colorName + '色 ' + n + ' 格，' + seq.min + '–' + seq.max +
+                (ji ? '（含 ' + ji + '）' : ''));
+        }
+
+        // ===================================================================
+        // COLOUR-CHANGE JOKER RUN
+        // CC cannot be first or last tile.
+        // Tiles before each CC = one color segment, after = different color segment.
+        // Numbers must be strictly consecutive across the whole run (CC = 1 slot).
+        // ===================================================================
+        function validateCCRun(ts) {
+            if (isMir(ts[0])) return fail('鏡像百搭不能位於首位');
+            if (isCC(ts[0])) return fail('換色百搭不能位於首位');
+            if (isCC(ts[ts.length - 1])) return fail('換色百搭不能位於末位');
+
+            // Split into color segments separated by CC jokers
+            const segments = [];
+            let cur = [];
+            for (const t of ts) {
+                if (isCC(t)) { segments.push(cur); cur = []; }
+                else cur.push(t);
+            }
+            segments.push(cur);
+
+            // Each segment must be internally same color (ignoring std/dbl jokers)
+            for (let i = 0; i < segments.length; i++) {
+                const segReal = segments[i].filter(isReal);
+                const segColors = [...new Set(segReal.map(t => t.color))];
+                if (segColors.length > 1)
+                    return fail('第 ' + (i + 1) + ' 色段內顏色不統一（含 ' + segColors.map(c => colorNames[c]).join('、') + '）');
+            }
+
+            // Adjacent segments must be different colors
+            const segColors = segments.map(seg => {
+                const r = seg.filter(isReal);
+                return r.length > 0 ? r[0].color : null;
+            });
+            for (let i = 1; i < segColors.length; i++) {
+                if (segColors[i] !== null && segColors[i - 1] !== null && segColors[i] === segColors[i - 1])
+                    return fail('換色百搭兩側顏色相同（均為' + colorNames[segColors[i]] + '色）');
+            }
+
+            // Build full slot array: CC joker = 1 joker slot, dbl = 2 joker slots, real = real slot
+            const slots = expandSlots(ts); // CC is counted as 1 joker slot by expandSlots
+            const n = slots.length;
+            if (n < 3) return fail('展開後格位不足 3');
+            if (n > 13) return fail('順牌不能超過 13 格');
+
+            const seq = resolveSequence(slots);
+            if (!seq.ok) return fail(seq.reason);
+
+            const dblErr = checkDblConstraints(ts, seq.X);
+            if (dblErr) return fail(dblErr);
+
+            const colorDesc = segColors.map(c => c ? colorNames[c] : '？').join(' → ');
+            return okResult('run',
+                '有效換色順牌：' + n + ' 格，' + seq.min + '–' + seq.max + '（' + colorDesc + '）');
+        }
+
+        // ===================================================================
+        // MIRROR JOKER VALIDATION
+        // Exactly one mirror joker (for now). Cannot be first or last.
+        // Left side[i] must mirror right side[n-1-i] in NUMBER (colors may differ).
+        // Standard jokers match anything. Double jokers must face double jokers.
+        // CC joker cannot coexist with mirror joker.
+        // ===================================================================
+        function validateMirror(ts) {
+            const mirPositions = ts.map((t, i) => isMir(t) ? i : -1).filter(i => i >= 0);
+            if (mirPositions.length > 1)
+                return fail('此版本只支援單一鏡像百搭');
+
+            const mi = mirPositions[0];
+            if (mi === 0) return fail('鏡像百搭不能位於首位');
+            if (mi === ts.length - 1) return fail('鏡像百搭不能位於末位');
+
+            const left = ts.slice(0, mi);
+            const right = ts.slice(mi + 1);
+
+            if (left.length !== right.length)
+                return fail('鏡像兩側牌數不等（左 ' + left.length + ' 塊，右 ' + right.length + ' 塊）');
+
+            const n = left.length;
+
+            for (let i = 0; i < n; i++) {
+                const l = left[i];
+                const r = right[n - 1 - i];   // mirror: right is read in reverse
+
+                // Standard joker matches anything
+                if (isStd(l) || isStd(r)) continue;
+
+                // Double joker must face double joker
+                if (isDbl(l) || isDbl(r)) {
+                    if (l.color !== r.color)
+                        return fail('鏡像不對稱：位置 ' + (i + 1) + '（左雙搭 vs 右' + colorNames[r.color] + '）');
+                    continue;
+                }
+
+                // CC joker cannot appear inside mirror arms
+                if (isCC(l) || isCC(r))
+                    return fail('換色百搭不能在鏡像臂內使用');
+
+                // Both real tiles: numbers must match
+                if (l.num !== r.num)
+                    return fail('鏡像不對稱：左側「' + colorNames[l.color] + l.num + '」對應右側「' + colorNames[r.color] + r.num + '」，數字不符');
+            }
+
+            // Detect whether this is a run-mirror (same color per side) or group-mirror (same number)
+            const allReal = ts.filter(isReal);
+            const allNums = allReal.map(t => t.num);
+            const allColors = allReal.map(t => t.color);
+            const isGroupMirror = allNums.length > 0 && allNums.every(x => x === allNums[0]);
+            const isRunMirror = [...new Set(allColors)].length <= 2; // each side same color, two sides can differ
+            const typeDesc = isGroupMirror ? '組牌鏡像' : '順牌鏡像';
+
+            return okResult('run',
+                '有效' + typeDesc + '：左 ' + n + ' 🪞 右 ' + n + '（共 ' + ts.length + ' 格，兩側對稱）');
+        }
+
+        // ===================================================================
+        // RESULT DISPLAY
+        // ===================================================================
+        function showResult(r) {
+            const box = document.getElementById('result-box');
+            const hl = document.getElementById('result-hl');
+            const dt = document.getElementById('result-detail');
+            box.className = 'result-box show ' + (r.valid ? 'valid' : 'invalid');
+            if (r.valid) {
+                const tags =
+                    r.type === 'group' ? '<span class="rtag">組牌</span>' :
+                        r.type === 'both' ? '<span class="rtag">組牌</span><span class="rtag">順牌</span>' :
+                            '<span class="rtag">順牌</span>';
+                hl.innerHTML = '✓ 合規' + tags;
+                if (r.type === 'both')
+                    dt.innerHTML = '同時符合兩種有效牌組：<br>• 組牌：' + r.groupDetail + '<br>• 順牌：' + r.runDetail;
+                else
+                    dt.textContent = r.detail;
+            } else {
+                hl.innerHTML = '✗ 不合規';
+                if (r.groupDetail || r.runDetail)
+                    dt.innerHTML = '不符合任何有效牌組：<br>• 組牌：' + (r.groupDetail || '—') + '<br>• 順牌：' + (r.runDetail || '—');
+                else
+                    dt.textContent = r.detail;
+            }
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideResult() { document.getElementById('result-box').classList.remove('show'); }
+    </script>
+</body>
+
+</html>

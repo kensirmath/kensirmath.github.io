@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>簡潔貨幣換算器</title>
+    <style>
+        :root,
+        [data-theme="light"] {
+            --bg: #f6f7f4;
+            --card: #fff;
+            --soft: #f1f3ef;
+            --border: #d8dcd4;
+            --text: #1f241f;
+            --muted: #677067;
+            --primary: #12685e;
+            --primary-hover: #0e564e;
+            --ok: #2a7a35;
+            --err: #b43b6b;
+            --radius: 16px;
+            --radius-sm: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .07);
+        }
+
+        [data-theme="dark"] {
+            --bg: #111412;
+            --card: #1a1e1a;
+            --soft: #242924;
+            --border: #373d37;
+            --text: #ecf0ea;
+            --muted: #a4aca4;
+            --primary: #58b3a7;
+            --primary-hover: #79c5bb;
+            --ok: #8ad56f;
+            --err: #f290bb;
+            --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text)
+        }
+
+        .wrap {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 24px 16px 56px
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0
+        }
+
+        .sub {
+            margin: 6px 0 0;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .theme {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            cursor: pointer;
+            color: var(--text)
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px
+        }
+
+        .field {
+            display: grid;
+            gap: 8px
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--soft);
+            color: var(--text);
+            font-size: 15px
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(18, 104, 94, .14)
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover)
+        }
+
+        .btn-secondary {
+            background: var(--soft);
+            border: 1px solid var(--border);
+            color: var(--text)
+        }
+
+        .result {
+            margin-top: 18px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--soft)
+        }
+
+        .expr,
+        .meta,
+        .status,
+        .empty,
+        .attr {
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .value {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.05;
+            margin: 8px 0 4px
+        }
+
+        .status.ok {
+            color: var(--ok)
+        }
+
+        .status.err {
+            color: var(--err)
+        }
+
+        .history {
+            margin-top: 20px
+        }
+
+        .history-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px
+        }
+
+        .history h2 {
+            font-size: 18px;
+            margin: 0
+        }
+
+        .list {
+            display: grid;
+            gap: 10px
+        }
+
+        .item {
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            display: grid;
+            gap: 4px;
+            text-align: left;
+            cursor: pointer
+        }
+
+        .item-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: start
+        }
+
+        .item strong {
+            font-size: 16px
+        }
+
+        .chip {
+            font-size: 12px;
+            color: var(--muted);
+            background: var(--soft);
+            padding: 4px 8px;
+            border-radius: 999px
+        }
+
+        .attr {
+            margin-top: 14px
+        }
+
+        @media (max-width:700px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .value {
+                font-size: 32px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="top">
+            <div>
+                <h1>貨幣換算器</h1>
+                <p class="sub">簡潔版，支援新台幣、中文貨幣名稱與暫存記錄</p>
+            </div>
+            <button class="theme" id="themeBtn" aria-label="切換主題">☾</button>
+        </div>
+
+        <section class="card">
+            <form id="form">
+                <div class="grid">
+                    <div class="field">
+                        <label for="amount">金額 Amount</label>
+                        <input id="amount" type="number" min="0" step="any" value="100" required>
+                    </div>
+                    <div class="field">
+                        <label for="from">輸入貨幣 Input Currency</label>
+                        <select id="from"></select>
+                    </div>
+                    <div class="field">
+                        <label for="to">輸出貨幣 Output Currency</label>
+                        <select id="to"></select>
+                    </div>
+                    <div class="field">
+                        <label for="rate">目前匯率 Currency Ratio</label>
+                        <input id="rate" readonly value="--">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit">換算</button>
+                    <button class="btn btn-secondary" type="button" id="swapBtn">交換</button>
+                    <button class="btn btn-secondary" type="button" id="resetBtn">重設</button>
+                </div>
+            </form>
+
+            <div class="result" aria-live="polite">
+                <div class="expr" id="expr">1 USD =</div>
+                <div class="value" id="result">--</div>
+                <div class="meta" id="resultCode">HKD</div>
+                <div class="status" id="status">載入中…</div>
+                <div class="meta" id="updated">更新時間：--</div>
+            </div>
+
+            <div class="history">
+                <div class="history-head">
+                    <h2>暫存記錄</h2>
+                    <button class="btn btn-secondary" type="button" id="clearHistoryBtn">清除記錄</button>
+                </div>
+                <div class="list" id="historyList">
+                    <div class="empty">暫時未有記錄</div>
+                </div>
+            </div>
+
+            <div class="attr">Rates by ExchangeRate-API；若瀏覽器封鎖 localStorage，暫存記錄會自動停用</div>
+        </section>
+    </div>
+
+    <div class="page-header">
+        <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
+            Menu</button>
+        <h2>Currency 匯率</h2>
+    </div>
+
+    <script>
+        const API_BASE = 'https://open.er-api.com/v6/latest';
+        const STORAGE_KEY = 'currency_converter_history_v3';
+        const zhNames = {
+            AED: '阿聯酋迪拉姆', ARS: '阿根廷披索', AUD: '澳元', BGN: '保加利亞列弗', BRL: '巴西雷亞爾', CAD: '加拿大元', CHF: '瑞士法郎', CLP: '智利披索', CNY: '人民幣', COP: '哥倫比亞披索', CZK: '捷克克朗', DKK: '丹麥克朗', EGP: '埃及鎊', EUR: '歐元', GBP: '英鎊', HKD: '港元', HUF: '匈牙利福林', IDR: '印尼盾', ILS: '以色列新謝克爾', INR: '印度盧比', ISK: '冰島克朗', JPY: '日圓', KRW: '韓元', KWD: '科威特第納爾', MAD: '摩洛哥迪拉姆', MXN: '墨西哥披索', MYR: '馬來西亞令吉', NOK: '挪威克朗', NZD: '紐西蘭元', PHP: '菲律賓披索', PKR: '巴基斯坦盧比', PLN: '波蘭茲羅提', QAR: '卡塔爾里亞爾', RON: '羅馬尼亞列伊', SAR: '沙地里亞爾', SEK: '瑞典克朗', SGD: '新加坡元', THB: '泰銖', TRY: '土耳其里拉', TWD: '新台幣', USD: '美元', VND: '越南盾', ZAR: '南非蘭特'
+        };
+
+        const amount = document.getElementById('amount');
+        const from = document.getElementById('from');
+        const to = document.getElementById('to');
+        const rate = document.getElementById('rate');
+        const expr = document.getElementById('expr');
+        const result = document.getElementById('result');
+        const resultCode = document.getElementById('resultCode');
+        const statusEl = document.getElementById('status');
+        const updated = document.getElementById('updated');
+        const historyList = document.getElementById('historyList');
+        const themeBtn = document.getElementById('themeBtn');
+        let storageAvailable = false;
+
+        function initStorage() {
+            try {
+                const testKey = '__cc_test__';
+                window.localStorage.setItem(testKey, testKey);
+                window.localStorage.removeItem(testKey);
+                storageAvailable = true;
+            } catch (e) {
+                storageAvailable = false;
+            }
+        }
+
+        function getLabel(code) {
+            return `${code}｜${zhNames[code] || code}`;
+        }
+
+        function toggleTheme() {
+            const root = document.documentElement;
+            const nextDark = root.getAttribute('data-theme') !== 'dark';
+            root.setAttribute('data-theme', nextDark ? 'dark' : 'light');
+            themeBtn.textContent = nextDark ? '☀' : '☾';
+        }
+        themeBtn.addEventListener('click', toggleTheme);
+
+        async function loadCurrencies() {
+            const res = await fetch(`${API_BASE}/USD`);
+            if (!res.ok) throw new Error('無法載入貨幣清單');
+            const data = await res.json();
+            if (data.result !== 'success' || !data.rates) throw new Error('API 回應異常');
+            const codes = Object.keys(data.rates).sort();
+            const options = codes.map(code => `<option value="${code}">${getLabel(code)}</option>`).join('');
+            from.innerHTML = options;
+            to.innerHTML = options;
+            from.value = 'USD';
+            to.value = codes.includes('TWD') ? 'TWD' : 'HKD';
+            statusEl.textContent = '貨幣清單已載入';
+            statusEl.className = 'status ok';
+        }
+
+        function formatNumber(value, currency) {
+            return new Intl.NumberFormat('zh-HK', { maximumFractionDigits: 6 }).format(value) + ' ' + currency;
+        }
+
+        async function getRate(baseCode, targetCode) {
+            if (baseCode === targetCode) return { rate: 1, update: new Date().toLocaleString('zh-HK') };
+            const res = await fetch(`${API_BASE}/${encodeURIComponent(baseCode)}`);
+            if (!res.ok) throw new Error('無法取得匯率');
+            const data = await res.json();
+            if (data.result !== 'success') throw new Error('API 回應失敗');
+            const fx = data?.rates?.[targetCode];
+            if (!Number.isFinite(fx)) throw new Error('找不到該貨幣匯率');
+            return { rate: fx, update: data.time_last_update_utc || '' };
+        }
+
+        function saveHistory(entry) {
+            if (!storageAvailable) return;
+            try {
+                const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                list.unshift(entry);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0, 10)));
+            } catch (e) { }
+            renderHistory();
+        }
+
+        function renderHistory() {
+            if (!storageAvailable) {
+                historyList.innerHTML = '<div class="empty">此瀏覽器或目前開啟方式不支援暫存記錄</div>';
+                return;
+            }
+            let list = [];
+            try {
+                list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch (e) {
+                historyList.innerHTML = '<div class="empty">暫存記錄目前無法讀取</div>';
+                return;
+            }
+            if (!list.length) {
+                historyList.innerHTML = '<div class="empty">暫時未有記錄</div>';
+                return;
+            }
+            historyList.innerHTML = list.map((item, idx) => `
+        <button type="button" class="item" data-index="${idx}">
+          <div class="item-top">
+            <strong>${item.amount} ${item.from} → ${item.to}</strong>
+            <span class="chip">${item.savedAt}</span>
+          </div>
+          <div class="meta">${item.resultText}</div>
+          <div class="meta">匯率：${item.rateText}</div>
+        </button>
+      `).join('');
+            historyList.querySelectorAll('[data-index]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item = list[Number(btn.dataset.index)];
+                    amount.value = item.amount;
+                    from.value = item.from;
+                    to.value = item.to;
+                    rate.value = item.rateText;
+                    expr.textContent = `${item.amount} ${item.from} =`;
+                    result.textContent = item.resultText;
+                    resultCode.textContent = item.to;
+                    statusEl.textContent = '已載入暫存記錄';
+                    statusEl.className = 'status ok';
+                    updated.textContent = `記錄時間：${item.savedAt}`;
+                });
+            });
+        }
+
+        async function convertCurrency() {
+            const amt = Number(amount.value);
+            const a = from.value;
+            const b = to.value;
+            expr.textContent = `${amt || 0} ${a} =`;
+            resultCode.textContent = b;
+            statusEl.className = 'status';
+
+            if (!Number.isFinite(amt) || amt < 0) {
+                result.textContent = '--';
+                rate.value = '--';
+                statusEl.textContent = '請輸入有效金額';
+                statusEl.className = 'status err';
+                return;
+            }
+
+            try {
+                statusEl.textContent = '正在換算…';
+                const { rate: fx, update } = await getRate(a, b);
+                const total = amt * fx;
+                const resultText = formatNumber(total, b);
+                const rateText = `${fx.toFixed(6)} ${b} / 1 ${a}`;
+                result.textContent = resultText;
+                rate.value = rateText;
+                statusEl.textContent = '換算完成';
+                statusEl.className = 'status ok';
+                updated.textContent = update ? `資料更新：${update}` : `更新時間：${new Date().toLocaleString('zh-HK')}`;
+                saveHistory({ amount: amt, from: a, to: b, resultText, rateText, savedAt: new Date().toLocaleString('zh-HK') });
+            } catch (error) {
+                result.textContent = '--';
+                rate.value = '--';
+                statusEl.textContent = error.message || '換算失敗';
+                statusEl.className = 'status err';
+                updated.textContent = '更新時間：--';
+            }
+        }
+
+        document.getElementById('form').addEventListener('submit', e => { e.preventDefault(); convertCurrency(); });
+        document.getElementById('swapBtn').addEventListener('click', () => {
+            const temp = from.value; from.value = to.value; to.value = temp;
+        });
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            amount.value = 100; from.value = 'USD'; to.value = 'TWD'; rate.value = '--'; result.textContent = '--'; resultCode.textContent = 'TWD'; expr.textContent = '100 USD ='; statusEl.textContent = '已重設'; statusEl.className = 'status'; updated.textContent = '更新時間：--';
+        });
+        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+            if (!storageAvailable) { renderHistory(); return; }
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
+            renderHistory();
+        });
+
+        (async function init() {
+            initStorage();
+            try {
+                await loadCurrencies();
+                renderHistory();
+                await convertCurrency();
+            } catch (error) {
+                statusEl.textContent = error.message || '初始化失敗';
+                statusEl.className = 'status err';
+                renderHistory();
+            }
+        })();
+    </script>
+</body>
+
+</html>
