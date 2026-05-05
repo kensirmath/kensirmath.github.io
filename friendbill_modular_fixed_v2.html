@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>好友拆帳助手 - 模組化重構版</title>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --color-bg: #f8fafc; --color-panel: #ffffff; --color-primary: #059669; --color-primary-dark: #065f46;
+      --color-accent: #34d399; --color-text: #1e293b; --color-text-muted: #64748b; --color-border: #e2e8f0;
+      --color-warning: #ef4444; --color-success: #10b981; --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); --radius: 12px;
+    }
+    [data-theme="dark"] {
+      --color-bg: #0f172a; --color-panel: #1e293b; --color-primary: #10b981; --color-primary-dark: #34d399; --color-accent: #34d399;
+      --color-text: #f1f5f9; --color-text-muted: #94a3b8; --color-border: #334155; --color-warning: #f87171; --color-success: #34d399; --shadow: 0 4px 10px -2px rgb(0 0 0 / 0.35);
+    }
+    * { box-sizing: border-box; font-family: 'Satoshi', sans-serif; }
+    body { background: var(--color-bg); color: var(--color-text); margin: 0; transition: background-color .3s ease, color .3s ease; }
+    .container { max-width: 1440px; margin: 0 auto; padding: 2rem; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+    h1 { margin:0; color:var(--color-primary); }
+    .main-grid { display:grid; grid-template-columns: 380px 1fr; gap: 1.5rem; }
+    .panel { background:var(--color-panel); border:1px solid var(--color-border); border-radius:var(--radius); padding:1.25rem; box-shadow:var(--shadow); }
+    h2 { margin-top:0; font-size:1.05rem; border-left:4px solid var(--color-primary); padding-left:.75rem; }
+    .field { margin-bottom:1rem; }
+    label { display:block; font-size:.85rem; font-weight:700; margin-bottom:.45rem; color:var(--color-text-muted); }
+    .input,.select { width:100%; padding:.75rem; border-radius:8px; border:1px solid var(--color-border); background:var(--color-bg); color:var(--color-text); }
+    .input:focus,.select:focus { outline:2px solid var(--color-accent); border-color:transparent; }
+    .btn { cursor:pointer; padding:.72rem 1rem; border-radius:8px; border:none; font-weight:700; display:inline-flex; align-items:center; gap:.5rem; }
+    .btn-primary { background:var(--color-primary); color:#fff; }
+    .btn-primary:hover { background:var(--color-primary-dark); }
+    .btn-outline { background:transparent; border:1px solid var(--color-border); color:var(--color-text); }
+    .btn-outline:hover { background:var(--color-bg); }
+    .picker-grid { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+    .checkbox-tile { display:flex; align-items:center; gap:.5rem; background:var(--color-bg); padding:.55rem; border-radius:8px; }
+    .friend-chip { display:inline-flex; align-items:center; gap:.45rem; padding:.38rem .6rem; border:1px solid var(--color-border); border-radius:999px; background:var(--color-bg); }
+    .friend-chip button { border:none; background:transparent; cursor:pointer; color:var(--color-warning); font-weight:700; font-size:.95rem; line-height:1; }
+    .table-container { overflow-x:auto; border:1px solid var(--color-border); border-radius:8px; }
+    table { width:100%; min-width:860px; border-collapse:collapse; }
+    th,td { padding:.9rem; text-align:center; border-top:1px solid var(--color-border); }
+    th { background:var(--color-bg); color:var(--color-text-muted); font-size:.8rem; text-transform:uppercase; }
+    .money { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight:700; }
+    .summary-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
+    .settle-item { display:flex; justify-content:space-between; gap:1rem; padding:.7rem 0; border-bottom:1px dashed var(--color-border); }
+    .path-item { background:var(--color-bg); padding:.85rem; border-radius:8px; margin-bottom:.5rem; }
+    .muted { color:var(--color-text-muted); }
+    .toolbar { display:flex; gap:.5rem; flex-wrap:wrap; }
+    @media (max-width: 1024px) { .main-grid, .summary-grid { grid-template-columns:1fr; } }
+    @media print { .btn, input, select { display:none !important; } body { background:#fff; } .panel { box-shadow:none; break-inside:avoid; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>FriendBill <span style="font-weight:400; font-size:.9rem; color:var(--color-text-muted)">| 模組化重構版</span></h1>
+      <div class="toolbar">
+        <button class="btn btn-outline" onclick="app.excel.export()">匯出備份</button>
+        <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">匯入記錄</button>
+        <input type="file" id="importInput" hidden accept=".xlsx,.xls" onchange="app.excel.import(event)">
+        <button class="btn btn-outline" onclick="app.actions.clearAll()">清空資料</button>
+        <button class="btn btn-outline" onclick="window.print()">列印</button>
+        <button class="btn btn-outline" onclick="app.actions.toggleTheme()">🌓</button>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <aside class="panel">
+        <section>
+          <h2>成員名單</h2>
+          <div class="field" style="display:flex; gap:.5rem;">
+            <input id="newFriend" class="input" placeholder="輸入名字..." onkeypress="if(event.key==='Enter') app.actions.addFriend()">
+            <button class="btn btn-primary" onclick="app.actions.addFriend()">＋</button>
+          </div>
+          <div id="friendList" style="display:flex; flex-wrap:wrap; gap:.5rem;"></div>
+        </section>
+
+        <section style="margin-top:1.5rem;">
+          <h2>新增帳目</h2>
+          <div class="field"><label>日期</label><input id="itemDate" type="date" class="input"></div>
+          <div class="field"><label>幣別</label><select id="currency" class="select"><option>HKD</option><option>CNY</option><option>JPY</option><option>USD</option></select></div>
+          <div class="field"><label>項目名稱</label><input id="itemName" class="input" placeholder="例如：晚餐、打車"></div>
+          <div class="field"><label>備註</label><input id="itemNote" class="input" placeholder="例如：已包小費 / 現金支付"></div>
+          <div class="field"><label>總金額</label><input id="itemAmount" type="number" step="0.01" class="input" placeholder="0.00"></div>
+          <div class="field"><label>付款人</label><select id="itemPayer" class="select"></select></div>
+          <div class="field"><label>拆帳方式</label><select id="splitMode" class="select" onchange="app.render.toggleSplitArea()"><option value="equal">平均分配</option><option value="custom">不均分項目</option></select></div>
+          <div id="customArea" style="display:none; background:var(--color-bg); padding:1rem; border-radius:8px; margin-bottom:1rem;">
+            <label>請輸入各人應付金額 (需等於總額)</label>
+            <div id="customInputs" class="picker-grid"></div>
+          </div>
+          <div class="field"><label>參與成員</label><div id="participantList" class="picker-grid"></div></div>
+          <button class="btn btn-primary" style="width:100%" onclick="app.actions.addOrUpdateItem()">加入帳單</button>
+        </section>
+      </aside>
+
+      <section>
+        <div class="panel">
+          <h2>帳目詳情</h2>
+          <div class="table-container">
+            <table>
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <div class="panel"><h2>匯率設定</h2><div id="rateEditor" class="picker-grid"></div></div>
+          <div class="panel"><h2>摘要統計</h2><div id="statsBox"></div></div>
+          <div class="panel"><h2>每人結算 <small>(HKD / 0.1)</small></h2><div id="settlementList"></div></div>
+          <div class="panel"><h2>建議過數路徑</h2><div id="transferPath"></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const app = (() => {
+  const round2 = n => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+  const round1 = n => Math.round((Number(n) + Number.EPSILON) * 10) / 10;
+  const fmt = (n, d = 2) => Number(n).toLocaleString('zh-HK', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  const state = {
+    friends: [],
+    items: [],
+    editId: null,
+    baseCurrency: 'HKD',
+    rates: { HKD: 1, CNY: 1.08, JPY: 0.055, USD: 7.8 }
+  };
+
+  const storage = {
+    save() {
+      localStorage.setItem('friendbill_modular_state_v1', JSON.stringify({
+        friends: state.friends,
+        items: state.items,
+        rates: state.rates,
+        theme: document.documentElement.getAttribute('data-theme') || 'light'
+      }));
+    },
+    load() {
+      try {
+        const raw = localStorage.getItem('friendbill_modular_state_v1');
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        state.friends = Array.isArray(data.friends) ? data.friends.filter(Boolean) : [];
+        state.items = Array.isArray(data.items) ? data.items : [];
+        state.rates = data.rates || state.rates;
+        if (data.theme) document.documentElement.setAttribute('data-theme', data.theme);
+      } catch {}
+    }
+  };
+
+  const settlement = {
+    toBase(amount, currency) {
+      return round2((Number(amount) || 0) * (state.rates[currency] || 1));
+    },
+    calculateNet() {
+      const net = Object.fromEntries(state.friends.map(f => [f, 0]));
+      state.items.forEach(item => {
+        if (!net.hasOwnProperty(item.payer)) return;
+        const baseAmount = settlement.toBase(item.amount, item.currency || state.baseCurrency);
+        if (item.mode === 'equal') {
+          if (!item.participants?.length) return;
+          const share = round2(baseAmount / item.participants.length);
+          item.participants.forEach(p => { if (net.hasOwnProperty(p)) net[p] = round2(net[p] + share); });
+          const diff = round2(baseAmount - round2(share * item.participants.length));
+          net[item.payer] = round2(net[item.payer] + diff);
+        } else {
+          Object.entries(item.customShares || {}).forEach(([p, amt]) => {
+            if (net.hasOwnProperty(p)) net[p] = round2(net[p] + settlement.toBase(amt, item.currency || state.baseCurrency));
+          });
+        }
+        net[item.payer] = round2(net[item.payer] - baseAmount);
+      });
+      return net;
+    },
+    perPersonStats() {
+      return state.friends.map(name => {
+        let paid = 0, owed = 0;
+        state.items.forEach(item => {
+          const baseAmount = settlement.toBase(item.amount, item.currency || state.baseCurrency);
+          if (item.payer === name) paid = round2(paid + baseAmount);
+          if (item.mode === 'equal') {
+            if ((item.participants || []).includes(name) && item.participants.length) owed = round2(owed + round2(baseAmount / item.participants.length));
+          } else {
+            owed = round2(owed + settlement.toBase(item.customShares?.[name] || 0, item.currency || state.baseCurrency));
+          }
+        });
+        return { name, paid, owed, net: round1(owed - paid) };
+      });
+    }
+  };
+
+  const render = {
+    toggleSplitArea() {
+      const mode = document.getElementById('splitMode').value;
+      document.getElementById('customArea').style.display = mode === 'custom' ? 'block' : 'none';
+      if (mode === 'custom') render.customInputs();
+    },
+    customInputs() {
+      document.getElementById('customInputs').innerHTML = state.friends.map(f => `
+        <div><span style="font-size:.75rem">${f}</span><input type="number" step="0.01" class="input custom-val" data-name="${f}" style="padding:.45rem"></div>
+      `).join('');
+    },
+    friends() {
+      document.getElementById('friendList').innerHTML = state.friends.map(f => `
+        <span class="friend-chip">
+          <span>${f}</span>
+          <button type="button" class="friend-remove" data-name="${encodeURIComponent(f)}" title="刪除成員">✕</button>
+        </span>
+      `).join('') || `<span class="muted">尚未加入成員</span>`;
+      document.querySelectorAll('.friend-remove').forEach(btn => {
+        btn.addEventListener('click', () => app.actions.removeFriend(decodeURIComponent(btn.dataset.name)));
+      });
+      document.getElementById('itemPayer').innerHTML = state.friends.map(f => `<option value="${f}">${f}</option>`).join('');
+      document.getElementById('participantList').innerHTML = state.friends.map(f => `<label class="checkbox-tile"><input type="checkbox" value="${f}" checked>${f}</label>`).join('');
+    },
+    table() {
+      const items = [...state.items].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || String(a.name || '').localeCompare(String(b.name || '')));
+      document.getElementById('tableHead').innerHTML = `<tr><th>日期</th><th>項目</th><th>總金額</th>${state.friends.map(f => `<th>${f}</th>`).join('')}</tr>`;
+      document.getElementById('tableBody').innerHTML = items.map(item => `
+        <tr>
+          <td><small>${item.date || '-'}</small></td>
+          <td><b>${item.name}</b><br><small>${item.mode === 'equal' ? '均分' : '不均分'} · ${item.currency || 'HKD'}</small>${item.note ? `<br><small class="muted">${item.note}</small>` : ''}<br>
+            <button class="btn btn-outline" style="padding:.2rem .45rem; font-size:.75rem; margin-top:.35rem;" onclick="app.actions.editItem(${item.id})">編輯</button>
+            <button class="btn btn-outline" style="padding:.2rem .45rem; font-size:.75rem; margin-top:.35rem;" onclick="app.actions.removeItem(${item.id})">刪除</button>
+          </td>
+          <td class="money">${item.currency || 'HKD'} $${fmt(item.amount, 2)}</td>
+          ${state.friends.map(f => {
+            let share = 0;
+            if (item.mode === 'custom') share = round2(item.customShares?.[f] || 0);
+            else if ((item.participants || []).includes(f) && item.participants.length > 0) share = round2(item.amount / item.participants.length);
+            if (item.payer === f) share = round2(share - item.amount);
+            const color = share > 0 ? 'var(--color-warning)' : share < 0 ? 'var(--color-success)' : 'var(--color-text-muted)';
+            return `<td class="money" style="color:${color}">${share === 0 ? '-' : fmt(share, 2)}</td>`;
+          }).join('')}
+        </tr>
+      `).join('') || `<tr><td colspan="${state.friends.length + 3}" class="muted">尚未有帳目</td></tr>`;
+    },
+    rates() {
+      document.getElementById('rateEditor').innerHTML = Object.entries(state.rates).map(([cur, rate]) => `
+        <div><label>${cur} → ${state.baseCurrency}</label><input class="input" type="number" step="0.0001" value="${rate}" onchange="app.actions.updateRate('${cur}', this.value)"></div>
+      `).join('');
+    },
+    stats() {
+      const totalBase = state.items.reduce((s, item) => s + settlement.toBase(item.amount, item.currency || state.baseCurrency), 0);
+      const byCurrency = Object.entries(state.items.reduce((acc, item) => { const c = item.currency || 'HKD'; acc[c] = (acc[c] || 0) + Number(item.amount || 0); return acc; }, {})).map(([cur, amt]) => `${cur} $${fmt(amt, 2)}`).join('；');
+      document.getElementById('statsBox').innerHTML = `
+        <div class="settle-item"><span>帳目數量</span><span><b>${state.items.length}</b></span></div>
+        <div class="settle-item"><span>成員數量</span><span><b>${state.friends.length}</b></span></div>
+        <div class="settle-item"><span>總額（${state.baseCurrency}）</span><span><b>${state.baseCurrency} $${fmt(totalBase, 2)}</b></span></div>
+        <div class="settle-item"><span>各幣別原值</span><span>${byCurrency || '—'}</span></div>`;
+    },
+    settlement() {
+      const net = settlement.calculateNet();
+      const per = settlement.perPersonStats();
+      const summary = Object.entries(net).map(([name, val]) => {
+        const v = round1(val);
+        const label = v > 0 ? '應付' : v < 0 ? '應收' : '已結清';
+        const color = v > 0 ? 'var(--color-warning)' : v < 0 ? 'var(--color-success)' : 'var(--color-text-muted)';
+        return `<div class="settle-item"><span>${name}</span><span style="font-weight:700; color:${color}">${label}${v === 0 ? '' : ` ${state.baseCurrency} $${fmt(Math.abs(v), 1)}`}</span></div>`;
+      }).join('') || `<div class="muted">尚未有結算資料</div>`;
+      const detail = `<div style="margin-top:1rem"><h3 style="margin:.25rem 0 .5rem 0; font-size:.95rem;">個人統計（${state.baseCurrency}）</h3>${per.map(p => `<div class="settle-item"><span>${p.name}</span><span>付款 ${fmt(p.paid,2)} / 應付 ${fmt(p.owed,2)} / 淨額 ${fmt(Math.abs(p.net),1)} ${p.net>0?'應付':p.net<0?'應收':'結清'}</span></div>`).join('')}</div>`;
+      document.getElementById('settlementList').innerHTML = summary + detail;
+      render.transfers(net);
+    },
+    transfers(net) {
+      const debtors = [], creditors = [];
+      Object.entries(net).forEach(([name, val]) => {
+        const v = round1(val);
+        if (v > 0.05) debtors.push({ name, amt: v });
+        else if (v < -0.05) creditors.push({ name, amt: Math.abs(v) });
+      });
+      let i = 0, j = 0;
+      const paths = [];
+      while (i < debtors.length && j < creditors.length) {
+        const pay = round1(Math.min(debtors[i].amt, creditors[j].amt));
+        paths.push(`<div class="path-item">${debtors[i].name} ➜ ${creditors[j].name} : <b>${state.baseCurrency} $${fmt(pay, 1)}</b></div>`);
+        debtors[i].amt = round1(debtors[i].amt - pay);
+        creditors[j].amt = round1(creditors[j].amt - pay);
+        if (debtors[i].amt <= 0.05) i++;
+        if (creditors[j].amt <= 0.05) j++;
+      }
+      document.getElementById('transferPath').innerHTML = paths.join('') || `<p class="muted">無須轉帳</p>`;
+    },
+    form(item = null) {
+      document.getElementById('itemDate').value = item?.date || new Date().toISOString().slice(0, 10);
+      document.getElementById('currency').value = item?.currency || 'HKD';
+      document.getElementById('itemName').value = item?.name || '';
+      document.getElementById('itemNote').value = item?.note || '';
+      document.getElementById('itemAmount').value = item?.amount ?? '';
+      document.getElementById('itemPayer').value = item?.payer || state.friends[0] || '';
+      document.getElementById('splitMode').value = item?.mode || 'equal';
+      render.toggleSplitArea();
+      document.querySelectorAll('#participantList input').forEach(chk => { chk.checked = item ? (item.participants || []).includes(chk.value) : true; });
+      if (item?.mode === 'custom') {
+        document.querySelectorAll('.custom-val').forEach(input => { input.value = item.customShares?.[input.dataset.name] ?? ''; });
+      }
+    },
+    all() {
+      render.friends();
+      render.table();
+      render.rates();
+      render.stats();
+      render.settlement();
+      render.form(state.editId ? state.items.find(x => x.id === state.editId) : null);
+      storage.save();
+    }
+  };
+
+  const excel = {
+    export() {
+      if (!state.friends.length && !state.items.length) return alert('沒有可匯出的資料');
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.items.map(i => ({ 日期: i.date || '', 幣別: i.currency || 'HKD', 項目: i.name, 備註: i.note || '', 金額: i.amount, 付款人: i.payer, 模式: i.mode, 參與者: (i.participants || []).join(','), 不均分資料: JSON.stringify(i.customShares || {}) }))), '帳單');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.friends.map(f => ({ 成員: f }))), '成員');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(Object.entries(state.rates).map(([貨幣, 匯率]) => ({ 貨幣, 匯率 }))), '匯率');
+      XLSX.writeFile(wb, `FriendBill_${new Date().toISOString().slice(0,10)}.xlsx`);
+    },
+    import(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = new Uint8Array(event.target.result);
+          const wb = XLSX.read(data, { type: 'array' });
+          const bills = wb.Sheets['帳單'] ? XLSX.utils.sheet_to_json(wb.Sheets['帳單']) : [];
+          const members = wb.Sheets['成員'] ? XLSX.utils.sheet_to_json(wb.Sheets['成員']) : [];
+          const rates = wb.Sheets['匯率'] ? XLSX.utils.sheet_to_json(wb.Sheets['匯率']) : [];
+          state.friends = members.map(r => r.成員).filter(Boolean);
+          state.items = bills.map(b => {
+            let customShares = {};
+            try { customShares = JSON.parse(b.不均分資料 || '{}'); } catch {}
+            return { id: Date.now() + Math.random(), date: b.日期 || '', currency: b.幣別 || 'HKD', name: b.項目 || '', note: b.備註 || '', amount: round2(parseFloat(b.金額) || 0), payer: b.付款人 || '', mode: b.模式 === 'custom' ? 'custom' : 'equal', participants: String(b.參與者 || '').split(',').map(s => s.trim()).filter(Boolean), customShares };
+          }).filter(x => x.name && x.amount > 0 && x.payer);
+          if (rates.length) state.rates = Object.fromEntries(rates.map(r => [r.貨幣, Number(r.匯率) || 1]));
+          state.editId = null;
+          render.all();
+          alert('匯入成功');
+        } catch {
+          alert('匯入失敗：檔案格式不正確或內容損壞');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+      e.target.value = '';
+    }
+  };
+
+  const actions = {
+    addFriend() {
+      const input = document.getElementById('newFriend');
+      const name = input.value.trim();
+      if (!name) return;
+      if (state.friends.includes(name)) return alert('成員不可重複');
+      state.friends.push(name);
+      input.value = '';
+      render.all();
+    },
+    removeFriend(name) {
+      if (!state.friends.includes(name)) return;
+      const relatedItems = state.items.filter(item => item.payer === name || (item.participants || []).includes(name) || Object.prototype.hasOwnProperty.call(item.customShares || {}, name));
+      const msg = relatedItems.length
+        ? `成員「${name}」已出現在 ${relatedItems.length} 筆帳目中。刪除後會一併移除該成員作為付款人或參與者的相關資料，是否繼續？`
+        : `確定刪除成員「${name}」？`;
+      if (!confirm(msg)) return;
+
+      state.items = state.items
+        .filter(item => item.payer !== name)
+        .map(item => ({
+          ...item,
+          participants: (item.participants || []).filter(p => p !== name),
+          customShares: Object.fromEntries(Object.entries(item.customShares || {}).filter(([k]) => k !== name))
+        }))
+        .filter(item => item.mode !== 'equal' || (item.participants || []).length > 0);
+
+      state.friends = state.friends.filter(f => f !== name);
+      if (state.editId && !state.items.find(x => x.id === state.editId)) state.editId = null;
+      render.all();
+    },
+    addOrUpdateItem() {
+      if (!state.friends.length) return alert('請先加入成員');
+      const item = {
+        id: state.editId || Date.now() + Math.random(),
+        date: document.getElementById('itemDate').value || new Date().toISOString().slice(0, 10),
+        currency: document.getElementById('currency').value || 'HKD',
+        name: document.getElementById('itemName').value.trim(),
+        note: document.getElementById('itemNote').value.trim(),
+        amount: round2(parseFloat(document.getElementById('itemAmount').value) || 0),
+        payer: document.getElementById('itemPayer').value,
+        mode: document.getElementById('splitMode').value,
+        participants: [...document.querySelectorAll('#participantList input:checked')].map(el => el.value),
+        customShares: {}
+      };
+      if (!item.name || item.amount <= 0 || !item.payer) return alert('請完整填寫項目資料');
+      if (item.mode === 'equal' && item.participants.length === 0) return alert('請至少選擇一位參與成員');
+      if (item.mode === 'custom') {
+        let sum = 0;
+        document.querySelectorAll('.custom-val').forEach(input => {
+          const val = round2(parseFloat(input.value) || 0);
+          item.customShares[input.dataset.name] = val;
+          sum = round2(sum + val);
+        });
+        if (Math.abs(sum - item.amount) > 0.01) return alert(`金額不符！項目總額為 $${item.amount}，目前分配總和為 $${sum}。`);
+      }
+      if (state.editId) state.items = state.items.filter(x => x.id !== state.editId);
+      state.items.push(item);
+      state.editId = null;
+      render.all();
+    },
+    editItem(id) {
+      state.editId = id;
+      render.all();
+    },
+    removeItem(id) {
+      state.items = state.items.filter(x => x.id !== id);
+      if (state.editId === id) state.editId = null;
+      render.all();
+    },
+    updateRate(cur, val) {
+      state.rates[cur] = Number(val) || 1;
+      render.all();
+    },
+    clearAll() {
+      if (!confirm('確定要清空全部成員、帳目與匯率資料？')) return;
+      state.friends = [];
+      state.items = [];
+      state.editId = null;
+      state.rates = { HKD: 1, CNY: 1.08, JPY: 0.055, USD: 7.8 };
+      storage.save();
+      render.all();
+    },
+    toggleTheme() {
+      const root = document.documentElement;
+      root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+      storage.save();
+    }
+  };
+
+  storage.load();
+  return { state, storage, settlement, render, excel, actions };
+})();
+
+app.render.all();
+</script>
+</body>
+</html>
