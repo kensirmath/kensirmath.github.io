@@ -428,10 +428,16 @@
         let activeItems = [];
         const colors = ['#01696f', '#0f8b94', '#da7101', '#e09b2d', '#437a22', '#7a39bb', '#006494', '#a13544', '#964219', '#5e7d00'];
 
-        function clampCount(value) {
+        function clampCountBackup(value) {
             const n = Number(value);
             if (!Number.isFinite(n)) return 2;
             return Math.max(2, Math.min(24, Math.round(n)));
+        }
+
+        function clampCount(value) {
+            const n = Number(value);
+            if (!Number.isFinite(n)) return 1;
+            return n;
         }
 
         function buildItems() {
