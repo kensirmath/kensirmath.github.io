@@ -2,1334 +2,1334 @@
 <html lang="zh-Hant">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Calculator HTML Final Tight</title>
-  <style>
-    :root {
-      --bg1: #000;
-      --bg2: #14161a;
-      --text: #fff;
-      --muted: #8e9098;
-      --orange1: #ff9f1a;
-      --orange2: #ffba52;
-      --gray1: #53535c;
-      --gray2: #373740;
-      --blue1: #253447;
-      --blue2: #1b2636;
-      --key1: #2f3034;
-      --key2: #1c1d21;
-      --purple: #ba88ff;
-      --yellow: #ffe05c;
-      --overlay: rgba(0, 0, 0, .55);
-      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans: Inter, "Segoe UI", Arial, sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Calculator HTML Final Tight</title>
+    <style>
+        :root {
+            --bg1: #000;
+            --bg2: #14161a;
+            --text: #fff;
+            --muted: #8e9098;
+            --orange1: #ff9f1a;
+            --orange2: #ffba52;
+            --gray1: #53535c;
+            --gray2: #373740;
+            --blue1: #253447;
+            --blue2: #1b2636;
+            --key1: #2f3034;
+            --key2: #1c1d21;
+            --purple: #ba88ff;
+            --yellow: #ffe05c;
+            --overlay: rgba(0, 0, 0, .55);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            --sans: Inter, "Segoe UI", Arial, sans-serif;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    html,
-    body {
-      margin: 0;
-      height: 100%;
-      background: linear-gradient(to bottom, var(--bg1), #101216);
-      color: var(--text);
-      font-family: var(--sans);
-      overflow: hidden;
-      touch-action: manipulation;
-    }
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--bg1), #101216);
+            color: var(--text);
+            font-family: var(--sans);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
 
-    body {
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-    }
+        body {
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+        }
 
-    .app {
-      width: min(100%, 460px);
-      height: 100vh;
-      min-height: 0;
-      border-radius: 0;
-      background: linear-gradient(to bottom, #060606, #15181d);
-      border: 0;
-      box-shadow: none;
-      padding: 4px 4px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      position: relative;
-      overflow: hidden;
-    }
+        .app {
+            width: min(100%, 460px);
+            height: 100vh;
+            min-height: 0;
+            border-radius: 0;
+            background: linear-gradient(to bottom, #060606, #15181d);
+            border: 0;
+            box-shadow: none;
+            padding: 4px 4px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .top-controls {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      flex: 0 0 auto;
-    }
+        .top-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex: 0 0 auto;
+        }
 
-    .segmented {
-      display: grid;
-      grid-auto-flow: column;
-      gap: 3px;
-      background: rgba(255, 255, 255, .05);
-      border-radius: 10px;
-      padding: 2px;
-      flex: 1;
-    }
+        .segmented {
+            display: grid;
+            grid-auto-flow: column;
+            gap: 3px;
+            background: rgba(255, 255, 255, .05);
+            border-radius: 10px;
+            padding: 2px;
+            flex: 1;
+        }
 
-    .segmented.small {
-      flex: 0 0 128px;
-    }
+        .segmented.small {
+            flex: 0 0 128px;
+        }
 
-    .segmented button {
-      border: 0;
-      border-radius: 8px;
-      background: transparent;
-      color: #d7d9df;
-      padding: 7px 8px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
+        .segmented button {
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #d7d9df;
+            padding: 7px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
-    .segmented button.active {
-      background: rgba(255, 255, 255, .14);
-      color: white;
-    }
+        .segmented button.active {
+            background: rgba(255, 255, 255, .14);
+            color: white;
+        }
 
-    .memory-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 3px;
-      flex: 0 0 auto;
-    }
+        .memory-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 3px;
+            flex: 0 0 auto;
+        }
 
-    .memory-chip {
-      border: 0;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, .04);
-      color: white;
-      min-height: 36px;
-      padding: 3px 2px;
-      cursor: pointer;
-      transition: .12s ease;
-    }
+        .memory-chip {
+            border: 0;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .04);
+            color: white;
+            min-height: 36px;
+            padding: 3px 2px;
+            cursor: pointer;
+            transition: .12s ease;
+        }
 
-    .memory-chip.pending {
-      background: rgba(255, 224, 92, .16);
-    }
+        .memory-chip.pending {
+            background: rgba(255, 224, 92, .16);
+        }
 
-    .memory-chip:hover {
-      transform: translateY(-1px);
-    }
+        .memory-chip:hover {
+            transform: translateY(-1px);
+        }
 
-    .memory-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--purple);
-      line-height: 1.05;
-    }
+        .memory-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--purple);
+            line-height: 1.05;
+        }
 
-    .memory-chip.pending .memory-label {
-      color: var(--yellow);
-    }
+        .memory-chip.pending .memory-label {
+            color: var(--yellow);
+        }
 
-    .memory-value {
-      margin-top: 1px;
-      font-size: 9px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+        .memory-value {
+            margin-top: 1px;
+            font-size: 9px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .history-wrap {
-      height: 100px;
-      min-height: 100px;
-      max-height: 100px;
-      overflow: hidden;
-      flex: 0 0 auto;
-      border-radius: 8px;
-    }
+        .history-wrap {
+            height: 100px;
+            min-height: 100px;
+            max-height: 100px;
+            overflow: hidden;
+            flex: 0 0 auto;
+            border-radius: 8px;
+        }
 
-    .history {
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      padding: 1px 0 0;
-      min-height: 0;
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch;
-    }
+        .history {
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 1px 0 0;
+            min-height: 0;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
 
-    .history-item {
-      font-size: 11px;
-      color: var(--muted);
-      text-align: right;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: pointer;
-      border-radius: 6px;
-      padding: 2px 3px;
-      flex: 0 0 auto;
-    }
+        .history-item {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 2px 3px;
+            flex: 0 0 auto;
+        }
 
-    .history-item:hover {
-      background: rgba(255, 255, 255, .05);
-      color: #d9dbe1;
-    }
+        .history-item:hover {
+            background: rgba(255, 255, 255, .05);
+            color: #d9dbe1;
+        }
 
-    .editor-wrap {
-      min-height: 54px;
-      background: #000;
-      border-radius: 10px;
-      padding: 3px 6px;
-      margin: 0;
-      overflow: hidden;
-      flex: 0 0 auto;
-      border: 1px solid rgba(255, 255, 255, .08);
-    }
+        .editor-wrap {
+            min-height: 54px;
+            background: #000;
+            border-radius: 10px;
+            padding: 3px 6px;
+            margin: 0;
+            overflow: hidden;
+            flex: 0 0 auto;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
 
-    .editor-stack {
-      position: relative;
-      height: 46px;
-      overflow: hidden;
-      font-family: var(--mono);
-      font-size: 20px;
-      line-height: 1.14;
-    }
+        .editor-stack {
+            position: relative;
+            height: 46px;
+            overflow: hidden;
+            font-family: var(--mono);
+            font-size: 20px;
+            line-height: 1.14;
+        }
 
-    .editor-display {
-      color: #fff;
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow: hidden;
-      height: 100%;
-      max-height: 100%;
-      line-height: 1.14;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
+        .editor-display {
+            color: #fff;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow: hidden;
+            height: 100%;
+            max-height: 100%;
+            line-height: 1.14;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
 
-    .editor-placeholder {
-      position: absolute;
-      inset: 0;
-      color: rgba(255, 255, 255, .25);
-      pointer-events: none;
-      user-select: none;
-      line-height: 1.14;
-    }
+        .editor-placeholder {
+            position: absolute;
+            inset: 0;
+            color: rgba(255, 255, 255, .25);
+            pointer-events: none;
+            user-select: none;
+            line-height: 1.14;
+        }
 
-    .caret {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--orange1);
-      vertical-align: -0.12em;
-      margin: 0 1px;
-    }
+        .caret {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--orange1);
+            vertical-align: -0.12em;
+            margin: 0 1px;
+        }
 
-    .display {
-      min-height: 28px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-top: -1px;
-      flex: 0 0 auto;
-    }
+        .display {
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: -1px;
+            flex: 0 0 auto;
+        }
 
-    .display-left {
-      min-width: 52px;
-      font-size: 12px;
-      font-weight: 700;
-      color: rgba(255, 170, 60, .95);
-    }
+        .display-left {
+            min-width: 52px;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 170, 60, .95);
+        }
 
-    .display-left.pending {
-      min-width: 124px;
-      font-size: 11px;
-      color: var(--yellow);
-    }
+        .display-left.pending {
+            min-width: 124px;
+            font-size: 11px;
+            color: var(--yellow);
+        }
 
-    .display-right {
-      margin-left: auto;
-      font-size: 26px;
-      font-weight: 300;
-      text-align: right;
-      white-space: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+        .display-right {
+            margin-left: auto;
+            font-size: 26px;
+            font-weight: 300;
+            text-align: right;
+            white-space: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
 
-    .display-right::-webkit-scrollbar {
-      display: none;
-    }
+        .display-right::-webkit-scrollbar {
+            display: none;
+        }
 
-    .pages {
-      flex: 1 1 auto;
-      min-height: 0;
-      display: block;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 0;
-      margin: 0;
-    }
+        .pages {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: block;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 4px;
-      width: 100%;
-      align-content: start;
-      margin: 0;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            width: 100%;
+            align-content: start;
+            margin: 0;
+        }
 
-    .key {
-      min-height: 42px;
-      border: 0;
-      border-radius: 14px;
-      padding: 0 4px;
-      color: white;
-      font-size: 17px;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
-      transition: transform .12s ease, opacity .12s ease;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-    }
+        .key {
+            min-height: 42px;
+            border: 0;
+            border-radius: 14px;
+            padding: 0 4px;
+            color: white;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+            transition: transform .12s ease, opacity .12s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
 
-    .key:active {
-      transform: scale(.96);
-      opacity: .88;
-    }
+        .key:active {
+            transform: scale(.96);
+            opacity: .88;
+        }
 
-    .key.default {
-      background: linear-gradient(to bottom right, var(--key1), var(--key2));
-    }
+        .key.default {
+            background: linear-gradient(to bottom right, var(--key1), var(--key2));
+        }
 
-    .key.gray {
-      background: linear-gradient(to bottom right, var(--gray1), var(--gray2));
-    }
+        .key.gray {
+            background: linear-gradient(to bottom right, var(--gray1), var(--gray2));
+        }
 
-    .key.orange {
-      background: linear-gradient(to bottom right, var(--orange1), var(--orange2));
-    }
+        .key.orange {
+            background: linear-gradient(to bottom right, var(--orange1), var(--orange2));
+        }
 
-    .key.blue {
-      background: linear-gradient(to bottom right, var(--blue1), var(--blue2));
-      color: #c4ddff;
-    }
+        .key.blue {
+            background: linear-gradient(to bottom right, var(--blue1), var(--blue2));
+            color: #c4ddff;
+        }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: var(--overlay);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      z-index: 40;
-    }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--overlay);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            z-index: 40;
+        }
 
-    .overlay.show {
-      display: flex;
-    }
+        .overlay.show {
+            display: flex;
+        }
 
-    .dialog {
-      width: min(100%, 320px);
-      border-radius: 16px;
-      background: linear-gradient(to bottom, #1d2128, #161a20);
-      border: 1px solid rgba(255, 255, 255, .08);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
-      padding: 12px;
-    }
+        .dialog {
+            width: min(100%, 320px);
+            border-radius: 16px;
+            background: linear-gradient(to bottom, #1d2128, #161a20);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+            padding: 12px;
+        }
 
-    .dialog-title {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: #f2f4f8;
-    }
+        .dialog-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #f2f4f8;
+        }
 
-    .dialog-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
+        .dialog-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
 
-    .dialog-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
+        .dialog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
 
-    .dialog-btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 10px 8px;
-      background: rgba(255, 255, 255, .06);
-      color: white;
-      cursor: pointer;
-      min-height: 52px;
-    }
+        .dialog-btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 10px 8px;
+            background: rgba(255, 255, 255, .06);
+            color: white;
+            cursor: pointer;
+            min-height: 52px;
+        }
 
-    .dialog-key {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--purple);
-    }
+        .dialog-key {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--purple);
+        }
 
-    .dialog-value {
-      margin-top: 3px;
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+        .dialog-value {
+            margin-top: 3px;
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    .dialog-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 10px;
-    }
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+        }
 
-    .action-btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, .08);
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+        .action-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, .08);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="app">
-    <div class="top-controls">
-      <div class="segmented" id="modeControl">
-        <button class="active" data-mode="scientific">Scientific</button>
-        <button data-mode="standard">Standard</button>
-      </div>
-      <div class="segmented small" id="angleControl">
-        <button class="active" data-angle="degree">DEG</button>
-        <button data-angle="radian">RAD</button>
-      </div>
-    </div>
-
-    <div class="memory-row" id="memoryRow"></div>
-
-    <div class="history-wrap">
-      <div class="history" id="history"></div>
-    </div>
-
-    <div class="editor-wrap">
-      <div class="editor-stack">
-        <div class="editor-placeholder" id="editorPlaceholder">輸入算式</div>
-        <div class="editor-display" id="editorDisplay"></div>
-      </div>
-    </div>
-
-    <div class="display">
-      <div class="display-left" id="displayLeft">DEG</div>
-      <div class="display-right" id="displayRight">0</div>
-    </div>
-
-    <div class="pages">
-      <div class="grid" id="mainGrid"></div>
-    </div>
-
-    <div class="overlay" id="memoryOverlay">
-      <div class="dialog">
-        <div class="dialog-title" id="memoryDialogTitle">Memory</div>
-        <div class="dialog-subtitle" id="memoryDialogSubtitle">選擇記憶格</div>
-        <div class="dialog-grid" id="memoryDialogGrid"></div>
-        <div class="dialog-actions">
-          <button class="action-btn" id="memoryDialogCancel">取消</button>
+    <div class="app">
+        <div class="top-controls">
+            <div class="segmented" id="modeControl">
+                <button class="active" data-mode="scientific">Scientific</button>
+                <button data-mode="standard">Standard</button>
+            </div>
+            <div class="segmented small" id="angleControl">
+                <button class="active" data-angle="degree">DEG</button>
+                <button data-angle="radian">RAD</button>
+            </div>
         </div>
-      </div>
+
+        <div class="memory-row" id="memoryRow"></div>
+
+        <div class="history-wrap">
+            <div class="history" id="history"></div>
+        </div>
+
+        <div class="editor-wrap">
+            <div class="editor-stack">
+                <div class="editor-placeholder" id="editorPlaceholder">輸入算式</div>
+                <div class="editor-display" id="editorDisplay"></div>
+            </div>
+        </div>
+
+        <div class="display">
+            <div class="display-left" id="displayLeft">DEG</div>
+            <div class="display-right" id="displayRight">0</div>
+        </div>
+
+        <div class="pages">
+            <div class="grid" id="mainGrid"></div>
+        </div>
+
+        <div class="overlay" id="memoryOverlay">
+            <div class="dialog">
+                <div class="dialog-title" id="memoryDialogTitle">Memory</div>
+                <div class="dialog-subtitle" id="memoryDialogSubtitle">選擇記憶格</div>
+                <div class="dialog-grid" id="memoryDialogGrid"></div>
+                <div class="dialog-actions">
+                    <button class="action-btn" id="memoryDialogCancel">取消</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const state = {
-      pendingStoreSelection: false,
-      expressionText: "",
-      displayText: "0",
-      history: [],
-      mode: "scientific",
-      angleMode: "degree",
-      selectedRange: { location: 0, length: 0 },
-      memoryStore: { A: 0, B: 0, D: 0, X: 0, Y: 0, Z: 0 },
-      memoryDialogMode: null
-    };
+    <script>
+        const state = {
+            pendingStoreSelection: false,
+            expressionText: "",
+            displayText: "0",
+            history: [],
+            mode: "scientific",
+            angleMode: "degree",
+            selectedRange: { location: 0, length: 0 },
+            memoryStore: { A: 0, B: 0, D: 0, X: 0, Y: 0, Z: 0 },
+            memoryDialogMode: null
+        };
 
-    const variableKeys = ["A", "B", "D", "X", "Y", "Z"];
-    const functionTokens = ["sin(", "cos(", "tan(", "sqrt(", "log(", "ln("];
+        const variableKeys = ["A", "B", "D", "X", "Y", "Z"];
+        const functionTokens = ["sin(", "cos(", "tan(", "sqrt(", "log(", "ln("];
 
-    const standardButtons = [
-      { title: "←", type: "cursorLeft" },
-      { title: "→", type: "cursorRight" },
-      { title: "%", type: "percent" },
-      { title: "(", type: "openParen" },
-      { title: ")", type: "closeParen" },
+        const standardButtons = [
+            { title: "←", type: "cursorLeft" },
+            { title: "→", type: "cursorRight" },
+            { title: "%", type: "percent" },
+            { title: "(", type: "openParen" },
+            { title: ")", type: "closeParen" },
 
-      { title: "7", type: "digit", value: "7" },
-      { title: "8", type: "digit", value: "8" },
-      { title: "9", type: "digit", value: "9" },
-      { title: "⌫", type: "delete" },
-      { title: "AC", type: "clear" },
+            { title: "7", type: "digit", value: "7" },
+            { title: "8", type: "digit", value: "8" },
+            { title: "9", type: "digit", value: "9" },
+            { title: "⌫", type: "delete" },
+            { title: "AC", type: "clear" },
 
-      { title: "4", type: "digit", value: "4" },
-      { title: "5", type: "digit", value: "5" },
-      { title: "6", type: "digit", value: "6" },
-      { title: "×", type: "operation", value: "×" },
-      { title: "÷", type: "operation", value: "÷" },
+            { title: "4", type: "digit", value: "4" },
+            { title: "5", type: "digit", value: "5" },
+            { title: "6", type: "digit", value: "6" },
+            { title: "×", type: "operation", value: "×" },
+            { title: "÷", type: "operation", value: "÷" },
 
-      { title: "1", type: "digit", value: "1" },
-      { title: "2", type: "digit", value: "2" },
-      { title: "3", type: "digit", value: "3" },
-      { title: "+", type: "operation", value: "+" },
-      { title: "-", type: "operation", value: "-" },
+            { title: "1", type: "digit", value: "1" },
+            { title: "2", type: "digit", value: "2" },
+            { title: "3", type: "digit", value: "3" },
+            { title: "+", type: "operation", value: "+" },
+            { title: "-", type: "operation", value: "-" },
 
-      { title: "+/-", type: "sign" },
-      { title: "0", type: "digit", value: "0" },
-      { title: ".", type: "decimal" },
-      { title: "π", type: "constantPi" },
-      { title: "=", type: "equals" }
-    ];
+            { title: "+/-", type: "sign" },
+            { title: "0", type: "digit", value: "0" },
+            { title: ".", type: "decimal" },
+            { title: "π", type: "constantPi" },
+            { title: "=", type: "equals" }
+        ];
 
-    const scientificButtons = [
-      { title: "log", type: "scientific", value: "log(" },
-      { title: "ln", type: "scientific", value: "ln(" },
-      { title: "sin", type: "scientific", value: "sin(" },
-      { title: "cos", type: "scientific", value: "cos(" },
-      { title: "tan", type: "scientific", value: "tan(" },
+        const scientificButtons = [
+            { title: "HC", type: "historyClear" },
+            { title: "←", type: "cursorLeft" },
+            { title: "X", type: "memoryRecall", value: "X" },
+            { title: "→", type: "cursorRight" },
+            { title: "!", type: "factorial" },
 
-      { title: "√", type: "scientific", value: "sqrt(" },
-      { title: "^", type: "operation", value: "^" },
-      { title: "%", type: "percent" },
-      { title: "(", type: "openParen" },
-      { title: ")", type: "closeParen" },
+            { title: "A", type: "memoryRecall", value: "A" },
+            { title: "B", type: "memoryRecall", value: "B" },
+            { title: "D", type: "memoryRecall", value: "D" },
+            { title: "Y", type: "memoryRecall", value: "Y" },
+            { title: "Z", type: "memoryRecall", value: "Z" },
 
-      { title: "7", type: "digit", value: "7" },
-      { title: "8", type: "digit", value: "8" },
-      { title: "9", type: "digit", value: "9" },
-      { title: "⌫", type: "delete" },
-      { title: "AC", type: "clear" },
+            { title: "√", type: "scientific", value: "sqrt(" },
+            { title: "nPr", type: "permutation" },
+            { title: "^", type: "operation", value: "^" },
+            { title: "log", type: "scientific", value: "log(" },
+            { title: "ln", type: "scientific", value: "ln(" },
 
-      { title: "4", type: "digit", value: "4" },
-      { title: "5", type: "digit", value: "5" },
-      { title: "6", type: "digit", value: "6" },
-      { title: "×", type: "operation", value: "×" },
-      { title: "÷", type: "operation", value: "÷" },
+            { title: "+/-", type: "sign" },
+            { title: "nCr", type: "combination" },
+            { title: "sin", type: "scientific", value: "sin(" },
+            { title: "cos", type: "scientific", value: "cos(" },
+            { title: "tan", type: "scientific", value: "tan(" },
 
-      { title: "1", type: "digit", value: "1" },
-      { title: "2", type: "digit", value: "2" },
-      { title: "3", type: "digit", value: "3" },
-      { title: "+", type: "operation", value: "+" },
-      { title: "-", type: "operation", value: "-" },
+            { title: "RCL", type: "memoryRecall", value: "ASK" },
+            { title: "%", type: "percent" },
+            { title: "(", type: "openParen" },
+            { title: ")", type: "closeParen" },
+            { title: "STO", type: "memoryStore", value: "ASK" },
 
-      { title: "0", type: "digit", value: "0" },
-      { title: ".", type: "decimal" },
-      { title: "π", type: "constantPi" },
-      { title: "e", type: "constantE" },
-      { title: "=", type: "equals" },
+            { title: "7", type: "digit", value: "7" },
+            { title: "8", type: "digit", value: "8" },
+            { title: "9", type: "digit", value: "9" },
+            { title: "⌫", type: "delete" },
+            { title: "AC", type: "clear" },
 
-      { title: "STO", type: "memoryStore", value: "ASK" },
-      { title: "A", type: "memoryRecall", value: "A" },
-      { title: "B", type: "memoryRecall", value: "B" },
-      { title: "D", type: "memoryRecall", value: "D" },
-      { title: "HC", type: "historyClear" },
+            { title: "4", type: "digit", value: "4" },
+            { title: "5", type: "digit", value: "5" },
+            { title: "6", type: "digit", value: "6" },
+            { title: "×", type: "operation", value: "×" },
+            { title: "÷", type: "operation", value: "÷" },
 
-      { title: "RCL", type: "memoryRecall", value: "ASK" },
-      { title: "X", type: "memoryRecall", value: "X" },
-      { title: "Y", type: "memoryRecall", value: "Y" },
-      { title: "Z", type: "memoryRecall", value: "Z" },
-      { title: "+/-", type: "sign" },
+            { title: "1", type: "digit", value: "1" },
+            { title: "2", type: "digit", value: "2" },
+            { title: "3", type: "digit", value: "3" },
+            { title: "+", type: "operation", value: "+" },
+            { title: "-", type: "operation", value: "-" },
 
-      { title: "!", type: "factorial" },
-      { title: "nPr", type: "permutation" },
-      { title: "nCr", type: "combination" },
-      { title: "←", type: "cursorLeft" },
-      { title: "→", type: "cursorRight" }
-    ];
+            { title: "0", type: "digit", value: "0" },
+            { title: ".", type: "decimal" },
+            { title: "π", type: "constantPi" },
+            { title: "e", type: "constantE" },
+            { title: "=", type: "equals" },
+        ];
 
-    const modeControl = document.getElementById("modeControl");
-    const angleControl = document.getElementById("angleControl");
-    const memoryRow = document.getElementById("memoryRow");
-    const historyEl = document.getElementById("history");
-    const editorDisplay = document.getElementById("editorDisplay");
-    const editorPlaceholder = document.getElementById("editorPlaceholder");
-    const displayLeft = document.getElementById("displayLeft");
-    const displayRight = document.getElementById("displayRight");
-    const mainGrid = document.getElementById("mainGrid");
-    const memoryOverlay = document.getElementById("memoryOverlay");
-    const memoryDialogGrid = document.getElementById("memoryDialogGrid");
-    const memoryDialogTitle = document.getElementById("memoryDialogTitle");
-    const memoryDialogSubtitle = document.getElementById("memoryDialogSubtitle");
-    const memoryDialogCancel = document.getElementById("memoryDialogCancel");
+        const modeControl = document.getElementById("modeControl");
+        const angleControl = document.getElementById("angleControl");
+        const memoryRow = document.getElementById("memoryRow");
+        const historyEl = document.getElementById("history");
+        const editorDisplay = document.getElementById("editorDisplay");
+        const editorPlaceholder = document.getElementById("editorPlaceholder");
+        const displayLeft = document.getElementById("displayLeft");
+        const displayRight = document.getElementById("displayRight");
+        const mainGrid = document.getElementById("mainGrid");
+        const memoryOverlay = document.getElementById("memoryOverlay");
+        const memoryDialogGrid = document.getElementById("memoryDialogGrid");
+        const memoryDialogTitle = document.getElementById("memoryDialogTitle");
+        const memoryDialogSubtitle = document.getElementById("memoryDialogSubtitle");
+        const memoryDialogCancel = document.getElementById("memoryDialogCancel");
 
-    function formatValue(value) {
-      if (!Number.isFinite(value)) return "Error";
-      const rounded = Math.round(value);
-      if (Math.abs(value - rounded) < 1e-12) return String(rounded);
-      return new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 10,
-        minimumFractionDigits: 0,
-        useGrouping: false
-      }).format(value);
-    }
-
-    function escapeHtml(s) {
-      return s
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll(" ", "&nbsp;");
-    }
-
-    function renderEditor() {
-      const text = state.expressionText || "";
-      const pos = Math.max(0, Math.min(state.selectedRange.location, text.length));
-      const left = escapeHtml(text.slice(0, pos));
-      const right = escapeHtml(text.slice(pos));
-      const caret = '<span class="caret"></span>';
-      editorDisplay.innerHTML = text.length ? left + caret + right : "";
-      editorPlaceholder.style.display = text.length ? "none" : "block";
-    }
-
-    function setSelection(location, length = 0) {
-      state.selectedRange = {
-        location: Math.max(0, Math.min(location, state.expressionText.length)),
-        length
-      };
-      renderEditor();
-    }
-
-    function setTextAndSelection(text, location, length = 0) {
-      state.expressionText = text;
-      state.selectedRange = {
-        location: Math.max(0, Math.min(location, text.length)),
-        length
-      };
-      updateDisplayPreview();
-      renderEditor();
-      render();
-    }
-
-    function nsReplace(text, range, replacement) {
-      return text.slice(0, range.location) + replacement + text.slice(range.location + range.length);
-    }
-
-    function insertAtCursor(text) {
-      const replaced = nsReplace(state.expressionText, state.selectedRange, text);
-      const newLocation = state.selectedRange.location + text.length;
-      setTextAndSelection(replaced, newLocation, 0);
-    }
-
-    function replaceRange(range, text) {
-      const replaced = nsReplace(state.expressionText, range, text);
-      setTextAndSelection(replaced, range.location + text.length, 0);
-    }
-
-    function substring(range) {
-      return state.expressionText.slice(range.location, range.location + range.length);
-    }
-
-    function charBeforeCursor() {
-      if (state.selectedRange.location <= 0) return null;
-      return state.expressionText[state.selectedRange.location - 1] || null;
-    }
-
-    function replaceCharacterBeforeCursor(withText) {
-      if (state.selectedRange.location <= 0) return;
-      const range = { location: state.selectedRange.location - 1, length: 1 };
-      replaceRange(range, withText);
-    }
-
-    function isOperator(char) {
-      return ["+", "-", "×", "÷", "^", "*", "/"].includes(String(char));
-    }
-
-    function shouldPrefixZeroForDecimal() {
-      if (state.selectedRange.location <= 0) return true;
-      const prev = charBeforeCursor();
-      return prev == null || isOperator(prev) || prev === "(";
-    }
-
-    function shouldInsertMultiplicationBefore(text) {
-      const prev = charBeforeCursor();
-      if (!prev) return false;
-      if (prev === "P" || prev === "C") return false;
-
-      const incomingIsDigit = text.length === 1 && /\d/.test(text);
-      const incomingIsDecimal = text === ".";
-      const incomingIsOpenParen = text === "(";
-      const incomingIsFunction = functionTokens.includes(text);
-      const incomingIsConstantOrVariable = ["π", "e", "A", "B", "D", "X", "Y", "Z"].includes(text);
-      const incomingIsCombinatoricOperator = text === "P" || text === "C";
-
-      if (incomingIsCombinatoricOperator) return false;
-
-      if (incomingIsDigit || incomingIsDecimal) {
-        return prev === ")" || prev === "π" || prev === "e" || (/[A-Za-z]/.test(prev) && prev !== "P" && prev !== "C");
-      }
-
-      const previousAllowsImplicitMultiply =
-        /\d/.test(prev) || prev === ")" || prev === "π" || prev === "e" || /[A-Za-z]/.test(prev) || prev === "!";
-
-      return previousAllowsImplicitMultiply &&
-        (incomingIsOpenParen || incomingIsFunction || incomingIsConstantOrVariable);
-    }
-
-    function currentVariableTokenRange() {
-      const text = state.expressionText;
-      if (!text.length) return null;
-      const cursor = Math.max(0, Math.min(state.selectedRange.location, text.length));
-      if (cursor === 0) return null;
-      const char = text[cursor - 1];
-      const upper = char.toUpperCase();
-      return variableKeys.includes(upper) ? { location: cursor - 1, length: 1 } : null;
-    }
-
-    function currentNumericTokenRange() {
-      const text = state.expressionText;
-      if (!text.length) return null;
-
-      let start = Math.max(0, Math.min(state.selectedRange.location, text.length));
-      let end = start;
-
-      while (start > 0) {
-        const c = text[start - 1];
-        if (/[0-9.]/.test(c)) {
-          start -= 1;
-        } else if (c === "-") {
-          if (start - 1 === 0) {
-            start -= 1;
-          } else {
-            const before = text[start - 2];
-            if (isOperator(before) || before === "(") {
-              start -= 1;
-            }
-          }
-          break;
-        } else {
-          break;
+        function formatValue(value) {
+            if (!Number.isFinite(value)) return "Error";
+            const rounded = Math.round(value);
+            if (Math.abs(value - rounded) < 1e-12) return String(rounded);
+            return new Intl.NumberFormat("en-US", {
+                maximumFractionDigits: 10,
+                minimumFractionDigits: 0,
+                useGrouping: false
+            }).format(value);
         }
-      }
 
-      while (end < text.length) {
-        const c = text[end];
-        if (/[0-9.]/.test(c)) end += 1;
-        else break;
-      }
+        function escapeHtml(s) {
+            return s
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll(" ", "&nbsp;");
+        }
 
-      return start < end ? { location: start, length: end - start } : null;
-    }
+        function renderEditor() {
+            const text = state.expressionText || "";
+            const pos = Math.max(0, Math.min(state.selectedRange.location, text.length));
+            const left = escapeHtml(text.slice(0, pos));
+            const right = escapeHtml(text.slice(pos));
+            const caret = '<span class="caret"></span>';
+            editorDisplay.innerHTML = text.length ? left + caret + right : "";
+            editorPlaceholder.style.display = text.length ? "none" : "block";
+        }
 
-    function currentNumericValueOrDisplayValue() {
-      const range = currentNumericTokenRange();
-      if (range) {
-        const value = Number(substring(range));
-        if (!Number.isNaN(value)) return value;
-      }
-      const value = Number(state.displayText);
-      return Number.isNaN(value) ? null : value;
-    }
+        function setSelection(location, length = 0) {
+            state.selectedRange = {
+                location: Math.max(0, Math.min(location, state.expressionText.length)),
+                length
+            };
+            renderEditor();
+        }
 
-    function moveCursorLeft() {
-      setSelection(state.selectedRange.location - 1, 0);
-    }
+        function setTextAndSelection(text, location, length = 0) {
+            state.expressionText = text;
+            state.selectedRange = {
+                location: Math.max(0, Math.min(location, text.length)),
+                length
+            };
+            updateDisplayPreview();
+            renderEditor();
+            render();
+        }
 
-    function moveCursorRight() {
-      setSelection(state.selectedRange.location + 1, 0);
-    }
+        function nsReplace(text, range, replacement) {
+            return text.slice(0, range.location) + replacement + text.slice(range.location + range.length);
+        }
 
-    function insertAuto(text) {
-      state.pendingStoreSelection = false;
+        function insertAtCursor(text) {
+            const replaced = nsReplace(state.expressionText, state.selectedRange, text);
+            const newLocation = state.selectedRange.location + text.length;
+            setTextAndSelection(replaced, newLocation, 0);
+        }
 
-      if (text === "π" || text === "e" || variableKeys.includes(text) || functionTokens.includes(text) || text === "(") {
-        const prev = charBeforeCursor();
-        if (prev === ".") insertAtCursor("0");
-      }
+        function replaceRange(range, text) {
+            const replaced = nsReplace(state.expressionText, range, text);
+            setTextAndSelection(replaced, range.location + text.length, 0);
+        }
 
-      if (shouldInsertMultiplicationBefore(text)) {
-        insertAtCursor("×");
-      }
+        function substring(range) {
+            return state.expressionText.slice(range.location, range.location + range.length);
+        }
 
-      insertAtCursor(text);
-    }
+        function charBeforeCursor() {
+            if (state.selectedRange.location <= 0) return null;
+            return state.expressionText[state.selectedRange.location - 1] || null;
+        }
 
-    function insertDecimal() {
-      const range = currentNumericTokenRange();
-      if (range) {
-        const token = substring(range);
-        if (token.includes(".")) return;
-      }
+        function replaceCharacterBeforeCursor(withText) {
+            if (state.selectedRange.location <= 0) return;
+            const range = { location: state.selectedRange.location - 1, length: 1 };
+            replaceRange(range, withText);
+        }
 
-      if (shouldInsertMultiplicationBefore(".")) {
-        insertAtCursor("×0.");
-      } else if (shouldPrefixZeroForDecimal()) {
-        insertAtCursor("0.");
-      } else {
-        insertAtCursor(".");
-      }
-    }
+        function isOperator(char) {
+            return ["+", "-", "×", "÷", "^", "*", "/"].includes(String(char));
+        }
 
-    function insertOperator(op) {
-      if (!state.expressionText.length) {
-        if (op === "-") insertAtCursor("-");
-        updateDisplayPreview();
-        render();
-        return;
-      }
+        function shouldPrefixZeroForDecimal() {
+            if (state.selectedRange.location <= 0) return true;
+            const prev = charBeforeCursor();
+            return prev == null || isOperator(prev) || prev === "(";
+        }
 
-      const prev = charBeforeCursor();
-      if (state.selectedRange.length === 0 && prev && isOperator(prev)) {
-        replaceCharacterBeforeCursor(op);
-      } else {
-        insertAtCursor(op);
-      }
-    }
+        function shouldInsertMultiplicationBefore(text) {
+            const prev = charBeforeCursor();
+            if (!prev) return false;
+            if (prev === "P" || prev === "C") return false;
 
-    function insertCloseParen() {
-      const openCount = [...state.expressionText].filter(c => c === "(").length;
-      const closeCount = [...state.expressionText].filter(c => c === ")").length;
-      if (!(openCount > closeCount)) return;
+            const incomingIsDigit = text.length === 1 && /\d/.test(text);
+            const incomingIsDecimal = text === ".";
+            const incomingIsOpenParen = text === "(";
+            const incomingIsFunction = functionTokens.includes(text);
+            const incomingIsConstantOrVariable = ["π", "e", "A", "B", "D", "X", "Y", "Z"].includes(text);
+            const incomingIsCombinatoricOperator = text === "P" || text === "C";
 
-      const prev = charBeforeCursor();
-      if (prev && (isOperator(prev) || prev === "(")) return;
+            if (incomingIsCombinatoricOperator) return false;
 
-      insertAtCursor(")");
-    }
+            if (incomingIsDigit || incomingIsDecimal) {
+                return prev === ")" || prev === "π" || prev === "e" || (/[A-Za-z]/.test(prev) && prev !== "P" && prev !== "C");
+            }
 
-    function insertFactorial() {
-      state.pendingStoreSelection = false;
-      const prev = charBeforeCursor();
-      if (prev && (/\d/.test(prev) || prev === ")" || prev === "π" || prev === "e" || /[A-Za-z]/.test(prev))) {
-        insertAtCursor("!");
-      }
-    }
+            const previousAllowsImplicitMultiply =
+                /\d/.test(prev) || prev === ")" || prev === "π" || prev === "e" || /[A-Za-z]/.test(prev) || prev === "!";
 
-    function backspace() {
-      if (state.selectedRange.length > 0) {
-        const replaced = nsReplace(state.expressionText, state.selectedRange, "");
-        setTextAndSelection(replaced, state.selectedRange.location, 0);
-      } else if (state.selectedRange.location > 0) {
-        const deleteRange = { location: state.selectedRange.location - 1, length: 1 };
-        const replaced = nsReplace(state.expressionText, deleteRange, "");
-        setTextAndSelection(replaced, deleteRange.location, 0);
-      }
-    }
+            return previousAllowsImplicitMultiply &&
+                (incomingIsOpenParen || incomingIsFunction || incomingIsConstantOrVariable);
+        }
 
-    function clearAll() {
-      state.expressionText = "";
-      state.displayText = "0";
-      state.selectedRange = { location: 0, length: 0 };
-      renderEditor();
-      render();
-    }
+        function currentVariableTokenRange() {
+            const text = state.expressionText;
+            if (!text.length) return null;
+            const cursor = Math.max(0, Math.min(state.selectedRange.location, text.length));
+            if (cursor === 0) return null;
+            const char = text[cursor - 1];
+            const upper = char.toUpperCase();
+            return variableKeys.includes(upper) ? { location: cursor - 1, length: 1 } : null;
+        }
 
-    function autoCloseParentheses(text) {
-      const openCount = [...text].filter(c => c === "(").length;
-      const closeCount = [...text].filter(c => c === ")").length;
-      return openCount > closeCount ? text + ")".repeat(openCount - closeCount) : text;
-    }
+        function currentNumericTokenRange() {
+            const text = state.expressionText;
+            if (!text.length) return null;
 
-    function toggleSignForCurrentToken() {
-      const variableRange = currentVariableTokenRange();
-      if (variableRange) {
-        const token = substring(variableRange);
-        const replacement = token.startsWith("-") ? token.slice(1) : "-" + token;
-        replaceRange(variableRange, replacement);
-        return;
-      }
+            let start = Math.max(0, Math.min(state.selectedRange.location, text.length));
+            let end = start;
 
-      const range = currentNumericTokenRange();
-      if (!range) {
-        insertAtCursor("-");
-        return;
-      }
+            while (start > 0) {
+                const c = text[start - 1];
+                if (/[0-9.]/.test(c)) {
+                    start -= 1;
+                } else if (c === "-") {
+                    if (start - 1 === 0) {
+                        start -= 1;
+                    } else {
+                        const before = text[start - 2];
+                        if (isOperator(before) || before === "(") {
+                            start -= 1;
+                        }
+                    }
+                    break;
+                } else {
+                    break;
+                }
+            }
 
-      const token = substring(range);
-      const replacement = token.startsWith("-") ? token.slice(1) : "-" + token;
-      replaceRange(range, replacement);
-    }
+            while (end < text.length) {
+                const c = text[end];
+                if (/[0-9.]/.test(c)) end += 1;
+                else break;
+            }
 
-    function updateDisplayPreview() {
-      const trimmed = state.expressionText.trim();
-      state.displayText = trimmed === "" ? "0" : trimmed;
-    }
+            return start < end ? { location: start, length: end - start } : null;
+        }
 
-    function openMemoryDialog(mode) {
-      state.memoryDialogMode = mode;
-      memoryDialogTitle.textContent = mode === "store" ? "Store Memory" : "Recall Memory";
-      memoryDialogSubtitle.textContent =
-        mode === "store"
-          ? "選擇要儲存到哪個記憶格"
-          : "選擇要插入哪個記憶格";
+        function currentNumericValueOrDisplayValue() {
+            const range = currentNumericTokenRange();
+            if (range) {
+                const value = Number(substring(range));
+                if (!Number.isNaN(value)) return value;
+            }
+            const value = Number(state.displayText);
+            return Number.isNaN(value) ? null : value;
+        }
 
-      memoryDialogGrid.innerHTML = "";
-      for (const key of variableKeys) {
-        const btn = document.createElement("button");
-        btn.className = "dialog-btn";
-        btn.innerHTML = `
+        function moveCursorLeft() {
+            setSelection(state.selectedRange.location - 1, 0);
+        }
+
+        function moveCursorRight() {
+            setSelection(state.selectedRange.location + 1, 0);
+        }
+
+        function insertAuto(text) {
+            state.pendingStoreSelection = false;
+
+            if (text === "π" || text === "e" || variableKeys.includes(text) || functionTokens.includes(text) || text === "(") {
+                const prev = charBeforeCursor();
+                if (prev === ".") insertAtCursor("0");
+            }
+
+            if (shouldInsertMultiplicationBefore(text)) {
+                insertAtCursor("×");
+            }
+
+            insertAtCursor(text);
+        }
+
+        function insertDecimal() {
+            const range = currentNumericTokenRange();
+            if (range) {
+                const token = substring(range);
+                if (token.includes(".")) return;
+            }
+
+            if (shouldInsertMultiplicationBefore(".")) {
+                insertAtCursor("×0.");
+            } else if (shouldPrefixZeroForDecimal()) {
+                insertAtCursor("0.");
+            } else {
+                insertAtCursor(".");
+            }
+        }
+
+        function insertOperator(op) {
+            if (!state.expressionText.length) {
+                if (op === "-") insertAtCursor("-");
+                updateDisplayPreview();
+                render();
+                return;
+            }
+
+            const prev = charBeforeCursor();
+            if (state.selectedRange.length === 0 && prev && isOperator(prev)) {
+                replaceCharacterBeforeCursor(op);
+            } else {
+                insertAtCursor(op);
+            }
+        }
+
+        function insertCloseParen() {
+            const openCount = [...state.expressionText].filter(c => c === "(").length;
+            const closeCount = [...state.expressionText].filter(c => c === ")").length;
+            if (!(openCount > closeCount)) return;
+
+            const prev = charBeforeCursor();
+            if (prev && (isOperator(prev) || prev === "(")) return;
+
+            insertAtCursor(")");
+        }
+
+        function insertFactorial() {
+            state.pendingStoreSelection = false;
+            const prev = charBeforeCursor();
+            if (prev && (/\d/.test(prev) || prev === ")" || prev === "π" || prev === "e" || /[A-Za-z]/.test(prev))) {
+                insertAtCursor("!");
+            }
+        }
+
+        function backspace() {
+            if (state.selectedRange.length > 0) {
+                const replaced = nsReplace(state.expressionText, state.selectedRange, "");
+                setTextAndSelection(replaced, state.selectedRange.location, 0);
+            } else if (state.selectedRange.location > 0) {
+                const deleteRange = { location: state.selectedRange.location - 1, length: 1 };
+                const replaced = nsReplace(state.expressionText, deleteRange, "");
+                setTextAndSelection(replaced, deleteRange.location, 0);
+            }
+        }
+
+        function clearAll() {
+            state.expressionText = "";
+            state.displayText = "0";
+            state.selectedRange = { location: 0, length: 0 };
+            renderEditor();
+            render();
+        }
+
+        function autoCloseParentheses(text) {
+            const openCount = [...text].filter(c => c === "(").length;
+            const closeCount = [...text].filter(c => c === ")").length;
+            return openCount > closeCount ? text + ")".repeat(openCount - closeCount) : text;
+        }
+
+        function toggleSignForCurrentToken() {
+            const variableRange = currentVariableTokenRange();
+            if (variableRange) {
+                const token = substring(variableRange);
+                const replacement = token.startsWith("-") ? token.slice(1) : "-" + token;
+                replaceRange(variableRange, replacement);
+                return;
+            }
+
+            const range = currentNumericTokenRange();
+            if (!range) {
+                insertAtCursor("-");
+                return;
+            }
+
+            const token = substring(range);
+            const replacement = token.startsWith("-") ? token.slice(1) : "-" + token;
+            replaceRange(range, replacement);
+        }
+
+        function updateDisplayPreview() {
+            const trimmed = state.expressionText.trim();
+            state.displayText = trimmed === "" ? "0" : trimmed;
+        }
+
+        function openMemoryDialog(mode) {
+            state.memoryDialogMode = mode;
+            memoryDialogTitle.textContent = mode === "store" ? "Store Memory" : "Recall Memory";
+            memoryDialogSubtitle.textContent =
+                mode === "store"
+                    ? "選擇要儲存到哪個記憶格"
+                    : "選擇要插入哪個記憶格";
+
+            memoryDialogGrid.innerHTML = "";
+            for (const key of variableKeys) {
+                const btn = document.createElement("button");
+                btn.className = "dialog-btn";
+                btn.innerHTML = `
           <div class="dialog-key">${key}</div>
           <div class="dialog-value">${formatValue(state.memoryStore[key] ?? 0)}</div>
         `;
-        btn.addEventListener("click", () => {
-          if (mode === "store") {
+                btn.addEventListener("click", () => {
+                    if (mode === "store") {
+                        const value = currentNumericValueOrDisplayValue();
+                        if (value != null) state.memoryStore[key] = value;
+                        state.pendingStoreSelection = false;
+                    } else {
+                        insertAuto(key);
+                    }
+                    closeMemoryDialog();
+                    render();
+                });
+                memoryDialogGrid.appendChild(btn);
+            }
+
+            memoryOverlay.classList.add("show");
+        }
+
+        function closeMemoryDialog() {
+            state.memoryDialogMode = null;
+            memoryOverlay.classList.remove("show");
+        }
+
+        function handleMemoryStore(key) {
             const value = currentNumericValueOrDisplayValue();
-            if (value != null) state.memoryStore[key] = value;
-            state.pendingStoreSelection = false;
-          } else {
-            insertAuto(key);
-          }
-          closeMemoryDialog();
-          render();
-        });
-        memoryDialogGrid.appendChild(btn);
-      }
+            if (value == null) return;
 
-      memoryOverlay.classList.add("show");
-    }
-
-    function closeMemoryDialog() {
-      state.memoryDialogMode = null;
-      memoryOverlay.classList.remove("show");
-    }
-
-    function handleMemoryStore(key) {
-      const value = currentNumericValueOrDisplayValue();
-      if (value == null) return;
-
-      if (key === "ASK") {
-        state.pendingStoreSelection = true;
-        openMemoryDialog("store");
-      } else {
-        state.memoryStore[key] = value;
-        state.pendingStoreSelection = false;
-      }
-      render();
-    }
-
-    function handleMemoryRecall(key) {
-      if (state.pendingStoreSelection) {
-        const value = currentNumericValueOrDisplayValue();
-        if (value != null) state.memoryStore[key] = value;
-        state.pendingStoreSelection = false;
-        render();
-        return;
-      }
-
-      if (key === "ASK") {
-        openMemoryDialog("recall");
-      } else {
-        insertAuto(key);
-      }
-    }
-
-    function handleTap(btn) {
-      switch (btn.type) {
-        case "digit": insertAuto(btn.value); break;
-        case "decimal": insertDecimal(); break;
-        case "operation": insertOperator(btn.value); break;
-        case "scientific": insertAuto(btn.value); break;
-        case "openParen": insertAuto("("); break;
-        case "closeParen": insertCloseParen(); break;
-        case "constantPi": insertAuto("π"); break;
-        case "constantE": insertAuto("e"); break;
-        case "delete": backspace(); break;
-        case "clear": clearAll(); break;
-        case "equals": evaluate(); break;
-        case "memoryStore": handleMemoryStore(btn.value); break;
-        case "memoryRecall": handleMemoryRecall(btn.value); break;
-        case "historyClear": state.history = []; render(); break;
-        case "sign": toggleSignForCurrentToken(); break;
-        case "percent": insertAuto("/100"); break;
-        case "factorial": insertFactorial(); break;
-        case "permutation": insertAuto("P"); break;
-        case "combination": insertAuto("C"); break;
-        case "cursorLeft": moveCursorLeft(); break;
-        case "cursorRight": moveCursorRight(); break;
-      }
-    }
-
-    class Parser {
-      constructor(input, angleMode, memoryValues) {
-        this.chars = [...input.replaceAll(" ", "")];
-        this.index = 0;
-        this.angleMode = angleMode;
-        this.memoryValues = memoryValues;
-      }
-
-      peek() { return this.index < this.chars.length ? this.chars[this.index] : null; }
-      skipSpaces() { while (this.index < this.chars.length && /\s/.test(this.chars[this.index])) this.index++; }
-
-      parse() {
-        const value = this.parseExpression();
-        this.skipSpaces();
-        if (value == null || this.index !== this.chars.length) throw new Error("invalidExpression");
-        return value;
-      }
-
-      parseExpression() {
-        let value = this.parseTerm();
-        while (true) {
-          this.skipSpaces();
-          const op = this.peek();
-          if (op !== "+" && op !== "-") break;
-          this.index++;
-          const rhs = this.parseTerm();
-          if (rhs == null || value == null) return null;
-          value = op === "+" ? value + rhs : value - rhs;
-        }
-        return value;
-      }
-
-      parseTerm() {
-        let value = this.parseCombinatorics();
-        while (true) {
-          this.skipSpaces();
-          const op = this.peek();
-          if (op !== "*" && op !== "/") break;
-          this.index++;
-          const rhs = this.parseCombinatorics();
-          if (rhs == null || value == null) return null;
-          if (op === "/" && Math.abs(rhs) < 1e-12) return null;
-          value = op === "*" ? value * rhs : value / rhs;
-        }
-        return value;
-      }
-
-      parseCombinatorics() {
-        let left = this.parsePostfix();
-        if (left == null) return null;
-        while (true) {
-          this.skipSpaces();
-          const op = this.peek();
-          if (op !== "P" && op !== "C") break;
-          this.index++;
-          const right = this.parsePostfix();
-          if (right == null) return null;
-          left = op === "P" ? this.permutation(left, right) : this.combination(left, right);
-          if (left == null) return null;
-        }
-        return left;
-      }
-
-      parsePostfix() {
-        let value = this.parsePower();
-        if (value == null) return null;
-        while (true) {
-          this.skipSpaces();
-          if (this.peek() === "!") {
-            this.index++;
-            value = this.factorial(value);
-            if (value == null) return null;
-          } else break;
-        }
-        return value;
-      }
-
-      parsePower() {
-        let left = this.parseUnary();
-        if (left == null) return null;
-        this.skipSpaces();
-        if (this.peek() === "^") {
-          this.index++;
-          const right = this.parsePower();
-          if (right == null) return null;
-          left = Math.pow(left, right);
-        }
-        return left;
-      }
-
-      parseUnary() {
-        this.skipSpaces();
-        if (this.peek() === "+") { this.index++; return this.parseUnary(); }
-        if (this.peek() === "-") {
-          this.index++;
-          const value = this.parseUnary();
-          return value == null ? null : -value;
-        }
-        return this.parsePrimary();
-      }
-
-      parsePrimary() {
-        this.skipSpaces();
-
-        if (this.peek() === "(") {
-          this.index++;
-          const value = this.parseExpression();
-          this.skipSpaces();
-          if (this.peek() !== ")") return null;
-          this.index++;
-          return value;
+            if (key === "ASK") {
+                state.pendingStoreSelection = true;
+                openMemoryDialog("store");
+            } else {
+                state.memoryStore[key] = value;
+                state.pendingStoreSelection = false;
+            }
+            render();
         }
 
-        const name = this.parseIdentifier();
-        if (name != null) {
-          this.skipSpaces();
-          if (this.peek() === "(") {
-            this.index++;
-            const arg = this.parseExpression();
-            this.skipSpaces();
-            if (this.peek() !== ")") return null;
-            this.index++;
-            return this.applyFunction(name, arg);
-          } else {
-            return this.lookupVariable(name);
-          }
+        function handleMemoryRecall(key) {
+            if (state.pendingStoreSelection) {
+                const value = currentNumericValueOrDisplayValue();
+                if (value != null) state.memoryStore[key] = value;
+                state.pendingStoreSelection = false;
+                render();
+                return;
+            }
+
+            if (key === "ASK") {
+                openMemoryDialog("recall");
+            } else {
+                insertAuto(key);
+            }
         }
 
-        return this.parseNumber();
-      }
-
-      parseNumber() {
-        this.skipSpaces();
-        const start = this.index;
-        let hasDot = false;
-
-        while (this.index < this.chars.length) {
-          const c = this.chars[this.index];
-          if (/\d/.test(c)) this.index++;
-          else if (c === "." && !hasDot) { hasDot = true; this.index++; }
-          else break;
+        function handleTap(btn) {
+            switch (btn.type) {
+                case "digit": insertAuto(btn.value); break;
+                case "decimal": insertDecimal(); break;
+                case "operation": insertOperator(btn.value); break;
+                case "scientific": insertAuto(btn.value); break;
+                case "openParen": insertAuto("("); break;
+                case "closeParen": insertCloseParen(); break;
+                case "constantPi": insertAuto("π"); break;
+                case "constantE": insertAuto("e"); break;
+                case "delete": backspace(); break;
+                case "clear": clearAll(); break;
+                case "equals": evaluate(); break;
+                case "memoryStore": handleMemoryStore(btn.value); break;
+                case "memoryRecall": handleMemoryRecall(btn.value); break;
+                case "historyClear": state.history = []; render(); break;
+                case "sign": toggleSignForCurrentToken(); break;
+                case "percent": insertAuto("/100"); break;
+                case "factorial": insertFactorial(); break;
+                case "permutation": insertAuto("P"); break;
+                case "combination": insertAuto("C"); break;
+                case "cursorLeft": moveCursorLeft(); break;
+                case "cursorRight": moveCursorRight(); break;
+            }
         }
 
-        if (start >= this.index) return null;
-        const value = Number(this.chars.slice(start, this.index).join(""));
-        return Number.isNaN(value) ? null : value;
-      }
+        class Parser {
+            constructor(input, angleMode, memoryValues) {
+                this.chars = [...input.replaceAll(" ", "")];
+                this.index = 0;
+                this.angleMode = angleMode;
+                this.memoryValues = memoryValues;
+            }
 
-      parseIdentifier() {
-        this.skipSpaces();
-        const start = this.index;
-        while (this.index < this.chars.length && (/[A-Za-z]/.test(this.chars[this.index]) || this.chars[this.index] === "π")) {
-          this.index++;
+            peek() { return this.index < this.chars.length ? this.chars[this.index] : null; }
+            skipSpaces() { while (this.index < this.chars.length && /\s/.test(this.chars[this.index])) this.index++; }
+
+            parse() {
+                const value = this.parseExpression();
+                this.skipSpaces();
+                if (value == null || this.index !== this.chars.length) throw new Error("invalidExpression");
+                return value;
+            }
+
+            parseExpression() {
+                let value = this.parseTerm();
+                while (true) {
+                    this.skipSpaces();
+                    const op = this.peek();
+                    if (op !== "+" && op !== "-") break;
+                    this.index++;
+                    const rhs = this.parseTerm();
+                    if (rhs == null || value == null) return null;
+                    value = op === "+" ? value + rhs : value - rhs;
+                }
+                return value;
+            }
+
+            parseTerm() {
+                let value = this.parseCombinatorics();
+                while (true) {
+                    this.skipSpaces();
+                    const op = this.peek();
+                    if (op !== "*" && op !== "/") break;
+                    this.index++;
+                    const rhs = this.parseCombinatorics();
+                    if (rhs == null || value == null) return null;
+                    if (op === "/" && Math.abs(rhs) < 1e-12) return null;
+                    value = op === "*" ? value * rhs : value / rhs;
+                }
+                return value;
+            }
+
+            parseCombinatorics() {
+                let left = this.parsePostfix();
+                if (left == null) return null;
+                while (true) {
+                    this.skipSpaces();
+                    const op = this.peek();
+                    if (op !== "P" && op !== "C") break;
+                    this.index++;
+                    const right = this.parsePostfix();
+                    if (right == null) return null;
+                    left = op === "P" ? this.permutation(left, right) : this.combination(left, right);
+                    if (left == null) return null;
+                }
+                return left;
+            }
+
+            parsePostfix() {
+                let value = this.parsePower();
+                if (value == null) return null;
+                while (true) {
+                    this.skipSpaces();
+                    if (this.peek() === "!") {
+                        this.index++;
+                        value = this.factorial(value);
+                        if (value == null) return null;
+                    } else break;
+                }
+                return value;
+            }
+
+            parsePower() {
+                let left = this.parseUnary();
+                if (left == null) return null;
+                this.skipSpaces();
+                if (this.peek() === "^") {
+                    this.index++;
+                    const right = this.parsePower();
+                    if (right == null) return null;
+                    left = Math.pow(left, right);
+                }
+                return left;
+            }
+
+            parseUnary() {
+                this.skipSpaces();
+                if (this.peek() === "+") { this.index++; return this.parseUnary(); }
+                if (this.peek() === "-") {
+                    this.index++;
+                    const value = this.parseUnary();
+                    return value == null ? null : -value;
+                }
+                return this.parsePrimary();
+            }
+
+            parsePrimary() {
+                this.skipSpaces();
+
+                if (this.peek() === "(") {
+                    this.index++;
+                    const value = this.parseExpression();
+                    this.skipSpaces();
+                    if (this.peek() !== ")") return null;
+                    this.index++;
+                    return value;
+                }
+
+                const name = this.parseIdentifier();
+                if (name != null) {
+                    this.skipSpaces();
+                    if (this.peek() === "(") {
+                        this.index++;
+                        const arg = this.parseExpression();
+                        this.skipSpaces();
+                        if (this.peek() !== ")") return null;
+                        this.index++;
+                        return this.applyFunction(name, arg);
+                    } else {
+                        return this.lookupVariable(name);
+                    }
+                }
+
+                return this.parseNumber();
+            }
+
+            parseNumber() {
+                this.skipSpaces();
+                const start = this.index;
+                let hasDot = false;
+
+                while (this.index < this.chars.length) {
+                    const c = this.chars[this.index];
+                    if (/\d/.test(c)) this.index++;
+                    else if (c === "." && !hasDot) { hasDot = true; this.index++; }
+                    else break;
+                }
+
+                if (start >= this.index) return null;
+                const value = Number(this.chars.slice(start, this.index).join(""));
+                return Number.isNaN(value) ? null : value;
+            }
+
+            parseIdentifier() {
+                this.skipSpaces();
+                const start = this.index;
+                while (this.index < this.chars.length && (/[A-Za-z]/.test(this.chars[this.index]) || this.chars[this.index] === "π")) {
+                    this.index++;
+                }
+                if (start >= this.index) return null;
+                return this.chars.slice(start, this.index).join("");
+            }
+
+            lookupVariable(name) {
+                if (name === "π") return Math.PI;
+                if (name === "e") return Math.E;
+                return this.memoryValues[name.toUpperCase()];
+            }
+
+            applyFunction(name, value) {
+                if (value == null) return null;
+                switch (name.toLowerCase()) {
+                    case "sin": return Math.sin(this.convertAngleToRadiansIfNeeded(value));
+                    case "cos": return Math.cos(this.convertAngleToRadiansIfNeeded(value));
+                    case "tan": return Math.tan(this.convertAngleToRadiansIfNeeded(value));
+                    case "sqrt": return value < 0 ? null : Math.sqrt(value);
+                    case "log": return value <= 0 ? null : Math.log10(value);
+                    case "ln": return value <= 0 ? null : Math.log(value);
+                    default: return null;
+                }
+            }
+
+            convertAngleToRadiansIfNeeded(value) {
+                return this.angleMode === "degree" ? value * Math.PI / 180 : value;
+            }
+
+            factorial(x) {
+                if (x < 0 || Math.round(x) !== x) return null;
+                const n = Math.trunc(x);
+                if (n === 0 || n === 1) return 1;
+                let result = 1;
+                for (let i = 2; i <= n; i++) result *= i;
+                return result;
+            }
+
+            permutation(n, r) {
+                if (n < 0 || r < 0 || Math.round(n) !== n || Math.round(r) !== r) return null;
+                const nn = Math.trunc(n);
+                const rr = Math.trunc(r);
+                if (rr > nn) return null;
+                if (rr === 0) return 1;
+                let result = 1;
+                for (let i = 0; i < rr; i++) result *= (nn - i);
+                return result;
+            }
+
+            combination(n, r) {
+                if (n < 0 || r < 0 || Math.round(n) !== n || Math.round(r) !== r) return null;
+                const nn = Math.trunc(n);
+                let rr = Math.trunc(r);
+                if (rr > nn) return null;
+                if (rr === 0) return 1;
+                rr = Math.min(rr, nn - rr);
+                let result = 1;
+                for (let i = 1; i <= rr; i++) {
+                    result = result * (nn - rr + i) / i;
+                }
+                return result;
+            }
         }
-        if (start >= this.index) return null;
-        return this.chars.slice(start, this.index).join("");
-      }
 
-      lookupVariable(name) {
-        if (name === "π") return Math.PI;
-        if (name === "e") return Math.E;
-        return this.memoryValues[name.toUpperCase()];
-      }
+        function evaluate() {
+            const completed = autoCloseParentheses(state.expressionText);
+            const input = completed.replaceAll("×", "*").replaceAll("÷", "/");
 
-      applyFunction(name, value) {
-        if (value == null) return null;
-        switch (name.toLowerCase()) {
-          case "sin": return Math.sin(this.convertAngleToRadiansIfNeeded(value));
-          case "cos": return Math.cos(this.convertAngleToRadiansIfNeeded(value));
-          case "tan": return Math.tan(this.convertAngleToRadiansIfNeeded(value));
-          case "sqrt": return value < 0 ? null : Math.sqrt(value);
-          case "log": return value <= 0 ? null : Math.log10(value);
-          case "ln": return value <= 0 ? null : Math.log(value);
-          default: return null;
+            try {
+                const parser = new Parser(input, state.angleMode, state.memoryStore);
+                const value = parser.parse();
+                const result = formatValue(value);
+                state.history.push(`${completed} = ${result}`);
+                state.displayText = result;
+                state.expressionText = result;
+                state.selectedRange = { location: result.length, length: 0 };
+                renderEditor();
+            } catch {
+                state.displayText = "Error";
+            }
+            render();
         }
-      }
 
-      convertAngleToRadiansIfNeeded(value) {
-        return this.angleMode === "degree" ? value * Math.PI / 180 : value;
-      }
-
-      factorial(x) {
-        if (x < 0 || Math.round(x) !== x) return null;
-        const n = Math.trunc(x);
-        if (n === 0 || n === 1) return 1;
-        let result = 1;
-        for (let i = 2; i <= n; i++) result *= i;
-        return result;
-      }
-
-      permutation(n, r) {
-        if (n < 0 || r < 0 || Math.round(n) !== n || Math.round(r) !== r) return null;
-        const nn = Math.trunc(n);
-        const rr = Math.trunc(r);
-        if (rr > nn) return null;
-        if (rr === 0) return 1;
-        let result = 1;
-        for (let i = 0; i < rr; i++) result *= (nn - i);
-        return result;
-      }
-
-      combination(n, r) {
-        if (n < 0 || r < 0 || Math.round(n) !== n || Math.round(r) !== r) return null;
-        const nn = Math.trunc(n);
-        let rr = Math.trunc(r);
-        if (rr > nn) return null;
-        if (rr === 0) return 1;
-        rr = Math.min(rr, nn - rr);
-        let result = 1;
-        for (let i = 1; i <= rr; i++) {
-          result = result * (nn - rr + i) / i;
+        function buttonClass(btn) {
+            if (btn.type === "equals" || btn.type === "operation") return "orange";
+            if (["clear", "delete", "historyClear", "sign", "percent", "cursorLeft", "cursorRight"].includes(btn.type)) return "gray";
+            if (["scientific", "constantPi", "constantE", "memoryStore", "memoryRecall", "factorial", "permutation", "combination"].includes(btn.type)) return "blue";
+            return "default";
         }
-        return result;
-      }
-    }
 
-    function evaluate() {
-      const completed = autoCloseParentheses(state.expressionText);
-      const input = completed.replaceAll("×", "*").replaceAll("÷", "/");
+        function renderButtons() {
+            const buttons = state.mode === "scientific" ? scientificButtons : standardButtons;
+            mainGrid.innerHTML = "";
+            for (const btn of buttons) {
+                const el = document.createElement("button");
+                el.className = `key ${buttonClass(btn)}`;
+                el.textContent = btn.title;
+                el.addEventListener("click", () => handleTap(btn));
+                mainGrid.appendChild(el);
+            }
+        }
 
-      try {
-        const parser = new Parser(input, state.angleMode, state.memoryStore);
-        const value = parser.parse();
-        const result = formatValue(value);
-        state.history.push(`${completed} = ${result}`);
-        state.displayText = result;
-        state.expressionText = result;
-        state.selectedRange = { location: result.length, length: 0 };
-        renderEditor();
-      } catch {
-        state.displayText = "Error";
-      }
-      render();
-    }
-
-    function buttonClass(btn) {
-      if (btn.type === "equals" || btn.type === "operation") return "orange";
-      if (["clear", "delete", "historyClear", "sign", "percent", "cursorLeft", "cursorRight"].includes(btn.type)) return "gray";
-      if (["scientific", "constantPi", "constantE", "memoryStore", "memoryRecall", "factorial", "permutation", "combination"].includes(btn.type)) return "blue";
-      return "default";
-    }
-
-    function renderButtons() {
-      const buttons = state.mode === "scientific" ? scientificButtons : standardButtons;
-      mainGrid.innerHTML = "";
-      for (const btn of buttons) {
-        const el = document.createElement("button");
-        el.className = `key ${buttonClass(btn)}`;
-        el.textContent = btn.title;
-        el.addEventListener("click", () => handleTap(btn));
-        mainGrid.appendChild(el);
-      }
-    }
-
-    function renderMemoryRow() {
-      memoryRow.innerHTML = "";
-      for (const key of variableKeys) {
-        const btn = document.createElement("button");
-        btn.className = `memory-chip ${state.pendingStoreSelection ? "pending" : ""}`;
-        btn.innerHTML = `
+        function renderMemoryRow() {
+            memoryRow.innerHTML = "";
+            for (const key of variableKeys) {
+                const btn = document.createElement("button");
+                btn.className = `memory-chip ${state.pendingStoreSelection ? "pending" : ""}`;
+                btn.innerHTML = `
           <div class="memory-label">${key}</div>
           <div class="memory-value">${formatValue(state.memoryStore[key] ?? 0)}</div>
         `;
-        btn.addEventListener("click", () => {
-          if (state.pendingStoreSelection) {
-            const value = currentNumericValueOrDisplayValue();
-            if (value != null) state.memoryStore[key] = value;
-            state.pendingStoreSelection = false;
+                btn.addEventListener("click", () => {
+                    if (state.pendingStoreSelection) {
+                        const value = currentNumericValueOrDisplayValue();
+                        if (value != null) state.memoryStore[key] = value;
+                        state.pendingStoreSelection = false;
+                        render();
+                    } else {
+                        insertAuto(key);
+                    }
+                });
+                memoryRow.appendChild(btn);
+            }
+        }
+
+        function renderHistory() {
+            historyEl.innerHTML = "";
+            state.history.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "history-item";
+                div.textContent = item;
+                div.title = "點擊回填算式";
+                div.addEventListener("click", () => {
+                    const eqPos = item.lastIndexOf(" = ");
+                    const expr = eqPos >= 0 ? item.slice(0, eqPos) : item;
+                    setTextAndSelection(expr, expr.length, 0);
+                });
+                historyEl.appendChild(div);
+            });
+            requestAnimationFrame(() => {
+                historyEl.scrollTop = historyEl.scrollHeight;
+            });
+        }
+
+        function renderDisplay() {
+            if (state.pendingStoreSelection) {
+                displayLeft.textContent = "STO → A/B/D/X/Y/Z";
+                displayLeft.className = "display-left pending";
+            } else if (state.mode === "scientific") {
+                displayLeft.textContent = state.angleMode === "degree" ? "DEG" : "RAD";
+                displayLeft.className = "display-left";
+            } else {
+                displayLeft.textContent = "";
+                displayLeft.className = "display-left";
+            }
+            displayRight.textContent = state.displayText;
+        }
+
+        function renderControls() {
+            modeControl.querySelectorAll("button").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.mode === state.mode);
+            });
+            angleControl.querySelectorAll("button").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.angle === state.angleMode);
+            });
+            angleControl.style.visibility = state.mode === "scientific" ? "visible" : "hidden";
+        }
+
+        function render() {
+            renderControls();
+            renderMemoryRow();
+            renderHistory();
+            renderDisplay();
+            renderButtons();
+            renderEditor();
+        }
+
+        modeControl.addEventListener("click", e => {
+            const btn = e.target.closest("button[data-mode]");
+            if (!btn) return;
+            state.mode = btn.dataset.mode;
             render();
-          } else {
-            insertAuto(key);
-          }
         });
-        memoryRow.appendChild(btn);
-      }
-    }
 
-    function renderHistory() {
-      historyEl.innerHTML = "";
-      state.history.forEach(item => {
-        const div = document.createElement("div");
-        div.className = "history-item";
-        div.textContent = item;
-        div.title = "點擊回填算式";
-        div.addEventListener("click", () => {
-          const eqPos = item.lastIndexOf(" = ");
-          const expr = eqPos >= 0 ? item.slice(0, eqPos) : item;
-          setTextAndSelection(expr, expr.length, 0);
+        angleControl.addEventListener("click", e => {
+            const btn = e.target.closest("button[data-angle]");
+            if (!btn) return;
+            state.angleMode = btn.dataset.angle;
+            render();
         });
-        historyEl.appendChild(div);
-      });
-      requestAnimationFrame(() => {
-        historyEl.scrollTop = historyEl.scrollHeight;
-      });
-    }
 
-    function renderDisplay() {
-      if (state.pendingStoreSelection) {
-        displayLeft.textContent = "STO → A/B/D/X/Y/Z";
-        displayLeft.className = "display-left pending";
-      } else if (state.mode === "scientific") {
-        displayLeft.textContent = state.angleMode === "degree" ? "DEG" : "RAD";
-        displayLeft.className = "display-left";
-      } else {
-        displayLeft.textContent = "";
-        displayLeft.className = "display-left";
-      }
-      displayRight.textContent = state.displayText;
-    }
+        memoryDialogCancel.addEventListener("click", () => {
+            state.pendingStoreSelection = false;
+            closeMemoryDialog();
+            render();
+        });
 
-    function renderControls() {
-      modeControl.querySelectorAll("button").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.mode === state.mode);
-      });
-      angleControl.querySelectorAll("button").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.angle === state.angleMode);
-      });
-      angleControl.style.visibility = state.mode === "scientific" ? "visible" : "hidden";
-    }
+        memoryOverlay.addEventListener("click", e => {
+            if (e.target === memoryOverlay) {
+                state.pendingStoreSelection = false;
+                closeMemoryDialog();
+                render();
+            }
+        });
 
-    function render() {
-      renderControls();
-      renderMemoryRow();
-      renderHistory();
-      renderDisplay();
-      renderButtons();
-      renderEditor();
-    }
-
-    modeControl.addEventListener("click", e => {
-      const btn = e.target.closest("button[data-mode]");
-      if (!btn) return;
-      state.mode = btn.dataset.mode;
-      render();
-    });
-
-    angleControl.addEventListener("click", e => {
-      const btn = e.target.closest("button[data-angle]");
-      if (!btn) return;
-      state.angleMode = btn.dataset.angle;
-      render();
-    });
-
-    memoryDialogCancel.addEventListener("click", () => {
-      state.pendingStoreSelection = false;
-      closeMemoryDialog();
-      render();
-    });
-
-    memoryOverlay.addEventListener("click", e => {
-      if (e.target === memoryOverlay) {
-        state.pendingStoreSelection = false;
-        closeMemoryDialog();
+        state.expressionText = "";
+        state.selectedRange = { location: 0, length: 0 };
         render();
-      }
-    });
-
-    state.expressionText = "";
-    state.selectedRange = { location: 0, length: 0 };
-    render();
-  </script>
+    </script>
 </body>
 
 </html>
