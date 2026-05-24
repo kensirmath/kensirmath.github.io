@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Real Calculator</title>
+  <title>Calculator HTML Final Tight</title>
   <style>
     :root {
       --bg1: #000;
@@ -38,10 +38,11 @@
       color: var(--text);
       font-family: var(--sans);
       overflow: hidden;
+      touch-action: manipulation;
     }
 
     body {
-      padding: 8px;
+      padding: 0;
       display: flex;
       justify-content: center;
       align-items: stretch;
@@ -49,23 +50,23 @@
 
     .app {
       width: min(100%, 460px);
-      height: calc(100vh - 16px);
+      height: 100vh;
       min-height: 0;
-      border-radius: 24px;
+      border-radius: 0;
       background: linear-gradient(to bottom, #060606, #15181d);
-      border: 1px solid rgba(255, 255, 255, .06);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, .35);
-      padding: 8px 10px 8px;
+      border: 0;
+      box-shadow: none;
+      padding: 4px 4px 0;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 3px;
       position: relative;
       overflow: hidden;
     }
 
     .top-controls {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       align-items: center;
       flex: 0 0 auto;
     }
@@ -73,23 +74,24 @@
     .segmented {
       display: grid;
       grid-auto-flow: column;
-      gap: 4px;
+      gap: 3px;
       background: rgba(255, 255, 255, .05);
-      border-radius: 12px;
-      padding: 3px;
+      border-radius: 10px;
+      padding: 2px;
       flex: 1;
     }
 
     .segmented.small {
-      flex: 0 0 132px;
+      flex: 0 0 128px;
     }
 
     .segmented button {
       border: 0;
-      border-radius: 9px;
+      border-radius: 8px;
       background: transparent;
       color: #d7d9df;
-      padding: 8px 10px;
+      padding: 7px 8px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -102,17 +104,17 @@
     .memory-row {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 4px;
+      gap: 3px;
       flex: 0 0 auto;
     }
 
     .memory-chip {
       border: 0;
-      border-radius: 9px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, .04);
       color: white;
-      min-height: 40px;
-      padding: 4px 3px;
+      min-height: 36px;
+      padding: 3px 2px;
       cursor: pointer;
       transition: .12s ease;
     }
@@ -126,7 +128,7 @@
     }
 
     .memory-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--purple);
       line-height: 1.05;
@@ -138,7 +140,7 @@
 
     .memory-value {
       margin-top: 1px;
-      font-size: 10px;
+      font-size: 9px;
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
@@ -146,12 +148,12 @@
     }
 
     .history-wrap {
-      height: 124px;
-      min-height: 124px;
-      max-height: 124px;
+      height: 100px;
+      min-height: 100px;
+      max-height: 100px;
       overflow: hidden;
       flex: 0 0 auto;
-      border-radius: 10px;
+      border-radius: 8px;
     }
 
     .history {
@@ -160,23 +162,23 @@
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      padding: 2px 2px 0;
+      gap: 2px;
+      padding: 1px 0 0;
       min-height: 0;
       scrollbar-width: thin;
       -webkit-overflow-scrolling: touch;
     }
 
     .history-item {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
       text-align: right;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
-      border-radius: 7px;
-      padding: 2px 4px;
+      border-radius: 6px;
+      padding: 2px 3px;
       flex: 0 0 auto;
     }
 
@@ -186,10 +188,10 @@
     }
 
     .editor-wrap {
-      min-height: 50px;
+      min-height: 54px;
       background: #000;
-      border-radius: 12px;
-      padding: 1px 10px;
+      border-radius: 10px;
+      padding: 3px 6px;
       margin: 0;
       overflow: hidden;
       flex: 0 0 auto;
@@ -198,43 +200,24 @@
 
     .editor-stack {
       position: relative;
-      min-height: 44px;
-      max-height: 56px;
-      overflow: auto;
+      height: 46px;
+      overflow: hidden;
       font-family: var(--mono);
-      font-size: 24px;
+      font-size: 20px;
       line-height: 1.14;
-      white-space: pre-wrap;
-      word-break: break-word;
-      tab-size: 2;
     }
 
-    .editor-input {
-      display: block;
-      width: 100%;
-      min-height: 44px;
-      max-height: 56px;
-      resize: none;
-      overflow-y: auto;
-      overflow-x: hidden;
-      background: transparent;
-      color: #ffffff;
-      caret-color: var(--orange1);
-      -webkit-text-fill-color: #ffffff;
-      font: inherit;
-      line-height: inherit;
-      border: 0;
-      outline: 0;
-      padding: 0;
-      margin: 0;
+    .editor-display {
+      color: #fff;
       white-space: pre-wrap;
       word-break: break-word;
-    }
-
-    .editor-input::selection {
-      background: rgba(255, 255, 255, .22);
-      color: #ffffff;
-      -webkit-text-fill-color: #ffffff;
+      overflow: hidden;
+      height: 100%;
+      max-height: 100%;
+      line-height: 1.14;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
     .editor-placeholder {
@@ -246,31 +229,40 @@
       line-height: 1.14;
     }
 
+    .caret {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--orange1);
+      vertical-align: -0.12em;
+      margin: 0 1px;
+    }
+
     .display {
-      min-height: 32px;
+      min-height: 28px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       margin-top: -1px;
       flex: 0 0 auto;
     }
 
     .display-left {
-      min-width: 58px;
-      font-size: 13px;
+      min-width: 52px;
+      font-size: 12px;
       font-weight: 700;
       color: rgba(255, 170, 60, .95);
     }
 
     .display-left.pending {
-      min-width: 132px;
-      font-size: 12px;
+      min-width: 124px;
+      font-size: 11px;
       color: var(--yellow);
     }
 
     .display-right {
       margin-left: auto;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 300;
       text-align: right;
       white-space: nowrap;
@@ -288,29 +280,33 @@
       display: block;
       overflow-y: auto;
       overflow-x: hidden;
-      padding-bottom: 2px;
+      padding: 0;
+      margin: 0;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      gap: 4px;
       width: 100%;
       align-content: start;
+      margin: 0;
     }
 
     .key {
-      min-height: 50px;
+      min-height: 42px;
       border: 0;
-      border-radius: 16px;
-      padding: 0 6px;
+      border-radius: 14px;
+      padding: 0 4px;
       color: white;
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 500;
       cursor: pointer;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
       transition: transform .12s ease, opacity .12s ease;
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
     }
 
     .key:active {
@@ -335,10 +331,6 @@
       color: #c4ddff;
     }
 
-    .key.wide {
-      grid-column: span 2;
-    }
-
     .overlay {
       position: absolute;
       inset: 0;
@@ -346,7 +338,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 12px;
       z-index: 40;
     }
 
@@ -356,11 +348,11 @@
 
     .dialog {
       width: min(100%, 320px);
-      border-radius: 18px;
+      border-radius: 16px;
       background: linear-gradient(to bottom, #1d2128, #161a20);
       border: 1px solid rgba(255, 255, 255, .08);
       box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
-      padding: 14px;
+      padding: 12px;
     }
 
     .dialog-title {
@@ -373,7 +365,7 @@
     .dialog-subtitle {
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .dialog-grid {
@@ -389,11 +381,7 @@
       background: rgba(255, 255, 255, .06);
       color: white;
       cursor: pointer;
-      min-height: 54px;
-    }
-
-    .dialog-btn:hover {
-      background: rgba(255, 255, 255, .1);
+      min-height: 52px;
     }
 
     .dialog-key {
@@ -415,7 +403,7 @@
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .action-btn {
@@ -451,7 +439,7 @@
     <div class="editor-wrap">
       <div class="editor-stack">
         <div class="editor-placeholder" id="editorPlaceholder">輸入算式</div>
-        <textarea id="editorInput" class="editor-input" rows="1" spellcheck="false"></textarea>
+        <div class="editor-display" id="editorDisplay"></div>
       </div>
     </div>
 
@@ -474,13 +462,6 @@
         </div>
       </div>
     </div>
-
-    <div class="page-header">
-      <button class="btn btn--outline back-btn" onclick="window.location.href='index.html'">← 返回主選單 Return to
-        Menu</button>
-      <h2>Real Calculator</h2>
-    </div>
-
   </div>
 
   <script>
@@ -500,8 +481,8 @@
     const functionTokens = ["sin(", "cos(", "tan(", "sqrt(", "log(", "ln("];
 
     const standardButtons = [
-      { title: "+/-", type: "sign" },
-      { title: "^", type: "operation", value: "^" },
+      { title: "←", type: "cursorLeft" },
+      { title: "→", type: "cursorRight" },
       { title: "%", type: "percent" },
       { title: "(", type: "openParen" },
       { title: ")", type: "closeParen" },
@@ -524,7 +505,8 @@
       { title: "+", type: "operation", value: "+" },
       { title: "-", type: "operation", value: "-" },
 
-      { title: "0", type: "digit", value: "0", wide: true },
+      { title: "+/-", type: "sign" },
+      { title: "0", type: "digit", value: "0" },
       { title: ".", type: "decimal" },
       { title: "π", type: "constantPi" },
       { title: "=", type: "equals" }
@@ -581,14 +563,16 @@
 
       { title: "!", type: "factorial" },
       { title: "nPr", type: "permutation" },
-      { title: "nCr", type: "combination" }
+      { title: "nCr", type: "combination" },
+      { title: "←", type: "cursorLeft" },
+      { title: "→", type: "cursorRight" }
     ];
 
     const modeControl = document.getElementById("modeControl");
     const angleControl = document.getElementById("angleControl");
     const memoryRow = document.getElementById("memoryRow");
     const historyEl = document.getElementById("history");
-    const editorInput = document.getElementById("editorInput");
+    const editorDisplay = document.getElementById("editorDisplay");
     const editorPlaceholder = document.getElementById("editorPlaceholder");
     const displayLeft = document.getElementById("displayLeft");
     const displayRight = document.getElementById("displayRight");
@@ -610,44 +594,40 @@
       }).format(value);
     }
 
-    function updateEditorPlaceholder() {
-      editorPlaceholder.style.display = state.expressionText.length ? "none" : "block";
+    function escapeHtml(s) {
+      return s
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll(" ", "&nbsp;");
     }
 
-    function autoResizeEditor() {
-      editorInput.style.height = "auto";
-      editorInput.style.height = Math.min(editorInput.scrollHeight, 56) + "px";
+    function renderEditor() {
+      const text = state.expressionText || "";
+      const pos = Math.max(0, Math.min(state.selectedRange.location, text.length));
+      const left = escapeHtml(text.slice(0, pos));
+      const right = escapeHtml(text.slice(pos));
+      const caret = '<span class="caret"></span>';
+      editorDisplay.innerHTML = text.length ? left + caret + right : "";
+      editorPlaceholder.style.display = text.length ? "none" : "block";
     }
 
-    function updateSelectionFromTextarea() {
-      const start = editorInput.selectionStart ?? 0;
-      const end = editorInput.selectionEnd ?? start;
-      state.selectedRange = { location: start, length: end - start };
-    }
-
-    function applySelectionToTextarea() {
-      const start = Math.max(0, Math.min(state.selectedRange.location, state.expressionText.length));
-      const end = Math.max(start, Math.min(start + state.selectedRange.length, state.expressionText.length));
-      editorInput.setSelectionRange(start, end);
-    }
-
-    function syncEditorView() {
-      editorInput.value = state.expressionText;
-      updateEditorPlaceholder();
-      applySelectionToTextarea();
-      autoResizeEditor();
-    }
-
-    function focusEditor() {
-      editorInput.focus();
-      applySelectionToTextarea();
+    function setSelection(location, length = 0) {
+      state.selectedRange = {
+        location: Math.max(0, Math.min(location, state.expressionText.length)),
+        length
+      };
+      renderEditor();
     }
 
     function setTextAndSelection(text, location, length = 0) {
       state.expressionText = text;
-      state.selectedRange = { location, length };
+      state.selectedRange = {
+        location: Math.max(0, Math.min(location, text.length)),
+        length
+      };
       updateDisplayPreview();
-      syncEditorView();
+      renderEditor();
       render();
     }
 
@@ -771,6 +751,14 @@
       return Number.isNaN(value) ? null : value;
     }
 
+    function moveCursorLeft() {
+      setSelection(state.selectedRange.location - 1, 0);
+    }
+
+    function moveCursorRight() {
+      setSelection(state.selectedRange.location + 1, 0);
+    }
+
     function insertAuto(text) {
       state.pendingStoreSelection = false;
 
@@ -852,7 +840,7 @@
       state.expressionText = "";
       state.displayText = "0";
       state.selectedRange = { location: 0, length: 0 };
-      syncEditorView();
+      renderEditor();
       render();
     }
 
@@ -913,7 +901,6 @@
           }
           closeMemoryDialog();
           render();
-          focusEditor();
         });
         memoryDialogGrid.appendChild(btn);
       }
@@ -957,8 +944,6 @@
     }
 
     function handleTap(btn) {
-      focusEditor();
-
       switch (btn.type) {
         case "digit": insertAuto(btn.value); break;
         case "decimal": insertDecimal(); break;
@@ -979,6 +964,8 @@
         case "factorial": insertFactorial(); break;
         case "permutation": insertAuto("P"); break;
         case "combination": insertAuto("C"); break;
+        case "cursorLeft": moveCursorLeft(); break;
+        case "cursorRight": moveCursorRight(); break;
       }
     }
 
@@ -1210,7 +1197,7 @@
         state.displayText = result;
         state.expressionText = result;
         state.selectedRange = { location: result.length, length: 0 };
-        syncEditorView();
+        renderEditor();
       } catch {
         state.displayText = "Error";
       }
@@ -1219,7 +1206,7 @@
 
     function buttonClass(btn) {
       if (btn.type === "equals" || btn.type === "operation") return "orange";
-      if (["clear", "delete", "historyClear", "sign", "percent"].includes(btn.type)) return "gray";
+      if (["clear", "delete", "historyClear", "sign", "percent", "cursorLeft", "cursorRight"].includes(btn.type)) return "gray";
       if (["scientific", "constantPi", "constantE", "memoryStore", "memoryRecall", "factorial", "permutation", "combination"].includes(btn.type)) return "blue";
       return "default";
     }
@@ -1227,10 +1214,9 @@
     function renderButtons() {
       const buttons = state.mode === "scientific" ? scientificButtons : standardButtons;
       mainGrid.innerHTML = "";
-
       for (const btn of buttons) {
         const el = document.createElement("button");
-        el.className = `key ${buttonClass(btn)} ${btn.wide ? "wide" : ""}`;
+        el.className = `key ${buttonClass(btn)}`;
         el.textContent = btn.title;
         el.addEventListener("click", () => handleTap(btn));
         mainGrid.appendChild(el);
@@ -1247,7 +1233,6 @@
           <div class="memory-value">${formatValue(state.memoryStore[key] ?? 0)}</div>
         `;
         btn.addEventListener("click", () => {
-          focusEditor();
           if (state.pendingStoreSelection) {
             const value = currentNumericValueOrDisplayValue();
             if (value != null) state.memoryStore[key] = value;
@@ -1272,7 +1257,6 @@
           const eqPos = item.lastIndexOf(" = ");
           const expr = eqPos >= 0 ? item.slice(0, eqPos) : item;
           setTextAndSelection(expr, expr.length, 0);
-          focusEditor();
         });
         historyEl.appendChild(div);
       });
@@ -1311,6 +1295,7 @@
       renderHistory();
       renderDisplay();
       renderButtons();
+      renderEditor();
     }
 
     modeControl.addEventListener("click", e => {
@@ -1318,7 +1303,6 @@
       if (!btn) return;
       state.mode = btn.dataset.mode;
       render();
-      focusEditor();
     });
 
     angleControl.addEventListener("click", e => {
@@ -1326,14 +1310,12 @@
       if (!btn) return;
       state.angleMode = btn.dataset.angle;
       render();
-      focusEditor();
     });
 
     memoryDialogCancel.addEventListener("click", () => {
       state.pendingStoreSelection = false;
       closeMemoryDialog();
       render();
-      focusEditor();
     });
 
     memoryOverlay.addEventListener("click", e => {
@@ -1341,74 +1323,11 @@
         state.pendingStoreSelection = false;
         closeMemoryDialog();
         render();
-        focusEditor();
-      }
-    });
-
-    editorInput.addEventListener("input", () => {
-      state.expressionText = editorInput.value;
-      updateSelectionFromTextarea();
-      updateDisplayPreview();
-      syncEditorView();
-      render();
-    });
-
-    editorInput.addEventListener("select", updateSelectionFromTextarea);
-
-    editorInput.addEventListener("keyup", () => {
-      updateSelectionFromTextarea();
-    });
-
-    editorInput.addEventListener("click", () => {
-      updateSelectionFromTextarea();
-    });
-
-    editorInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        evaluate();
-      } else {
-        requestAnimationFrame(() => {
-          updateSelectionFromTextarea();
-          autoResizeEditor();
-        });
-      }
-    });
-
-    window.addEventListener("keydown", e => {
-      if (document.activeElement === editorInput) return;
-      if (memoryOverlay.classList.contains("show")) return;
-      if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-      if (/^[0-9]$/.test(e.key)) {
-        e.preventDefault();
-        handleTap({ type: "digit", value: e.key });
-      } else if (e.key === ".") {
-        e.preventDefault();
-        handleTap({ type: "decimal" });
-      } else if (["+", "-", "*", "/", "^", "(", ")"].includes(e.key)) {
-        e.preventDefault();
-        if (e.key === "(") handleTap({ type: "openParen" });
-        else if (e.key === ")") handleTap({ type: "closeParen" });
-        else handleTap({ type: "operation", value: e.key === "*" ? "×" : e.key === "/" ? "÷" : e.key });
-      } else if (e.key === "Backspace") {
-        e.preventDefault();
-        handleTap({ type: "delete" });
-      } else if (e.key === "Enter" || e.key === "=") {
-        e.preventDefault();
-        handleTap({ type: "equals" });
-      } else if (e.key === "Escape" && memoryOverlay.classList.contains("show")) {
-        e.preventDefault();
-        state.pendingStoreSelection = false;
-        closeMemoryDialog();
-        render();
-        focusEditor();
       }
     });
 
     state.expressionText = "";
     state.selectedRange = { location: 0, length: 0 };
-    syncEditorView();
     render();
   </script>
 </body>
