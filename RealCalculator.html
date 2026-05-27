@@ -150,9 +150,9 @@
         }
 
         .history-wrap {
-            height: 100px;
-            min-height: 100px;
-            max-height: 100px;
+            height: 148px;
+            min-height: 148px;
+            max-height: 1480px;
             overflow: hidden;
             flex: 0 0 auto;
             border-radius: 8px;
@@ -172,7 +172,7 @@
         }
 
         .history-item {
-            font-size: 11px;
+            font-size: 30px;
             color: var(--muted);
             text-align: right;
             white-space: nowrap;
@@ -296,7 +296,7 @@
         }
 
         .key {
-            min-height: 42px;
+            min-height: 63px;
             border: 0;
             border-radius: 14px;
             padding: 0 4px;
@@ -476,11 +476,12 @@
             angleMode: "degree",
             selectedRange: { location: 0, length: 0 },
             memoryStore: { A: 0, B: 0, D: 0, X: 0, Y: 0, Z: 0 },
-            memoryDialogMode: null
+            memoryDialogMode: null,
+            shiftOn: false
         };
 
         const variableKeys = ["A", "B", "D", "X", "Y", "Z"];
-        const functionTokens = ["sin(", "cos(", "tan(", "sqrt(", "log(", "ln("];
+        const functionTokens = ["sin(", "cos(", "tan(", "asin(", "acos(", "atan(", "sqrt(", "log(", "ln("];
 
         const standardButtons = [
             { title: "←", type: "cursorLeft" },
@@ -514,61 +515,63 @@
             { title: "=", type: "equals" }
         ];
 
-        const scientificButtons = [
-            { title: "HC", type: "historyClear" },
-            { title: "←", type: "cursorLeft" },
-            { title: "X", type: "memoryRecall", value: "X" },
-            { title: "→", type: "cursorRight" },
-            { title: "!", type: "factorial" },
+        function getScientificButtons() {
+            return [
+                { title: "SHIFT", type: "shift" },
+                { title: "←", type: "cursorLeft" },
+                { title: "X", type: "memoryRecall", value: "X" },
+                { title: "→", type: "cursorRight" },
+                { title: "!", type: "factorial" },
 
-            { title: "A", type: "memoryRecall", value: "A" },
-            { title: "B", type: "memoryRecall", value: "B" },
-            { title: "D", type: "memoryRecall", value: "D" },
-            { title: "Y", type: "memoryRecall", value: "Y" },
-            { title: "Z", type: "memoryRecall", value: "Z" },
+                { title: "A", type: "memoryRecall", value: "A" },
+                { title: "B", type: "memoryRecall", value: "B" },
+                { title: "D", type: "memoryRecall", value: "D" },
+                { title: "Y", type: "memoryRecall", value: "Y" },
+                { title: "Z", type: "memoryRecall", value: "Z" },
 
-            { title: "√", type: "scientific", value: "sqrt(" },
-            { title: "nPr", type: "permutation" },
-            { title: "^", type: "operation", value: "^" },
-            { title: "log", type: "scientific", value: "log(" },
-            { title: "ln", type: "scientific", value: "ln(" },
+                { title: "√", type: "scientific", value: "sqrt(" },
+                { title: "nPr", type: "permutation" },
+                { title: "^", type: "operation", value: "^" },
+                { title: "log", type: "scientific", value: "log(" },
+                { title: "ln", type: "scientific", value: "ln(" },
 
-            { title: "+/-", type: "sign" },
-            { title: "nCr", type: "combination" },
-            { title: "sin", type: "scientific", value: "sin(" },
-            { title: "cos", type: "scientific", value: "cos(" },
-            { title: "tan", type: "scientific", value: "tan(" },
+                { title: "+/-", type: "sign" },
+                { title: "nCr", type: "combination" },
+                { title: state.shiftOn ? "asin" : "sin", type: "scientific", value: state.shiftOn ? "asin(" : "sin(" },
+                { title: state.shiftOn ? "acos" : "cos", type: "scientific", value: state.shiftOn ? "acos(" : "cos(" },
+                { title: state.shiftOn ? "atan" : "tan", type: "scientific", value: state.shiftOn ? "atan(" : "tan(" },
 
-            { title: "RCL", type: "memoryRecall", value: "ASK" },
-            { title: "%", type: "percent" },
-            { title: "(", type: "openParen" },
-            { title: ")", type: "closeParen" },
-            { title: "STO", type: "memoryStore", value: "ASK" },
+                { title: "RCL", type: "memoryRecall", value: "ASK" },
+                { title: "%", type: "percent" },
+                { title: "(", type: "openParen" },
+                { title: ")", type: "closeParen" },
+                { title: "STO", type: "memoryStore", value: "ASK" },
 
-            { title: "7", type: "digit", value: "7" },
-            { title: "8", type: "digit", value: "8" },
-            { title: "9", type: "digit", value: "9" },
-            { title: "⌫", type: "delete" },
-            { title: "AC", type: "clear" },
+                { title: "7", type: "digit", value: "7" },
+                { title: "8", type: "digit", value: "8" },
+                { title: "9", type: "digit", value: "9" },
+                { title: "⌫", type: "delete" },
+                { title: "AC", type: "clear" },
 
-            { title: "4", type: "digit", value: "4" },
-            { title: "5", type: "digit", value: "5" },
-            { title: "6", type: "digit", value: "6" },
-            { title: "×", type: "operation", value: "×" },
-            { title: "÷", type: "operation", value: "÷" },
+                { title: "4", type: "digit", value: "4" },
+                { title: "5", type: "digit", value: "5" },
+                { title: "6", type: "digit", value: "6" },
+                { title: "×", type: "operation", value: "×" },
+                { title: "÷", type: "operation", value: "÷" },
 
-            { title: "1", type: "digit", value: "1" },
-            { title: "2", type: "digit", value: "2" },
-            { title: "3", type: "digit", value: "3" },
-            { title: "+", type: "operation", value: "+" },
-            { title: "-", type: "operation", value: "-" },
+                { title: "1", type: "digit", value: "1" },
+                { title: "2", type: "digit", value: "2" },
+                { title: "3", type: "digit", value: "3" },
+                { title: "+", type: "operation", value: "+" },
+                { title: "-", type: "operation", value: "-" },
 
-            { title: "0", type: "digit", value: "0" },
-            { title: ".", type: "decimal" },
-            { title: "π", type: "constantPi" },
-            { title: "e", type: "constantE" },
-            { title: "=", type: "equals" },
-        ];
+                { title: "0", type: "digit", value: "0" },
+                { title: ".", type: "decimal" },
+                { title: "π", type: "constantPi" },
+                { title: "e", type: "constantE" },
+                { title: "=", type: "equals" },
+            ];
+        }
 
         const modeControl = document.getElementById("modeControl");
         const angleControl = document.getElementById("angleControl");
@@ -947,10 +950,20 @@
 
         function handleTap(btn) {
             switch (btn.type) {
+                case "shift":
+                    state.shiftOn = !state.shiftOn;
+                    render();
+                    break;
                 case "digit": insertAuto(btn.value); break;
                 case "decimal": insertDecimal(); break;
                 case "operation": insertOperator(btn.value); break;
-                case "scientific": insertAuto(btn.value); break;
+                case "scientific":
+                    insertAuto(btn.value);
+                    if (state.shiftOn && ["asin(", "acos(", "atan("].includes(btn.value)) {
+                        state.shiftOn = false;
+                        render();
+                    }
+                    break;
                 case "openParen": insertAuto("("); break;
                 case "closeParen": insertCloseParen(); break;
                 case "constantPi": insertAuto("π"); break;
@@ -977,6 +990,10 @@
                 this.index = 0;
                 this.angleMode = angleMode;
                 this.memoryValues = memoryValues;
+            }
+
+            convertRadiansToAngleIfNeeded(value) {
+                return this.angleMode === "degree" ? value * 180 / Math.PI : value;
             }
 
             peek() { return this.index < this.chars.length ? this.chars[this.index] : null; }
@@ -1141,6 +1158,16 @@
                     case "sin": return Math.sin(this.convertAngleToRadiansIfNeeded(value));
                     case "cos": return Math.cos(this.convertAngleToRadiansIfNeeded(value));
                     case "tan": return Math.tan(this.convertAngleToRadiansIfNeeded(value));
+                    case "asin": {
+                        if (value < -1 || value > 1) return null;
+                        return this.convertRadiansToAngleIfNeeded(Math.asin(value));
+                    }
+                    case "acos": {
+                        if (value < -1 || value > 1) return null;
+                        return this.convertRadiansToAngleIfNeeded(Math.acos(value));
+                    }
+                    case "atan":
+                        return this.convertRadiansToAngleIfNeeded(Math.atan(value));
                     case "sqrt": return value < 0 ? null : Math.sqrt(value);
                     case "log": return value <= 0 ? null : Math.log10(value);
                     case "ln": return value <= 0 ? null : Math.log(value);
@@ -1207,6 +1234,7 @@
         }
 
         function buttonClass(btn) {
+            if (btn.type === "shift") return state.shiftOn ? "orange" : "gray";
             if (btn.type === "equals" || btn.type === "operation") return "orange";
             if (["clear", "delete", "historyClear", "sign", "percent", "cursorLeft", "cursorRight"].includes(btn.type)) return "gray";
             if (["scientific", "constantPi", "constantE", "memoryStore", "memoryRecall", "factorial", "permutation", "combination"].includes(btn.type)) return "blue";
@@ -1214,7 +1242,7 @@
         }
 
         function renderButtons() {
-            const buttons = state.mode === "scientific" ? scientificButtons : standardButtons;
+            const buttons = state.mode === "scientific" ? getScientificButtons() : standardButtons;
             mainGrid.innerHTML = "";
             for (const btn of buttons) {
                 const el = document.createElement("button");
