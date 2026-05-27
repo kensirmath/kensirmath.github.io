@@ -11,7 +11,7 @@
             --bg2: #14161a;
             --text: #fff;
             --muted: #8e9098;
-            --orange1: #ff9f1a;
+            --orange1: #5c5245;
             --orange2: #ffba52;
             --gray1: #53535c;
             --gray2: #373740;
@@ -33,7 +33,9 @@
         html,
         body {
             margin: 0;
-            height: 100%;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
             background: linear-gradient(to bottom, var(--bg1), #101216);
             color: var(--text);
             font-family: var(--sans);
@@ -49,14 +51,14 @@
         }
 
         .app {
-            width: min(100%, 460px);
+            width: 100%;
             height: 100vh;
-            min-height: 0;
+            min-height: 100dvh;
             border-radius: 0;
             background: linear-gradient(to bottom, #060606, #15181d);
             border: 0;
             box-shadow: none;
-            padding: 4px 4px 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             gap: 3px;
