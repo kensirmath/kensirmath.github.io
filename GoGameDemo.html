@@ -1228,22 +1228,33 @@
         }
 
         function buildSGF() {
-            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:1.0]SZ[${state.size}]`];
+            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:1.1]SZ[${state.size}]`];
             const blacks = [];
             const whites = [];
-            const setupStoneKeys = new Set(state.moves.filter(m => m.type === 'setup').map(m => key(m.x, m.y)));
+            const empties = [];
+            const playMoves = state.moves.filter(m => m.type === 'play' || m.type === 'pass');
+            const setupMoves = state.moves.filter(m => m.type === 'setup');
+            const setupKeys = new Set(setupMoves.map(m => key(m.x, m.y)));
+            const playedPointKeys = new Set(state.moves.filter(m => m.type === 'play').map(m => key(m.x, m.y)));
 
             for (let y = 0; y < state.size; y++) {
                 for (let x = 0; x < state.size; x++) {
                     const k = key(x, y);
-                    const setupOnly = setupStoneKeys.has(k) || !state.moves.some(m => m.type === 'play' && m.x === x && m.y === y);
-                    if (state.board[y][x] === 'black' && setupOnly) blacks.push(coordToSgf(x, y));
-                    if (state.board[y][x] === 'white' && setupOnly) whites.push(coordToSgf(x, y));
+                    const stone = state.board[y][x];
+                    const isSetupPoint = setupKeys.has(k) || (!playedPointKeys.has(k) && stone);
+                    if (isSetupPoint && stone === 'black') blacks.push(coordToSgf(x, y));
+                    if (isSetupPoint && stone === 'white') whites.push(coordToSgf(x, y));
                 }
             }
 
+            state.moves.filter(m => m.type === 'erase').forEach(m => {
+                const k = key(m.x, m.y);
+                if (!playedPointKeys.has(k) && !state.board[m.y][m.x]) empties.push(coordToSgf(m.x, m.y));
+            });
+
             if (blacks.length) parts.push(`AB${blacks.map(v => `[${v}]`).join('')}`);
             if (whites.length) parts.push(`AW${whites.map(v => `[${v}]`).join('')}`);
+            if (empties.length) parts.push(`AE${[...new Set(empties)].map(v => `[${v}]`).join('')}`);
             parts.push(`PL[${state.current === 'black' ? 'B' : 'W'}]`);
 
             const lb = [...state.labels.entries()].map(([k, v]) => {
@@ -1291,17 +1302,15 @@
             });
 
             if (state.problem.enabled || state.setupMode || state.setupPlacement !== 'auto') {
-                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupMode=${state.setupMode};setupPlacement=${state.setupPlacement}`;
+                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupMode=${state.setupMode};setupPlacement=${state.setupPlacement};exportSetup=ABAWAEPL`;
                 if (state.problem.answer) comment += `;answer=${state.problem.answer.x},${state.problem.answer.y}`;
                 parts.push(`C[${esc(comment)}]`);
             }
 
-            state.moves
-                .filter(m => m.type === 'play' || m.type === 'pass')
-                .forEach(m => {
-                    if (m.type === 'play') parts.push(`;${m.color === 'black' ? 'B' : 'W'}[${coordToSgf(m.x, m.y)}]MN[${m.moveNo}]`);
-                    else parts.push(`;${m.color === 'black' ? 'B' : 'W'}[]MN[${m.moveNo}]`);
-                });
+            playMoves.forEach(m => {
+                if (m.type === 'play') parts.push(`;${m.color === 'black' ? 'B' : 'W'}[${coordToSgf(m.x, m.y)}]MN[${m.moveNo}]`);
+                else parts.push(`;${m.color === 'black' ? 'B' : 'W'}[]MN[${m.moveNo}]`);
+            });
 
             parts.push(')');
             return parts.join('');
@@ -1344,6 +1353,10 @@
                     (p.AW || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.board[y][x] = 'white';
+                    });
+                    (p.AE || []).forEach(pt => {
+                        const { x, y } = sgfToCoord(pt);
+                        state.board[y][x] = null;
                     });
                     if (p.PL?.[0]) state.current = p.PL[0] === 'B' ? 'black' : 'white';
                     (p.LB || []).forEach(v => {
@@ -1434,6 +1447,7 @@
 
             snapshotBaseState();
             state.setupMode = false;
+            state.setupPlacement = 'auto';
             state.viewStep = null;
             syncUI();
             draw();
