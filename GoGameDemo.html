@@ -433,6 +433,12 @@
                             <option value="label">標記文字</option>
                             <option value="forbidden">禁著點</option>
                             <option value="erase">擦除</option>
+                            <option value="triangle">三角</option>
+                            <option value="square">方塊</option>
+                            <option value="circle">圓圈</option>
+                            <option value="xmark">叉記</option>
+                            <option value="arrow">箭頭</option>
+                            <option value="line">連線</option>
                         </select>
                     </div>
                 </div>
@@ -517,6 +523,9 @@
                 <button class="btn" id="problemBtn">題目模式</button>
                 <button class="btn" id="lockProblemBtn">鎖定答案</button>
                 <button class="btn" id="setAnswerBtn">設定答案點</button>
+                <button class="btn" id="setupModeBtn">關手順擺盤</button>
+                <button class="btn" id="setupAutoBtn">擺盤自動</button>
+                <button class="btn" id="setupManualBtn">擺盤手動</button>
                 <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
             </section>
 
@@ -536,23 +545,6 @@
         const statusText = document.getElementById('statusText');
         const moveList = document.getElementById('moveList');
 
-        const extraToolOptions = [
-            ['triangle', '三角'],
-            ['square', '方塊'],
-            ['circle', '圓圈'],
-            ['xmark', '叉記'],
-            ['arrow', '箭頭'],
-            ['line', '連線']
-        ];
-        extraToolOptions.forEach(([value, label]) => {
-            if (![...toolSelect.options].some(opt => opt.value === value)) {
-                const opt = document.createElement('option');
-                opt.value = value;
-                opt.textContent = label;
-                toolSelect.appendChild(opt);
-            }
-        });
-
         const state = {
             size: 19,
             current: 'black',
@@ -568,6 +560,8 @@
             starPoints: [],
             captures: { black: 0, white: 0 },
             problem: { enabled: false, locked: false, answer: null, prompt: '' },
+            setupMode: false,
+            setupPlacement: 'auto',
             pendingArrow: null,
             pendingLine: null,
             viewStep: null,
@@ -619,6 +613,8 @@
                 state.problem.locked = false;
                 state.problem.enabled = false;
             }
+            state.setupMode = false;
+            state.setupPlacement = 'auto';
             state.pendingArrow = null;
             state.pendingLine = null;
             state.viewStep = null;
@@ -693,7 +689,9 @@
                 lines: state.lines.map(v => ({ ...v })),
                 moves: state.moves.map(v => ({ ...v })),
                 captures: { ...state.captures },
-                problem: JSON.parse(JSON.stringify(state.problem))
+                problem: JSON.parse(JSON.stringify(state.problem)),
+                setupMode: state.setupMode,
+                setupPlacement: state.setupPlacement
             };
         }
 
@@ -716,11 +714,27 @@
             state.moves = b.moves.map(v => ({ ...v }));
             state.captures = { ...b.captures };
             state.problem = JSON.parse(JSON.stringify(b.problem));
+            state.setupMode = !!b.setupMode;
+            state.setupPlacement = b.setupPlacement || 'auto';
             updateStarPoints();
         }
 
         function placeStone(x, y) {
             state.baseState = null;
+            if (state.board[y][x]) return;
+
+            if (state.setupMode) {
+                const setupColor = state.current;
+                state.board[y][x] = setupColor;
+                state.moves.push({ type: 'setup', x, y, color: setupColor });
+                if (state.setupPlacement === 'auto') {
+                    state.current = state.current === 'black' ? 'white' : 'black';
+                }
+                syncUI();
+                draw();
+                return;
+            }
+
             if (!isLegalMove(x, y, state.current)) return;
             if (state.problem.enabled && state.problem.locked && state.problem.answer) {
                 const hit = state.problem.answer.x === x && state.problem.answer.y === y;
@@ -927,6 +941,7 @@
                 const li = document.createElement('li');
                 if (item.type === 'play') li.textContent = `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})${item.captured ? `，提 ${item.captured} 子` : ''}`;
                 else if (item.type === 'pass') li.textContent = `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} 虛手`;
+                else if (item.type === 'setup') li.textContent = `擺盤：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})`;
                 else if (item.type === 'label') li.textContent = `標記：(${item.x + 1},${item.y + 1}) → ${item.text}`;
                 else if (item.type === 'forbidden') li.textContent = `切換禁著點：(${item.x + 1},${item.y + 1})`;
                 else if (item.type === 'erase') li.textContent = `擦除：(${item.x + 1},${item.y + 1})`;
@@ -954,15 +969,20 @@
             statusText.textContent = `${state.current === 'black' ? '黑方' : '白方'}行棋`;
             document.getElementById('blackCaptures').textContent = state.captures.black;
             document.getElementById('whiteCaptures').textContent = state.captures.white;
-            document.getElementById('problemText').textContent = state.problem.enabled
-                ? (state.problem.locked ? '題目模式：答案已鎖定，學生可在棋盤作答。' : '題目模式：可擺設題目局面，並設定答案點。')
-                : '一般示範模式，可自由落子與標記。';
+            document.getElementById('problemText').textContent = state.setupMode
+                ? `擺盤模式：暫時不記手順，可自由擺黑白棋（${state.setupPlacement === 'auto' ? '自動輪流' : '手動選色'}）。`
+                : (state.problem.enabled
+                    ? (state.problem.locked ? '題目模式：答案已鎖定，學生可在棋盤作答。' : '題目模式：可擺設題目局面，並設定答案點。')
+                    : '一般示範模式，可自由落子與標記。');
 
             renderMoves();
             updateTimeline();
             document.querySelectorAll('#stoneChooser .btn').forEach(btn => btn.classList.toggle('active', btn.dataset.color === state.current));
             document.getElementById('problemBtn').classList.toggle('active', state.problem.enabled);
             document.getElementById('lockProblemBtn').classList.toggle('active', state.problem.locked);
+            document.getElementById('setupModeBtn').classList.toggle('active', state.setupMode);
+            document.getElementById('setupAutoBtn').classList.toggle('active', state.setupPlacement === 'auto');
+            document.getElementById('setupManualBtn').classList.toggle('active', state.setupPlacement === 'manual');
         }
 
         function drawGrid() {
@@ -1211,11 +1231,14 @@
             const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:1.0]SZ[${state.size}]`];
             const blacks = [];
             const whites = [];
+            const setupStoneKeys = new Set(state.moves.filter(m => m.type === 'setup').map(m => key(m.x, m.y)));
 
             for (let y = 0; y < state.size; y++) {
                 for (let x = 0; x < state.size; x++) {
-                    if (state.board[y][x] === 'black') blacks.push(coordToSgf(x, y));
-                    if (state.board[y][x] === 'white') whites.push(coordToSgf(x, y));
+                    const k = key(x, y);
+                    const setupOnly = setupStoneKeys.has(k) || !state.moves.some(m => m.type === 'play' && m.x === x && m.y === y);
+                    if (state.board[y][x] === 'black' && setupOnly) blacks.push(coordToSgf(x, y));
+                    if (state.board[y][x] === 'white' && setupOnly) whites.push(coordToSgf(x, y));
                 }
             }
 
@@ -1267,8 +1290,8 @@
                 parts.push(`LN[${coordToSgf(fx, fy)}:${coordToSgf(tx, ty)}]`);
             });
 
-            if (state.problem.enabled) {
-                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white}`;
+            if (state.problem.enabled || state.setupMode || state.setupPlacement !== 'auto') {
+                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupMode=${state.setupMode};setupPlacement=${state.setupPlacement}`;
                 if (state.problem.answer) comment += `;answer=${state.problem.answer.x},${state.problem.answer.y}`;
                 parts.push(`C[${esc(comment)}]`);
             }
@@ -1366,7 +1389,7 @@
                         }
                     });
                     if (p.C?.[0]?.includes('教學模式=')) {
-                        state.problem.enabled = true;
+                        state.problem.enabled = p.C[0].includes('教學模式=true');
                         state.problem.locked = p.C[0].includes('locked=true');
                         const ans = /answer=(\d+),(\d+)/.exec(p.C[0]);
                         if (ans) state.problem.answer = { x: Number(ans[1]), y: Number(ans[2]) };
@@ -1374,6 +1397,8 @@
                         const cw = /capturesW=(\d+)/.exec(p.C[0]);
                         if (cb) state.captures.black = Number(cb[1]);
                         if (cw) state.captures.white = Number(cw[1]);
+                        if (p.C[0].includes('setupMode=true')) state.setupMode = true;
+                        if (p.C[0].includes('setupPlacement=manual')) state.setupPlacement = 'manual';
                     }
                 } else {
                     if (p.B) {
@@ -1408,6 +1433,7 @@
             });
 
             snapshotBaseState();
+            state.setupMode = false;
             state.viewStep = null;
             syncUI();
             draw();
@@ -1464,10 +1490,13 @@
             const history = state.moves.slice(0, -1);
             const size = state.size;
             const problemCopy = JSON.parse(JSON.stringify(state.problem));
-            const currentBase = state.baseState;
+            const setupModeCopy = state.setupMode;
+            const setupPlacementCopy = state.setupPlacement;
 
             resetBoard(size, true);
             state.problem = problemCopy;
+            state.setupMode = setupModeCopy;
+            state.setupPlacement = setupPlacementCopy;
 
             history.forEach(item => {
                 if (item.type === 'play') {
@@ -1480,6 +1509,9 @@
                 } else if (item.type === 'pass') {
                     state.moves.push({ ...item });
                     state.current = item.color === 'black' ? 'white' : 'black';
+                } else if (item.type === 'setup') {
+                    state.board[item.y][item.x] = item.color;
+                    state.moves.push(item);
                 } else if (item.type === 'label') {
                     state.labels.set(key(item.x, item.y), item.text);
                     state.moves.push(item);
@@ -1548,6 +1580,27 @@
             draw();
         });
 
+        document.getElementById('setupModeBtn').addEventListener('click', () => {
+            state.setupMode = !state.setupMode;
+            state.baseState = null;
+            state.viewStep = null;
+            if (!state.setupMode) snapshotBaseState();
+            syncUI();
+            draw();
+        });
+
+        document.getElementById('setupAutoBtn').addEventListener('click', () => {
+            state.setupPlacement = 'auto';
+            syncUI();
+            draw();
+        });
+
+        document.getElementById('setupManualBtn').addEventListener('click', () => {
+            state.setupPlacement = 'manual';
+            syncUI();
+            draw();
+        });
+
         document.getElementById('setAnswerBtn').addEventListener('click', () => {
             if (!state.problem.enabled) state.problem.enabled = true;
             statusText.textContent = '請在棋盤點一下作為答案點';
@@ -1567,12 +1620,14 @@
 
         document.getElementById('prevStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            setViewStep((state.viewStep ?? (state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length)) - 1);
+            const total = state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length;
+            setViewStep((state.viewStep ?? total) - 1);
         });
 
         document.getElementById('nextStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            setViewStep((state.viewStep ?? (state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length)) + 1);
+            const total = state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length;
+            setViewStep((state.viewStep ?? total) + 1);
         });
 
         document.getElementById('playBtn').addEventListener('click', () => {
