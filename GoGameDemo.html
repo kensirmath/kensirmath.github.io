@@ -5,79 +5,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>圍棋教學示範棋盤</title>
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
     <style>
         :root,
         [data-theme="light"] {
-            --text-xs: clamp(.75rem, .7rem + .25vw, .875rem);
-            --text-sm: clamp(.875rem, .8rem + .35vw, 1rem);
-            --text-base: clamp(1rem, .95rem + .25vw, 1.125rem);
-            --text-lg: clamp(1.125rem, 1rem + .75vw, 1.5rem);
-            --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2rem);
-            --space-1: .25rem;
-            --space-2: .5rem;
-            --space-3: .75rem;
-            --space-4: 1rem;
-            --space-5: 1.25rem;
-            --space-6: 1.5rem;
-            --space-8: 2rem;
-            --space-10: 2.5rem;
-            --space-12: 3rem;
-            --color-bg: #f7f6f2;
-            --color-surface: #f9f8f5;
-            --color-surface-2: #fbfbf9;
-            --color-surface-offset: #edeae5;
-            --color-border: #d4d1ca;
-            --color-divider: #dcd9d5;
-            --color-text: #28251d;
-            --color-text-muted: #67655f;
-            --color-text-faint: #96948e;
-            --color-text-inverse: #f9f8f4;
-            --color-primary: #01696f;
-            --color-primary-hover: #0c4e54;
-            --color-success: #437a22;
-            --color-error: #a12c7b;
-            --color-warning: #964219;
-            --radius-sm: .375rem;
-            --radius-md: .5rem;
-            --radius-lg: .75rem;
-            --radius-xl: 1rem;
-            --radius-full: 9999px;
-            --shadow-sm: 0 1px 2px rgba(40, 37, 29, .06);
-            --shadow-md: 0 8px 20px rgba(40, 37, 29, .10);
-            --font-body: 'Satoshi', sans-serif;
-            --font-display: 'Satoshi', sans-serif;
-            --wood-1: #d8b06f;
-            --wood-2: #c79c5a;
+            --bg: #f7f6f2;
+            --surface: #fbfaf7;
+            --surface2: #f2efe8;
+            --text: #26231c;
+            --muted: #706b62;
+            --border: #d7d2c8;
+            --primary: #01696f;
+            --primary-hover: #0d5257;
+            --wood1: #d8b06f;
+            --wood2: #c79c5a;
             --line: #6c4d24;
+            --danger: #c0392b;
+            --accent: #7a3cff;
+            --accent2: #cc7a00;
+            --pink: #ff006e;
+            --shadow: 0 8px 24px rgba(0, 0, 0, .08);
+            --radius: 16px;
         }
 
         [data-theme="dark"] {
-            --color-bg: #171614;
-            --color-surface: #1c1b19;
-            --color-surface-2: #201f1d;
-            --color-surface-offset: #2a2825;
-            --color-border: #393836;
-            --color-divider: #262523;
-            --color-text: #e0dfdb;
-            --color-text-muted: #a29f96;
-            --color-text-faint: #75716b;
-            --color-text-inverse: #171614;
-            --color-primary: #4f98a3;
-            --color-primary-hover: #67adb6;
-            --color-success: #6daa45;
-            --color-error: #d163a7;
-            --color-warning: #d79a58;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, .25);
-            --shadow-md: 0 12px 32px rgba(0, 0, 0, .35);
-            --wood-1: #8b6a3b;
-            --wood-2: #6e5127;
+            --bg: #171614;
+            --surface: #1d1c1a;
+            --surface2: #262420;
+            --text: #e5e2dc;
+            --muted: #a49f95;
+            --border: #3c3933;
+            --primary: #4f98a3;
+            --primary-hover: #67adb6;
+            --wood1: #8b6a3b;
+            --wood2: #6e5127;
             --line: #e3cc9a;
+            --danger: #d45c4f;
+            --accent: #9d75ff;
+            --accent2: #e0a15b;
+            --pink: #ff5c9a;
+            --shadow: 0 10px 28px rgba(0, 0, 0, .28);
         }
 
-        *,
-        *::before,
-        *::after {
+        * {
             box-sizing: border-box
         }
 
@@ -88,11 +57,9 @@
         }
 
         body {
-            font-family: var(--font-body);
-            font-size: var(--text-base);
-            background: var(--color-bg);
-            color: var(--color-text);
-            line-height: 1.5
+            font-family: Arial, "Noto Sans TC", "PingFang TC", sans-serif;
+            background: var(--bg);
+            color: var(--text)
         }
 
         button,
@@ -119,173 +86,33 @@
 
         .app {
             display: grid;
-            grid-template-columns: 1fr minmax(320px, 420px);
-            gap: var(--space-6);
-            min-height: 100dvh;
-            padding: var(--space-6)
+            grid-template-columns: 1fr 390px;
+            gap: 20px;
+            min-height: 100vh;
+            padding: 20px
         }
 
         .panel,
         .board-panel {
-            background: var(--color-surface);
-            border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-sm)
-        }
-
-        .panel {
-            padding: var(--space-5);
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-5);
-            order: 2
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow)
         }
 
         .board-panel {
-            padding: var(--space-4);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: auto;
-            order: 1
+            padding: 16px;
+            overflow: auto
         }
 
-        .topbar {
+        .panel {
+            padding: 18px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--space-4)
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: var(--space-3)
-        }
-
-        .brand svg {
-            width: 30px;
-            height: 30px
-        }
-
-        h1 {
-            font-size: var(--text-xl);
-            line-height: 1.1;
-            margin: 0
-        }
-
-        .muted {
-            color: var(--color-text-muted);
-            font-size: var(--text-sm)
-        }
-
-        .grid {
-            display: grid;
-            gap: var(--space-3)
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-3)
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-2)
-        }
-
-        .btn {
-            min-height: 44px;
-            padding: .7rem 1rem;
-            border-radius: var(--radius-md);
-            border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
-            background: var(--color-surface-2);
-            color: var(--color-text);
-            transition: .18s ease
-        }
-
-        .btn:hover {
-            background: var(--color-surface-offset)
-        }
-
-        .btn.primary {
-            background: var(--color-primary);
-            border-color: var(--color-primary);
-            color: var(--color-text-inverse)
-        }
-
-        .btn.primary:hover {
-            background: var(--color-primary-hover)
-        }
-
-        .btn.active {
-            outline: 2px solid var(--color-primary);
-            outline-offset: 2px
-        }
-
-        .segment {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-2)
-        }
-
-        label {
-            font-size: var(--text-sm);
-            font-weight: 600
-        }
-
-        select,
-        input[type="text"] {
-            min-height: 44px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--color-border);
-            background: var(--color-surface-2);
-            padding: 0 .85rem;
-            color: var(--color-text);
-            width: 100%
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-3)
-        }
-
-        .stat {
-            padding: var(--space-4);
-            background: var(--color-surface-2);
-            border-radius: var(--radius-lg);
-            border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent)
-        }
-
-        .stat strong {
-            display: block;
-            font-size: var(--text-lg);
-            font-variant-numeric: tabular-nums lining-nums
-        }
-
-        .hint {
-            font-size: var(--text-sm);
-            color: var(--color-text-muted)
-        }
-
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--space-3);
-            font-size: var(--text-sm);
-            color: var(--color-text-muted)
-        }
-
-        .dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: middle
+            flex-direction: column;
+            gap: 18px
         }
 
         .board-wrap {
@@ -299,10 +126,9 @@
             inset: 0;
             border-radius: 24px;
             background:
-                linear-gradient(135deg, rgba(255, 255, 255, .18), transparent 35%),
+                linear-gradient(135deg, rgba(255, 255, 255, .16), transparent 35%),
                 repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, .03) 31px 32px),
-                linear-gradient(135deg, var(--wood-1), var(--wood-2));
-            box-shadow: var(--shadow-md)
+                linear-gradient(135deg, var(--wood1), var(--wood2))
         }
 
         canvas {
@@ -317,73 +143,164 @@
             position: absolute;
             left: 14px;
             bottom: 14px;
-            padding: .55rem .75rem;
+            padding: 8px 12px;
             border-radius: 999px;
             background: rgba(20, 20, 20, .72);
             color: #fff;
-            font-size: var(--text-sm);
-            backdrop-filter: blur(8px)
+            font-size: 14px
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px
+        }
+
+        h2 {
+            margin: 0 0 6px;
+            font-size: 20px
+        }
+
+        .muted,
+        .hint {
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .controls,
+        .segment,
+        .tag-row,
+        .playback {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .btn {
+            min-height: 42px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text)
+        }
+
+        .btn:hover {
+            filter: brightness(.98)
+        }
+
+        .btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff
+        }
+
+        .btn.primary:hover {
+            background: var(--primary-hover)
+        }
+
+        .btn.active {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 700
+        }
+
+        select,
+        input[type="text"] {
+            width: 100%;
+            min-height: 42px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            padding: 0 12px;
+            color: var(--text)
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px
+        }
+
+        .stat {
+            padding: 12px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border)
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 24px
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle
         }
 
         .moves {
-            max-height: 240px;
+            max-height: 260px;
             overflow: auto;
-            border-top: 1px solid var(--color-divider);
-            padding-top: var(--space-3)
+            border-top: 1px solid var(--border);
+            padding-top: 10px
         }
 
         .moves ol {
             margin: 0;
-            padding-left: 1.35rem;
-            font-size: var(--text-sm)
+            padding-left: 20px;
+            font-size: 14px
         }
 
         .moves li {
-            margin: .25rem 0;
-            color: var(--color-text-muted)
-        }
-
-        .section-title {
-            font-size: var(--text-lg);
-            margin: 0 0 .3rem
-        }
-
-        .tag-row {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap
-        }
-
-        .playback {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap
+            margin: 4px 0;
+            color: var(--muted)
         }
 
         .range-wrap {
             display: grid;
-            gap: var(--space-2)
+            gap: 8px
         }
 
         input[type="range"] {
             width: 100%
         }
 
-        @media (max-width:960px) {
+        @media (max-width:980px) {
             .app {
                 grid-template-columns: 1fr
             }
 
-            .board-panel {
-                order: 1
-            }
-
-            .panel {
-                order: 2
-            }
-
             .board-wrap {
-                width: min(96vw, 720px)
+                width: min(96vw, 760px)
             }
         }
     </style>
@@ -401,22 +318,14 @@
 
         <aside class="panel">
             <div class="topbar">
-                <div class="brand">
-                    <svg viewBox="0 0 64 64" aria-label="棋盤標誌" fill="none">
-                        <rect x="8" y="8" width="48" height="48" rx="10" stroke="currentColor" stroke-width="4"></rect>
-                        <path d="M20 20H44M20 32H44M20 44H44M20 20V44M32 20V44M44 20V44" stroke="currentColor"
-                            stroke-width="3"></path>
-                        <circle cx="32" cy="32" r="7" fill="currentColor"></circle>
-                    </svg>
-                    <div>
-                        <h1>圍棋教學示範棋盤</h1>
-                        <div class="muted">帶手順編號、即時計目、橫盤標記與禁著點演示</div>
-                    </div>
+                <div>
+                    <h1>圍棋教學示範棋盤</h1>
+                    <div class="muted">SGF 標準匯出 + JSON 完整重播</div>
                 </div>
                 <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
             </div>
 
-            <section class="grid">
+            <section>
                 <div class="row">
                     <div>
                         <label for="sizeSelect">棋盤大小</label>
@@ -442,12 +351,16 @@
                         </select>
                     </div>
                 </div>
+            </section>
 
+            <section>
                 <div class="segment" id="stoneChooser">
                     <button class="btn active" data-color="black">黑先</button>
                     <button class="btn" data-color="white">白先</button>
                 </div>
+            </section>
 
+            <section>
                 <div class="tag-row" id="quickLabels">
                     <button class="btn" data-label="眼">眼</button>
                     <button class="btn" data-label="虎口">虎口</button>
@@ -455,22 +368,21 @@
                     <button class="btn" data-label="劫">劫</button>
                     <button class="btn" data-label="急所">急所</button>
                 </div>
-
-                <div>
+                <div style="margin-top:10px">
                     <label for="customLabel">自訂橫盤標字</label>
                     <input id="customLabel" type="text" placeholder="例如：征子、斷點、厚勢">
                 </div>
+            </section>
 
-                <div class="controls">
-                    <button class="btn primary" id="passBtn">虛手</button>
-                    <button class="btn" id="undoBtn">悔棋</button>
-                    <button class="btn" id="clearBtn">清空棋盤</button>
-                    <button class="btn" id="scoreBtn">重新計目</button>
-                </div>
+            <section class="controls">
+                <button class="btn primary" id="passBtn">虛手</button>
+                <button class="btn" id="undoBtn">悔棋</button>
+                <button class="btn" id="clearBtn">清空棋盤</button>
+                <button class="btn" id="scoreBtn">重新計目</button>
             </section>
 
             <section>
-                <h2 class="section-title">即時計目</h2>
+                <h2>即時計目</h2>
                 <div class="stats">
                     <div class="stat"><span class="muted">黑子數</span><strong id="blackStones">0</strong></div>
                     <div class="stat"><span class="muted">白子數</span><strong id="whiteStones">0</strong></div>
@@ -479,11 +391,51 @@
                     <div class="stat"><span class="muted">中立點</span><strong id="neutralPoints">0</strong></div>
                     <div class="stat"><span class="muted">形勢</span><strong id="scoreLead">平手</strong></div>
                 </div>
-                <p class="hint">計目採示範用途：以現局面空點歸屬估算地盤，不含貼目與複雜死活判定。</p>
+                <p class="hint">計目為教學估算，不含貼目與死活終局判定。</p>
             </section>
 
             <section>
-                <h2 class="section-title">圖例</h2>
+                <h2>教學資訊</h2>
+                <div class="stats">
+                    <div class="stat"><span class="muted">黑提子</span><strong id="blackCaptures">0</strong></div>
+                    <div class="stat"><span class="muted">白提子</span><strong id="whiteCaptures">0</strong></div>
+                </div>
+                <p class="hint" id="problemText">一般示範模式，可自由落子與標記。</p>
+            </section>
+
+            <section>
+                <h2>手順播放</h2>
+                <div class="playback">
+                    <button class="btn" id="prevStepBtn">上一步</button>
+                    <button class="btn" id="playBtn">播放</button>
+                    <button class="btn" id="nextStepBtn">下一步</button>
+                    <button class="btn" id="autoplayBtn">自動展示</button>
+                </div>
+                <div class="range-wrap" style="margin-top:10px">
+                    <label for="timeline">手順時間軸</label>
+                    <input id="timeline" type="range" min="0" max="0" value="0">
+                    <div class="hint" id="timelineText">目前顯示：第 0 手 / 共 0 手</div>
+                </div>
+            </section>
+
+            <section class="controls" id="extraTools">
+                <button class="btn" id="exportBtn">匯出 PNG</button>
+                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
+                <button class="btn" id="loadSgfBtn">載入 SGF</button>
+                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
+                <button class="btn" id="loadJsonBtn">載入 JSON</button>
+                <button class="btn" id="problemBtn">題目模式</button>
+                <button class="btn" id="lockProblemBtn">鎖定答案</button>
+                <button class="btn" id="setAnswerBtn">設定答案點</button>
+                <button class="btn" id="setupModeBtn">關手順擺盤</button>
+                <button class="btn" id="setupAutoBtn">擺盤自動</button>
+                <button class="btn" id="setupManualBtn">擺盤手動</button>
+                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
+                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
+            </section>
+
+            <section>
+                <h2>圖例</h2>
                 <div class="legend">
                     <span><i class="dot" style="background:#111"></i>黑子</span>
                     <span><i class="dot" style="background:#f5f5f5;border:1px solid #999"></i>白子</span>
@@ -492,45 +444,8 @@
                 </div>
             </section>
 
-            <section id="teachingInfo">
-                <h2 class="section-title">教學資訊</h2>
-                <div class="stats">
-                    <div class="stat"><span class="muted">黑提子</span><strong id="blackCaptures">0</strong></div>
-                    <div class="stat"><span class="muted">白提子</span><strong id="whiteCaptures">0</strong></div>
-                </div>
-                <p class="hint" id="problemText">一般示範模式，可自由落子與標記。</p>
-            </section>
-
-            <section id="playbackSection">
-                <h2 class="section-title">手順播放</h2>
-                <div class="playback">
-                    <button class="btn" id="prevStepBtn">上一步</button>
-                    <button class="btn" id="playBtn">播放</button>
-                    <button class="btn" id="nextStepBtn">下一步</button>
-                    <button class="btn" id="autoplayBtn">自動展示</button>
-                </div>
-                <div class="range-wrap">
-                    <label for="timeline">手順時間軸</label>
-                    <input id="timeline" type="range" min="0" max="0" value="0">
-                    <div class="hint" id="timelineText">目前顯示：第 0 手</div>
-                </div>
-            </section>
-
-            <section class="controls" id="extraTools">
-                <button class="btn" id="exportBtn">匯出 PNG</button>
-                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
-                <button class="btn" id="loadSgfBtn">載入 SGF</button>
-                <button class="btn" id="problemBtn">題目模式</button>
-                <button class="btn" id="lockProblemBtn">鎖定答案</button>
-                <button class="btn" id="setAnswerBtn">設定答案點</button>
-                <button class="btn" id="setupModeBtn">關手順擺盤</button>
-                <button class="btn" id="setupAutoBtn">擺盤自動</button>
-                <button class="btn" id="setupManualBtn">擺盤手動</button>
-                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
-            </section>
-
             <section class="moves">
-                <h2 class="section-title">手順記錄</h2>
+                <h2>手順記錄</h2>
                 <ol id="moveList"></ol>
             </section>
         </aside>
@@ -555,6 +470,8 @@
             arrows: [],
             lines: [],
             moves: [],
+            captureLog: [],
+            replayMeta: { version: '1.0', steps: [] },
             margin: 70,
             cell: 0,
             starPoints: [],
@@ -586,15 +503,15 @@
                 .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < state.size && ny < state.size);
         }
 
+        function moveCount() {
+            return state.moves.filter(m => m.type === 'play' || m.type === 'pass').length;
+        }
+
         function stopAutoplay(silent = false) {
             state.autoplay = false;
             if (state.autoplayTimer) clearInterval(state.autoplayTimer);
             state.autoplayTimer = null;
             if (!silent) updateTimeline();
-        }
-
-        function moveCount() {
-            return state.moves.filter(m => m.type === 'play' || m.type === 'pass').length;
         }
 
         function resetBoard(size = state.size, preserveProblem = false) {
@@ -606,13 +523,11 @@
             state.arrows = [];
             state.lines = [];
             state.moves = [];
+            state.captureLog = [];
+            state.replayMeta = { version: '1.0', steps: [] };
             state.current = 'black';
             state.captures = { black: 0, white: 0 };
-            if (!preserveProblem) {
-                state.problem.answer = null;
-                state.problem.locked = false;
-                state.problem.enabled = false;
-            }
+            if (!preserveProblem) state.problem = { enabled: false, locked: false, answer: null, prompt: '' };
             state.setupMode = false;
             state.setupPlacement = 'auto';
             state.pendingArrow = null;
@@ -622,6 +537,57 @@
             updateStarPoints();
             syncUI();
             draw();
+        }
+
+        function snapshotBaseState() {
+            state.baseState = {
+                size: state.size,
+                current: state.current,
+                board: cloneBoard(state.board),
+                labels: [...state.labels.entries()],
+                forbidden: [...state.forbidden],
+                marks: {
+                    triangle: [...state.marks.triangle],
+                    square: [...state.marks.square],
+                    circle: [...state.marks.circle],
+                    xmark: [...state.marks.xmark]
+                },
+                arrows: state.arrows.map(v => ({ ...v })),
+                lines: state.lines.map(v => ({ ...v })),
+                moves: state.moves.map(v => ({ ...v })),
+                captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
+                replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
+                captures: { ...state.captures },
+                problem: JSON.parse(JSON.stringify(state.problem)),
+                setupMode: state.setupMode,
+                setupPlacement: state.setupPlacement
+            };
+        }
+
+        function restoreBaseState() {
+            if (!state.baseState) return;
+            const b = state.baseState;
+            state.size = b.size;
+            state.current = b.current;
+            state.board = cloneBoard(b.board);
+            state.labels = new Map(b.labels);
+            state.forbidden = new Set(b.forbidden);
+            state.marks = {
+                triangle: new Set(b.marks.triangle),
+                square: new Set(b.marks.square),
+                circle: new Set(b.marks.circle),
+                xmark: new Set(b.marks.xmark)
+            };
+            state.arrows = b.arrows.map(v => ({ ...v }));
+            state.lines = b.lines.map(v => ({ ...v }));
+            state.moves = b.moves.map(v => ({ ...v }));
+            state.captureLog = b.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
+            state.replayMeta = JSON.parse(JSON.stringify(b.replayMeta || { version: '1.0', steps: [] }));
+            state.captures = { ...b.captures };
+            state.problem = JSON.parse(JSON.stringify(b.problem));
+            state.setupMode = !!b.setupMode;
+            state.setupPlacement = b.setupPlacement || 'auto';
+            updateStarPoints();
         }
 
         function groupAt(board, x, y) {
@@ -647,20 +613,32 @@
             return { color, stones, liberties };
         }
 
-        function removeCaptured(board, colorJustPlayed, x, y) {
-            let removed = 0;
+        function findCapturedGroups(board, colorJustPlayed, x, y) {
             const enemy = colorJustPlayed === 'black' ? 'white' : 'black';
+            const groups = [];
+            const seen = new Set();
             neighbors(x, y).forEach(([nx, ny]) => {
                 if (board[ny][nx] !== enemy) return;
+                const k = key(nx, ny);
+                if (seen.has(k)) return;
                 const grp = groupAt(board, nx, ny);
-                if (grp && grp.liberties.size === 0) {
-                    grp.stones.forEach(([sx, sy]) => {
-                        board[sy][sx] = null;
-                        removed++;
-                    });
-                }
+                if (!grp) return;
+                grp.stones.forEach(([sx, sy]) => seen.add(key(sx, sy)));
+                if (grp.liberties.size === 0) groups.push(grp.stones.map(([sx, sy]) => [sx, sy]));
             });
-            return removed;
+            return groups;
+        }
+
+        function removeCaptured(board, colorJustPlayed, x, y) {
+            let removed = 0;
+            const groups = findCapturedGroups(board, colorJustPlayed, x, y);
+            groups.forEach(stones => {
+                stones.forEach(([sx, sy]) => {
+                    board[sy][sx] = null;
+                    removed++;
+                });
+            });
+            return { removed, groups };
         }
 
         function isLegalMove(x, y, color) {
@@ -672,51 +650,8 @@
             return grp && grp.liberties.size > 0;
         }
 
-        function snapshotBaseState() {
-            state.baseState = {
-                size: state.size,
-                current: state.current,
-                board: cloneBoard(state.board),
-                labels: new Map(state.labels),
-                forbidden: new Set(state.forbidden),
-                marks: {
-                    triangle: new Set(state.marks.triangle),
-                    square: new Set(state.marks.square),
-                    circle: new Set(state.marks.circle),
-                    xmark: new Set(state.marks.xmark)
-                },
-                arrows: state.arrows.map(v => ({ ...v })),
-                lines: state.lines.map(v => ({ ...v })),
-                moves: state.moves.map(v => ({ ...v })),
-                captures: { ...state.captures },
-                problem: JSON.parse(JSON.stringify(state.problem)),
-                setupMode: state.setupMode,
-                setupPlacement: state.setupPlacement
-            };
-        }
-
-        function restoreBaseState() {
-            if (!state.baseState) return;
-            const b = state.baseState;
-            state.size = b.size;
-            state.current = b.current;
-            state.board = cloneBoard(b.board);
-            state.labels = new Map(b.labels);
-            state.forbidden = new Set(b.forbidden);
-            state.marks = {
-                triangle: new Set(b.marks.triangle),
-                square: new Set(b.marks.square),
-                circle: new Set(b.marks.circle),
-                xmark: new Set(b.marks.xmark)
-            };
-            state.arrows = b.arrows.map(v => ({ ...v }));
-            state.lines = b.lines.map(v => ({ ...v }));
-            state.moves = b.moves.map(v => ({ ...v }));
-            state.captures = { ...b.captures };
-            state.problem = JSON.parse(JSON.stringify(b.problem));
-            state.setupMode = !!b.setupMode;
-            state.setupPlacement = b.setupPlacement || 'auto';
-            updateStarPoints();
+        function recordReplayStep(step) {
+            state.replayMeta.steps.push(JSON.parse(JSON.stringify(step)));
         }
 
         function placeStone(x, y) {
@@ -727,29 +662,38 @@
                 const setupColor = state.current;
                 state.board[y][x] = setupColor;
                 state.moves.push({ type: 'setup', x, y, color: setupColor });
-                if (state.setupPlacement === 'auto') {
-                    state.current = state.current === 'black' ? 'white' : 'black';
-                }
+                recordReplayStep({ type: 'setup', x, y, color: setupColor });
+                if (state.setupPlacement === 'auto') state.current = state.current === 'black' ? 'white' : 'black';
                 syncUI();
                 draw();
                 return;
             }
 
             if (!isLegalMove(x, y, state.current)) return;
+
             if (state.problem.enabled && state.problem.locked && state.problem.answer) {
                 const hit = state.problem.answer.x === x && state.problem.answer.y === y;
                 document.getElementById('problemText').textContent = hit ? '答對了：落在設定答案點。' : '這步不是預設答案點，可繼續嘗試。';
             }
+
             state.board[y][x] = state.current;
-            const captured = removeCaptured(state.board, state.current, x, y);
-            if (captured) state.captures[state.current] += captured;
-            state.moves.push({
+            const moveNo = moveCount() + 1;
+            const result = removeCaptured(state.board, state.current, x, y);
+            if (result.removed) {
+                state.captures[state.current] += result.removed;
+                const capEntry = { moveNo, by: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) };
+                state.captureLog.push(capEntry);
+            }
+
+            state.moves.push({ type: 'play', x, y, color: state.current, moveNo, captured: result.removed });
+            recordReplayStep({
                 type: 'play',
+                moveNo,
                 x, y,
                 color: state.current,
-                moveNo: moveCount() + 1,
-                captured
+                captures: result.groups.flat().map(([sx, sy]) => [sx, sy])
             });
+
             state.current = state.current === 'black' ? 'white' : 'black';
             syncUI();
             draw();
@@ -760,6 +704,7 @@
             state.baseState = null;
             state.labels.set(key(x, y), text.slice(0, 5));
             state.moves.push({ type: 'label', x, y, text: text.slice(0, 5) });
+            recordReplayStep({ type: 'label', x, y, text: text.slice(0, 5) });
             syncUI();
             draw();
         }
@@ -769,6 +714,7 @@
             const k = key(x, y);
             state.forbidden.has(k) ? state.forbidden.delete(k) : state.forbidden.add(k);
             state.moves.push({ type: 'forbidden', x, y });
+            recordReplayStep({ type: 'forbidden', x, y });
             syncUI();
             draw();
         }
@@ -779,6 +725,7 @@
             const k = key(x, y);
             set.has(k) ? set.delete(k) : set.add(k);
             state.moves.push({ type, x, y });
+            recordReplayStep({ type, x, y });
             syncUI();
             draw();
         }
@@ -793,6 +740,7 @@
             state.arrows = state.arrows.filter(a => a.from !== k && a.to !== k);
             state.lines = state.lines.filter(a => a.from !== k && a.to !== k);
             state.moves.push({ type: 'erase', x, y });
+            recordReplayStep({ type: 'erase', x, y });
             syncUI();
             draw();
         }
@@ -801,14 +749,15 @@
             state.baseState = null;
             const prop = kind === 'arrow' ? 'pendingArrow' : 'pendingLine';
             const arr = kind === 'arrow' ? state.arrows : state.lines;
-            const current = key(x, y);
+            const currentKey = key(x, y);
             if (!state[prop]) {
-                state[prop] = current;
+                state[prop] = currentKey;
                 statusText.textContent = kind === 'arrow' ? '請點選箭頭終點' : '請點選連線終點';
                 return;
             }
-            if (state[prop] !== current) arr.push({ from: state[prop], to: current });
-            state.moves.push({ type: kind, from: state[prop], to: current });
+            if (state[prop] !== currentKey) arr.push({ from: state[prop], to: currentKey });
+            state.moves.push({ type: kind, from: state[prop], to: currentKey });
+            recordReplayStep({ type: kind, from: state[prop], to: currentKey });
             state[prop] = null;
             syncUI();
             draw();
@@ -852,47 +801,90 @@
             return state.moves.filter(m => m.type === 'play' || m.type === 'pass');
         }
 
+        function rebuildBoardFromReplaySteps(steps) {
+            const board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            const labels = new Map();
+            const forbidden = new Set();
+            const marks = { triangle: new Set(), square: new Set(), circle: new Set(), xmark: new Set() };
+            const arrows = [];
+            const lines = [];
+            let current = 'black';
+            let captures = { black: 0, white: 0 };
+
+            steps.forEach(step => {
+                if (step.type === 'setup') {
+                    board[step.y][step.x] = step.color;
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'play') {
+                    board[step.y][step.x] = step.color;
+                    (step.captures || []).forEach(([cx, cy]) => board[cy][cx] = null);
+                    if (step.captures?.length) captures[step.color] += step.captures.length;
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'pass') {
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'label') {
+                    labels.set(key(step.x, step.y), step.text);
+                } else if (step.type === 'forbidden') {
+                    const k = key(step.x, step.y);
+                    forbidden.has(k) ? forbidden.delete(k) : forbidden.add(k);
+                } else if (['triangle', 'square', 'circle', 'xmark'].includes(step.type)) {
+                    const k = key(step.x, step.y);
+                    const set = marks[step.type];
+                    set.has(k) ? set.delete(k) : set.add(k);
+                } else if (step.type === 'erase') {
+                    const k = key(step.x, step.y);
+                    board[step.y][step.x] = null;
+                    labels.delete(k);
+                    forbidden.delete(k);
+                    Object.values(marks).forEach(set => set.delete(k));
+                } else if (step.type === 'arrow') {
+                    if (step.from && step.to && step.from !== step.to) arrows.push({ from: step.from, to: step.to });
+                } else if (step.type === 'line') {
+                    if (step.from && step.to && step.from !== step.to) lines.push({ from: step.from, to: step.to });
+                }
+            });
+
+            return { board, labels, forbidden, marks, arrows, lines, current, captures };
+        }
+
         function rebuildToStep(step) {
             if (!state.baseState) snapshotBaseState();
             restoreBaseState();
 
-            const fullMoves = [...state.baseState.moves].filter(m => m.type === 'play' || m.type === 'pass');
-            const keepMoveNos = new Set(fullMoves.slice(0, step).map(m => m.moveNo));
+            const setupSteps = state.baseState.replayMeta.steps.filter(s => s.type !== 'play' && s.type !== 'pass');
+            const playSteps = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass');
+            const merged = [...setupSteps, ...playSteps.slice(0, step)];
+            const rebuilt = rebuildBoardFromReplaySteps(merged);
 
-            const initialBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            for (let y = 0; y < state.size; y++) {
-                for (let x = 0; x < state.size; x++) {
-                    const isPlayStone = state.baseState.moves.some(m => m.type === 'play' && m.x === x && m.y === y);
-                    if (state.baseState.board[y][x] && !isPlayStone) {
-                        initialBoard[y][x] = state.baseState.board[y][x];
-                    }
-                }
-            }
+            state.board = rebuilt.board;
+            state.labels = rebuilt.labels;
+            state.forbidden = rebuilt.forbidden;
+            state.marks = rebuilt.marks;
+            state.arrows = rebuilt.arrows;
+            state.lines = rebuilt.lines;
+            state.current = rebuilt.current;
+            state.captures = rebuilt.captures;
 
-            state.board = initialBoard;
             state.moves = [];
-            state.captures = { black: 0, white: 0 };
-            state.current = 'black';
+            state.captureLog = [];
 
-            fullMoves.forEach(item => {
-                if (!keepMoveNos.has(item.moveNo)) return;
-                if (item.type === 'play') {
-                    state.current = item.color;
-                    state.board[item.y][item.x] = state.current;
-                    const captured = removeCaptured(state.board, state.current, item.x, item.y);
-                    if (captured) state.captures[state.current] += captured;
-                    state.moves.push({ ...item, captured });
-                    state.current = state.current === 'black' ? 'white' : 'black';
-                } else if (item.type === 'pass') {
-                    state.moves.push({ ...item });
-                    state.current = item.color === 'black' ? 'white' : 'black';
+            merged.forEach(s => {
+                if (s.type === 'setup') state.moves.push({ type: 'setup', x: s.x, y: s.y, color: s.color });
+                if (s.type === 'play') {
+                    state.moves.push({ type: 'play', x: s.x, y: s.y, color: s.color, moveNo: s.moveNo, captured: (s.captures || []).length });
+                    if (s.captures?.length) state.captureLog.push({ moveNo: s.moveNo, by: s.color, captures: s.captures.map(([x, y]) => [x, y]) });
                 }
+                if (s.type === 'pass') state.moves.push({ type: 'pass', color: s.color, moveNo: s.moveNo });
             });
 
-            state.moves = [
-                ...state.moves,
-                ...state.baseState.moves.filter(m => m.type !== 'play' && m.type !== 'pass')
-            ];
+            setupSteps.forEach(s => {
+                if (s.type === 'label') state.moves.push({ type: 'label', x: s.x, y: s.y, text: s.text });
+                if (s.type === 'forbidden') state.moves.push({ type: 'forbidden', x: s.x, y: s.y });
+                if (['triangle', 'square', 'circle', 'xmark'].includes(s.type)) state.moves.push({ type: s.type, x: s.x, y: s.y });
+                if (s.type === 'erase') state.moves.push({ type: 'erase', x: s.x, y: s.y });
+                if (s.type === 'arrow') state.moves.push({ type: 'arrow', from: s.from, to: s.to });
+                if (s.type === 'line') state.moves.push({ type: 'line', from: s.from, to: s.to });
+            });
 
             syncUI();
             draw();
@@ -900,7 +892,7 @@
 
         function updateTimeline() {
             const total = state.baseState
-                ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length
+                ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length
                 : getPlayableMoves().length;
             const tl = document.getElementById('timeline');
             const displayStep = state.viewStep == null ? total : state.viewStep;
@@ -912,7 +904,7 @@
 
         function setViewStep(step) {
             if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length;
+            const total = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length;
             const s = Math.max(0, Math.min(total, step));
             state.viewStep = s;
             rebuildToStep(s);
@@ -921,7 +913,7 @@
 
         function startAutoplay() {
             if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length;
+            const total = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length;
             if ((state.viewStep ?? total) >= total) state.viewStep = 0;
             state.autoplay = true;
             updateTimeline();
@@ -932,7 +924,7 @@
                     return;
                 }
                 setViewStep(cur + 1);
-            }, 900);
+            }, 850);
         }
 
         function renderMoves() {
@@ -963,8 +955,8 @@
             const blackTotal = s.blackStones + s.blackTerritory + state.captures.black;
             const whiteTotal = s.whiteStones + s.whiteTerritory + state.captures.white;
             document.getElementById('scoreLead').textContent =
-                blackTotal === whiteTotal ? '平手'
-                    : (blackTotal > whiteTotal ? `黑領先 ${blackTotal - whiteTotal}` : `白領先 ${whiteTotal - blackTotal}`);
+                blackTotal === whiteTotal ? '平手' :
+                    (blackTotal > whiteTotal ? `黑領先 ${blackTotal - whiteTotal}` : `白領先 ${whiteTotal - blackTotal}`);
 
             statusText.textContent = `${state.current === 'black' ? '黑方' : '白方'}行棋`;
             document.getElementById('blackCaptures').textContent = state.captures.black;
@@ -993,15 +985,8 @@
             ctx.lineWidth = 2;
             for (let i = 0; i < size; i++) {
                 const p = margin + i * state.cell;
-                ctx.beginPath();
-                ctx.moveTo(margin, p);
-                ctx.lineTo(canvas.width - margin, p);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(p, margin);
-                ctx.lineTo(p, canvas.height - margin);
-                ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(margin, p); ctx.lineTo(canvas.width - margin, p); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(p, margin); ctx.lineTo(p, canvas.height - margin); ctx.stroke();
             }
             ctx.fillStyle = ctx.strokeStyle;
             state.starPoints.forEach(([sx, sy]) => {
@@ -1013,8 +998,8 @@
 
         function drawCoordinates() {
             const letters = 'ABCDEFGHJKLMNOPQRST';
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
-            ctx.font = `600 ${Math.max(16, state.cell * 0.25)}px Satoshi, sans-serif`;
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+            ctx.font = `600 ${Math.max(16, state.cell * 0.25)}px Arial`;
             ctx.textAlign = 'center';
             for (let i = 0; i < state.size; i++) {
                 const px = state.margin + i * state.cell;
@@ -1040,20 +1025,13 @@
                     const py = state.margin + y * state.cell;
                     if (stone) {
                         const r = state.cell * 0.42;
-                        const grad = ctx.createRadialGradient(px - r * 0.35, py - r * 0.35, 2, px, py, r);
-                        if (stone === 'black') {
-                            grad.addColorStop(0, '#666');
-                            grad.addColorStop(1, '#111');
-                        } else {
-                            grad.addColorStop(0, '#fff');
-                            grad.addColorStop(1, '#dbdbdb');
-                        }
+                        const grad = ctx.createRadialGradient(px - r * .35, py - r * .35, 2, px, py, r);
+                        if (stone === 'black') { grad.addColorStop(0, '#666'); grad.addColorStop(1, '#111'); }
+                        else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#dbdbdb'); }
                         ctx.fillStyle = grad;
-                        ctx.beginPath();
-                        ctx.arc(px, py, r, 0, Math.PI * 2);
-                        ctx.fill();
+                        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
                         ctx.strokeStyle = stone === 'black' ? '#000' : '#999';
-                        ctx.lineWidth = 1.5;
+                        ctx.lineWidth = 1.4;
                         ctx.stroke();
                     }
                 }
@@ -1063,7 +1041,7 @@
                 const px = state.margin + m.x * state.cell;
                 const py = state.margin + m.y * state.cell;
                 ctx.fillStyle = m.color === 'black' ? '#fff' : '#111';
-                ctx.font = `700 ${Math.max(16, state.cell * 0.38)}px Satoshi, sans-serif`;
+                ctx.font = `700 ${Math.max(16, state.cell * 0.38)}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(String(m.moveNo), px, py + 1);
@@ -1079,10 +1057,7 @@
             const y2 = state.margin + ty * state.cell;
             ctx.strokeStyle = color;
             ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
         }
 
         function drawArrow(from, to, color) {
@@ -1112,7 +1087,6 @@
                     const py = state.margin + y * state.cell;
                     ctx.strokeStyle = '#01696f';
                     ctx.lineWidth = 4;
-
                     if (type === 'triangle') {
                         ctx.beginPath();
                         ctx.moveTo(px, py - 18);
@@ -1121,27 +1095,19 @@
                         ctx.closePath();
                         ctx.stroke();
                     }
-                    if (type === 'square') {
-                        ctx.strokeRect(px - 15, py - 15, 30, 30);
-                    }
-                    if (type === 'circle') {
-                        ctx.beginPath();
-                        ctx.arc(px, py, 16, 0, Math.PI * 2);
-                        ctx.stroke();
-                    }
+                    if (type === 'square') ctx.strokeRect(px - 15, py - 15, 30, 30);
+                    if (type === 'circle') { ctx.beginPath(); ctx.arc(px, py, 16, 0, Math.PI * 2); ctx.stroke(); }
                     if (type === 'xmark') {
                         ctx.beginPath();
-                        ctx.moveTo(px - 14, py - 14);
-                        ctx.lineTo(px + 14, py + 14);
-                        ctx.moveTo(px + 14, py - 14);
-                        ctx.lineTo(px - 14, py + 14);
+                        ctx.moveTo(px - 14, py - 14); ctx.lineTo(px + 14, py + 14);
+                        ctx.moveTo(px + 14, py - 14); ctx.lineTo(px - 14, py + 14);
                         ctx.stroke();
                     }
                 });
             });
 
-            state.arrows.forEach(({ from, to }) => drawArrow(from, to, '#7a3cff'));
-            state.lines.forEach(({ from, to }) => drawSegment(from, to, '#cc7a00'));
+            state.arrows.forEach(({ from, to }) => drawArrow(from, to, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7a3cff'));
+            state.lines.forEach(({ from, to }) => drawSegment(from, to, getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#cc7a00'));
         }
 
         function drawLabelsAndForbidden() {
@@ -1150,11 +1116,15 @@
                 const px = state.margin + x * state.cell;
                 const py = state.margin + y * state.cell;
                 ctx.fillStyle = 'rgba(1,105,111,.92)';
-                ctx.beginPath();
-                ctx.roundRect(px - state.cell * 0.34, py - state.cell * 0.18, state.cell * 0.68, state.cell * 0.36, 10);
-                ctx.fill();
+                if (ctx.roundRect) {
+                    ctx.beginPath();
+                    ctx.roundRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36, 10);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36);
+                }
                 ctx.fillStyle = '#fff';
-                ctx.font = `700 ${Math.max(15, state.cell * 0.22)}px Satoshi, sans-serif`;
+                ctx.font = `700 ${Math.max(14, state.cell * 0.22)}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(text, px, py);
@@ -1164,26 +1134,18 @@
                 const [x, y] = parseKey(k);
                 const px = state.margin + x * state.cell;
                 const py = state.margin + y * state.cell;
-                ctx.strokeStyle = '#c0392b';
+                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--danger').trim();
                 ctx.lineWidth = 5;
-                ctx.beginPath();
-                ctx.moveTo(px - 14, py - 14);
-                ctx.lineTo(px + 14, py + 14);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(px + 14, py - 14);
-                ctx.lineTo(px - 14, py + 14);
-                ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(px - 14, py - 14); ctx.lineTo(px + 14, py + 14); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(px + 14, py - 14); ctx.lineTo(px - 14, py + 14); ctx.stroke();
             });
 
             if (state.problem.enabled && state.problem.answer && !state.problem.locked) {
                 const px = state.margin + state.problem.answer.x * state.cell;
                 const py = state.margin + state.problem.answer.y * state.cell;
-                ctx.strokeStyle = '#ff006e';
+                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
                 ctx.lineWidth = 5;
-                ctx.beginPath();
-                ctx.arc(px, py, 22, 0, Math.PI * 2);
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(px, py, 22, 0, Math.PI * 2); ctx.stroke();
             }
         }
 
@@ -1228,28 +1190,29 @@
         }
 
         function buildSGF() {
-            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:1.1]SZ[${state.size}]`];
+            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:2.0]SZ[${state.size}]`];
             const blacks = [];
             const whites = [];
             const empties = [];
+
             const playMoves = state.moves.filter(m => m.type === 'play' || m.type === 'pass');
-            const setupMoves = state.moves.filter(m => m.type === 'setup');
-            const setupKeys = new Set(setupMoves.map(m => key(m.x, m.y)));
-            const playedPointKeys = new Set(state.moves.filter(m => m.type === 'play').map(m => key(m.x, m.y)));
+            const setupSteps = state.replayMeta.steps.filter(s => s.type === 'setup');
+            const setupKeys = new Set(setupSteps.map(s => key(s.x, s.y)));
 
             for (let y = 0; y < state.size; y++) {
                 for (let x = 0; x < state.size; x++) {
                     const k = key(x, y);
                     const stone = state.board[y][x];
-                    const isSetupPoint = setupKeys.has(k) || (!playedPointKeys.has(k) && stone);
-                    if (isSetupPoint && stone === 'black') blacks.push(coordToSgf(x, y));
-                    if (isSetupPoint && stone === 'white') whites.push(coordToSgf(x, y));
+                    if (!stone) continue;
+                    if (setupKeys.has(k)) {
+                        if (stone === 'black') blacks.push(coordToSgf(x, y));
+                        if (stone === 'white') whites.push(coordToSgf(x, y));
+                    }
                 }
             }
 
-            state.moves.filter(m => m.type === 'erase').forEach(m => {
-                const k = key(m.x, m.y);
-                if (!playedPointKeys.has(k) && !state.board[m.y][m.x]) empties.push(coordToSgf(m.x, m.y));
+            state.replayMeta.steps.filter(s => s.type === 'erase').forEach(s => {
+                empties.push(coordToSgf(s.x, s.y));
             });
 
             if (blacks.length) parts.push(`AB${blacks.map(v => `[${v}]`).join('')}`);
@@ -1301,8 +1264,8 @@
                 parts.push(`LN[${coordToSgf(fx, fy)}:${coordToSgf(tx, ty)}]`);
             });
 
-            if (state.problem.enabled || state.setupMode || state.setupPlacement !== 'auto') {
-                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupMode=${state.setupMode};setupPlacement=${state.setupPlacement};exportSetup=ABAWAEPL`;
+            if (state.problem.enabled || state.setupPlacement !== 'auto') {
+                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupPlacement=${state.setupPlacement}`;
                 if (state.problem.answer) comment += `;answer=${state.problem.answer.x},${state.problem.answer.y}`;
                 parts.push(`C[${esc(comment)}]`);
             }
@@ -1325,12 +1288,85 @@
             setTimeout(() => URL.revokeObjectURL(a.href), 1000);
         }
 
+        function exportReplayJSONData() {
+            return {
+                version: 'teaching-go-json-1.0',
+                size: state.size,
+                current: state.current,
+                board: cloneBoard(state.board),
+                labels: [...state.labels.entries()],
+                forbidden: [...state.forbidden],
+                marks: {
+                    triangle: [...state.marks.triangle],
+                    square: [...state.marks.square],
+                    circle: [...state.marks.circle],
+                    xmark: [...state.marks.xmark]
+                },
+                arrows: state.arrows.map(v => ({ ...v })),
+                lines: state.lines.map(v => ({ ...v })),
+                moves: state.moves.map(v => ({ ...v })),
+                captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
+                replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
+                captures: { ...state.captures },
+                problem: JSON.parse(JSON.stringify(state.problem)),
+                setupMode: state.setupMode,
+                setupPlacement: state.setupPlacement
+            };
+        }
+
+        function downloadReplayJSON() {
+            const blob = new Blob([JSON.stringify(exportReplayJSONData(), null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'teaching-board-replay.json';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        function restoreStateFromJSON(data) {
+            resetBoard(data.size || 19, true);
+            state.size = data.size || 19;
+            sizeSelect.value = String(state.size);
+            state.current = data.current || 'black';
+            state.board = Array.isArray(data.board)
+                ? data.board.map(row => row.slice())
+                : Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            state.labels = new Map(data.labels || []);
+            state.forbidden = new Set(data.forbidden || []);
+            state.marks = {
+                triangle: new Set(data.marks?.triangle || []),
+                square: new Set(data.marks?.square || []),
+                circle: new Set(data.marks?.circle || []),
+                xmark: new Set(data.marks?.xmark || [])
+            };
+            state.arrows = (data.arrows || []).map(v => ({ ...v }));
+            state.lines = (data.lines || []).map(v => ({ ...v }));
+            state.moves = (data.moves || []).map(v => ({ ...v }));
+            state.captureLog = (data.captureLog || []).map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
+            state.replayMeta = data.replayMeta || { version: '1.0', steps: [] };
+            state.captures = data.captures || { black: 0, white: 0 };
+            state.problem = data.problem || { enabled: false, locked: false, answer: null, prompt: '' };
+            state.setupMode = !!data.setupMode;
+            state.setupPlacement = data.setupPlacement || 'auto';
+            updateStarPoints();
+            snapshotBaseState();
+            state.viewStep = null;
+            syncUI();
+            draw();
+        }
+
+        async function loadReplayJSONFile(file) {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            restoreStateFromJSON(data);
+        }
+
         function parseProps(node) {
             const props = {};
-            const re = /([A-Z]+)((?:\[[^\]]*(?:\\\][^\]]*)*\])+)/g;
+            const re = /([A-Z]+)((?:\[(?:\\.|[^\]])*\])+)/g;
             let m;
             while ((m = re.exec(node))) {
-                props[m[1]] = [...m[2].matchAll(/\[([^\]]*(?:\\\][^\]]*)*)\]/g)]
+                props[m[1]] = [...m[2].matchAll(/\[((?:\\.|[^\]])*)\]/g)]
                     .map(v => v[1].replace(/\\]/g, ']').replace(/\\\\/g, '\\'));
             }
             return props;
@@ -1338,7 +1374,6 @@
 
         function loadSGFText(text) {
             const sz = /SZ\[(\d+)/.exec(text);
-            state.baseState = null;
             resetBoard(sz ? Number(sz[1]) : state.size, true);
             if (sz) sizeSelect.value = sz[1];
 
@@ -1349,56 +1384,79 @@
                     (p.AB || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.board[y][x] = 'black';
+                        state.moves.push({ type: 'setup', x, y, color: 'black' });
+                        recordReplayStep({ type: 'setup', x, y, color: 'black' });
                     });
                     (p.AW || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.board[y][x] = 'white';
+                        state.moves.push({ type: 'setup', x, y, color: 'white' });
+                        recordReplayStep({ type: 'setup', x, y, color: 'white' });
                     });
                     (p.AE || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.board[y][x] = null;
+                        state.moves.push({ type: 'erase', x, y });
+                        recordReplayStep({ type: 'erase', x, y });
                     });
                     if (p.PL?.[0]) state.current = p.PL[0] === 'B' ? 'black' : 'white';
+
                     (p.LB || []).forEach(v => {
                         const [pt, label] = v.split(':');
                         if (!pt || label == null) return;
                         const { x, y } = sgfToCoord(pt);
                         state.labels.set(key(x, y), label);
+                        state.moves.push({ type: 'label', x, y, text: label });
+                        recordReplayStep({ type: 'label', x, y, text: label });
                     });
                     (p.MA || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.forbidden.add(key(x, y));
+                        state.moves.push({ type: 'forbidden', x, y });
+                        recordReplayStep({ type: 'forbidden', x, y });
                     });
                     (p.TR || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.marks.triangle.add(key(x, y));
+                        state.moves.push({ type: 'triangle', x, y });
+                        recordReplayStep({ type: 'triangle', x, y });
                     });
                     (p.SQ || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.marks.square.add(key(x, y));
+                        state.moves.push({ type: 'square', x, y });
+                        recordReplayStep({ type: 'square', x, y });
                     });
                     (p.CR || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.marks.circle.add(key(x, y));
+                        state.moves.push({ type: 'circle', x, y });
+                        recordReplayStep({ type: 'circle', x, y });
                     });
                     (p.SL || []).forEach(pt => {
                         const { x, y } = sgfToCoord(pt);
                         state.marks.xmark.add(key(x, y));
+                        state.moves.push({ type: 'xmark', x, y });
+                        recordReplayStep({ type: 'xmark', x, y });
                     });
                     (p.AR || []).forEach(v => {
                         const [a, b] = v.split(':');
                         if (a && b) {
-                            const pa = sgfToCoord(a);
-                            const pb = sgfToCoord(b);
-                            state.arrows.push({ from: key(pa.x, pa.y), to: key(pb.x, pb.y) });
+                            const pa = sgfToCoord(a), pb = sgfToCoord(b);
+                            const from = key(pa.x, pa.y), to = key(pb.x, pb.y);
+                            state.arrows.push({ from, to });
+                            state.moves.push({ type: 'arrow', from, to });
+                            recordReplayStep({ type: 'arrow', from, to });
                         }
                     });
                     (p.LN || []).forEach(v => {
                         const [a, b] = v.split(':');
                         if (a && b) {
-                            const pa = sgfToCoord(a);
-                            const pb = sgfToCoord(b);
-                            state.lines.push({ from: key(pa.x, pa.y), to: key(pb.x, pb.y) });
+                            const pa = sgfToCoord(a), pb = sgfToCoord(b);
+                            const from = key(pa.x, pa.y), to = key(pb.x, pb.y);
+                            state.lines.push({ from, to });
+                            state.moves.push({ type: 'line', from, to });
+                            recordReplayStep({ type: 'line', from, to });
                         }
                     });
                     if (p.C?.[0]?.includes('教學模式=')) {
@@ -1410,7 +1468,6 @@
                         const cw = /capturesW=(\d+)/.exec(p.C[0]);
                         if (cb) state.captures.black = Number(cb[1]);
                         if (cw) state.captures.white = Number(cw[1]);
-                        if (p.C[0].includes('setupMode=true')) state.setupMode = true;
                         if (p.C[0].includes('setupPlacement=manual')) state.setupPlacement = 'manual';
                     }
                 } else {
@@ -1419,12 +1476,17 @@
                         if (p.B[0] !== '') {
                             const c = sgfToCoord(p.B[0]);
                             state.board[c.y][c.x] = 'black';
-                            const captured = removeCaptured(state.board, 'black', c.x, c.y);
-                            if (captured) state.captures.black += captured;
-                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'black', moveNo: moveCount() + 1, captured });
+                            const moveNo = moveCount() + 1;
+                            const result = removeCaptured(state.board, 'black', c.x, c.y);
+                            if (result.removed) state.captures.black += result.removed;
+                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'black', moveNo, captured: result.removed });
+                            if (result.removed) state.captureLog.push({ moveNo, by: 'black', captures: result.groups.flat().map(([x, y]) => [x, y]) });
+                            recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'black', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             state.current = 'white';
                         } else {
-                            state.moves.push({ type: 'pass', color: 'black', moveNo: moveCount() + 1 });
+                            const moveNo = moveCount() + 1;
+                            state.moves.push({ type: 'pass', color: 'black', moveNo });
+                            recordReplayStep({ type: 'pass', color: 'black', moveNo });
                             state.current = 'white';
                         }
                     }
@@ -1433,12 +1495,17 @@
                         if (p.W[0] !== '') {
                             const c = sgfToCoord(p.W[0]);
                             state.board[c.y][c.x] = 'white';
-                            const captured = removeCaptured(state.board, 'white', c.x, c.y);
-                            if (captured) state.captures.white += captured;
-                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'white', moveNo: moveCount() + 1, captured });
+                            const moveNo = moveCount() + 1;
+                            const result = removeCaptured(state.board, 'white', c.x, c.y);
+                            if (result.removed) state.captures.white += result.removed;
+                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'white', moveNo, captured: result.removed });
+                            if (result.removed) state.captureLog.push({ moveNo, by: 'white', captures: result.groups.flat().map(([x, y]) => [x, y]) });
+                            recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'white', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             state.current = 'black';
                         } else {
-                            state.moves.push({ type: 'pass', color: 'white', moveNo: moveCount() + 1 });
+                            const moveNo = moveCount() + 1;
+                            state.moves.push({ type: 'pass', color: 'white', moveNo });
+                            recordReplayStep({ type: 'pass', color: 'white', moveNo });
                             state.current = 'black';
                         }
                     }
@@ -1447,7 +1514,6 @@
 
             snapshotBaseState();
             state.setupMode = false;
-            state.setupPlacement = 'auto';
             state.viewStep = null;
             syncUI();
             draw();
@@ -1484,81 +1550,28 @@
         document.getElementById('clearBtn').addEventListener('click', () => {
             state.baseState = null;
             resetBoard(state.size);
+            snapshotBaseState();
         });
 
         document.getElementById('scoreBtn').addEventListener('click', syncUI);
 
         document.getElementById('passBtn').addEventListener('click', () => {
             state.baseState = null;
+            if (state.setupMode) return;
             const moveNo = moveCount() + 1;
             state.moves.push({ type: 'pass', color: state.current, moveNo });
+            recordReplayStep({ type: 'pass', color: state.current, moveNo });
             state.current = state.current === 'black' ? 'white' : 'black';
             syncUI();
             draw();
         });
 
         document.getElementById('undoBtn').addEventListener('click', () => {
-            if (!state.moves.length) return;
+            if (!state.replayMeta.steps.length) return;
             state.baseState = null;
-
-            const history = state.moves.slice(0, -1);
-            const size = state.size;
-            const problemCopy = JSON.parse(JSON.stringify(state.problem));
-            const setupModeCopy = state.setupMode;
-            const setupPlacementCopy = state.setupPlacement;
-
-            resetBoard(size, true);
-            state.problem = problemCopy;
-            state.setupMode = setupModeCopy;
-            state.setupPlacement = setupPlacementCopy;
-
-            history.forEach(item => {
-                if (item.type === 'play') {
-                    state.current = item.color;
-                    state.board[item.y][item.x] = item.color;
-                    const captured = removeCaptured(state.board, item.color, item.x, item.y);
-                    if (captured) state.captures[item.color] += captured;
-                    state.moves.push({ ...item, captured });
-                    state.current = item.color === 'black' ? 'white' : 'black';
-                } else if (item.type === 'pass') {
-                    state.moves.push({ ...item });
-                    state.current = item.color === 'black' ? 'white' : 'black';
-                } else if (item.type === 'setup') {
-                    state.board[item.y][item.x] = item.color;
-                    state.moves.push(item);
-                } else if (item.type === 'label') {
-                    state.labels.set(key(item.x, item.y), item.text);
-                    state.moves.push(item);
-                } else if (item.type === 'forbidden') {
-                    const k = key(item.x, item.y);
-                    state.forbidden.has(k) ? state.forbidden.delete(k) : state.forbidden.add(k);
-                    state.moves.push(item);
-                } else if (['triangle', 'square', 'circle', 'xmark'].includes(item.type)) {
-                    const set = state.marks[item.type];
-                    const k = key(item.x, item.y);
-                    set.has(k) ? set.delete(k) : set.add(k);
-                    state.moves.push(item);
-                } else if (item.type === 'arrow') {
-                    state.arrows.push({ from: item.from, to: item.to });
-                    state.moves.push(item);
-                } else if (item.type === 'line') {
-                    state.lines.push({ from: item.from, to: item.to });
-                    state.moves.push(item);
-                } else if (item.type === 'erase') {
-                    const k = key(item.x, item.y);
-                    state.board[item.y][item.x] = null;
-                    state.labels.delete(k);
-                    state.forbidden.delete(k);
-                    Object.values(state.marks).forEach(set => set.delete(k));
-                    state.arrows = state.arrows.filter(a => a.from !== k && a.to !== k);
-                    state.lines = state.lines.filter(a => a.from !== k && a.to !== k);
-                    state.moves.push(item);
-                }
-            });
-
-            snapshotBaseState();
-            syncUI();
-            draw();
+            state.replayMeta.steps.pop();
+            const saved = JSON.parse(JSON.stringify(exportReplayJSONData()));
+            restoreStateFromJSON(saved);
         });
 
         document.getElementById('themeBtn').addEventListener('click', () => {
@@ -1570,11 +1583,20 @@
         document.getElementById('exportBtn').addEventListener('click', exportPNG);
         document.getElementById('saveSgfBtn').addEventListener('click', downloadSGF);
         document.getElementById('loadSgfBtn').addEventListener('click', () => document.getElementById('sgfInput').click());
+        document.getElementById('saveJsonBtn').addEventListener('click', downloadReplayJSON);
+        document.getElementById('loadJsonBtn').addEventListener('click', () => document.getElementById('jsonInput').click());
 
         document.getElementById('sgfInput').addEventListener('change', async e => {
             const file = e.target.files[0];
             if (!file) return;
             loadSGFText(await file.text());
+            e.target.value = '';
+        });
+
+        document.getElementById('jsonInput').addEventListener('change', async e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            await loadReplayJSONFile(file);
             e.target.value = '';
         });
 
@@ -1634,13 +1656,13 @@
 
         document.getElementById('prevStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            const total = state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length;
+            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length : getPlayableMoves().length;
             setViewStep((state.viewStep ?? total) - 1);
         });
 
         document.getElementById('nextStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            const total = state.baseState ? state.baseState.moves.filter(m => m.type === 'play' || m.type === 'pass').length : getPlayableMoves().length;
+            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length : getPlayableMoves().length;
             setViewStep((state.viewStep ?? total) + 1);
         });
 
