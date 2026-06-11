@@ -1343,7 +1343,7 @@
             return a || 1;
         }
 
-        function decimalToMixedFraction(value, maxDenominator = 1000000) {
+        function decimalToMixedFraction(value, maxDenominator = 1000000000) {
             if (!Number.isFinite(value)) return "Error";
 
             const sign = value < 0 ? -1 : 1;
@@ -1397,7 +1397,7 @@
             const value = Number(state.displayText);
             if (Number.isNaN(value)) return;
 
-            const fractionText = decimalToMixedFraction(value, 1000000);
+            const fractionText = decimalToMixedFraction(value, 1000000000);
             state.displayText = fractionText;
             state.expressionText = fractionText;
             state.selectedRange = { location: fractionText.length, length: 0 };
