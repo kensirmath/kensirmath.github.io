@@ -296,7 +296,7 @@
         }
 
         .key {
-            min-height: 63px;
+            min-height: 32px;
             border: 0;
             border-radius: 14px;
             padding: 0 4px;
@@ -515,18 +515,20 @@
             { title: "=", type: "equals" }
         ];
 
+        <!--{ title: "+/-", type: "sign" },-->
+
         function getScientificButtons() {
             return [
                 { title: "SHIFT", type: "shift" },
                 { title: "←", type: "cursorLeft" },
-                { title: "X", type: "memoryRecall", value: "X" },
                 { title: "→", type: "cursorRight" },
                 { title: "!", type: "factorial" },
+                { title: "e", type: "constantE" },
 
                 { title: "A", type: "memoryRecall", value: "A" },
                 { title: "B", type: "memoryRecall", value: "B" },
                 { title: "D", type: "memoryRecall", value: "D" },
-                { title: "Y", type: "memoryRecall", value: "Y" },
+                { title: "X", type: "memoryRecall", value: "X" },
                 { title: "Z", type: "memoryRecall", value: "Z" },
 
                 { title: "√", type: "scientific", value: "sqrt(" },
@@ -535,17 +537,18 @@
                 { title: "log", type: "scientific", value: "log(" },
                 { title: "ln", type: "scientific", value: "ln(" },
 
-                { title: "+/-", type: "sign" },
+
+                { title: "轉分數", type: "fraction" },
                 { title: "nCr", type: "combination" },
                 { title: state.shiftOn ? "asin" : "sin", type: "scientific", value: state.shiftOn ? "asin(" : "sin(" },
                 { title: state.shiftOn ? "acos" : "cos", type: "scientific", value: state.shiftOn ? "acos(" : "cos(" },
                 { title: state.shiftOn ? "atan" : "tan", type: "scientific", value: state.shiftOn ? "atan(" : "tan(" },
 
-                { title: "RCL", type: "memoryRecall", value: "ASK" },
+                { title: "STO", type: "memoryStore", value: "ASK" },
                 { title: "%", type: "percent" },
                 { title: "(", type: "openParen" },
                 { title: ")", type: "closeParen" },
-                { title: "STO", type: "memoryStore", value: "ASK" },
+                { title: "Y", type: "memoryRecall", value: "Y" },
 
                 { title: "7", type: "digit", value: "7" },
                 { title: "8", type: "digit", value: "8" },
@@ -568,7 +571,7 @@
                 { title: "0", type: "digit", value: "0" },
                 { title: ".", type: "decimal" },
                 { title: "π", type: "constantPi" },
-                { title: "e", type: "constantE" },
+                { title: "RCL", type: "memoryRecall", value: "ASK" },
                 { title: "=", type: "equals" },
             ];
         }
@@ -981,6 +984,7 @@
                 case "combination": insertAuto("C"); break;
                 case "cursorLeft": moveCursorLeft(); break;
                 case "cursorRight": moveCursorRight(); break;
+                case "fraction": convertDisplayToFraction(); break;
             }
         }
 
@@ -1326,6 +1330,75 @@
             renderDisplay();
             renderButtons();
             renderEditor();
+        }
+
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                const t = b;
+                b = a % b;
+                a = t;
+            }
+            return a || 1;
+        }
+
+        function decimalToMixedFraction(value, maxDenominator = 100000) {
+            if (!Number.isFinite(value)) return "Error";
+
+            const sign = value < 0 ? -1 : 1;
+            const absValue = Math.abs(value);
+
+            if (Math.abs(absValue - Math.round(absValue)) < 1e-12) {
+                return String(sign * Math.round(absValue));
+            }
+
+            let bestNumerator = 0;
+            let bestDenominator = 1;
+            let bestError = Infinity;
+
+            for (let d = 1; d <= maxDenominator; d++) {
+                const n = Math.round(absValue * d);
+                const error = Math.abs(absValue - n / d);
+                if (error < bestError) {
+                    bestError = error;
+                    bestNumerator = n;
+                    bestDenominator = d;
+                    if (error < 1e-12) break;
+                }
+            }
+
+            const divisor = gcd(bestNumerator, bestDenominator);
+            let numerator = bestNumerator / divisor;
+            let denominator = bestDenominator / divisor;
+
+            const whole = Math.floor(numerator / denominator);
+            const remainder = numerator % denominator;
+
+            const signText = sign < 0 ? "-" : "";
+
+            if (remainder === 0) {
+                return signText + String(whole);
+            }
+
+            if (whole === 0) {
+                return signText + `${remainder}/${denominator}`;
+            }
+
+            const improperNumerator = whole * denominator + remainder
+            return signText + `${improperNumerator}/${denominator}`;
+        }
+
+        function convertDisplayToFraction() {
+            const value = Number(state.displayText);
+            if (Number.isNaN(value)) return;
+
+            const fractionText = decimalToMixedFraction(value, 10000);
+            state.displayText = fractionText;
+            state.expressionText = fractionText;
+            state.selectedRange = { location: fractionText.length, length: 0 };
+            renderEditor();
+            render();
         }
 
         modeControl.addEventListener("click", e => {
