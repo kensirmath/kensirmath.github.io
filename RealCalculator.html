@@ -1343,13 +1343,13 @@
             return a || 1;
         }
 
-        function decimalToMixedFraction(value, maxDenominator = 100000) {
+        function decimalToMixedFraction(value, maxDenominator = 1000000) {
             if (!Number.isFinite(value)) return "Error";
 
             const sign = value < 0 ? -1 : 1;
             const absValue = Math.abs(value);
 
-            if (Math.abs(absValue - Math.round(absValue)) < 1e-12) {
+            if (Math.abs(absValue - Math.round(absValue)) < 1e-24) {
                 return String(sign * Math.round(absValue));
             }
 
@@ -1364,7 +1364,7 @@
                     bestError = error;
                     bestNumerator = n;
                     bestDenominator = d;
-                    if (error < 1e-12) break;
+                    if (error < 1e-24) break;
                 }
             }
 
@@ -1376,6 +1376,10 @@
             const remainder = numerator % denominator;
 
             const signText = sign < 0 ? "-" : "";
+
+            if (denominator > 1000000) {
+                return "Irrational 無理數";
+            }
 
             if (remainder === 0) {
                 return signText + String(whole);
@@ -1393,7 +1397,7 @@
             const value = Number(state.displayText);
             if (Number.isNaN(value)) return;
 
-            const fractionText = decimalToMixedFraction(value, 10000);
+            const fractionText = decimalToMixedFraction(value, 1000000);
             state.displayText = fractionText;
             state.expressionText = fractionText;
             state.selectedRange = { location: fractionText.length, length: 0 };
