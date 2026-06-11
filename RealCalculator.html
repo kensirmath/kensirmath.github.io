@@ -1349,7 +1349,7 @@
             const sign = value < 0 ? -1 : 1;
             const absValue = Math.abs(value);
 
-            if (Math.abs(absValue - Math.round(absValue)) < 1e-24) {
+            if (Math.abs(absValue - Math.round(absValue)) < 1e-36) {
                 return String(sign * Math.round(absValue));
             }
 
@@ -1364,7 +1364,7 @@
                     bestError = error;
                     bestNumerator = n;
                     bestDenominator = d;
-                    if (error < 1e-24) break;
+                    if (error < 1e-36) break;
                 }
             }
 
