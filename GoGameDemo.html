@@ -19,10 +19,7 @@
             --wood1: #d8b06f;
             --wood2: #c79c5a;
             --line: #6c4d24;
-            --danger: #c0392b;
-            --accent: #7a3cff;
-            --accent2: #cc7a00;
-            --pink: #ff006e;
+            --free: #b45000;
             --shadow: 0 8px 24px rgba(0, 0, 0, .08);
             --radius: 16px;
         }
@@ -39,10 +36,7 @@
             --wood1: #8b6a3b;
             --wood2: #6e5127;
             --line: #e3cc9a;
-            --danger: #d45c4f;
-            --accent: #9d75ff;
-            --accent2: #e0a15b;
-            --pink: #ff5c9a;
+            --free: #ff9b54;
             --shadow: 0 10px 28px rgba(0, 0, 0, .28);
         }
 
@@ -53,13 +47,14 @@
         html,
         body {
             margin: 0;
-            height: 100%
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
             font-family: Arial, "Noto Sans TC", "PingFang TC", sans-serif;
             background: var(--bg);
-            color: var(--text)
+            color: var(--text);
         }
 
         button,
@@ -86,45 +81,55 @@
 
         .app {
             display: grid;
-            grid-template-columns: 1fr 390px;
-            gap: 20px;
-            min-height: 100vh;
-            padding: 20px
+            grid-template-columns: minmax(0, 1fr) 400px;
+            gap: 16px;
+            height: 100vh;
+            padding: 0;
+            overflow: hidden;
+            align-items: start;
         }
 
         .panel,
         .board-panel {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         .board-panel {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            overflow: auto
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            border-radius: 0;
         }
 
         .panel {
             padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 18px
+            gap: 18px;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 0;
         }
 
         .board-wrap {
             position: relative;
             width: min(92vmin, 920px);
-            aspect-ratio: 1/1
+            height: min(92vmin, 920px);
+            aspect-ratio: 1/1;
+            margin: 0;
+            flex: 0 0 auto;
         }
 
         .board-bg {
             position: absolute;
             inset: 0;
-            border-radius: 24px;
+            border-radius: 0;
             background:
                 linear-gradient(135deg, rgba(255, 255, 255, .16), transparent 35%),
                 repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, .03) 31px 32px),
@@ -181,7 +186,6 @@
 
         .controls,
         .segment,
-        .tag-row,
         .playback {
             display: flex;
             flex-wrap: wrap;
@@ -189,8 +193,8 @@
         }
 
         .btn {
-            min-height: 42px;
-            padding: 10px 14px;
+            min-height: 40px;
+            padding: 8px 12px;
             border-radius: 10px;
             border: 1px solid var(--border);
             background: var(--surface2);
@@ -214,6 +218,17 @@
         .btn.active {
             outline: 2px solid var(--primary);
             outline-offset: 2px
+        }
+
+        .btn.free-active {
+            outline: 2px solid var(--free);
+            outline-offset: 2px
+        }
+
+        .btn.small {
+            min-height: 30px;
+            padding: 4px 8px;
+            font-size: 12px
         }
 
         label {
@@ -268,8 +283,8 @@
         }
 
         .moves {
-            max-height: 260px;
-            overflow: auto;
+            max-height: none;
+            overflow: visible;
             border-top: 1px solid var(--border);
             padding-top: 10px
         }
@@ -281,8 +296,20 @@
         }
 
         .moves li {
-            margin: 4px 0;
+            margin: 8px 0;
             color: var(--muted)
+        }
+
+        .move-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .move-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
         }
 
         .range-wrap {
@@ -294,13 +321,64 @@
             width: 100%
         }
 
+        .editor {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 50
+        }
+
+        .editor.show {
+            display: flex
+        }
+
+        .editor-card {
+            width: min(460px, 100%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+            display: grid;
+            gap: 12px
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
+
         @media (max-width:980px) {
+
+            html,
+            body {
+                overflow: auto
+            }
+
             .app {
-                grid-template-columns: 1fr
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .board-panel {
+                height: auto;
+                overflow: auto;
+            }
+
+            .panel {
+                height: auto;
+                overflow: visible;
             }
 
             .board-wrap {
-                width: min(96vw, 760px)
+                width: min(96vw, 760px);
+                height: min(96vw, 760px);
             }
         }
     </style>
@@ -316,11 +394,11 @@
             </div>
         </main>
 
-        <aside class="panel">
+        <aside class="panel" tabindex="0" role="region" aria-label="功能區">
             <div class="topbar">
                 <div>
                     <h1>圍棋教學示範棋盤</h1>
-                    <div class="muted">SGF 標準匯出 + JSON 完整重播</div>
+                    <div class="muted">固定棋盤 + 右欄獨立滾動 + 1 起始座標 + 順序手順</div>
                 </div>
                 <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
             </div>
@@ -340,14 +418,7 @@
                         <select id="toolSelect">
                             <option value="play">落子</option>
                             <option value="label">標記文字</option>
-                            <option value="forbidden">禁著點</option>
                             <option value="erase">擦除</option>
-                            <option value="triangle">三角</option>
-                            <option value="square">方塊</option>
-                            <option value="circle">圓圈</option>
-                            <option value="xmark">叉記</option>
-                            <option value="arrow">箭頭</option>
-                            <option value="line">連線</option>
                         </select>
                     </div>
                 </div>
@@ -361,17 +432,8 @@
             </section>
 
             <section>
-                <div class="tag-row" id="quickLabels">
-                    <button class="btn" data-label="眼">眼</button>
-                    <button class="btn" data-label="虎口">虎口</button>
-                    <button class="btn" data-label="先手">先手</button>
-                    <button class="btn" data-label="劫">劫</button>
-                    <button class="btn" data-label="急所">急所</button>
-                </div>
-                <div style="margin-top:10px">
-                    <label for="customLabel">自訂橫盤標字</label>
-                    <input id="customLabel" type="text" placeholder="例如：征子、斷點、厚勢">
-                </div>
+                <label for="customLabel">自訂標記文字</label>
+                <input id="customLabel" type="text" placeholder="例如：斷點、厚勢、先手">
             </section>
 
             <section class="controls">
@@ -395,12 +457,12 @@
             </section>
 
             <section>
-                <h2>教學資訊</h2>
+                <h2>提子統計</h2>
                 <div class="stats">
                     <div class="stat"><span class="muted">黑提子</span><strong id="blackCaptures">0</strong></div>
                     <div class="stat"><span class="muted">白提子</span><strong id="whiteCaptures">0</strong></div>
                 </div>
-                <p class="hint" id="problemText">一般示範模式，可自由落子與標記。</p>
+                <p class="hint" id="modeText">一般示範模式，可自由落子與標記。</p>
             </section>
 
             <section>
@@ -409,7 +471,6 @@
                     <button class="btn" id="prevStepBtn">上一步</button>
                     <button class="btn" id="playBtn">播放</button>
                     <button class="btn" id="nextStepBtn">下一步</button>
-                    <button class="btn" id="autoplayBtn">自動展示</button>
                 </div>
                 <div class="range-wrap" style="margin-top:10px">
                     <label for="timeline">手順時間軸</label>
@@ -424,12 +485,10 @@
                 <button class="btn" id="loadSgfBtn">載入 SGF</button>
                 <button class="btn" id="saveJsonBtn">匯出 JSON</button>
                 <button class="btn" id="loadJsonBtn">載入 JSON</button>
-                <button class="btn" id="problemBtn">題目模式</button>
-                <button class="btn" id="lockProblemBtn">鎖定答案</button>
-                <button class="btn" id="setAnswerBtn">設定答案點</button>
                 <button class="btn" id="setupModeBtn">關手順擺盤</button>
                 <button class="btn" id="setupAutoBtn">擺盤自動</button>
                 <button class="btn" id="setupManualBtn">擺盤手動</button>
+                <button class="btn" id="freeModeBtn">自由模式</button>
                 <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
                 <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
             </section>
@@ -437,10 +496,10 @@
             <section>
                 <h2>圖例</h2>
                 <div class="legend">
-                    <span><i class="dot" style="background:#111"></i>黑子</span>
-                    <span><i class="dot" style="background:#f5f5f5;border:1px solid #999"></i>白子</span>
-                    <span><i class="dot" style="background:#c0392b"></i>禁著點</span>
-                    <span><i class="dot" style="background:#01696f"></i>標記字</span>
+                    <span><i class="dot" style="background:#111"></i>正式黑子</span>
+                    <span><i class="dot" style="background:#f5f5f5;border:1px solid #999"></i>正式白子</span>
+                    <span><i class="dot" style="background:#01696f"></i>正式標記</span>
+                    <span><i class="dot" style="background:#b45000"></i>自由標記/自由棋子</span>
                 </div>
             </section>
 
@@ -451,6 +510,43 @@
         </aside>
     </div>
 
+    <div class="editor" id="moveEditor">
+        <div class="editor-card">
+            <h2>編輯手順</h2>
+            <div class="row">
+                <div>
+                    <label for="editType">類型</label>
+                    <select id="editType">
+                        <option value="play">落子</option>
+                        <option value="pass">虛手</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="editColor">顏色</label>
+                    <select id="editColor">
+                        <option value="black">黑</option>
+                        <option value="white">白</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <label for="editX">X 座標</label>
+                    <input id="editX" type="text" placeholder="1">
+                </div>
+                <div>
+                    <label for="editY">Y 座標</label>
+                    <input id="editY" type="text" placeholder="1">
+                </div>
+            </div>
+            <div class="hint">座標以 1 開始，例如左上角是 1,1；虛手可不用填 X/Y。</div>
+            <div class="editor-actions">
+                <button class="btn" id="cancelEditBtn">取消</button>
+                <button class="btn primary" id="saveEditBtn">儲存</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const canvas = document.getElementById('board');
         const ctx = canvas.getContext('2d');
@@ -459,16 +555,19 @@
         const customLabel = document.getElementById('customLabel');
         const statusText = document.getElementById('statusText');
         const moveList = document.getElementById('moveList');
+        const moveEditor = document.getElementById('moveEditor');
+        const editType = document.getElementById('editType');
+        const editColor = document.getElementById('editColor');
+        const editX = document.getElementById('editX');
+        const editY = document.getElementById('editY');
 
         const state = {
             size: 19,
             current: 'black',
             board: [],
+            freeBoard: [],
             labels: new Map(),
-            forbidden: new Set(),
-            marks: { triangle: new Set(), square: new Set(), circle: new Set(), xmark: new Set() },
-            arrows: [],
-            lines: [],
+            freeLabels: new Map(),
             moves: [],
             captureLog: [],
             replayMeta: { version: '1.0', steps: [] },
@@ -476,15 +575,14 @@
             cell: 0,
             starPoints: [],
             captures: { black: 0, white: 0 },
-            problem: { enabled: false, locked: false, answer: null, prompt: '' },
             setupMode: false,
             setupPlacement: 'auto',
-            pendingArrow: null,
-            pendingLine: null,
+            freeMode: false,
             viewStep: null,
             autoplay: false,
             autoplayTimer: null,
-            baseState: null
+            baseState: null,
+            editingMoveNo: null
         };
 
         function key(x, y) { return `${x},${y}`; }
@@ -514,24 +612,20 @@
             if (!silent) updateTimeline();
         }
 
-        function resetBoard(size = state.size, preserveProblem = false) {
+        function resetBoard(size = state.size) {
             state.size = Number(size);
             state.board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
             state.labels = new Map();
-            state.forbidden = new Set();
-            state.marks = { triangle: new Set(), square: new Set(), circle: new Set(), xmark: new Set() };
-            state.arrows = [];
-            state.lines = [];
+            state.freeLabels = new Map();
             state.moves = [];
             state.captureLog = [];
             state.replayMeta = { version: '1.0', steps: [] };
             state.current = 'black';
             state.captures = { black: 0, white: 0 };
-            if (!preserveProblem) state.problem = { enabled: false, locked: false, answer: null, prompt: '' };
             state.setupMode = false;
             state.setupPlacement = 'auto';
-            state.pendingArrow = null;
-            state.pendingLine = null;
+            state.freeMode = false;
             state.viewStep = null;
             stopAutoplay(true);
             updateStarPoints();
@@ -545,20 +639,10 @@
                 current: state.current,
                 board: cloneBoard(state.board),
                 labels: [...state.labels.entries()],
-                forbidden: [...state.forbidden],
-                marks: {
-                    triangle: [...state.marks.triangle],
-                    square: [...state.marks.square],
-                    circle: [...state.marks.circle],
-                    xmark: [...state.marks.xmark]
-                },
-                arrows: state.arrows.map(v => ({ ...v })),
-                lines: state.lines.map(v => ({ ...v })),
                 moves: state.moves.map(v => ({ ...v })),
                 captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
                 replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
                 captures: { ...state.captures },
-                problem: JSON.parse(JSON.stringify(state.problem)),
                 setupMode: state.setupMode,
                 setupPlacement: state.setupPlacement
             };
@@ -570,23 +654,16 @@
             state.size = b.size;
             state.current = b.current;
             state.board = cloneBoard(b.board);
+            state.freeBoard = Array.from({ length: b.size }, () => Array(b.size).fill(null));
             state.labels = new Map(b.labels);
-            state.forbidden = new Set(b.forbidden);
-            state.marks = {
-                triangle: new Set(b.marks.triangle),
-                square: new Set(b.marks.square),
-                circle: new Set(b.marks.circle),
-                xmark: new Set(b.marks.xmark)
-            };
-            state.arrows = b.arrows.map(v => ({ ...v }));
-            state.lines = b.lines.map(v => ({ ...v }));
+            state.freeLabels = new Map();
             state.moves = b.moves.map(v => ({ ...v }));
             state.captureLog = b.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
             state.replayMeta = JSON.parse(JSON.stringify(b.replayMeta || { version: '1.0', steps: [] }));
             state.captures = { ...b.captures };
-            state.problem = JSON.parse(JSON.stringify(b.problem));
             state.setupMode = !!b.setupMode;
             state.setupPlacement = b.setupPlacement || 'auto';
+            state.freeMode = false;
             updateStarPoints();
         }
 
@@ -641,9 +718,9 @@
             return { removed, groups };
         }
 
-        function isLegalMove(x, y, color) {
-            if (state.board[y][x] || state.forbidden.has(key(x, y))) return false;
-            const test = cloneBoard(state.board);
+        function isLegalMoveOnBoard(board, x, y, color) {
+            if (board[y][x]) return false;
+            const test = cloneBoard(board);
             test[y][x] = color;
             removeCaptured(test, color, x, y);
             const grp = groupAt(test, x, y);
@@ -654,8 +731,99 @@
             state.replayMeta.steps.push(JSON.parse(JSON.stringify(step)));
         }
 
+        function isPlayableStep(step) {
+            return step.type === 'play' || step.type === 'pass';
+        }
+
+        function renumberPlayableSteps() {
+            let n = 1;
+            state.replayMeta.steps.forEach(step => {
+                if (isPlayableStep(step)) step.moveNo = n++;
+            });
+        }
+
+        function rebuildBoardFromReplaySteps(steps) {
+            const board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            const labels = new Map();
+            let current = 'black';
+            let captures = { black: 0, white: 0 };
+
+            steps.forEach(step => {
+                if (step.type === 'setup') {
+                    board[step.y][step.x] = step.color;
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'play') {
+                    if (step.x >= 0 && step.y >= 0 && step.x < state.size && step.y < state.size) {
+                        board[step.y][step.x] = step.color;
+                        const result = removeCaptured(board, step.color, step.x, step.y);
+                        step.captures = result.groups.flat().map(([x, y]) => [x, y]);
+                        if (result.removed) captures[step.color] += result.removed;
+                    } else {
+                        step.captures = [];
+                    }
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'pass') {
+                    current = step.color === 'black' ? 'white' : 'black';
+                } else if (step.type === 'label') {
+                    labels.set(key(step.x, step.y), step.text);
+                } else if (step.type === 'erase') {
+                    board[step.y][step.x] = null;
+                    labels.delete(key(step.x, step.y));
+                }
+            });
+
+            return { board, labels, current, captures };
+        }
+
+        function rebuildAllFromReplayMeta() {
+            renumberPlayableSteps();
+            const rebuilt = rebuildBoardFromReplaySteps(state.replayMeta.steps);
+
+            state.board = rebuilt.board;
+            state.labels = rebuilt.labels;
+            state.current = rebuilt.current;
+            state.captures = rebuilt.captures;
+            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            state.freeLabels = new Map();
+            state.moves = [];
+            state.captureLog = [];
+
+            state.replayMeta.steps.forEach(step => {
+                if (step.type === 'setup') {
+                    state.moves.push({ type: 'setup', x: step.x, y: step.y, color: step.color });
+                } else if (step.type === 'play') {
+                    const captured = (step.captures || []).length;
+                    state.moves.push({ type: 'play', x: step.x, y: step.y, color: step.color, moveNo: step.moveNo, captured });
+                    if (captured) {
+                        state.captureLog.push({ moveNo: step.moveNo, by: step.color, captures: (step.captures || []).map(([x, y]) => [x, y]) });
+                    }
+                } else if (step.type === 'pass') {
+                    state.moves.push({ type: 'pass', color: step.color, moveNo: step.moveNo });
+                } else if (step.type === 'label') {
+                    state.moves.push({ type: 'label', x: step.x, y: step.y, text: step.text });
+                } else if (step.type === 'erase') {
+                    state.moves.push({ type: 'erase', x: step.x, y: step.y });
+                }
+            });
+
+            snapshotBaseState();
+            state.viewStep = null;
+            syncUI();
+            draw();
+        }
+
         function placeStone(x, y) {
             state.baseState = null;
+
+            if (state.freeMode) {
+                if (state.freeBoard[y][x] || state.board[y][x]) return;
+                state.freeBoard[y][x] = state.current;
+                if (state.setupPlacement === 'auto') state.current = state.current === 'black' ? 'white' : 'black';
+                syncUI();
+                draw();
+                return;
+            }
+
             if (state.board[y][x]) return;
 
             if (state.setupMode) {
@@ -669,30 +837,19 @@
                 return;
             }
 
-            if (!isLegalMove(x, y, state.current)) return;
-
-            if (state.problem.enabled && state.problem.locked && state.problem.answer) {
-                const hit = state.problem.answer.x === x && state.problem.answer.y === y;
-                document.getElementById('problemText').textContent = hit ? '答對了：落在設定答案點。' : '這步不是預設答案點，可繼續嘗試。';
-            }
+            if (!isLegalMoveOnBoard(state.board, x, y, state.current)) return;
 
             state.board[y][x] = state.current;
             const moveNo = moveCount() + 1;
             const result = removeCaptured(state.board, state.current, x, y);
+
             if (result.removed) {
                 state.captures[state.current] += result.removed;
-                const capEntry = { moveNo, by: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) };
-                state.captureLog.push(capEntry);
+                state.captureLog.push({ moveNo, by: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) });
             }
 
             state.moves.push({ type: 'play', x, y, color: state.current, moveNo, captured: result.removed });
-            recordReplayStep({
-                type: 'play',
-                moveNo,
-                x, y,
-                color: state.current,
-                captures: result.groups.flat().map(([sx, sy]) => [sx, sy])
-            });
+            recordReplayStep({ type: 'play', moveNo, x, y, color: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) });
 
             state.current = state.current === 'black' ? 'white' : 'black';
             syncUI();
@@ -702,63 +859,37 @@
         function addLabel(x, y, text) {
             if (!text) return;
             state.baseState = null;
-            state.labels.set(key(x, y), text.slice(0, 5));
-            state.moves.push({ type: 'label', x, y, text: text.slice(0, 5) });
-            recordReplayStep({ type: 'label', x, y, text: text.slice(0, 5) });
-            syncUI();
-            draw();
-        }
 
-        function toggleForbidden(x, y) {
-            state.baseState = null;
-            const k = key(x, y);
-            state.forbidden.has(k) ? state.forbidden.delete(k) : state.forbidden.add(k);
-            state.moves.push({ type: 'forbidden', x, y });
-            recordReplayStep({ type: 'forbidden', x, y });
-            syncUI();
-            draw();
-        }
+            if (state.freeMode) {
+                state.freeLabels.set(key(x, y), text.slice(0, 8));
+                syncUI();
+                draw();
+                return;
+            }
 
-        function toggleMark(type, x, y) {
-            state.baseState = null;
-            const set = state.marks[type];
-            const k = key(x, y);
-            set.has(k) ? set.delete(k) : set.add(k);
-            state.moves.push({ type, x, y });
-            recordReplayStep({ type, x, y });
+            state.labels.set(key(x, y), text.slice(0, 8));
+            state.moves.push({ type: 'label', x, y, text: text.slice(0, 8) });
+            recordReplayStep({ type: 'label', x, y, text: text.slice(0, 8) });
             syncUI();
             draw();
         }
 
         function eraseAt(x, y) {
-            state.baseState = null;
             const k = key(x, y);
-            state.board[y][x] = null;
-            state.labels.delete(k);
-            state.forbidden.delete(k);
-            Object.values(state.marks).forEach(set => set.delete(k));
-            state.arrows = state.arrows.filter(a => a.from !== k && a.to !== k);
-            state.lines = state.lines.filter(a => a.from !== k && a.to !== k);
-            state.moves.push({ type: 'erase', x, y });
-            recordReplayStep({ type: 'erase', x, y });
-            syncUI();
-            draw();
-        }
 
-        function addArrowOrLine(kind, x, y) {
-            state.baseState = null;
-            const prop = kind === 'arrow' ? 'pendingArrow' : 'pendingLine';
-            const arr = kind === 'arrow' ? state.arrows : state.lines;
-            const currentKey = key(x, y);
-            if (!state[prop]) {
-                state[prop] = currentKey;
-                statusText.textContent = kind === 'arrow' ? '請點選箭頭終點' : '請點選連線終點';
+            if (state.freeMode) {
+                state.freeBoard[y][x] = null;
+                state.freeLabels.delete(k);
+                syncUI();
+                draw();
                 return;
             }
-            if (state[prop] !== currentKey) arr.push({ from: state[prop], to: currentKey });
-            state.moves.push({ type: kind, from: state[prop], to: currentKey });
-            recordReplayStep({ type: kind, from: state[prop], to: currentKey });
-            state[prop] = null;
+
+            state.baseState = null;
+            state.board[y][x] = null;
+            state.labels.delete(k);
+            state.moves.push({ type: 'erase', x, y });
+            recordReplayStep({ type: 'erase', x, y });
             syncUI();
             draw();
         }
@@ -769,9 +900,10 @@
             for (let y = 0; y < state.size; y++) {
                 for (let x = 0; x < state.size; x++) {
                     const v = state.board[y][x];
-                    if (v === 'black') blackStones++;
-                    if (v === 'white') whiteStones++;
-                    if (v || visited.has(key(x, y))) continue;
+                    const fv = state.freeBoard[y]?.[x];
+                    if (v === 'black' || fv === 'black') blackStones++;
+                    if (v === 'white' || fv === 'white') whiteStones++;
+                    if (v || fv || visited.has(key(x, y))) continue;
                     const queue = [[x, y]];
                     const empties = [];
                     const touches = new Set();
@@ -780,7 +912,7 @@
                         const [cx, cy] = queue.pop();
                         empties.push([cx, cy]);
                         neighbors(cx, cy).forEach(([nx, ny]) => {
-                            const nv = state.board[ny][nx];
+                            const nv = state.board[ny][nx] || state.freeBoard[ny][nx];
                             if (!nv && !visited.has(key(nx, ny))) {
                                 visited.add(key(nx, ny));
                                 queue.push([nx, ny]);
@@ -801,89 +933,37 @@
             return state.moves.filter(m => m.type === 'play' || m.type === 'pass');
         }
 
-        function rebuildBoardFromReplaySteps(steps) {
-            const board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            const labels = new Map();
-            const forbidden = new Set();
-            const marks = { triangle: new Set(), square: new Set(), circle: new Set(), xmark: new Set() };
-            const arrows = [];
-            const lines = [];
-            let current = 'black';
-            let captures = { black: 0, white: 0 };
-
-            steps.forEach(step => {
-                if (step.type === 'setup') {
-                    board[step.y][step.x] = step.color;
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'play') {
-                    board[step.y][step.x] = step.color;
-                    (step.captures || []).forEach(([cx, cy]) => board[cy][cx] = null);
-                    if (step.captures?.length) captures[step.color] += step.captures.length;
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'pass') {
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'label') {
-                    labels.set(key(step.x, step.y), step.text);
-                } else if (step.type === 'forbidden') {
-                    const k = key(step.x, step.y);
-                    forbidden.has(k) ? forbidden.delete(k) : forbidden.add(k);
-                } else if (['triangle', 'square', 'circle', 'xmark'].includes(step.type)) {
-                    const k = key(step.x, step.y);
-                    const set = marks[step.type];
-                    set.has(k) ? set.delete(k) : set.add(k);
-                } else if (step.type === 'erase') {
-                    const k = key(step.x, step.y);
-                    board[step.y][step.x] = null;
-                    labels.delete(k);
-                    forbidden.delete(k);
-                    Object.values(marks).forEach(set => set.delete(k));
-                } else if (step.type === 'arrow') {
-                    if (step.from && step.to && step.from !== step.to) arrows.push({ from: step.from, to: step.to });
-                } else if (step.type === 'line') {
-                    if (step.from && step.to && step.from !== step.to) lines.push({ from: step.from, to: step.to });
-                }
-            });
-
-            return { board, labels, forbidden, marks, arrows, lines, current, captures };
-        }
-
         function rebuildToStep(step) {
             if (!state.baseState) snapshotBaseState();
             restoreBaseState();
 
-            const setupSteps = state.baseState.replayMeta.steps.filter(s => s.type !== 'play' && s.type !== 'pass');
-            const playSteps = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass');
+            const setupSteps = state.baseState.replayMeta.steps.filter(s => !isPlayableStep(s));
+            const playSteps = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s));
             const merged = [...setupSteps, ...playSteps.slice(0, step)];
-            const rebuilt = rebuildBoardFromReplaySteps(merged);
+            const rebuilt = rebuildBoardFromReplaySteps(JSON.parse(JSON.stringify(merged)));
 
             state.board = rebuilt.board;
             state.labels = rebuilt.labels;
-            state.forbidden = rebuilt.forbidden;
-            state.marks = rebuilt.marks;
-            state.arrows = rebuilt.arrows;
-            state.lines = rebuilt.lines;
             state.current = rebuilt.current;
             state.captures = rebuilt.captures;
-
+            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            state.freeLabels = new Map();
             state.moves = [];
             state.captureLog = [];
 
             merged.forEach(s => {
                 if (s.type === 'setup') state.moves.push({ type: 'setup', x: s.x, y: s.y, color: s.color });
                 if (s.type === 'play') {
-                    state.moves.push({ type: 'play', x: s.x, y: s.y, color: s.color, moveNo: s.moveNo, captured: (s.captures || []).length });
-                    if (s.captures?.length) state.captureLog.push({ moveNo: s.moveNo, by: s.color, captures: s.captures.map(([x, y]) => [x, y]) });
+                    const captured = (s.captures || []).length;
+                    state.moves.push({ type: 'play', x: s.x, y: s.y, color: s.color, moveNo: s.moveNo, captured });
+                    if (captured) state.captureLog.push({ moveNo: s.moveNo, by: s.color, captures: s.captures.map(([x, y]) => [x, y]) });
                 }
                 if (s.type === 'pass') state.moves.push({ type: 'pass', color: s.color, moveNo: s.moveNo });
             });
 
             setupSteps.forEach(s => {
                 if (s.type === 'label') state.moves.push({ type: 'label', x: s.x, y: s.y, text: s.text });
-                if (s.type === 'forbidden') state.moves.push({ type: 'forbidden', x: s.x, y: s.y });
-                if (['triangle', 'square', 'circle', 'xmark'].includes(s.type)) state.moves.push({ type: s.type, x: s.x, y: s.y });
                 if (s.type === 'erase') state.moves.push({ type: 'erase', x: s.x, y: s.y });
-                if (s.type === 'arrow') state.moves.push({ type: 'arrow', from: s.from, to: s.to });
-                if (s.type === 'line') state.moves.push({ type: 'line', from: s.from, to: s.to });
             });
 
             syncUI();
@@ -892,7 +972,7 @@
 
         function updateTimeline() {
             const total = state.baseState
-                ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length
+                ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length
                 : getPlayableMoves().length;
             const tl = document.getElementById('timeline');
             const displayStep = state.viewStep == null ? total : state.viewStep;
@@ -904,7 +984,7 @@
 
         function setViewStep(step) {
             if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length;
+            const total = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length;
             const s = Math.max(0, Math.min(total, step));
             state.viewStep = s;
             rebuildToStep(s);
@@ -913,7 +993,7 @@
 
         function startAutoplay() {
             if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length;
+            const total = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length;
             if ((state.viewStep ?? total) >= total) state.viewStep = 0;
             state.autoplay = true;
             updateTimeline();
@@ -927,19 +1007,131 @@
             }, 850);
         }
 
+        function getPlayableIndexes() {
+            return state.replayMeta.steps
+                .map((step, index) => ({ step, index }))
+                .filter(({ step }) => isPlayableStep(step));
+        }
+
+        function movePlayableStep(direction, moveNo) {
+            const playable = getPlayableIndexes();
+            const pos = playable.findIndex(v => v.step.moveNo === moveNo);
+            if (pos === -1) return;
+            const swapPos = direction === 'up' ? pos - 1 : pos + 1;
+            if (swapPos < 0 || swapPos >= playable.length) return;
+            const a = playable[pos].index;
+            const b = playable[swapPos].index;
+            [state.replayMeta.steps[a], state.replayMeta.steps[b]] = [state.replayMeta.steps[b], state.replayMeta.steps[a]];
+            rebuildAllFromReplayMeta();
+        }
+
+        function deletePlayableStep(moveNo) {
+            const idx = state.replayMeta.steps.findIndex(step => isPlayableStep(step) && step.moveNo === moveNo);
+            if (idx === -1) return;
+            state.replayMeta.steps.splice(idx, 1);
+            rebuildAllFromReplayMeta();
+        }
+
+        function openEditPlayableStep(moveNo) {
+            const step = state.replayMeta.steps.find(s => isPlayableStep(s) && s.moveNo === moveNo);
+            if (!step) return;
+            state.editingMoveNo = moveNo;
+            editType.value = step.type;
+            editColor.value = step.color;
+            editX.value = step.type === 'play' ? String(step.x + 1) : '';
+            editY.value = step.type === 'play' ? String(step.y + 1) : '';
+            editX.disabled = step.type === 'pass';
+            editY.disabled = step.type === 'pass';
+            moveEditor.classList.add('show');
+        }
+
+        function saveEditPlayableStep() {
+            const step = state.replayMeta.steps.find(s => isPlayableStep(s) && s.moveNo === state.editingMoveNo);
+            if (!step) return;
+            const type = editType.value;
+            const color = editColor.value;
+
+            if (type === 'pass') {
+                step.type = 'pass';
+                step.color = color;
+                delete step.x;
+                delete step.y;
+                delete step.captures;
+            } else {
+                const x1 = Number(editX.value);
+                const y1 = Number(editY.value);
+                const x = x1 - 1;
+                const y = y1 - 1;
+
+                if (Number.isNaN(x1) || Number.isNaN(y1) || x1 < 1 || y1 < 1 || x1 > state.size || y1 > state.size) {
+                    alert('座標無效');
+                    return;
+                }
+
+                step.type = 'play';
+                step.color = color;
+                step.x = x;
+                step.y = y;
+                step.captures = [];
+            }
+
+            moveEditor.classList.remove('show');
+            state.editingMoveNo = null;
+            rebuildAllFromReplayMeta();
+        }
+
         function renderMoves() {
             moveList.innerHTML = '';
-            state.moves.slice().reverse().forEach(item => {
+
+            state.moves.forEach(item => {
                 const li = document.createElement('li');
-                if (item.type === 'play') li.textContent = `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})${item.captured ? `，提 ${item.captured} 子` : ''}`;
-                else if (item.type === 'pass') li.textContent = `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} 虛手`;
-                else if (item.type === 'setup') li.textContent = `擺盤：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})`;
-                else if (item.type === 'label') li.textContent = `標記：(${item.x + 1},${item.y + 1}) → ${item.text}`;
-                else if (item.type === 'forbidden') li.textContent = `切換禁著點：(${item.x + 1},${item.y + 1})`;
-                else if (item.type === 'erase') li.textContent = `擦除：(${item.x + 1},${item.y + 1})`;
-                else if (['triangle', 'square', 'circle', 'xmark'].includes(item.type)) li.textContent = `圖形標記：${item.type} (${item.x + 1},${item.y + 1})`;
-                else if (item.type === 'arrow') li.textContent = `箭頭：${item.from} → ${item.to}`;
-                else if (item.type === 'line') li.textContent = `連線：${item.from} → ${item.to}`;
+
+                if (item.type === 'play' || item.type === 'pass') {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'move-row';
+
+                    const text = document.createElement('div');
+                    text.textContent = item.type === 'play'
+                        ? `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})${item.captured ? `，提 ${item.captured} 子` : ''}`
+                        : `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} 虛手`;
+
+                    const actions = document.createElement('div');
+                    actions.className = 'move-actions';
+
+                    const upBtn = document.createElement('button');
+                    upBtn.className = 'btn small';
+                    upBtn.textContent = '上移';
+                    upBtn.addEventListener('click', () => movePlayableStep('up', item.moveNo));
+
+                    const downBtn = document.createElement('button');
+                    downBtn.className = 'btn small';
+                    downBtn.textContent = '下移';
+                    downBtn.addEventListener('click', () => movePlayableStep('down', item.moveNo));
+
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'btn small';
+                    editBtn.textContent = '編輯';
+                    editBtn.addEventListener('click', () => openEditPlayableStep(item.moveNo));
+
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'btn small';
+                    delBtn.textContent = '刪除';
+                    delBtn.addEventListener('click', () => deletePlayableStep(item.moveNo));
+
+                    actions.appendChild(upBtn);
+                    actions.appendChild(downBtn);
+                    actions.appendChild(editBtn);
+                    actions.appendChild(delBtn);
+
+                    wrap.appendChild(text);
+                    wrap.appendChild(actions);
+                    li.appendChild(wrap);
+                } else {
+                    if (item.type === 'setup') li.textContent = `擺盤：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})`;
+                    else if (item.type === 'label') li.textContent = `標記：(${item.x + 1},${item.y + 1}) → ${item.text}`;
+                    else if (item.type === 'erase') li.textContent = `擦除：(${item.x + 1},${item.y + 1})`;
+                }
+
                 moveList.appendChild(li);
             });
         }
@@ -961,20 +1153,20 @@
             statusText.textContent = `${state.current === 'black' ? '黑方' : '白方'}行棋`;
             document.getElementById('blackCaptures').textContent = state.captures.black;
             document.getElementById('whiteCaptures').textContent = state.captures.white;
-            document.getElementById('problemText').textContent = state.setupMode
-                ? `擺盤模式：暫時不記手順，可自由擺黑白棋（${state.setupPlacement === 'auto' ? '自動輪流' : '手動選色'}）。`
-                : (state.problem.enabled
-                    ? (state.problem.locked ? '題目模式：答案已鎖定，學生可在棋盤作答。' : '題目模式：可擺設題目局面，並設定答案點。')
-                    : '一般示範模式，可自由落子與標記。');
+
+            document.getElementById('modeText').textContent = state.freeMode
+                ? '自由模式：可自由標記與下棋，不作記錄，也不匯出。'
+                : state.setupMode
+                    ? `擺盤模式：暫時不記手順，可自由擺黑白棋（${state.setupPlacement === 'auto' ? '自動輪流' : '手動選色'}）。`
+                    : '一般示範模式，可自由落子與標記。';
 
             renderMoves();
             updateTimeline();
             document.querySelectorAll('#stoneChooser .btn').forEach(btn => btn.classList.toggle('active', btn.dataset.color === state.current));
-            document.getElementById('problemBtn').classList.toggle('active', state.problem.enabled);
-            document.getElementById('lockProblemBtn').classList.toggle('active', state.problem.locked);
             document.getElementById('setupModeBtn').classList.toggle('active', state.setupMode);
             document.getElementById('setupAutoBtn').classList.toggle('active', state.setupPlacement === 'auto');
             document.getElementById('setupManualBtn').classList.toggle('active', state.setupPlacement === 'manual');
+            document.getElementById('freeModeBtn').classList.toggle('free-active', state.freeMode);
         }
 
         function drawGrid() {
@@ -1017,23 +1209,37 @@
             }
         }
 
+        function drawStoneAt(px, py, stone, r, alpha = 1) {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            const grad = ctx.createRadialGradient(px - r * .35, py - r * .35, 2, px, py, r);
+            if (stone === 'black') { grad.addColorStop(0, '#666'); grad.addColorStop(1, '#111'); }
+            else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#dbdbdb'); }
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = stone === 'black' ? '#000' : '#999';
+            ctx.lineWidth = 1.4;
+            ctx.stroke();
+            ctx.restore();
+        }
+
         function drawStones() {
             for (let y = 0; y < state.size; y++) {
                 for (let x = 0; x < state.size; x++) {
                     const stone = state.board[y][x];
                     const px = state.margin + x * state.cell;
                     const py = state.margin + y * state.cell;
-                    if (stone) {
-                        const r = state.cell * 0.42;
-                        const grad = ctx.createRadialGradient(px - r * .35, py - r * .35, 2, px, py, r);
-                        if (stone === 'black') { grad.addColorStop(0, '#666'); grad.addColorStop(1, '#111'); }
-                        else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#dbdbdb'); }
-                        ctx.fillStyle = grad;
-                        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
-                        ctx.strokeStyle = stone === 'black' ? '#000' : '#999';
-                        ctx.lineWidth = 1.4;
-                        ctx.stroke();
-                    }
+                    if (stone) drawStoneAt(px, py, stone, state.cell * 0.42, 1);
+                }
+            }
+
+            for (let y = 0; y < state.size; y++) {
+                for (let x = 0; x < state.size; x++) {
+                    const stone = state.freeBoard[y][x];
+                    if (!stone) continue;
+                    const px = state.margin + x * state.cell;
+                    const py = state.margin + y * state.cell;
+                    drawStoneAt(px, py, stone, state.cell * 0.34, 0.72);
                 }
             }
 
@@ -1048,69 +1254,7 @@
             });
         }
 
-        function drawSegment(from, to, color) {
-            const [fx, fy] = parseKey(from);
-            const [tx, ty] = parseKey(to);
-            const x1 = state.margin + fx * state.cell;
-            const y1 = state.margin + fy * state.cell;
-            const x2 = state.margin + tx * state.cell;
-            const y2 = state.margin + ty * state.cell;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 5;
-            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
-        }
-
-        function drawArrow(from, to, color) {
-            const [fx, fy] = parseKey(from);
-            const [tx, ty] = parseKey(to);
-            const x1 = state.margin + fx * state.cell;
-            const y1 = state.margin + fy * state.cell;
-            const x2 = state.margin + tx * state.cell;
-            const y2 = state.margin + ty * state.cell;
-            const angle = Math.atan2(y2 - y1, x2 - x1);
-            const head = 18;
-            drawSegment(from, to, color);
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(x2, y2);
-            ctx.lineTo(x2 - head * Math.cos(angle - Math.PI / 6), y2 - head * Math.sin(angle - Math.PI / 6));
-            ctx.lineTo(x2 - head * Math.cos(angle + Math.PI / 6), y2 - head * Math.sin(angle + Math.PI / 6));
-            ctx.closePath();
-            ctx.fill();
-        }
-
-        function drawShapes() {
-            Object.entries(state.marks).forEach(([type, set]) => {
-                set.forEach(k => {
-                    const [x, y] = parseKey(k);
-                    const px = state.margin + x * state.cell;
-                    const py = state.margin + y * state.cell;
-                    ctx.strokeStyle = '#01696f';
-                    ctx.lineWidth = 4;
-                    if (type === 'triangle') {
-                        ctx.beginPath();
-                        ctx.moveTo(px, py - 18);
-                        ctx.lineTo(px - 16, py + 12);
-                        ctx.lineTo(px + 16, py + 12);
-                        ctx.closePath();
-                        ctx.stroke();
-                    }
-                    if (type === 'square') ctx.strokeRect(px - 15, py - 15, 30, 30);
-                    if (type === 'circle') { ctx.beginPath(); ctx.arc(px, py, 16, 0, Math.PI * 2); ctx.stroke(); }
-                    if (type === 'xmark') {
-                        ctx.beginPath();
-                        ctx.moveTo(px - 14, py - 14); ctx.lineTo(px + 14, py + 14);
-                        ctx.moveTo(px + 14, py - 14); ctx.lineTo(px - 14, py + 14);
-                        ctx.stroke();
-                    }
-                });
-            });
-
-            state.arrows.forEach(({ from, to }) => drawArrow(from, to, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7a3cff'));
-            state.lines.forEach(({ from, to }) => drawSegment(from, to, getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#cc7a00'));
-        }
-
-        function drawLabelsAndForbidden() {
+        function drawLabels() {
             state.labels.forEach((text, k) => {
                 const [x, y] = parseKey(k);
                 const px = state.margin + x * state.cell;
@@ -1130,31 +1274,34 @@
                 ctx.fillText(text, px, py);
             });
 
-            state.forbidden.forEach(k => {
+            state.freeLabels.forEach((text, k) => {
                 const [x, y] = parseKey(k);
                 const px = state.margin + x * state.cell;
                 const py = state.margin + y * state.cell;
-                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--danger').trim();
-                ctx.lineWidth = 5;
-                ctx.beginPath(); ctx.moveTo(px - 14, py - 14); ctx.lineTo(px + 14, py + 14); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(px + 14, py - 14); ctx.lineTo(px - 14, py + 14); ctx.stroke();
+                ctx.save();
+                ctx.globalAlpha = 0.82;
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--free').trim();
+                if (ctx.roundRect) {
+                    ctx.beginPath();
+                    ctx.roundRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36, 10);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36);
+                }
+                ctx.fillStyle = '#fff';
+                ctx.font = `700 ${Math.max(14, state.cell * 0.22)}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, px, py);
+                ctx.restore();
             });
-
-            if (state.problem.enabled && state.problem.answer && !state.problem.locked) {
-                const px = state.margin + state.problem.answer.x * state.cell;
-                const py = state.margin + state.problem.answer.y * state.cell;
-                ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
-                ctx.lineWidth = 5;
-                ctx.beginPath(); ctx.arc(px, py, 22, 0, Math.PI * 2); ctx.stroke();
-            }
         }
 
         function draw() {
             drawGrid();
             drawCoordinates();
-            drawShapes();
             drawStones();
-            drawLabelsAndForbidden();
+            drawLabels();
         }
 
         function pointFromEvent(evt) {
@@ -1190,7 +1337,7 @@
         }
 
         function buildSGF() {
-            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:2.0]SZ[${state.size}]`];
+            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:3.2]SZ[${state.size}]`];
             const blacks = [];
             const whites = [];
             const empties = [];
@@ -1224,51 +1371,7 @@
                 const [x, y] = parseKey(k);
                 return `[${coordToSgf(x, y)}:${esc(v)}]`;
             }).join('');
-            const ma = [...state.forbidden].map(k => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}]`;
-            }).join('');
-            const tr = [...state.marks.triangle].map(k => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}]`;
-            }).join('');
-            const sq = [...state.marks.square].map(k => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}]`;
-            }).join('');
-            const cr = [...state.marks.circle].map(k => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}]`;
-            }).join('');
-            const sl = [...state.marks.xmark].map(k => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}]`;
-            }).join('');
-
             if (lb) parts.push(`LB${lb}`);
-            if (ma) parts.push(`MA${ma}`);
-            if (tr) parts.push(`TR${tr}`);
-            if (sq) parts.push(`SQ${sq}`);
-            if (cr) parts.push(`CR${cr}`);
-            if (sl) parts.push(`SL${sl}`);
-
-            state.arrows.forEach(({ from, to }) => {
-                const [fx, fy] = parseKey(from);
-                const [tx, ty] = parseKey(to);
-                parts.push(`AR[${coordToSgf(fx, fy)}:${coordToSgf(tx, ty)}]`);
-            });
-
-            state.lines.forEach(({ from, to }) => {
-                const [fx, fy] = parseKey(from);
-                const [tx, ty] = parseKey(to);
-                parts.push(`LN[${coordToSgf(fx, fy)}:${coordToSgf(tx, ty)}]`);
-            });
-
-            if (state.problem.enabled || state.setupPlacement !== 'auto') {
-                let comment = `教學模式=${state.problem.enabled};locked=${state.problem.locked};capturesB=${state.captures.black};capturesW=${state.captures.white};setupPlacement=${state.setupPlacement}`;
-                if (state.problem.answer) comment += `;answer=${state.problem.answer.x},${state.problem.answer.y}`;
-                parts.push(`C[${esc(comment)}]`);
-            }
 
             playMoves.forEach(m => {
                 if (m.type === 'play') parts.push(`;${m.color === 'black' ? 'B' : 'W'}[${coordToSgf(m.x, m.y)}]MN[${m.moveNo}]`);
@@ -1290,25 +1393,15 @@
 
         function exportReplayJSONData() {
             return {
-                version: 'teaching-go-json-1.0',
+                version: 'teaching-go-json-2.2',
                 size: state.size,
                 current: state.current,
                 board: cloneBoard(state.board),
                 labels: [...state.labels.entries()],
-                forbidden: [...state.forbidden],
-                marks: {
-                    triangle: [...state.marks.triangle],
-                    square: [...state.marks.square],
-                    circle: [...state.marks.circle],
-                    xmark: [...state.marks.xmark]
-                },
-                arrows: state.arrows.map(v => ({ ...v })),
-                lines: state.lines.map(v => ({ ...v })),
                 moves: state.moves.map(v => ({ ...v })),
                 captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
                 replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
                 captures: { ...state.captures },
-                problem: JSON.parse(JSON.stringify(state.problem)),
                 setupMode: state.setupMode,
                 setupPlacement: state.setupPlacement
             };
@@ -1324,30 +1417,23 @@
         }
 
         function restoreStateFromJSON(data) {
-            resetBoard(data.size || 19, true);
+            resetBoard(data.size || 19);
             state.size = data.size || 19;
             sizeSelect.value = String(state.size);
             state.current = data.current || 'black';
             state.board = Array.isArray(data.board)
                 ? data.board.map(row => row.slice())
                 : Array.from({ length: state.size }, () => Array(state.size).fill(null));
+            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
             state.labels = new Map(data.labels || []);
-            state.forbidden = new Set(data.forbidden || []);
-            state.marks = {
-                triangle: new Set(data.marks?.triangle || []),
-                square: new Set(data.marks?.square || []),
-                circle: new Set(data.marks?.circle || []),
-                xmark: new Set(data.marks?.xmark || [])
-            };
-            state.arrows = (data.arrows || []).map(v => ({ ...v }));
-            state.lines = (data.lines || []).map(v => ({ ...v }));
+            state.freeLabels = new Map();
             state.moves = (data.moves || []).map(v => ({ ...v }));
             state.captureLog = (data.captureLog || []).map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
             state.replayMeta = data.replayMeta || { version: '1.0', steps: [] };
             state.captures = data.captures || { black: 0, white: 0 };
-            state.problem = data.problem || { enabled: false, locked: false, answer: null, prompt: '' };
             state.setupMode = !!data.setupMode;
             state.setupPlacement = data.setupPlacement || 'auto';
+            state.freeMode = false;
             updateStarPoints();
             snapshotBaseState();
             state.viewStep = null;
@@ -1374,7 +1460,7 @@
 
         function loadSGFText(text) {
             const sz = /SZ\[(\d+)/.exec(text);
-            resetBoard(sz ? Number(sz[1]) : state.size, true);
+            resetBoard(sz ? Number(sz[1]) : state.size);
             if (sz) sizeSelect.value = sz[1];
 
             const nodes = [...text.matchAll(/;([^;()]+)/g)].map(m => m[1]);
@@ -1409,67 +1495,6 @@
                         state.moves.push({ type: 'label', x, y, text: label });
                         recordReplayStep({ type: 'label', x, y, text: label });
                     });
-                    (p.MA || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.forbidden.add(key(x, y));
-                        state.moves.push({ type: 'forbidden', x, y });
-                        recordReplayStep({ type: 'forbidden', x, y });
-                    });
-                    (p.TR || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.marks.triangle.add(key(x, y));
-                        state.moves.push({ type: 'triangle', x, y });
-                        recordReplayStep({ type: 'triangle', x, y });
-                    });
-                    (p.SQ || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.marks.square.add(key(x, y));
-                        state.moves.push({ type: 'square', x, y });
-                        recordReplayStep({ type: 'square', x, y });
-                    });
-                    (p.CR || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.marks.circle.add(key(x, y));
-                        state.moves.push({ type: 'circle', x, y });
-                        recordReplayStep({ type: 'circle', x, y });
-                    });
-                    (p.SL || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.marks.xmark.add(key(x, y));
-                        state.moves.push({ type: 'xmark', x, y });
-                        recordReplayStep({ type: 'xmark', x, y });
-                    });
-                    (p.AR || []).forEach(v => {
-                        const [a, b] = v.split(':');
-                        if (a && b) {
-                            const pa = sgfToCoord(a), pb = sgfToCoord(b);
-                            const from = key(pa.x, pa.y), to = key(pb.x, pb.y);
-                            state.arrows.push({ from, to });
-                            state.moves.push({ type: 'arrow', from, to });
-                            recordReplayStep({ type: 'arrow', from, to });
-                        }
-                    });
-                    (p.LN || []).forEach(v => {
-                        const [a, b] = v.split(':');
-                        if (a && b) {
-                            const pa = sgfToCoord(a), pb = sgfToCoord(b);
-                            const from = key(pa.x, pa.y), to = key(pb.x, pb.y);
-                            state.lines.push({ from, to });
-                            state.moves.push({ type: 'line', from, to });
-                            recordReplayStep({ type: 'line', from, to });
-                        }
-                    });
-                    if (p.C?.[0]?.includes('教學模式=')) {
-                        state.problem.enabled = p.C[0].includes('教學模式=true');
-                        state.problem.locked = p.C[0].includes('locked=true');
-                        const ans = /answer=(\d+),(\d+)/.exec(p.C[0]);
-                        if (ans) state.problem.answer = { x: Number(ans[1]), y: Number(ans[2]) };
-                        const cb = /capturesB=(\d+)/.exec(p.C[0]);
-                        const cw = /capturesW=(\d+)/.exec(p.C[0]);
-                        if (cb) state.captures.black = Number(cb[1]);
-                        if (cw) state.captures.white = Number(cw[1]);
-                        if (p.C[0].includes('setupPlacement=manual')) state.setupPlacement = 'manual';
-                    }
                 } else {
                     if (p.B) {
                         state.current = 'black';
@@ -1480,7 +1505,6 @@
                             const result = removeCaptured(state.board, 'black', c.x, c.y);
                             if (result.removed) state.captures.black += result.removed;
                             state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'black', moveNo, captured: result.removed });
-                            if (result.removed) state.captureLog.push({ moveNo, by: 'black', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'black', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             state.current = 'white';
                         } else {
@@ -1499,7 +1523,6 @@
                             const result = removeCaptured(state.board, 'white', c.x, c.y);
                             if (result.removed) state.captures.white += result.removed;
                             state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'white', moveNo, captured: result.removed });
-                            if (result.removed) state.captureLog.push({ moveNo, by: 'white', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'white', captures: result.groups.flat().map(([x, y]) => [x, y]) });
                             state.current = 'black';
                         } else {
@@ -1512,8 +1535,9 @@
                 }
             });
 
-            snapshotBaseState();
+            rebuildAllFromReplayMeta();
             state.setupMode = false;
+            state.freeMode = false;
             state.viewStep = null;
             syncUI();
             draw();
@@ -1524,22 +1548,13 @@
             if (!p) return;
             const tool = toolSelect.value;
             if (tool === 'play') placeStone(p.x, p.y);
-            else if (tool === 'label') addLabel(p.x, p.y, customLabel.value.trim() || document.querySelector('#quickLabels .btn.active')?.dataset.label || '標');
-            else if (tool === 'forbidden') toggleForbidden(p.x, p.y);
+            else if (tool === 'label') addLabel(p.x, p.y, customLabel.value.trim() || '標');
             else if (tool === 'erase') eraseAt(p.x, p.y);
-            else if (['triangle', 'square', 'circle', 'xmark'].includes(tool)) toggleMark(tool, p.x, p.y);
-            else if (tool === 'arrow' || tool === 'line') addArrowOrLine(tool, p.x, p.y);
         });
 
         document.querySelectorAll('#stoneChooser .btn').forEach(btn => btn.addEventListener('click', () => {
             state.current = btn.dataset.color;
             syncUI();
-        }));
-
-        document.querySelectorAll('#quickLabels .btn').forEach(btn => btn.addEventListener('click', () => {
-            document.querySelectorAll('#quickLabels .btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            toolSelect.value = 'label';
         }));
 
         sizeSelect.addEventListener('change', e => {
@@ -1557,7 +1572,7 @@
 
         document.getElementById('passBtn').addEventListener('click', () => {
             state.baseState = null;
-            if (state.setupMode) return;
+            if (state.setupMode || state.freeMode) return;
             const moveNo = moveCount() + 1;
             state.moves.push({ type: 'pass', color: state.current, moveNo });
             recordReplayStep({ type: 'pass', color: state.current, moveNo });
@@ -1567,11 +1582,16 @@
         });
 
         document.getElementById('undoBtn').addEventListener('click', () => {
+            if (state.freeMode) {
+                state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
+                state.freeLabels = new Map();
+                syncUI();
+                draw();
+                return;
+            }
             if (!state.replayMeta.steps.length) return;
-            state.baseState = null;
             state.replayMeta.steps.pop();
-            const saved = JSON.parse(JSON.stringify(exportReplayJSONData()));
-            restoreStateFromJSON(saved);
+            rebuildAllFromReplayMeta();
         });
 
         document.getElementById('themeBtn').addEventListener('click', () => {
@@ -1600,23 +1620,8 @@
             e.target.value = '';
         });
 
-        document.getElementById('problemBtn').addEventListener('click', () => {
-            state.problem.enabled = !state.problem.enabled;
-            if (!state.problem.enabled) state.problem.locked = false;
-            state.baseState = null;
-            syncUI();
-            draw();
-        });
-
-        document.getElementById('lockProblemBtn').addEventListener('click', () => {
-            if (!state.problem.enabled) state.problem.enabled = true;
-            state.problem.locked = !state.problem.locked;
-            state.baseState = null;
-            syncUI();
-            draw();
-        });
-
         document.getElementById('setupModeBtn').addEventListener('click', () => {
+            if (state.freeMode) state.freeMode = false;
             state.setupMode = !state.setupMode;
             state.baseState = null;
             state.viewStep = null;
@@ -1637,32 +1642,22 @@
             draw();
         });
 
-        document.getElementById('setAnswerBtn').addEventListener('click', () => {
-            if (!state.problem.enabled) state.problem.enabled = true;
-            statusText.textContent = '請在棋盤點一下作為答案點';
-            const once = evt => {
-                const p = pointFromEvent(evt);
-                if (!p) return;
-                state.problem.answer = { x: p.x, y: p.y };
-                state.problem.locked = false;
-                state.baseState = null;
-                syncUI();
-                draw();
-                canvas.removeEventListener('click', once, true);
-                evt.stopImmediatePropagation();
-            };
-            canvas.addEventListener('click', once, true);
+        document.getElementById('freeModeBtn').addEventListener('click', () => {
+            if (state.setupMode) state.setupMode = false;
+            state.freeMode = !state.freeMode;
+            syncUI();
+            draw();
         });
 
         document.getElementById('prevStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length : getPlayableMoves().length;
+            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length : getPlayableMoves().length;
             setViewStep((state.viewStep ?? total) - 1);
         });
 
         document.getElementById('nextStepBtn').addEventListener('click', () => {
             stopAutoplay();
-            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => s.type === 'play' || s.type === 'pass').length : getPlayableMoves().length;
+            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length : getPlayableMoves().length;
             setViewStep((state.viewStep ?? total) + 1);
         });
 
@@ -1670,14 +1665,29 @@
             state.autoplay ? stopAutoplay() : startAutoplay();
         });
 
-        document.getElementById('autoplayBtn').addEventListener('click', () => {
-            state.viewStep = 0;
-            startAutoplay();
-        });
-
         document.getElementById('timeline').addEventListener('input', e => {
             stopAutoplay();
             setViewStep(Number(e.target.value));
+        });
+
+        editType.addEventListener('change', () => {
+            const pass = editType.value === 'pass';
+            editX.disabled = pass;
+            editY.disabled = pass;
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            moveEditor.classList.remove('show');
+            state.editingMoveNo = null;
+        });
+
+        document.getElementById('saveEditBtn').addEventListener('click', saveEditPlayableStep);
+
+        moveEditor.addEventListener('click', e => {
+            if (e.target === moveEditor) {
+                moveEditor.classList.remove('show');
+                state.editingMoveNo = null;
+            }
         });
 
         resetBoard(19);
