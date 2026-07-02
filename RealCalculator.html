@@ -24,6 +24,8 @@
             --overlay: rgba(0, 0, 0, .55);
             --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             --sans: Inter, "Segoe UI", Arial, sans-serif;
+            --calc-key-font-size: 32px;
+            --calc-key-height: 32px;
         }
 
         * {
@@ -66,6 +68,46 @@
             overflow: hidden;
         }
 
+        .ui-adjust-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, .04);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            flex: 0 0 auto;
+        }
+        .ui-adjust-bar label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        .ui-adjust-bar input {
+            width: 72px;
+            min-height: 30px;
+            border: 0;
+            border-radius: 8px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, .08);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+        .ui-adjust-bar button {
+            min-height: 30px;
+            border: 0;
+            border-radius: 8px;
+            padding: 4px 10px;
+            background: rgba(255, 186, 82, .18);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .ui-adjust-bar button:hover {
+            background: rgba(255, 186, 82, .28);
+        }
         .top-controls {
             display: flex;
             gap: 4px;
@@ -296,12 +338,12 @@
         }
 
         .key {
-            min-height: 32px;
+            min-height: var(--calc-key-height);
             border: 0;
             border-radius: 14px;
             padding: 0 4px;
             color: white;
-            font-size: 32px;
+            font-size: var(--calc-key-font-size);
             font-weight: 500;
             cursor: pointer;
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
@@ -421,6 +463,13 @@
 
 <body>
     <div class="app">
+        <div class="ui-adjust-bar">
+            <label for="fontSizeInput">字體大小</label>
+            <input id="fontSizeInput" type="number" min="12" max="60" step="1" value="32">
+            <label for="buttonHeightInput">按鍵高矮</label>
+            <input id="buttonHeightInput" type="number" min="28" max="80" step="1" value="32">
+            <button type="button" id="applyUiSettings">套用</button>
+        </div>
         <div class="top-controls">
             <div class="segmented" id="modeControl">
                 <button class="active" data-mode="scientific">Scientific</button>
@@ -465,6 +514,58 @@
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            if (window.__keyUiSettingsBound) return;
+            window.__keyUiSettingsBound = true;
+
+            function applyUiSettings() {
+                const root = document.documentElement;
+                const fontSizeInput = document.getElementById('fontSizeInput');
+                const buttonHeightInput = document.getElementById('buttonHeightInput');
+                const fontSize = Math.min(60, Math.max(12, Number(fontSizeInput && fontSizeInput.value) || 32));
+                const buttonHeight = Math.min(80, Math.max(28, Number(buttonHeightInput && buttonHeightInput.value) || 32));
+                if (fontSizeInput) fontSizeInput.value = fontSize;
+                if (buttonHeightInput) buttonHeightInput.value = buttonHeight;
+                root.style.setProperty('--calc-key-font-size', fontSize + 'px');
+                root.style.setProperty('--calc-key-height', buttonHeight + 'px');
+                document.querySelectorAll('.grid .key').forEach((el) => {
+                    el.style.fontSize = fontSize + 'px';
+                    el.style.minHeight = buttonHeight + 'px';
+                });
+            }
+
+            function bindUiSettings() {
+                const applyBtn = document.getElementById('applyUiSettings');
+                const fontSizeInput = document.getElementById('fontSizeInput');
+                const buttonHeightInput = document.getElementById('buttonHeightInput');
+                if (applyBtn && !applyBtn.dataset.boundUi) {
+                    applyBtn.dataset.boundUi = '1';
+                    applyBtn.addEventListener('click', applyUiSettings);
+                }
+                if (fontSizeInput && !fontSizeInput.dataset.boundUi) {
+                    fontSizeInput.dataset.boundUi = '1';
+                    fontSizeInput.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') applyUiSettings();
+                    });
+                }
+                if (buttonHeightInput && !buttonHeightInput.dataset.boundUi) {
+                    buttonHeightInput.dataset.boundUi = '1';
+                    buttonHeightInput.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') applyUiSettings();
+                    });
+                }
+                applyUiSettings();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', bindUiSettings);
+            } else {
+                bindUiSettings();
+            }
+        })();
+    </script>
 
     <script>
         const state = {
