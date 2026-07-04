@@ -12,8 +12,8 @@
             --surface: #fbfaf7;
             --surface2: #f2efe8;
             --text: #26231c;
-            --muted: #706b62;
-            --border: #d7d2c8;
+            --muted: #000000;
+            --border: #000000;
             --primary: #01696f;
             --primary-hover: #0d5257;
             --wood1: #d8b06f;
@@ -29,10 +29,10 @@
             --surface: #fbfaf7;
             --surface2: #f2efe8;
             --text: #26231c;
-            --muted: #706b62;
-            --border: #d7d2c8;
-            --primary: #01696f;
-            --primary-hover: #0d5257;
+            --muted: #a49f95;
+            --border: #3c3933;
+            --primary: #4f98a3;
+            --primary-hover: #67adb6;
             --wood1: #ffffff;
             --wood2: #ffffff;
             --line: #6c4d24;
@@ -497,7 +497,7 @@
                 <h2>圖例</h2>
                 <div class="legend">
                     <span><i class="dot" style="background:#111"></i>正式黑子</span>
-                    <span><i class="dot" style="background:#f5f5f5;border:1px solid #999"></i>正式白子</span>
+                    <span><i class="dot" style="background:#fff;border:1px solid #000"></i>正式白子</span>
                     <span><i class="dot" style="background:#01696f"></i>正式標記</span>
                     <span><i class="dot" style="background:#b45000"></i>自由標記/自由棋子</span>
                 </div>
@@ -1217,7 +1217,7 @@
             else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#dbdbdb'); }
             ctx.fillStyle = grad;
             ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = stone === 'black' ? '#000' : '#999';
+            ctx.strokeStyle = stone === 'black' ? '#000' : '#000';
             ctx.lineWidth = 1.4;
             ctx.stroke();
             ctx.restore();
