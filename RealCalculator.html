@@ -24,7 +24,7 @@
             --overlay: rgba(0, 0, 0, .55);
             --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             --sans: Inter, "Segoe UI", Arial, sans-serif;
-            --calc-key-font-size: 32px;
+            --calc-key-font-size: 28px;
             --calc-key-height: 32px;
         }
 
@@ -78,11 +78,13 @@
             border-bottom: 1px solid rgba(255, 255, 255, .08);
             flex: 0 0 auto;
         }
+
         .ui-adjust-bar label {
             font-size: 12px;
             color: var(--muted);
             font-weight: 700;
         }
+
         .ui-adjust-bar input {
             width: 72px;
             min-height: 30px;
@@ -94,6 +96,7 @@
             font-size: 14px;
             outline: none;
         }
+
         .ui-adjust-bar button {
             min-height: 30px;
             border: 0;
@@ -105,9 +108,30 @@
             font-weight: 700;
             cursor: pointer;
         }
+
         .ui-adjust-bar button:hover {
             background: rgba(255, 186, 82, .28);
         }
+
+        .adjust-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .adjust-value {
+            min-width: 36px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .adjust-btn {
+            min-width: 32px;
+            min-height: 30px;
+        }
+
         .top-controls {
             display: flex;
             gap: 4px;
@@ -249,6 +273,7 @@
             font-family: var(--mono);
             font-size: 20px;
             line-height: 1.14;
+
         }
 
         .editor-display {
@@ -358,6 +383,17 @@
             opacity: .88;
         }
 
+        .key {
+            transition: transform .08s ease, opacity .12s ease, filter .12s ease, box-shadow .12s ease;
+        }
+
+        .key.feedback-active {
+            transform: scale(0.74);
+            opacity: .42;
+            filter: brightness(1.75) saturate(1.45) contrast(1.12);
+            box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .62), 0 0 34px rgba(255, 255, 255, .38), 0 0 16px rgba(255, 255, 255, .24);
+        }
+
         .key.default {
             background: linear-gradient(to bottom right, var(--key1), var(--key2));
         }
@@ -464,11 +500,14 @@
 <body>
     <div class="app">
         <div class="ui-adjust-bar">
-            <label for="fontSizeInput">字體大小</label>
-            <input id="fontSizeInput" type="number" min="12" max="60" step="1" value="32">
-            <label for="buttonHeightInput">按鍵高矮</label>
-            <input id="buttonHeightInput" type="number" min="28" max="80" step="1" value="32">
-            <button type="button" id="applyUiSettings">套用</button>
+            <span class="adjust-label">字體大小</span>
+            <button type="button" id="fontSizeDecrease" class="adjust-btn">－</button>
+            <span id="fontSizeValue" class="adjust-value">28</span>
+            <button type="button" id="fontSizeIncrease" class="adjust-btn">＋</button>
+            <span class="adjust-label">按鍵高矮</span>
+            <button type="button" id="buttonHeightDecrease" class="adjust-btn">－</button>
+            <span id="buttonHeightValue" class="adjust-value">32</span>
+            <button type="button" id="buttonHeightIncrease" class="adjust-btn">＋</button>
         </div>
         <div class="top-controls">
             <div class="segmented" id="modeControl">
@@ -520,43 +559,73 @@
             if (window.__keyUiSettingsBound) return;
             window.__keyUiSettingsBound = true;
 
-            function applyUiSettings() {
+            const STORAGE_KEY = 'realCalculatorKeyUiSettings';
+            const DEFAULT_FONT_SIZE = 28;
+            const DEFAULT_BUTTON_HEIGHT = 32;
+            const FONT_MIN = 12;
+            const FONT_MAX = 60;
+            const HEIGHT_MIN = 28;
+            const HEIGHT_MAX = 80;
+
+            function clamp(value, min, max) {
+                return Math.min(max, Math.max(min, value));
+            }
+
+            function readSettings() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) return { fontSize: DEFAULT_FONT_SIZE, buttonHeight: DEFAULT_BUTTON_HEIGHT };
+                    const parsed = JSON.parse(raw);
+                    return {
+                        fontSize: clamp(Number(parsed.fontSize) || DEFAULT_FONT_SIZE, FONT_MIN, FONT_MAX),
+                        buttonHeight: clamp(Number(parsed.buttonHeight) || DEFAULT_BUTTON_HEIGHT, HEIGHT_MIN, HEIGHT_MAX)
+                    };
+                } catch (error) {
+                    return { fontSize: DEFAULT_FONT_SIZE, buttonHeight: DEFAULT_BUTTON_HEIGHT };
+                }
+            }
+
+            function saveSettings(fontSize, buttonHeight) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ fontSize, buttonHeight }));
+            }
+
+            function renderValues(fontSize, buttonHeight) {
+                const fontSizeValue = document.getElementById('fontSizeValue');
+                const buttonHeightValue = document.getElementById('buttonHeightValue');
+                if (fontSizeValue) fontSizeValue.textContent = String(fontSize);
+                if (buttonHeightValue) buttonHeightValue.textContent = String(buttonHeight);
+            }
+
+            function applyUiSettings(fontSize, buttonHeight) {
                 const root = document.documentElement;
-                const fontSizeInput = document.getElementById('fontSizeInput');
-                const buttonHeightInput = document.getElementById('buttonHeightInput');
-                const fontSize = Math.min(60, Math.max(12, Number(fontSizeInput && fontSizeInput.value) || 32));
-                const buttonHeight = Math.min(80, Math.max(28, Number(buttonHeightInput && buttonHeightInput.value) || 32));
-                if (fontSizeInput) fontSizeInput.value = fontSize;
-                if (buttonHeightInput) buttonHeightInput.value = buttonHeight;
                 root.style.setProperty('--calc-key-font-size', fontSize + 'px');
                 root.style.setProperty('--calc-key-height', buttonHeight + 'px');
                 document.querySelectorAll('.grid .key').forEach((el) => {
                     el.style.fontSize = fontSize + 'px';
                     el.style.minHeight = buttonHeight + 'px';
                 });
+                renderValues(fontSize, buttonHeight);
+                saveSettings(fontSize, buttonHeight);
             }
 
             function bindUiSettings() {
-                const applyBtn = document.getElementById('applyUiSettings');
-                const fontSizeInput = document.getElementById('fontSizeInput');
-                const buttonHeightInput = document.getElementById('buttonHeightInput');
-                if (applyBtn && !applyBtn.dataset.boundUi) {
-                    applyBtn.dataset.boundUi = '1';
-                    applyBtn.addEventListener('click', applyUiSettings);
-                }
-                if (fontSizeInput && !fontSizeInput.dataset.boundUi) {
-                    fontSizeInput.dataset.boundUi = '1';
-                    fontSizeInput.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') applyUiSettings();
-                    });
-                }
-                if (buttonHeightInput && !buttonHeightInput.dataset.boundUi) {
-                    buttonHeightInput.dataset.boundUi = '1';
-                    buttonHeightInput.addEventListener('keydown', function (event) {
-                        if (event.key === 'Enter') applyUiSettings();
-                    });
-                }
-                applyUiSettings();
+                let settings = readSettings();
+                applyUiSettings(settings.fontSize, settings.buttonHeight);
+
+                const actions = [
+                    ['fontSizeDecrease', () => { settings.fontSize = clamp(settings.fontSize - 1, FONT_MIN, FONT_MAX); applyUiSettings(settings.fontSize, settings.buttonHeight); }],
+                    ['fontSizeIncrease', () => { settings.fontSize = clamp(settings.fontSize + 1, FONT_MIN, FONT_MAX); applyUiSettings(settings.fontSize, settings.buttonHeight); }],
+                    ['buttonHeightDecrease', () => { settings.buttonHeight = clamp(settings.buttonHeight - 1, HEIGHT_MIN, HEIGHT_MAX); applyUiSettings(settings.fontSize, settings.buttonHeight); }],
+                    ['buttonHeightIncrease', () => { settings.buttonHeight = clamp(settings.buttonHeight + 1, HEIGHT_MIN, HEIGHT_MAX); applyUiSettings(settings.fontSize, settings.buttonHeight); }]
+                ];
+
+                actions.forEach(([id, handler]) => {
+                    const el = document.getElementById(id);
+                    if (el && !el.dataset.boundUi) {
+                        el.dataset.boundUi = '1';
+                        el.addEventListener('click', handler);
+                    }
+                });
             }
 
             if (document.readyState === 'loading') {
@@ -565,6 +634,16 @@
                 bindUiSettings();
             }
         })();
+    </script>
+
+    <script>
+        function triggerKeyFeedback(button) {
+            if (!button || !button.classList || !button.classList.contains('key')) return;
+            button.classList.remove('feedback-active');
+            void button.offsetWidth;
+            button.classList.add('feedback-active');
+            setTimeout(() => button.classList.remove('feedback-active'), 220);
+        }
     </script>
 
     <script>
@@ -758,7 +837,6 @@
         function substring(range) {
             return state.expressionText.slice(range.location, range.location + range.length);
         }
-
         function charBeforeCursor() {
             if (state.selectedRange.location <= 0) return null;
             return state.expressionText[state.selectedRange.location - 1] || null;
@@ -1353,7 +1431,7 @@
                 const el = document.createElement("button");
                 el.className = `key ${buttonClass(btn)}`;
                 el.textContent = btn.title;
-                el.addEventListener("click", () => handleTap(btn));
+                el.addEventListener("click", () => { triggerKeyFeedback(el); handleTap(btn); });
                 mainGrid.appendChild(el);
             }
         }
@@ -1444,7 +1522,7 @@
             return a || 1;
         }
 
-        function decimalToMixedFraction(value, maxDenominator = 1000000000) {
+        function decimalToMixedFraction(value, maxDenominator = 1.0e+09) {
             if (!Number.isFinite(value)) return "Error";
 
             const sign = value < 0 ? -1 : 1;
@@ -1498,7 +1576,7 @@
             const value = Number(state.displayText);
             if (Number.isNaN(value)) return;
 
-            const fractionText = decimalToMixedFraction(value, 1000000000);
+            const fractionText = decimalToMixedFraction(value, 1.0e+09);
             state.displayText = fractionText;
             state.expressionText = fractionText;
             state.selectedRange = { location: fractionText.length, length: 0 };
