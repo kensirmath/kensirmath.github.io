@@ -395,13 +395,19 @@
         </main>
 
         <aside class="panel" tabindex="0" role="region" aria-label="功能區">
-            <div class="topbar">
-                <div>
-                    <h1>圍棋教學示範棋盤</h1>
-                    <div class="muted">固定棋盤 + 右欄獨立滾動 + 1 起始座標 + 順序手順</div>
-                </div>
-                <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
-            </div>
+            <section class="controls" id="extraTools">
+                <button class="btn" id="exportBtn">匯出 PNG</button>
+                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
+                <button class="btn" id="loadSgfBtn">載入 SGF</button>
+                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
+                <button class="btn" id="loadJsonBtn">載入 JSON</button>
+                <button class="btn" id="setupModeBtn">關手順擺盤</button>
+                <button class="btn" id="setupAutoBtn">擺盤自動</button>
+                <button class="btn" id="setupManualBtn">擺盤手動</button>
+                <button class="btn" id="freeModeBtn">自由模式</button>
+                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
+                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
+            </section>
 
             <section>
                 <h2>手順播放</h2>
@@ -417,19 +423,13 @@
                 </div>
             </section>
 
-            <section class="controls" id="extraTools">
-                <button class="btn" id="exportBtn">匯出 PNG</button>
-                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
-                <button class="btn" id="loadSgfBtn">載入 SGF</button>
-                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
-                <button class="btn" id="loadJsonBtn">載入 JSON</button>
-                <button class="btn" id="setupModeBtn">關手順擺盤</button>
-                <button class="btn" id="setupAutoBtn">擺盤自動</button>
-                <button class="btn" id="setupManualBtn">擺盤手動</button>
-                <button class="btn" id="freeModeBtn">自由模式</button>
-                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
-                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
-            </section>
+            <div class="topbar">
+                <div>
+                    <h1>圍棋教學示範棋盤</h1>
+                    <div class="muted">固定棋盤 + 右欄獨立滾動 + 1 起始座標 + 順序手順</div>
+                </div>
+                <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
+            </div>
 
             <section>
                 <div class="row">
