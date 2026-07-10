@@ -404,6 +404,34 @@
             </div>
 
             <section>
+                <h2>手順播放</h2>
+                <div class="playback">
+                    <button class="btn" id="prevStepBtn">上一步</button>
+                    <button class="btn" id="playBtn">播放</button>
+                    <button class="btn" id="nextStepBtn">下一步</button>
+                </div>
+                <div class="range-wrap" style="margin-top:10px">
+                    <label for="timeline">手順時間軸</label>
+                    <input id="timeline" type="range" min="0" max="0" value="0">
+                    <div class="hint" id="timelineText">目前顯示：第 0 手 / 共 0 手</div>
+                </div>
+            </section>
+
+            <section class="controls" id="extraTools">
+                <button class="btn" id="exportBtn">匯出 PNG</button>
+                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
+                <button class="btn" id="loadSgfBtn">載入 SGF</button>
+                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
+                <button class="btn" id="loadJsonBtn">載入 JSON</button>
+                <button class="btn" id="setupModeBtn">關手順擺盤</button>
+                <button class="btn" id="setupAutoBtn">擺盤自動</button>
+                <button class="btn" id="setupManualBtn">擺盤手動</button>
+                <button class="btn" id="freeModeBtn">自由模式</button>
+                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
+                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
+            </section>
+
+            <section>
                 <div class="row">
                     <div>
                         <label for="sizeSelect">棋盤大小</label>
@@ -463,34 +491,6 @@
                     <div class="stat"><span class="muted">白提子</span><strong id="whiteCaptures">0</strong></div>
                 </div>
                 <p class="hint" id="modeText">一般示範模式，可自由落子與標記。</p>
-            </section>
-
-            <section>
-                <h2>手順播放</h2>
-                <div class="playback">
-                    <button class="btn" id="prevStepBtn">上一步</button>
-                    <button class="btn" id="playBtn">播放</button>
-                    <button class="btn" id="nextStepBtn">下一步</button>
-                </div>
-                <div class="range-wrap" style="margin-top:10px">
-                    <label for="timeline">手順時間軸</label>
-                    <input id="timeline" type="range" min="0" max="0" value="0">
-                    <div class="hint" id="timelineText">目前顯示：第 0 手 / 共 0 手</div>
-                </div>
-            </section>
-
-            <section class="controls" id="extraTools">
-                <button class="btn" id="exportBtn">匯出 PNG</button>
-                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
-                <button class="btn" id="loadSgfBtn">載入 SGF</button>
-                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
-                <button class="btn" id="loadJsonBtn">載入 JSON</button>
-                <button class="btn" id="setupModeBtn">關手順擺盤</button>
-                <button class="btn" id="setupAutoBtn">擺盤自動</button>
-                <button class="btn" id="setupManualBtn">擺盤手動</button>
-                <button class="btn" id="freeModeBtn">自由模式</button>
-                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
-                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
             </section>
 
             <section>
