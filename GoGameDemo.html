@@ -1195,16 +1195,16 @@
             ctx.textAlign = 'center';
             for (let i = 0; i < state.size; i++) {
                 const px = state.margin + i * state.cell;
-                ctx.fillText(letters[i], px, state.margin - 28);
-                ctx.fillText(letters[i], px, canvas.height - state.margin + 36);
+                ctx.fillText(letters[i], px, state.margin - 28 - state.margin / 3);
+                ctx.fillText(letters[i], px, canvas.height - state.margin + 36 + state.margin / 3);
             }
             ctx.textAlign = 'right';
             for (let i = 0; i < state.size; i++) {
                 const py = state.margin + i * state.cell;
                 const n = state.size - i;
-                ctx.fillText(n, state.margin - 18, py + 6);
+                ctx.fillText(n, state.margin - 18 - state.margin / 3, py + 6);
                 ctx.textAlign = 'left';
-                ctx.fillText(n, canvas.width - state.margin + 18, py + 6);
+                ctx.fillText(n, canvas.width - state.margin + 18 + state.margin / 3, py + 6);
                 ctx.textAlign = 'right';
             }
         }
