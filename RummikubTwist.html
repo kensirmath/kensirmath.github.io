@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rummikub Twist 特殊百搭題庫</title>
+
+    <style>
+        :root {
+            --bg: #101827;
+            --panel: #192338;
+            --panel-dark: #0f1727;
+            --text: #f6f8fc;
+            --muted: #aebbd0;
+            --accent: #56d6ff;
+            --good: #39d98a;
+            --bad: #ff5d73;
+            --tile: #f4f0e7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang TC",
+                "Microsoft JhengHei", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 15% 10%, #20365a, transparent 35%),
+                radial-gradient(circle at 85% 90%, #26394f, transparent 35%),
+                var(--bg);
+            padding: 24px;
+        }
+
+        .app-layout {
+            width: min(1280px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .app,
+        .history-panel {
+            background: rgb(25 35 56 / 92%);
+            border: 1px solid rgb(255 255 255 / 12%);
+            border-radius: 24px;
+            box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
+        }
+
+        .app {
+            width: 100%;
+            padding: clamp(22px, 5vw, 44px);
+        }
+
+        .history-panel {
+            position: sticky;
+            top: 24px;
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 4vw, 2.3rem);
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .intro {
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 10px 0 26px;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: var(--muted);
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .meld {
+            min-height: 150px;
+            background: var(--panel-dark);
+            border: 1px solid rgb(255 255 255 / 10%);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(7px, 1.7vw, 14px);
+            flex-wrap: wrap;
+        }
+
+        .tile {
+            width: clamp(56px, 10vw, 78px);
+            height: clamp(76px, 13vw, 104px);
+            border-radius: 11px;
+            background: var(--tile);
+            border: 3px solid #d5d0c6;
+            box-shadow: 0 5px 0 #aaa59b, 0 10px 15px rgb(0 0 0 / 25%);
+            display: grid;
+            place-items: center;
+            position: relative;
+            font-size: clamp(1.9rem, 5vw, 3rem);
+            font-weight: 900;
+            user-select: none;
+        }
+
+        .tile::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 6px;
+            left: 7px;
+            font-size: 0.63rem;
+            font-weight: 800;
+            color: #596173;
+        }
+
+        .blue {
+            color: #1876d2;
+        }
+
+        .red {
+            color: #dc3d48;
+        }
+
+        .black {
+            color: #26313d;
+        }
+
+        .yellow {
+            color: #b88a00;
+        }
+
+        .special {
+            color: #fff;
+            border-color: #8a65e8;
+            background: linear-gradient(135deg, #6240b7, #a150c6);
+            font-size: clamp(1.15rem, 3vw, 1.65rem);
+            text-align: center;
+            line-height: 1.05;
+            padding: 5px;
+        }
+
+        .special.change {
+            border-color: #5ed4a9;
+            background: linear-gradient(135deg, #147e85, #43bf74);
+        }
+
+        .special.mirror {
+            border-color: #63b9ff;
+            background: linear-gradient(135deg, #285ab7, #49afd7);
+        }
+
+        .answer-actions,
+        .actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .answer-actions {
+            margin-top: 25px;
+        }
+
+        .actions {
+            margin: 14px 0 18px;
+        }
+
+        button {
+            appearance: none;
+            border: 0;
+            border-radius: 11px;
+            padding: 12px 19px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            color: #07131f;
+            background: var(--accent);
+            transition: transform 0.16s ease, filter 0.16s ease;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.secondary,
+        .answer-btn,
+        .reset-btn {
+            color: var(--text);
+            background: #33425c;
+        }
+
+        .answer-btn {
+            min-width: 150px;
+            border: 2px solid transparent;
+        }
+
+        .answer-btn.valid-btn.selected {
+            color: #062115;
+            background: var(--good);
+            border-color: #b3ffd8;
+        }
+
+        .answer-btn.invalid-btn.selected {
+            color: #2b0710;
+            background: var(--bad);
+            border-color: #ffc2cc;
+        }
+
+        .result {
+            min-height: 68px;
+            border-radius: 14px;
+            background: rgb(0 0 0 / 15%);
+            padding: 14px 18px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+
+        .result.good {
+            color: var(--good);
+        }
+
+        .result.bad {
+            color: var(--bad);
+        }
+
+        .legend {
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.8;
+        }
+
+        code {
+            color: #bceaff;
+            background: #0d1524;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0 24px;
+        }
+
+        .score-card {
+            padding: 13px;
+            border-radius: 12px;
+            background: var(--panel-dark);
+            border: 1px solid rgb(255 255 255 / 8%);
+        }
+
+        .score-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.78rem;
+            margin-bottom: 5px;
+        }
+
+        .score-card strong {
+            font-size: 1.35rem;
+        }
+
+        .history-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .reset-btn {
+            padding: 7px 10px;
+            font-size: 0.8rem;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 9px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .history-item {
+            border-radius: 12px;
+            padding: 11px 12px;
+            background: var(--panel-dark);
+            border-left: 4px solid var(--muted);
+        }
+
+        .history-item.correct {
+            border-left-color: var(--good);
+        }
+
+        .history-item.wrong {
+            border-left-color: var(--bad);
+        }
+
+        .history-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.87rem;
+        }
+
+        .history-status {
+            font-weight: 900;
+        }
+
+        .history-item.correct .history-status {
+            color: var(--good);
+        }
+
+        .history-item.wrong .history-status {
+            color: var(--bad);
+        }
+
+        .history-tiles {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .empty-history {
+            margin: 0;
+            padding: 16px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 14px;
+            }
+
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .history-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 460px) {
+            .answer-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app-layout">
+        <section class="app game-panel">
+            <h1>Rummikub Twist 特殊百搭題庫</h1>
+
+            <p class="intro">
+                每題均含至少一張變色、鏡射或雙人百搭。
+                選擇你認為「合規」或「不合規」，再按判定。
+            </p>
+
+            <div class="meta">
+                <span id="questionNo">第 1 題</span>
+                <span id="typeLabel">題型載入中…</span>
+            </div>
+
+            <section id="meld" class="meld" aria-label="Rummikub 牌組"></section>
+
+            <div class="answer-actions">
+                <button class="answer-btn valid-btn" data-answer="true">
+                    我認為合規
+                </button>
+
+                <button class="answer-btn invalid-btn" data-answer="false">
+                    我認為不合規
+                </button>
+            </div>
+
+            <div class="actions">
+                <button id="checkBtn">判定本題</button>
+                <button id="nextBtn" class="secondary">下一題</button>
+            </div>
+
+            <div id="result" class="result" aria-live="polite">
+                先選擇「合規」或「不合規」，再按「判定本題」
+            </div>
+
+            <div class="legend">
+                <strong>提示：</strong>
+                雙人百搭可代表兩張連續同色數字；
+                變色百搭把順牌轉成另一種顏色；
+                鏡射百搭兩側必須按所代表的數字牌鏡像對應。
+            </div>
+        </section>
+
+        <aside class="history-panel">
+            <h2>本次成績</h2>
+
+            <div class="score-grid">
+                <div class="score-card">
+                    <span>積分</span>
+                    <strong id="score">0</strong>
+                </div>
+
+                <div class="score-card">
+                    <span>答對</span>
+                    <strong id="correctCount">0</strong>
+                </div>
+
+                <div class="score-card">
+                    <span>作答</span>
+                    <strong id="answeredCount">0</strong>
+                </div>
+
+                <div class="score-card">
+                    <span>正確率</span>
+                    <strong id="accuracy">--</strong>
+                </div>
+            </div>
+
+            <div class="history-heading">
+                <h2>題目記錄</h2>
+                <button id="resetBtn" class="reset-btn">重設</button>
+            </div>
+
+            <div id="historyList" class="history-list">
+                <p class="empty-history">尚未作答</p>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        const COLORS = ["blue", "red", "black", "yellow"];
+
+        const COLOR_NAMES = {
+            blue: "藍",
+            red: "紅",
+            black: "黑",
+            yellow: "黃"
+        };
+
+        let currentQuestion = null;
+        let questionNumber = 0;
+
+        let selectedAnswer = null;
+        let hasCheckedCurrentQuestion = false;
+
+        let score = 0;
+        let correctCount = 0;
+        let answeredCount = 0;
+        let history = [];
+
+        const normal = (color, number) => ({
+            kind: "normal",
+            color,
+            number
+        });
+
+        const special = (kind) => ({ kind });
+
+        function pick(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function otherColor(color) {
+            return pick(COLORS.filter(item => item !== color));
+        }
+
+        function tileText(tile) {
+            if (tile.kind === "normal") return tile.number;
+
+            return {
+                double: "雙",
+                change: "變",
+                mirror: "鏡"
+            }[tile.kind];
+        }
+
+        function tileLabel(tile) {
+            if (tile.kind === "normal") {
+                return `${COLOR_NAMES[tile.color]}${tile.number}`;
+            }
+
+            return {
+                double: "雙人百搭",
+                change: "變色百搭",
+                mirror: "鏡射百搭"
+            }[tile.kind];
+        }
+
+        function tileShortName(tile) {
+            if (tile.kind === "normal") {
+                return `${COLOR_NAMES[tile.color]}${tile.number}`;
+            }
+
+            return {
+                double: "雙",
+                change: "變",
+                mirror: "鏡"
+            }[tile.kind];
+        }
+
+        function meldShortText(tiles) {
+            return tiles.map(tileShortName).join("－");
+        }
+
+        function cssClass(tile) {
+            if (tile.kind === "normal") return `tile ${tile.color}`;
+            if (tile.kind === "change") return "tile special change";
+            if (tile.kind === "mirror") return "tile special mirror";
+            return "tile special";
+        }
+
+        function sameCard(a, b) {
+            return a.color === b.color && a.number === b.number;
+        }
+
+        function sameCardList(a, b) {
+            return a.length === b.length &&
+                a.every((card, index) => sameCard(card, b[index]));
+        }
+
+        function sameNumberList(a, b) {
+            return a.length === b.length &&
+                a.every((number, index) => number === b[index]);
+        }
+
+        function renderQuestion(question) {
+            const meld = document.getElementById("meld");
+            meld.innerHTML = "";
+
+            question.tiles.forEach(tile => {
+                const element = document.createElement("div");
+                element.className = cssClass(tile);
+                element.dataset.label = tileLabel(tile);
+                element.textContent = tileText(tile);
+                meld.appendChild(element);
+            });
+
+            document.getElementById("questionNo").textContent =
+                `第 ${questionNumber} 題`;
+
+            document.getElementById("typeLabel").textContent =
+                question.label;
+
+            selectedAnswer = null;
+            hasCheckedCurrentQuestion = false;
+
+            document.querySelectorAll(".answer-btn").forEach(button => {
+                button.classList.remove("selected");
+                button.disabled = false;
+            });
+
+            document.getElementById("checkBtn").disabled = false;
+
+            const result = document.getElementById("result");
+            result.className = "result";
+            result.textContent =
+                "先選擇「合規」或「不合規」，再按「判定本題」";
+        }
+
+        function setAnswerSelection(answer) {
+            if (hasCheckedCurrentQuestion) return;
+
+            selectedAnswer = answer;
+
+            document.querySelectorAll(".answer-btn").forEach(button => {
+                const buttonAnswer = button.dataset.answer === "true";
+                button.classList.toggle("selected", buttonAnswer === selectedAnswer);
+            });
+        }
+
+        /*
+          將一側牌列展開為實際代表的數字牌。
+    
+          direction = 1：由左至右遞增的普通順牌。
+          direction = -1：從鏡射牌向外閱讀的鏡像牌列。
+        */
+        function expandRunCandidates(tiles, direction = 1) {
+            const candidates = [];
+
+            for (let startNumber = 1; startNumber <= 13; startNumber++) {
+                for (const startColor of COLORS) {
+                    walk(
+                        0,
+                        startNumber,
+                        startColor,
+                        [],
+                        [],
+                        []
+                    );
+                }
+            }
+
+            return candidates;
+
+            function walk(
+                index,
+                expectedNumber,
+                currentColor,
+                cards,
+                changePositions,
+                kinds
+            ) {
+                if (index === tiles.length) {
+                    candidates.push({
+                        cards,
+                        changePositions,
+                        kinds
+                    });
+                    return;
+                }
+
+                const tile = tiles[index];
+
+                if (tile.kind === "normal") {
+                    if (
+                        tile.number !== expectedNumber ||
+                        tile.color !== currentColor
+                    ) {
+                        return;
+                    }
+
+                    const nextNumber = expectedNumber + direction;
+
+                    if (nextNumber < 0 || nextNumber > 14) {
+                        return;
+                    }
+
+                    walk(
+                        index + 1,
+                        nextNumber,
+                        currentColor,
+                        [...cards, normal(currentColor, expectedNumber)],
+                        changePositions,
+                        [...kinds, "normal"]
+                    );
+
+                    return;
+                }
+
+                if (tile.kind === "double") {
+                    const secondNumber = expectedNumber + direction;
+
+                    if (
+                        expectedNumber < 1 ||
+                        expectedNumber > 13 ||
+                        secondNumber < 1 ||
+                        secondNumber > 13
+                    ) {
+                        return;
+                    }
+
+                    const afterDouble = secondNumber + direction;
+
+                    if (afterDouble < 0 || afterDouble > 14) {
+                        return;
+                    }
+
+                    walk(
+                        index + 1,
+                        afterDouble,
+                        currentColor,
+                        [
+                            ...cards,
+                            normal(currentColor, expectedNumber),
+                            normal(currentColor, secondNumber)
+                        ],
+                        changePositions,
+                        [...kinds, "double", "double"]
+                    );
+
+                    return;
+                }
+
+                if (tile.kind === "change") {
+                    if (expectedNumber < 1 || expectedNumber > 13) {
+                        return;
+                    }
+
+                    const afterChange = expectedNumber + direction;
+
+                    if (afterChange < 0 || afterChange > 14) {
+                        return;
+                    }
+
+                    const changeIndex = cards.length;
+
+                    for (const nextColor of COLORS) {
+                        if (nextColor === currentColor) continue;
+
+                        walk(
+                            index + 1,
+                            afterChange,
+                            nextColor,
+                            [...cards, normal(currentColor, expectedNumber)],
+                            [...changePositions, changeIndex],
+                            [...kinds, "change"]
+                        );
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        function validatePlainRun(tiles) {
+            if (tiles.length < 3) return false;
+            if (tiles.some(tile => tile.kind === "mirror")) return false;
+
+            return expandRunCandidates(tiles, 1).length > 0;
+        }
+
+        function validateDoubleGroup(tiles) {
+            if (tiles.length !== 3) return false;
+            if (tiles.filter(tile => tile.kind === "double").length !== 1) {
+                return false;
+            }
+
+            if (
+                tiles.some(
+                    tile => tile.kind !== "normal" && tile.kind !== "double"
+                )
+            ) {
+                return false;
+            }
+
+            const normalTiles = tiles.filter(tile => tile.kind === "normal");
+
+            return (
+                normalTiles.length === 2 &&
+                normalTiles[0].number === normalTiles[1].number &&
+                normalTiles[0].color !== normalTiles[1].color
+            );
+        }
+
+        /*
+          鏡射判定：
+    
+          - 左側要反向，改為「由鏡向外」閱讀。
+          - 兩側展開後代表的數字牌必須一致。
+          - 雙人百搭可以對應兩張普通牌，不要求另一側也是雙人百搭。
+          - 變色百搭必須在兩側相同的展開位置出現。
+        */
+        function validateMirrorRun(tiles) {
+            if (tiles.length < 3) return false;
+            if (tiles.filter(tile => tile.kind === "mirror").length !== 1) {
+                return false;
+            }
+
+            const mirrorIndex = tiles.findIndex(tile => tile.kind === "mirror");
+
+            const physicalLeft = tiles.slice(0, mirrorIndex);
+            const physicalRight = tiles.slice(mirrorIndex + 1);
+
+            if (physicalLeft.length === 0 || physicalRight.length === 0) {
+                return false;
+            }
+
+            if (
+                physicalLeft.some(tile => tile.kind === "mirror") ||
+                physicalRight.some(tile => tile.kind === "mirror")
+            ) {
+                return false;
+            }
+
+            const leftFromMirror = [...physicalLeft].reverse();
+            const rightFromMirror = physicalRight;
+
+            const leftCandidates = expandRunCandidates(leftFromMirror, -1);
+            const rightCandidates = expandRunCandidates(rightFromMirror, -1);
+
+            for (const left of leftCandidates) {
+                for (const right of rightCandidates) {
+                    if (!sameCardList(left.cards, right.cards)) continue;
+
+                    if (!sameNumberList(left.changePositions, right.changePositions)) {
+                        continue;
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function validateMeld(tiles) {
+            if (!Array.isArray(tiles) || tiles.length < 3) {
+                return false;
+            }
+
+            const mirrorCount = tiles.filter(tile => tile.kind === "mirror").length;
+            const doubleCount = tiles.filter(tile => tile.kind === "double").length;
+            const changeCount = tiles.filter(tile => tile.kind === "change").length;
+
+            if (mirrorCount > 1) return false;
+
+            if (mirrorCount === 1) {
+                return validateMirrorRun(tiles);
+            }
+
+            if (doubleCount === 1 && changeCount === 0) {
+                return validatePlainRun(tiles) || validateDoubleGroup(tiles);
+            }
+
+            return validatePlainRun(tiles);
+        }
+
+        function updateScoreboard() {
+            document.getElementById("score").textContent = score;
+            document.getElementById("correctCount").textContent = correctCount;
+            document.getElementById("answeredCount").textContent = answeredCount;
+
+            const accuracy = answeredCount === 0
+                ? "--"
+                : `${Math.round((correctCount / answeredCount) * 100)}%`;
+
+            document.getElementById("accuracy").textContent = accuracy;
+        }
+
+        function renderHistory() {
+            const historyList = document.getElementById("historyList");
+
+            if (history.length === 0) {
+                historyList.innerHTML =
+                    `<p class="empty-history">尚未作答</p>`;
+                return;
+            }
+
+            historyList.innerHTML = history
+                .slice()
+                .reverse()
+                .map(item => `
+          <article class="history-item ${item.correct ? "correct" : "wrong"}">
+            <div class="history-topline">
+              <strong>第 ${item.number} 題</strong>
+              <span class="history-status">
+                ${item.correct ? "✓ +10 分" : "✕ 0 分"}
+              </span>
+            </div>
+
+            <div class="history-tiles">${item.tiles}</div>
+
+            <div class="history-tiles">
+              你的答案：${item.userAnswer ? "合規" : "不合規"}｜
+              正確答案：${item.actualAnswer ? "合規" : "不合規"}
+            </div>
+          </article>
+        `)
+                .join("");
+        }
+
+        function recordAnswer(userAnswer, actualAnswer) {
+            const correct = userAnswer === actualAnswer;
+
+            answeredCount++;
+
+            if (correct) {
+                correctCount++;
+                score += 10;
+            }
+
+            history.push({
+                number: questionNumber,
+                tiles: meldShortText(currentQuestion.tiles),
+                userAnswer,
+                actualAnswer,
+                correct
+            });
+
+            updateScoreboard();
+            renderHistory();
+
+            return correct;
+        }
+
+        function resetGame() {
+            score = 0;
+            correctCount = 0;
+            answeredCount = 0;
+            history = [];
+
+            updateScoreboard();
+            renderHistory();
+            generateQuestion();
+        }
+
+        /* --------------------
+           題目產生器：單百搭
+           -------------------- */
+
+        function validDoubleRun() {
+            const color = pick(COLORS);
+            const start = 1 + Math.floor(Math.random() * 9);
+
+            return {
+                label: "雙人百搭・順牌",
+                tiles: [
+                    normal(color, start),
+                    special("double"),
+                    normal(color, start + 3)
+                ]
+            };
+        }
+
+        function invalidDoubleRun() {
+            const color = pick(COLORS);
+            const start = 1 + Math.floor(Math.random() * 8);
+
+            return {
+                label: "雙人百搭・順牌",
+                tiles: [
+                    normal(color, start),
+                    special("double"),
+                    normal(color, start + 4)
+                ]
+            };
+        }
+
+        function validDoubleGroup() {
+            const number = 1 + Math.floor(Math.random() * 13);
+            const colors = [...COLORS].sort(() => Math.random() - 0.5);
+
+            return {
+                label: "雙人百搭・組牌",
+                tiles: [
+                    normal(colors[0], number),
+                    normal(colors[1], number),
+                    special("double")
+                ]
+            };
+        }
+
+        function invalidDoubleGroup() {
+            const number = 1 + Math.floor(Math.random() * 12);
+            const color = pick(COLORS);
+
+            return {
+                label: "雙人百搭・組牌",
+                tiles: [
+                    normal(color, number),
+                    normal(color, number + 1),
+                    special("double")
+                ]
+            };
+        }
+
+        function validChange() {
+            const start = 1 + Math.floor(Math.random() * 8);
+            const firstColor = pick(COLORS);
+            const secondColor = otherColor(firstColor);
+
+            return {
+                label: "變色百搭・順牌",
+                tiles: [
+                    normal(firstColor, start),
+                    normal(firstColor, start + 1),
+                    special("change"),
+                    normal(secondColor, start + 3),
+                    normal(secondColor, start + 4)
+                ]
+            };
+        }
+
+        function invalidChange() {
+            const start = 1 + Math.floor(Math.random() * 8);
+            const color = pick(COLORS);
+
+            return {
+                label: "變色百搭・順牌",
+                tiles: [
+                    normal(color, start),
+                    normal(color, start + 1),
+                    special("change"),
+                    normal(color, start + 3),
+                    normal(color, start + 4)
+                ]
+            };
+        }
+
+        /* --------------------
+           題目產生器：雙百搭
+           -------------------- */
+
+        function validMirrorDouble() {
+            const color = pick(COLORS);
+            const start = 1 + Math.floor(Math.random() * 10);
+
+            return {
+                label: "鏡射＋雙人百搭",
+                tiles: [
+                    normal(color, start),
+                    normal(color, start + 1),
+                    special("mirror"),
+                    special("double")
+                ]
+            };
+        }
+
+        function invalidMirrorDouble() {
+            const color = pick(COLORS);
+            const start = 1 + Math.floor(Math.random() * 9);
+
+            return {
+                label: "鏡射＋雙人百搭",
+                tiles: [
+                    normal(color, start),
+                    normal(color, start + 1),
+                    special("mirror"),
+                    special("double"),
+                    normal(color, start + 5)
+                ]
+            };
+        }
+
+        function validMirrorChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+
+            return {
+                label: "鏡射＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    normal(colorA, start + 1),
+                    special("change"),
+                    normal(colorB, start + 3),
+                    normal(colorB, start + 4),
+                    special("mirror"),
+                    normal(colorB, start + 4),
+                    normal(colorB, start + 3),
+                    special("change"),
+                    normal(colorA, start + 1),
+                    normal(colorA, start)
+                ]
+            };
+        }
+
+        function invalidMirrorChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+            const colorC = otherColor(colorB);
+
+            return {
+                label: "鏡射＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    normal(colorA, start + 1),
+                    special("change"),
+                    normal(colorB, start + 3),
+                    normal(colorB, start + 4),
+                    special("mirror"),
+                    normal(colorB, start + 4),
+                    normal(colorB, start + 3),
+                    special("change"),
+                    normal(colorC, start + 1),
+                    normal(colorA, start)
+                ]
+            };
+        }
+
+        function validDoubleChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+
+            return {
+                label: "雙人＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    special("double"),
+                    special("change"),
+                    normal(colorB, start + 4),
+                    normal(colorB, start + 5)
+                ]
+            };
+        }
+
+        function invalidDoubleChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+
+            return {
+                label: "雙人＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    special("double"),
+                    special("change"),
+                    normal(colorB, start + 5),
+                    normal(colorB, start + 6)
+                ]
+            };
+        }
+
+        /* --------------------
+           題目產生器：三百搭
+           -------------------- */
+
+        function validMirrorDoubleChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+
+            return {
+                label: "鏡射＋雙人＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    special("double"),
+                    special("change"),
+                    normal(colorB, start + 4),
+                    normal(colorB, start + 5),
+                    special("mirror"),
+                    normal(colorB, start + 5),
+                    normal(colorB, start + 4),
+                    special("change"),
+                    special("double"),
+                    normal(colorA, start)
+                ]
+            };
+        }
+
+        function invalidMirrorDoubleChange() {
+            const start = 1 + Math.floor(Math.random() * 7);
+            const colorA = pick(COLORS);
+            const colorB = otherColor(colorA);
+
+            return {
+                label: "鏡射＋雙人＋變色百搭",
+                tiles: [
+                    normal(colorA, start),
+                    special("double"),
+                    special("change"),
+                    normal(colorB, start + 4),
+                    normal(colorB, start + 5),
+                    special("mirror"),
+                    normal(colorB, start + 5),
+                    normal(colorB, start + 4),
+                    special("change"),
+                    special("double"),
+                    normal(colorA, start + 1)
+                ]
+            };
+        }
+
+        function generateQuestion() {
+            const templates = [
+                validDoubleRun,
+                invalidDoubleRun,
+                validDoubleGroup,
+                invalidDoubleGroup,
+                validChange,
+                invalidChange,
+
+                validMirrorDouble,
+                invalidMirrorDouble,
+
+                validMirrorChange,
+                invalidMirrorChange,
+
+                validDoubleChange,
+                invalidDoubleChange,
+
+                validMirrorDoubleChange,
+                invalidMirrorDoubleChange
+            ];
+
+            questionNumber++;
+            currentQuestion = pick(templates)();
+            renderQuestion(currentQuestion);
+        }
+
+        document.querySelectorAll(".answer-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                setAnswerSelection(button.dataset.answer === "true");
+            });
+        });
+
+        document.getElementById("checkBtn").addEventListener("click", () => {
+            const result = document.getElementById("result");
+
+            if (hasCheckedCurrentQuestion) {
+                result.className = "result bad";
+                result.textContent = "本題已判定，請按「下一題」繼續。";
+                return;
+            }
+
+            if (selectedAnswer === null) {
+                result.className = "result bad";
+                result.textContent =
+                    "請先選擇你認為本題是「合規」或「不合規」。";
+                return;
+            }
+
+            const actualAnswer = validateMeld(currentQuestion.tiles);
+            const correct = recordAnswer(selectedAnswer, actualAnswer);
+
+            hasCheckedCurrentQuestion = true;
+
+            document.querySelectorAll(".answer-btn").forEach(button => {
+                button.disabled = true;
+            });
+
+            document.getElementById("checkBtn").disabled = true;
+
+            result.className = `result ${correct ? "good" : "bad"}`;
+
+            if (correct) {
+                result.textContent =
+                    `✓ 答對！本題${actualAnswer ? "合規" : "不合規"}，獲得 10 分。`;
+            } else {
+                result.textContent =
+                    `✕ 答錯。本題正確答案是「${actualAnswer ? "合規" : "不合規"}」。`;
+            }
+        });
+
+        document.getElementById("nextBtn").addEventListener("click", () => {
+            generateQuestion();
+        });
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+            const confirmed = confirm("確定要清除所有題目記錄及積分？");
+
+            if (confirmed) {
+                resetGame();
+            }
+        });
+
+        updateScoreboard();
+        renderHistory();
+        generateQuestion();
+    </script>
+</body>
+
+</html>
