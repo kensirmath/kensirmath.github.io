@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -16,7 +15,6 @@
       --muted: #b7c6df;
       --primary: #53d8fb;
       --gold: #ffd166;
-      --danger: #ff6b7a;
       --success: #69e6a4;
     }
 
@@ -295,7 +293,7 @@
       color: #a9f2c8;
     }
 
-    /* 全頁抽獎效果 */
+    /* ===== 全頁魔法抽獎效果 ===== */
 
     .draw-overlay {
       position: fixed;
@@ -305,11 +303,7 @@
       place-items: center;
       overflow: hidden;
       color: #fff;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(75, 220, 255, 0.32), transparent 24%),
-        radial-gradient(circle at 20% 80%, rgba(255, 72, 150, 0.22), transparent 30%),
-        radial-gradient(circle at 80% 20%, rgba(255, 205, 70, 0.22), transparent 28%),
-        rgba(3, 7, 20, 0.76);
+      background: rgba(3, 7, 20, 0.76);
       backdrop-filter: blur(12px) saturate(1.35);
       -webkit-backdrop-filter: blur(12px) saturate(1.35);
     }
@@ -320,19 +314,32 @@
     }
 
     .draw-overlay.drawing {
-      animation: overlayIn 0.35s ease-out both, screenShake 0.42s linear infinite;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 222, 130, 0.16), transparent 13%),
+        radial-gradient(circle at 25% 30%, rgba(86, 231, 255, 0.30), transparent 25%),
+        radial-gradient(circle at 78% 68%, rgba(255, 65, 184, 0.28), transparent 27%),
+        radial-gradient(circle at 50% 100%, rgba(123, 83, 255, 0.24), transparent 35%),
+        rgba(2, 4, 20, 0.86);
+      animation:
+        overlayIn 0.35s ease-out both,
+        screenShakeCrazy 0.28s linear infinite,
+        colorShift 2.2s ease-in-out infinite alternate;
     }
 
-    /* 揭曉只使用彩色深色背景，沒有白光閃屏 */
+    /* 白光揭曉 */
     .draw-overlay.reveal {
       background:
         radial-gradient(
           circle at center,
-          rgba(255, 190, 70, 0.28),
-          rgba(255, 80, 145, 0.14) 35%,
-          rgba(3, 7, 20, 0.88) 72%
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(255, 242, 181, 0.92) 8%,
+          rgba(255, 165, 73, 0.58) 22%,
+          rgba(255, 70, 161, 0.28) 43%,
+          rgba(3, 7, 20, 0.90) 76%
         );
-      animation: revealIn 0.45s ease-out both;
+      animation:
+        winnerWhiteFlash 1.15s cubic-bezier(.16, .8, .2, 1) both,
+        revealPulse 1.6s ease-out both;
     }
 
     .fireworks-canvas {
@@ -344,6 +351,163 @@
       pointer-events: none;
     }
 
+    .magic-rings {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: min(88vw, 900px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .magic-ring {
+      position: absolute;
+      inset: 50%;
+      border: 3px solid rgba(126, 238, 255, 0.76);
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow:
+        0 0 18px rgba(83, 216, 251, 0.9),
+        inset 0 0 30px rgba(83, 216, 251, 0.25);
+    }
+
+    .magic-ring::before,
+    .magic-ring::after {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      content: "";
+      border-radius: 50%;
+      background: #fff5a8;
+      box-shadow: 0 0 18px 6px #ffd166;
+    }
+
+    .magic-ring::before {
+      top: -8px;
+      left: 50%;
+    }
+
+    .magic-ring::after {
+      right: -8px;
+      bottom: 50%;
+    }
+
+    .draw-overlay.drawing .magic-ring {
+      opacity: 1;
+    }
+
+    .ring-one {
+      width: 42%;
+      height: 42%;
+      transform: translate(-50%, -50%);
+      animation: ringSpin 1.15s linear infinite;
+    }
+
+    .ring-two {
+      width: 66%;
+      height: 66%;
+      border-color: rgba(255, 104, 193, 0.70);
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 24px rgba(255, 81, 178, 0.86),
+        inset 0 0 36px rgba(255, 81, 178, 0.20);
+      animation: ringSpinReverse 1.8s linear infinite;
+    }
+
+    .ring-three {
+      width: 92%;
+      height: 92%;
+      border-style: dashed;
+      border-color: rgba(255, 213, 95, 0.65);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 32px rgba(255, 209, 102, 0.75);
+      animation:
+        ringSpin 3s linear infinite,
+        ringBreath 0.55s ease-in-out infinite alternate;
+    }
+
+    .magic-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle, #fff 0 8%, #ffe887 15%, #ff79c6 40%, rgba(83, 216, 251, 0.12) 68%, transparent 72%);
+      box-shadow:
+        0 0 38px 16px rgba(255, 222, 115, 0.92),
+        0 0 100px 44px rgba(255, 73, 183, 0.34);
+    }
+
+    .draw-overlay.drawing .magic-core {
+      opacity: 1;
+      animation: corePulse 0.38s ease-in-out infinite alternate;
+    }
+
+    .meteor-field {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .meteor {
+      position: absolute;
+      width: 180px;
+      height: 4px;
+      border-radius: 999px;
+      opacity: 0;
+      transform: rotate(-36deg);
+      background: linear-gradient(90deg, transparent, currentColor);
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+    }
+
+    .meteor-1 { top: 8%; left: -25%; color: #53d8fb; }
+    .meteor-2 { top: 22%; left: -36%; color: #ff69bf; animation-delay: 0.35s !important; }
+    .meteor-3 { top: 40%; left: -18%; color: #ffe16b; animation-delay: 0.8s !important; }
+    .meteor-4 { top: 58%; left: -38%; color: #9f8cff; animation-delay: 1.15s !important; }
+    .meteor-5 { top: 73%; left: -20%; color: #6effba; animation-delay: 1.6s !important; }
+    .meteor-6 { top: 88%; left: -42%; color: #ff9b62; animation-delay: 2.05s !important; }
+
+    .draw-overlay.drawing .meteor {
+      animation: meteorRush 1.35s linear infinite;
+    }
+
+    .energy-wave {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 15px;
+      aspect-ratio: 1;
+      border: 4px solid rgba(255, 235, 134, 0.85);
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 24px rgba(255, 201, 80, 0.8);
+      pointer-events: none;
+    }
+
+    .draw-overlay.drawing .energy-wave {
+      animation: energyExpand 1.3s ease-out infinite;
+    }
+
+    .wave-two {
+      border-color: rgba(83, 216, 251, 0.78);
+      animation-delay: 0.43s !important;
+    }
+
+    .wave-three {
+      border-color: rgba(255, 96, 183, 0.72);
+      animation-delay: 0.86s !important;
+    }
+
     .overlay-content {
       position: relative;
       z-index: 3;
@@ -352,8 +516,12 @@
       text-shadow: 0 0 16px rgba(83, 216, 251, 0.9);
     }
 
+    .draw-overlay.drawing .overlay-content {
+      animation: contentWarp 0.42s ease-in-out infinite alternate;
+    }
+
     .draw-overlay.reveal .overlay-content {
-      animation: celebrateText 0.9s ease-out both;
+      animation: revealCelebrate 0.9s cubic-bezier(.15, .9, .2, 1.18) both;
     }
 
     .mega-icon {
@@ -363,10 +531,18 @@
       animation: iconFloat 0.48s ease-in-out infinite alternate;
     }
 
+    .draw-overlay.drawing .mega-icon {
+      animation: iconCrazy 0.32s ease-in-out infinite alternate;
+    }
+
     .overlay-title {
       font-size: clamp(1.6rem, 5vw, 4rem);
       font-weight: 900;
       letter-spacing: 0.2em;
+    }
+
+    .draw-overlay.drawing .overlay-title {
+      animation: titleFlicker 0.55s steps(2, end) infinite;
     }
 
     .overlay-count {
@@ -384,6 +560,10 @@
 
     .overlay-count.pop {
       animation: numberPop 0.72s cubic-bezier(.12, .9, .24, 1.35) both;
+    }
+
+    .draw-overlay.drawing .overlay-count {
+      animation: countThrob 0.38s ease-in-out infinite alternate;
     }
 
     .overlay-subtext {
@@ -404,14 +584,7 @@
       opacity: 0.78;
       transform-origin: 0 50%;
       filter: blur(2px);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #53d8fb 45%,
-        #fff 50%,
-        #53d8fb 55%,
-        transparent
-      );
+      background: linear-gradient(90deg, transparent, #53d8fb 45%, #fff 50%, #53d8fb 55%, transparent);
       box-shadow: 0 0 18px #53d8fb, 0 0 45px #53d8fb;
     }
 
@@ -422,28 +595,14 @@
 
     .laser-b {
       transform: rotate(83deg);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #ff5fa2 45%,
-        #fff 50%,
-        #ff5fa2 55%,
-        transparent
-      );
+      background: linear-gradient(90deg, transparent, #ff5fa2 45%, #fff 50%, #ff5fa2 55%, transparent);
       box-shadow: 0 0 18px #ff5fa2, 0 0 45px #ff5fa2;
       animation: laserSpin 1.55s linear infinite reverse;
     }
 
     .laser-c {
       transform: rotate(145deg);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #ffd166 45%,
-        #fff 50%,
-        #ffd166 55%,
-        transparent
-      );
+      background: linear-gradient(90deg, transparent, #ffd166 45%, #fff 50%, #ffd166 55%, transparent);
       box-shadow: 0 0 18px #ffd166, 0 0 45px #ffd166;
       animation: laserSpin 2.8s linear infinite;
     }
@@ -468,127 +627,128 @@
     }
 
     @keyframes pulse {
-      from {
-        box-shadow: 0 0 0 rgba(83, 216, 251, 0), inset 0 0 10px rgba(83, 216, 251, 0.1);
-      }
-
-      to {
-        box-shadow: 0 0 38px rgba(83, 216, 251, 0.52), inset 0 0 30px rgba(255, 209, 102, 0.2);
-      }
+      from { box-shadow: 0 0 0 rgba(83, 216, 251, 0), inset 0 0 10px rgba(83, 216, 251, 0.1); }
+      to { box-shadow: 0 0 38px rgba(83, 216, 251, 0.52), inset 0 0 30px rgba(255, 209, 102, 0.2); }
     }
 
     @keyframes bounce {
-      from {
-        transform: scale(1) rotate(-8deg);
-      }
-
-      to {
-        transform: scale(1.18) rotate(8deg);
-      }
+      from { transform: scale(1) rotate(-8deg); }
+      to { transform: scale(1.18) rotate(8deg); }
     }
 
     @keyframes orbit {
-      0% {
-        transform: rotate(0deg) translateX(76px) rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg) translateX(76px) rotate(-360deg);
-      }
+      0% { transform: rotate(0deg) translateX(76px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(76px) rotate(-360deg); }
     }
 
     @keyframes overlayIn {
-      from {
-        opacity: 0;
-      }
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
+    @keyframes winnerWhiteFlash {
+      0% { opacity: 0.75; filter: brightness(1); }
+      10% { opacity: 1; filter: brightness(4.2); }
+      28% { filter: brightness(1.65); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+
+    @keyframes revealPulse {
+      0% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes colorShift {
+      from { filter: hue-rotate(0deg) saturate(1.05); }
+      to { filter: hue-rotate(34deg) saturate(1.55); }
+    }
+
+    @keyframes screenShakeCrazy {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+      20% { transform: translate3d(-10px, 5px, 0) rotate(-0.25deg); }
+      40% { transform: translate3d(10px, -7px, 0) rotate(0.25deg); }
+      60% { transform: translate3d(-8px, -6px, 0) rotate(-0.18deg); }
+      80% { transform: translate3d(8px, 7px, 0) rotate(0.18deg); }
+    }
+
+    @keyframes ringSpin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes ringSpinReverse {
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    @keyframes ringBreath {
+      from { scale: 0.96; opacity: 0.55; }
+      to { scale: 1.05; opacity: 1; }
+    }
+
+    @keyframes corePulse {
+      from { transform: translate(-50%, -50%) scale(0.84); filter: hue-rotate(0); }
+      to { transform: translate(-50%, -50%) scale(1.32); filter: hue-rotate(55deg); }
+    }
+
+    @keyframes meteorRush {
+      0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-36deg) scaleX(0.35); }
+      14% { opacity: 1; }
+      75% { opacity: 0.95; }
+      100% { opacity: 0; transform: translate3d(155vw, 75vh, 0) rotate(-36deg) scaleX(1.25); }
+    }
+
+    @keyframes energyExpand {
+      0% { width: 15px; opacity: 1; }
+      100% { width: min(145vmax, 2200px); opacity: 0; }
+    }
+
+    @keyframes contentWarp {
+      from { transform: scale(0.98) rotate(-0.7deg); }
+      to { transform: scale(1.035) rotate(0.7deg); }
+    }
+
+    @keyframes iconCrazy {
+      from { transform: scale(0.87) rotate(-15deg); }
+      to { transform: scale(1.28) rotate(15deg); }
+    }
+
+    @keyframes titleFlicker {
+      0%, 100% { opacity: 1; letter-spacing: 0.2em; }
+      50% { opacity: 0.58; letter-spacing: 0.28em; }
+    }
+
+    @keyframes countThrob {
+      from {
+        transform: scale(0.88);
+        color: #53d8fb;
+        text-shadow: 0 0 20px #53d8fb, 0 0 70px #ff5fa2;
+      }
       to {
-        opacity: 1;
+        transform: scale(1.18);
+        color: #fff4a3;
+        text-shadow: 0 0 24px #fff, 0 0 62px #ffd166, 0 0 120px #ff4fa9;
       }
     }
 
-    @keyframes revealIn {
-      from {
-        opacity: 0.82;
-        transform: scale(1.015);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes celebrateText {
-      0% {
-        opacity: 0.5;
-        transform: scale(0.82);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+    @keyframes revealCelebrate {
+      0% { opacity: 0; transform: scale(0.25) rotate(-8deg); }
+      58% { opacity: 1; transform: scale(1.18) rotate(3deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
     }
 
     @keyframes laserSpin {
-      from {
-        rotate: 0deg;
-      }
-
-      to {
-        rotate: 360deg;
-      }
+      from { rotate: 0deg; }
+      to { rotate: 360deg; }
     }
 
     @keyframes iconFloat {
-      from {
-        transform: scale(0.92) rotate(-8deg);
-      }
-
-      to {
-        transform: scale(1.1) rotate(8deg);
-      }
+      from { transform: scale(0.92) rotate(-8deg); }
+      to { transform: scale(1.1) rotate(8deg); }
     }
 
     @keyframes numberPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.15) rotate(-18deg);
-      }
-
-      62% {
-        opacity: 1;
-        transform: scale(1.22) rotate(6deg);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    @keyframes screenShake {
-      0%,
-      100% {
-        transform: translate(0, 0);
-      }
-
-      20% {
-        transform: translate(-7px, 4px);
-      }
-
-      40% {
-        transform: translate(7px, -5px);
-      }
-
-      60% {
-        transform: translate(-5px, -4px);
-      }
-
-      80% {
-        transform: translate(5px, 5px);
-      }
+      0% { opacity: 0; transform: scale(0.15) rotate(-18deg); }
+      62% { opacity: 1; transform: scale(1.22) rotate(6deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
     }
 
     @keyframes particleFly {
@@ -596,11 +756,7 @@
         opacity: 0;
         transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.3);
       }
-
-      12% {
-        opacity: 1;
-      }
-
+      12% { opacity: 1; }
       100% {
         opacity: 0;
         transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.3);
@@ -727,6 +883,26 @@
   <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
     <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
 
+    <div class="magic-rings" aria-hidden="true">
+      <div class="magic-ring ring-one"></div>
+      <div class="magic-ring ring-two"></div>
+      <div class="magic-ring ring-three"></div>
+      <div class="magic-core"></div>
+    </div>
+
+    <div class="meteor-field" aria-hidden="true">
+      <i class="meteor meteor-1"></i>
+      <i class="meteor meteor-2"></i>
+      <i class="meteor meteor-3"></i>
+      <i class="meteor meteor-4"></i>
+      <i class="meteor meteor-5"></i>
+      <i class="meteor meteor-6"></i>
+    </div>
+
+    <div class="energy-wave wave-one"></div>
+    <div class="energy-wave wave-two"></div>
+    <div class="energy-wave wave-three"></div>
+
     <div class="laser laser-a"></div>
     <div class="laser laser-b"></div>
     <div class="laser laser-c"></div>
@@ -751,7 +927,6 @@
     const effectBox = document.getElementById("effectBox");
     const effectMessage = document.getElementById("effectMessage");
     const statusEl = document.getElementById("status");
-
     const bgm = document.getElementById("bgm");
 
     const drawOverlay = document.getElementById("drawOverlay");
@@ -788,8 +963,8 @@
     }
 
     function updateParticipantCount() {
-      const count = parseNames(participantsEl.value).length;
-      participantCountEl.textContent = `目前 ${count} 位有效參加者`;
+      participantCountEl.textContent =
+        `目前 ${parseNames(participantsEl.value).length} 位有效參加者`;
     }
 
     function setStatus(message, type = "") {
@@ -801,9 +976,7 @@
       const result = [...array];
 
       for (let i = result.length - 1; i > 0; i--) {
-        const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
-        const j = randomValue % (i + 1);
-
+        const j = crypto.getRandomValues(new Uint32Array(1))[0] % (i + 1);
         [result[i], result[j]] = [result[j], result[i]];
       }
 
@@ -826,8 +999,7 @@
 
     async function pasteText(target) {
       try {
-        const text = await navigator.clipboard.readText();
-        target.value = text;
+        target.value = await navigator.clipboard.readText();
         target.dispatchEvent(new Event("input"));
         setStatus("已從剪貼簿貼上。", "success");
       } catch {
@@ -841,11 +1013,12 @@
       target.value = "";
       target.dispatchEvent(new Event("input"));
 
-      if (target === winnersEl || target === notDrawnEl) {
-        setStatus("已清除抽獎結果。", "success");
-      } else {
-        setStatus("已清除內容。", "success");
-      }
+      setStatus(
+        target === winnersEl || target === notDrawnEl
+          ? "已清除抽獎結果。"
+          : "已清除內容。",
+        "success"
+      );
     }
 
     function setDrawingState(drawing) {
@@ -859,8 +1032,6 @@
     }
 
     async function playBgm() {
-      if (!bgm) return;
-
       bgm.currentTime = 0;
       bgm.volume = 0.6;
 
@@ -872,8 +1043,6 @@
     }
 
     function stopBgm() {
-      if (!bgm) return;
-
       bgm.pause();
       bgm.currentTime = 0;
     }
@@ -891,7 +1060,7 @@
       effectMessage.textContent = "抽獎完成";
     }
 
-    function createParticles(total = 75) {
+    function createParticles(total = 150) {
       particlesEl.innerHTML = "";
 
       for (let i = 0; i < total; i++) {
@@ -909,35 +1078,38 @@
     }
 
     function animateOverlayNumber() {
-      const numbers = ["3", "2", "1", "✨"];
+      const sequence = [
+        { number: "3", title: "命運正在集結", text: "準備召喚幸運力量" },
+        { number: "2", title: "能量正在爆發", text: "請屏住呼吸" },
+        { number: "1", title: "最後倒數", text: "幸運得主即將誕生" },
+        { number: "✨", title: "結果揭曉", text: "恭喜所有得獎者！" }
+      ];
 
-      numbers.forEach((number, index) => {
+      sequence.forEach((item, index) => {
         window.setTimeout(() => {
           overlayCount.classList.remove("pop");
           void overlayCount.offsetWidth;
 
-          overlayCount.textContent = number;
+          overlayTitle.textContent = item.title;
+          overlaySubtext.textContent = item.text;
+          overlayCount.textContent = item.number;
           overlayCount.classList.add("pop");
 
-          if (number === "✨") {
-            overlayTitle.textContent = "結果揭曉";
-            overlaySubtext.textContent = "恭喜所有得獎者！";
-
+          if (item.number === "✨") {
             drawOverlay.classList.remove("drawing");
             drawOverlay.classList.add("reveal");
           }
-        }, index * 650);
+        }, index * 820);
       });
     }
 
     function showOverlay() {
-      createParticles();
-
+      createParticles(150);
       drawOverlay.className = "draw-overlay show drawing";
       drawOverlay.setAttribute("aria-hidden", "false");
 
-      overlayTitle.textContent = "幸運抽獎";
-      overlaySubtext.textContent = "得獎者即將誕生";
+      overlayTitle.textContent = "命運正在集結";
+      overlaySubtext.textContent = "準備召喚幸運力量";
       overlayCount.textContent = "3";
 
       animateOverlayNumber();
@@ -965,11 +1137,11 @@
     }
 
     function createBurst(x, y, hue) {
-      const count = 70;
+      const count = 85;
 
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 * i) / count;
-        const speed = random(1.5, 6.5);
+        const speed = random(1.5, 7);
 
         fireworks.push({
           type: "spark",
@@ -977,12 +1149,12 @@
           y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          life: random(45, 80),
+          life: random(45, 85),
           alpha: 1,
           radius: random(1.8, 3.8),
-          hue,
+          hue: (hue + random(-35, 35) + 360) % 360,
           gravity: 0.045,
-          decay: random(0.010, 0.020)
+          decay: random(0.01, 0.02)
         });
       }
     }
@@ -1006,76 +1178,75 @@
       });
     }
 
-    function drawRocket(fw) {
-      fw.trail.push({ x: fw.x, y: fw.y });
+    function drawRocket(firework) {
+      firework.trail.push({ x: firework.x, y: firework.y });
 
-      if (fw.trail.length > 8) {
-        fw.trail.shift();
+      if (firework.trail.length > 8) {
+        firework.trail.shift();
       }
 
-      if (fw.trail.length > 1) {
+      if (firework.trail.length > 1) {
         fwCtx.beginPath();
-        fwCtx.moveTo(fw.trail[0].x, fw.trail[0].y);
+        fwCtx.moveTo(firework.trail[0].x, firework.trail[0].y);
 
-        for (const point of fw.trail) {
+        firework.trail.forEach(point => {
           fwCtx.lineTo(point.x, point.y);
-        }
+        });
 
-        fwCtx.strokeStyle = `hsla(${fw.hue}, 100%, 65%, 0.62)`;
+        fwCtx.strokeStyle = `hsla(${firework.hue}, 100%, 65%, 0.62)`;
         fwCtx.lineWidth = 2;
         fwCtx.stroke();
       }
 
       fwCtx.beginPath();
-      fwCtx.arc(fw.x, fw.y, 3, 0, Math.PI * 2);
-      fwCtx.fillStyle = `hsl(${fw.hue}, 100%, 68%)`;
+      fwCtx.arc(firework.x, firework.y, 3, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsl(${firework.hue}, 100%, 68%)`;
       fwCtx.shadowBlur = 16;
-      fwCtx.shadowColor = `hsl(${fw.hue}, 100%, 62%)`;
+      fwCtx.shadowColor = `hsl(${firework.hue}, 100%, 62%)`;
       fwCtx.fill();
       fwCtx.shadowBlur = 0;
     }
 
-    function drawSpark(fw) {
+    function drawSpark(firework) {
       fwCtx.beginPath();
-      fwCtx.arc(fw.x, fw.y, fw.radius, 0, Math.PI * 2);
-      fwCtx.fillStyle = `hsla(${fw.hue}, 100%, 64%, ${fw.alpha})`;
+      fwCtx.arc(firework.x, firework.y, firework.radius, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsla(${firework.hue}, 100%, 64%, ${firework.alpha})`;
       fwCtx.shadowBlur = 13;
-      fwCtx.shadowColor = `hsla(${fw.hue}, 100%, 58%, ${fw.alpha})`;
+      fwCtx.shadowColor = `hsla(${firework.hue}, 100%, 58%, ${firework.alpha})`;
       fwCtx.fill();
       fwCtx.shadowBlur = 0;
     }
 
     function updateFireworks() {
-      /* 深色半透明覆蓋創造拖尾，不會出現白色閃屏 */
       fwCtx.fillStyle = "rgba(3, 7, 20, 0.20)";
       fwCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
       for (let i = fireworks.length - 1; i >= 0; i--) {
-        const fw = fireworks[i];
+        const firework = fireworks[i];
 
-        if (fw.type === "rocket") {
-          fw.x += fw.vx;
-          fw.y += fw.vy;
+        if (firework.type === "rocket") {
+          firework.x += firework.vx;
+          firework.y += firework.vy;
 
-          drawRocket(fw);
+          drawRocket(firework);
 
-          if (fw.y <= fw.targetY) {
-            createBurst(fw.x, fw.y, fw.hue);
+          if (firework.y <= firework.targetY) {
+            createBurst(firework.x, firework.y, firework.hue);
             fireworks.splice(i, 1);
           }
 
           continue;
         }
 
-        fw.x += fw.vx;
-        fw.y += fw.vy;
-        fw.vy += fw.gravity;
-        fw.alpha -= fw.decay;
-        fw.life -= 1;
+        firework.x += firework.vx;
+        firework.y += firework.vy;
+        firework.vy += firework.gravity;
+        firework.alpha -= firework.decay;
+        firework.life -= 1;
 
-        drawSpark(fw);
+        drawSpark(firework);
 
-        if (fw.life <= 0 || fw.alpha <= 0) {
+        if (firework.life <= 0 || firework.alpha <= 0) {
           fireworks.splice(i, 1);
         }
       }
@@ -1094,23 +1265,21 @@
 
       fwCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-      for (let i = 0; i < 5; i++) {
-        window.setTimeout(() => launchFirework(), i * 180);
+      for (let i = 0; i < 6; i++) {
+        window.setTimeout(launchFirework, i * 150);
       }
 
       fireworksLauncherId = window.setInterval(() => {
         launchFirework();
 
-        if (Math.random() > 0.55) {
+        if (Math.random() > 0.45) {
           launchFirework();
         }
-      }, 320);
+      }, 260);
 
       updateFireworks();
 
-      window.setTimeout(() => {
-        stopFireworks();
-      }, duration);
+      window.setTimeout(stopFireworks, duration);
     }
 
     function stopFireworks() {
@@ -1138,7 +1307,7 @@
       const participants = parseNames(participantsEl.value);
       const winnerCount = Number.parseInt(winnerCountEl.value, 10);
 
-      if (participants.length === 0) {
+      if (!participants.length) {
         setStatus("請先輸入至少一位參加者。", "error");
         participantsEl.focus();
         return;
@@ -1181,14 +1350,14 @@
           `恭喜！已抽出 ${selectedWinners.length} 位得獎者，另有 ${notDrawnNames.length} 位未抽中。`,
           "success"
         );
-      }, 2750);
+      }, 3300);
 
       window.setTimeout(() => {
         stopFireworks();
         hideOverlay();
         stopBgm();
         setDrawingState(false);
-      }, 5400);
+      }, 6500);
     }
 
     participantsEl.addEventListener("input", updateParticipantCount);
@@ -1220,4 +1389,3 @@
   </script>
 </body>
 </html>
-
