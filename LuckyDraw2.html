@@ -1,0 +1,1239 @@
+以下是最新完整版本：包含參加者、得獎者、**未抽中名單及複製按鈕**、全頁倒數抽獎效果、BGM 播放區、揭曉後的**彩色煙火動畫**，並且**沒有白光閃屏效果**。煙火以 Canvas 搭配 `requestAnimationFrame()` 持續更新粒子畫面。[1][2]
+
+請儲存為 `lucky-draw.html`。如需背景音樂，請把 MP3 放到 `audio/lucky-draw-bgm.mp3`；`<audio>` 可用一個或多個音訊來源載入播放。[3]
+
+```html
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>幸運抽獎</title>
+
+  <style>
+    :root {
+      --bg1: #09111f;
+      --bg2: #172a4b;
+      --panel: rgba(255, 255, 255, 0.10);
+      --border: rgba(255, 255, 255, 0.18);
+      --text: #f7fbff;
+      --muted: #b7c6df;
+      --primary: #53d8fb;
+      --gold: #ffd166;
+      --danger: #ff6b7a;
+      --success: #69e6a4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "PingFang HK", "Microsoft JhengHei", sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(83, 216, 251, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 85%, rgba(255, 209, 102, 0.15), transparent 25%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    .page {
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 42px;
+    }
+
+    header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 26px rgba(83, 216, 251, 0.55);
+    }
+
+    header p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .panel {
+      min-height: 500px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .hint {
+      min-height: 40px;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    textarea {
+      width: 100%;
+      height: 330px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      outline: none;
+      color: var(--text);
+      background: rgba(3, 10, 24, 0.42);
+      font: inherit;
+      line-height: 1.55;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(83, 216, 251, 0.15);
+    }
+
+    textarea[readonly] {
+      opacity: 0.95;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 13px;
+    }
+
+    .button-row.two-buttons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    button {
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #06101d;
+      background: #dbe9ff;
+      font: inherit;
+      font-weight: 700;
+      transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
+    }
+
+    button:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .paste-btn {
+      background: #a8d8ff;
+    }
+
+    .clear-btn {
+      background: #ffb3bd;
+    }
+
+    .center-panel {
+      grid-column: 1 / -1;
+      display: flex;
+      min-height: 430px;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .draw-controls {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      max-width: 220px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--text);
+      background: rgba(3, 10, 24, 0.42);
+      font: inherit;
+      font-size: 1.3rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    input[type="number"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(83, 216, 251, 0.15);
+    }
+
+    #drawButton {
+      width: 100%;
+      min-height: 58px;
+      margin-top: 22px;
+      color: #172033;
+      background: linear-gradient(135deg, var(--gold), #ff9e5e);
+      box-shadow: 0 8px 24px rgba(255, 178, 73, 0.28);
+      font-size: 1.15rem;
+    }
+
+    .counter {
+      min-height: 25px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .effect-box {
+      position: relative;
+      display: grid;
+      width: min(100%, 320px);
+      height: 205px;
+      place-items: center;
+      overflow: hidden;
+      margin-top: auto;
+      margin-bottom: auto;
+      border: 1px solid rgba(83, 216, 251, 0.35);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle, rgba(83, 216, 251, 0.23), transparent 60%),
+        rgba(0, 0, 0, 0.18);
+    }
+
+    .effect-icon {
+      z-index: 2;
+      font-size: 4rem;
+      filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.8));
+    }
+
+    .effect-message {
+      z-index: 2;
+      margin-top: -55px;
+      color: #e9f7ff;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .orb {
+      position: absolute;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      opacity: 0;
+      background: var(--primary);
+      box-shadow: 0 0 15px var(--primary);
+    }
+
+    .effect-box.running {
+      animation: pulse 0.55s ease-in-out infinite alternate;
+    }
+
+    .effect-box.running .effect-icon {
+      animation: bounce 0.38s ease-in-out infinite alternate;
+    }
+
+    .effect-box.running .orb {
+      opacity: 1;
+      animation: orbit 1s linear infinite;
+    }
+
+    .orb:nth-child(3) {
+      background: var(--gold);
+      box-shadow: 0 0 15px var(--gold);
+      animation-delay: -0.33s !important;
+    }
+
+    .orb:nth-child(4) {
+      background: var(--success);
+      box-shadow: 0 0 15px var(--success);
+      animation-delay: -0.66s !important;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 15px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .status.error {
+      color: #ffb3bd;
+    }
+
+    .status.success {
+      color: #a9f2c8;
+    }
+
+    /* 全頁抽獎效果 */
+
+    .draw-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(75, 220, 255, 0.32), transparent 24%),
+        radial-gradient(circle at 20% 80%, rgba(255, 72, 150, 0.22), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(255, 205, 70, 0.22), transparent 28%),
+        rgba(3, 7, 20, 0.76);
+      backdrop-filter: blur(12px) saturate(1.35);
+      -webkit-backdrop-filter: blur(12px) saturate(1.35);
+    }
+
+    .draw-overlay.show {
+      display: grid;
+      animation: overlayIn 0.35s ease-out both;
+    }
+
+    .draw-overlay.drawing {
+      animation: overlayIn 0.35s ease-out both, screenShake 0.42s linear infinite;
+    }
+
+    /* 揭曉只使用彩色深色背景，沒有白光閃屏 */
+    .draw-overlay.reveal {
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(255, 190, 70, 0.28),
+          rgba(255, 80, 145, 0.14) 35%,
+          rgba(3, 7, 20, 0.88) 72%
+        );
+      animation: revealIn 0.45s ease-out both;
+    }
+
+    .fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .overlay-content {
+      position: relative;
+      z-index: 3;
+      width: min(92vw, 950px);
+      text-align: center;
+      text-shadow: 0 0 16px rgba(83, 216, 251, 0.9);
+    }
+
+    .draw-overlay.reveal .overlay-content {
+      animation: celebrateText 0.9s ease-out both;
+    }
+
+    .mega-icon {
+      margin-bottom: 16px;
+      font-size: clamp(5rem, 16vw, 12rem);
+      filter: drop-shadow(0 0 32px rgba(255, 210, 85, 0.95));
+      animation: iconFloat 0.48s ease-in-out infinite alternate;
+    }
+
+    .overlay-title {
+      font-size: clamp(1.6rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: 0.2em;
+    }
+
+    .overlay-count {
+      min-height: 1.15em;
+      margin: 4px 0;
+      color: #ffd166;
+      font-size: clamp(9rem, 31vw, 24rem);
+      font-weight: 1000;
+      line-height: 1;
+      text-shadow:
+        0 0 18px #fff,
+        0 0 45px #ffd166,
+        0 0 90px #ff8b4a;
+    }
+
+    .overlay-count.pop {
+      animation: numberPop 0.72s cubic-bezier(.12, .9, .24, 1.35) both;
+    }
+
+    .overlay-subtext {
+      margin-top: 12px;
+      color: #dcecff;
+      font-size: clamp(1.1rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .laser {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 150vmax;
+      height: 16px;
+      border-radius: 999px;
+      opacity: 0.78;
+      transform-origin: 0 50%;
+      filter: blur(2px);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #53d8fb 45%,
+        #fff 50%,
+        #53d8fb 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #53d8fb, 0 0 45px #53d8fb;
+    }
+
+    .laser-a {
+      transform: rotate(18deg);
+      animation: laserSpin 2.2s linear infinite;
+    }
+
+    .laser-b {
+      transform: rotate(83deg);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #ff5fa2 45%,
+        #fff 50%,
+        #ff5fa2 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #ff5fa2, 0 0 45px #ff5fa2;
+      animation: laserSpin 1.55s linear infinite reverse;
+    }
+
+    .laser-c {
+      transform: rotate(145deg);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #ffd166 45%,
+        #fff 50%,
+        #ffd166 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #ffd166, 0 0 45px #ffd166;
+      animation: laserSpin 2.8s linear infinite;
+    }
+
+    .particle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      color: hsl(var(--hue), 100%, 70%);
+      opacity: 0;
+      background: currentColor;
+      box-shadow: 0 0 13px currentColor;
+      animation: particleFly 1.55s ease-out infinite;
+      animation-delay: var(--delay);
+    }
+
+    .draw-overlay.reveal .particle {
+      animation-duration: 1.05s;
+    }
+
+    @keyframes pulse {
+      from {
+        box-shadow: 0 0 0 rgba(83, 216, 251, 0), inset 0 0 10px rgba(83, 216, 251, 0.1);
+      }
+
+      to {
+        box-shadow: 0 0 38px rgba(83, 216, 251, 0.52), inset 0 0 30px rgba(255, 209, 102, 0.2);
+      }
+    }
+
+    @keyframes bounce {
+      from {
+        transform: scale(1) rotate(-8deg);
+      }
+
+      to {
+        transform: scale(1.18) rotate(8deg);
+      }
+    }
+
+    @keyframes orbit {
+      0% {
+        transform: rotate(0deg) translateX(76px) rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg) translateX(76px) rotate(-360deg);
+      }
+    }
+
+    @keyframes overlayIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes revealIn {
+      from {
+        opacity: 0.82;
+        transform: scale(1.015);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes celebrateText {
+      0% {
+        opacity: 0.5;
+        transform: scale(0.82);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes laserSpin {
+      from {
+        rotate: 0deg;
+      }
+
+      to {
+        rotate: 360deg;
+      }
+    }
+
+    @keyframes iconFloat {
+      from {
+        transform: scale(0.92) rotate(-8deg);
+      }
+
+      to {
+        transform: scale(1.1) rotate(8deg);
+      }
+    }
+
+    @keyframes numberPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.15) rotate(-18deg);
+      }
+
+      62% {
+        opacity: 1;
+        transform: scale(1.22) rotate(6deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes screenShake {
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      20% {
+        transform: translate(-7px, 4px);
+      }
+
+      40% {
+        transform: translate(7px, -5px);
+      }
+
+      60% {
+        transform: translate(-5px, -4px);
+      }
+
+      80% {
+        transform: translate(5px, 5px);
+      }
+    }
+
+    @keyframes particleFly {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.3);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.3);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .center-panel {
+        grid-column: auto;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      textarea {
+        height: 230px;
+      }
+
+      .center-panel {
+        min-height: 420px;
+      }
+
+      .effect-box {
+        margin: 30px 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .draw-overlay,
+      .draw-overlay *,
+      .effect-box,
+      .effect-box * {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header>
+      <h1>幸運抽獎</h1>
+      <p>設定抽獎人數後，一次過抽出全部得獎者。</p>
+    </header>
+
+    <section class="layout">
+      <section class="panel">
+        <h2>參加者名單</h2>
+        <p class="hint">每行一個姓名，或使用逗號分隔。重複姓名會自動合併。</p>
+
+        <textarea
+          id="participants"
+          placeholder="例如：
+陳大文
+李小美, 王小明
+張美玲"
+        ></textarea>
+
+        <div class="button-row">
+          <button type="button" data-action="copy" data-target="participants">全部複製</button>
+          <button type="button" class="paste-btn" data-action="paste" data-target="participants">貼上</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="participants">清除</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>得獎名單</h2>
+        <p class="hint">抽獎特效完成後，所有得獎者會同時顯示在此。</p>
+
+        <textarea id="winners" readonly placeholder="尚未抽獎"></textarea>
+
+        <div class="button-row two-buttons">
+          <button type="button" data-action="copy" data-target="winners">全部複製</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="winners">清除</button>
+        </div>
+      </section>
+
+      <section class="panel center-panel">
+        <h2>抽獎控制</h2>
+
+        <div class="draw-controls">
+          <label for="winnerCount">抽獎人數</label>
+          <input id="winnerCount" type="number" min="1" value="1" inputmode="numeric" />
+
+          <button id="drawButton" type="button">開始抽獎</button>
+          <p id="participantCount" class="counter">目前 0 位有效參加者</p>
+        </div>
+
+        <div id="effectBox" class="effect-box" aria-live="polite">
+          <span class="effect-icon">🎁</span>
+          <span id="effectMessage" class="effect-message">等待開始</span>
+          <i class="orb"></i>
+          <i class="orb"></i>
+          <i class="orb"></i>
+        </div>
+
+        <p id="status" class="status">請先貼上參加者名單。</p>
+      </section>
+
+      <section class="panel">
+        <h2>未抽中名單</h2>
+        <p class="hint">本輪未獲獎的有效參加者會顯示在此。</p>
+
+        <textarea id="notDrawn" readonly placeholder="尚未抽獎"></textarea>
+
+        <div class="button-row two-buttons">
+          <button type="button" data-action="copy" data-target="notDrawn">全部複製</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="notDrawn">清除</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <audio id="bgm" preload="auto" loop>
+    <source src="./audio/lucky-draw-bgm.mp3" type="audio/mpeg" />
+    <source src="./audio/lucky-draw-bgm.ogg" type="audio/ogg" />
+  </audio>
+
+  <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <div class="laser laser-a"></div>
+    <div class="laser laser-b"></div>
+    <div class="laser laser-c"></div>
+
+    <div id="particles" class="particles"></div>
+
+    <div class="overlay-content">
+      <div class="mega-icon">🎉</div>
+      <div id="overlayTitle" class="overlay-title">幸運抽獎</div>
+      <div id="overlayCount" class="overlay-count">3</div>
+      <div id="overlaySubtext" class="overlay-subtext">得獎者即將誕生</div>
+    </div>
+  </div>
+
+  <script>
+    const participantsEl = document.getElementById("participants");
+    const winnersEl = document.getElementById("winners");
+    const notDrawnEl = document.getElementById("notDrawn");
+    const winnerCountEl = document.getElementById("winnerCount");
+    const drawButton = document.getElementById("drawButton");
+    const participantCountEl = document.getElementById("participantCount");
+    const effectBox = document.getElementById("effectBox");
+    const effectMessage = document.getElementById("effectMessage");
+    const statusEl = document.getElementById("status");
+
+    const bgm = document.getElementById("bgm");
+
+    const drawOverlay = document.getElementById("drawOverlay");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlayCount = document.getElementById("overlayCount");
+    const overlaySubtext = document.getElementById("overlaySubtext");
+    const particlesEl = document.getElementById("particles");
+
+    const fireworksCanvas = document.getElementById("fireworksCanvas");
+    const fwCtx = fireworksCanvas.getContext("2d");
+
+    let isDrawing = false;
+    let fireworks = [];
+    let fireworkAnimationId = null;
+    let fireworksRunning = false;
+    let fireworksLauncherId = null;
+
+    function parseNames(text) {
+      const seen = new Set();
+
+      return text
+        .split(/[\n,，]+/)
+        .map(name => name.trim())
+        .filter(name => {
+          if (!name) return false;
+
+          const key = name.toLocaleLowerCase();
+
+          if (seen.has(key)) return false;
+
+          seen.add(key);
+          return true;
+        });
+    }
+
+    function updateParticipantCount() {
+      const count = parseNames(participantsEl.value).length;
+      participantCountEl.textContent = `目前 ${count} 位有效參加者`;
+    }
+
+    function setStatus(message, type = "") {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+    }
+
+    function shuffle(array) {
+      const result = [...array];
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
+        const j = randomValue % (i + 1);
+
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+
+      return result;
+    }
+
+    async function copyText(text) {
+      if (!text.trim()) {
+        setStatus("沒有內容可複製。", "error");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("已複製到剪貼簿。", "success");
+      } catch {
+        setStatus("無法自動複製，請手動選取文字後複製。", "error");
+      }
+    }
+
+    async function pasteText(target) {
+      try {
+        const text = await navigator.clipboard.readText();
+        target.value = text;
+        target.dispatchEvent(new Event("input"));
+        setStatus("已從剪貼簿貼上。", "success");
+      } catch {
+        setStatus("瀏覽器未允許讀取剪貼簿，請在文字框內手動貼上。", "error");
+      }
+    }
+
+    function clearText(target) {
+      if (isDrawing) return;
+
+      target.value = "";
+      target.dispatchEvent(new Event("input"));
+
+      if (target === winnersEl || target === notDrawnEl) {
+        setStatus("已清除抽獎結果。", "success");
+      } else {
+        setStatus("已清除內容。", "success");
+      }
+    }
+
+    function setDrawingState(drawing) {
+      isDrawing = drawing;
+      drawButton.disabled = drawing;
+      winnerCountEl.disabled = drawing;
+
+      document.querySelectorAll("[data-action]").forEach(button => {
+        button.disabled = drawing;
+      });
+    }
+
+    async function playBgm() {
+      if (!bgm) return;
+
+      bgm.currentTime = 0;
+      bgm.volume = 0.6;
+
+      try {
+        await bgm.play();
+      } catch {
+        setStatus("背景音樂無法播放，請確認音訊檔案存在或瀏覽器允許播放。", "error");
+      }
+    }
+
+    function stopBgm() {
+      if (!bgm) return;
+
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
+    function startEffect() {
+      effectBox.classList.add("running");
+      effectMessage.textContent = "正在抽獎";
+      winnersEl.value = "";
+      notDrawnEl.value = "";
+      setStatus("抽獎進行中，結果即將一次過揭曉。");
+    }
+
+    function stopEffect() {
+      effectBox.classList.remove("running");
+      effectMessage.textContent = "抽獎完成";
+    }
+
+    function createParticles(total = 75) {
+      particlesEl.innerHTML = "";
+
+      for (let i = 0; i < total; i++) {
+        const particle = document.createElement("i");
+        particle.className = "particle";
+
+        particle.style.setProperty("--angle", `${Math.random() * 360}deg`);
+        particle.style.setProperty("--distance", `${35 + Math.random() * 80}vmax`);
+        particle.style.setProperty("--size", `${5 + Math.random() * 14}px`);
+        particle.style.setProperty("--hue", Math.floor(Math.random() * 360));
+        particle.style.setProperty("--delay", `${-(Math.random() * 1.5)}s`);
+
+        particlesEl.appendChild(particle);
+      }
+    }
+
+    function animateOverlayNumber() {
+      const numbers = ["3", "2", "1", "✨"];
+
+      numbers.forEach((number, index) => {
+        window.setTimeout(() => {
+          overlayCount.classList.remove("pop");
+          void overlayCount.offsetWidth;
+
+          overlayCount.textContent = number;
+          overlayCount.classList.add("pop");
+
+          if (number === "✨") {
+            overlayTitle.textContent = "結果揭曉";
+            overlaySubtext.textContent = "恭喜所有得獎者！";
+
+            drawOverlay.classList.remove("drawing");
+            drawOverlay.classList.add("reveal");
+          }
+        }, index * 650);
+      });
+    }
+
+    function showOverlay() {
+      createParticles();
+
+      drawOverlay.className = "draw-overlay show drawing";
+      drawOverlay.setAttribute("aria-hidden", "false");
+
+      overlayTitle.textContent = "幸運抽獎";
+      overlaySubtext.textContent = "得獎者即將誕生";
+      overlayCount.textContent = "3";
+
+      animateOverlayNumber();
+    }
+
+    function hideOverlay() {
+      stopFireworks();
+      drawOverlay.className = "draw-overlay";
+      drawOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    function resizeFireworksCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+
+      fireworksCanvas.width = Math.floor(window.innerWidth * ratio);
+      fireworksCanvas.height = Math.floor(window.innerHeight * ratio);
+      fireworksCanvas.style.width = `${window.innerWidth}px`;
+      fireworksCanvas.style.height = `${window.innerHeight}px`;
+
+      fwCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createBurst(x, y, hue) {
+      const count = 70;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count;
+        const speed = random(1.5, 6.5);
+
+        fireworks.push({
+          type: "spark",
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: random(45, 80),
+          alpha: 1,
+          radius: random(1.8, 3.8),
+          hue,
+          gravity: 0.045,
+          decay: random(0.010, 0.020)
+        });
+      }
+    }
+
+    function launchFirework() {
+      const startX = random(window.innerWidth * 0.15, window.innerWidth * 0.85);
+      const startY = window.innerHeight + 20;
+      const targetX = random(window.innerWidth * 0.15, window.innerWidth * 0.85);
+      const targetY = random(window.innerHeight * 0.12, window.innerHeight * 0.45);
+      const hue = Math.floor(random(0, 360));
+
+      fireworks.push({
+        type: "rocket",
+        x: startX,
+        y: startY,
+        vx: (targetX - startX) / random(35, 55),
+        vy: (targetY - startY) / random(35, 55),
+        targetY,
+        hue,
+        trail: []
+      });
+    }
+
+    function drawRocket(fw) {
+      fw.trail.push({ x: fw.x, y: fw.y });
+
+      if (fw.trail.length > 8) {
+        fw.trail.shift();
+      }
+
+      if (fw.trail.length > 1) {
+        fwCtx.beginPath();
+        fwCtx.moveTo(fw.trail[0].x, fw.trail[0].y);
+
+        for (const point of fw.trail) {
+          fwCtx.lineTo(point.x, point.y);
+        }
+
+        fwCtx.strokeStyle = `hsla(${fw.hue}, 100%, 65%, 0.62)`;
+        fwCtx.lineWidth = 2;
+        fwCtx.stroke();
+      }
+
+      fwCtx.beginPath();
+      fwCtx.arc(fw.x, fw.y, 3, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsl(${fw.hue}, 100%, 68%)`;
+      fwCtx.shadowBlur = 16;
+      fwCtx.shadowColor = `hsl(${fw.hue}, 100%, 62%)`;
+      fwCtx.fill();
+      fwCtx.shadowBlur = 0;
+    }
+
+    function drawSpark(fw) {
+      fwCtx.beginPath();
+      fwCtx.arc(fw.x, fw.y, fw.radius, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsla(${fw.hue}, 100%, 64%, ${fw.alpha})`;
+      fwCtx.shadowBlur = 13;
+      fwCtx.shadowColor = `hsla(${fw.hue}, 100%, 58%, ${fw.alpha})`;
+      fwCtx.fill();
+      fwCtx.shadowBlur = 0;
+    }
+
+    function updateFireworks() {
+      /* 深色半透明覆蓋創造拖尾，不會出現白色閃屏 */
+      fwCtx.fillStyle = "rgba(3, 7, 20, 0.20)";
+      fwCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        const fw = fireworks[i];
+
+        if (fw.type === "rocket") {
+          fw.x += fw.vx;
+          fw.y += fw.vy;
+
+          drawRocket(fw);
+
+          if (fw.y <= fw.targetY) {
+            createBurst(fw.x, fw.y, fw.hue);
+            fireworks.splice(i, 1);
+          }
+
+          continue;
+        }
+
+        fw.x += fw.vx;
+        fw.y += fw.vy;
+        fw.vy += fw.gravity;
+        fw.alpha -= fw.decay;
+        fw.life -= 1;
+
+        drawSpark(fw);
+
+        if (fw.life <= 0 || fw.alpha <= 0) {
+          fireworks.splice(i, 1);
+        }
+      }
+
+      if (fireworksRunning) {
+        fireworkAnimationId = requestAnimationFrame(updateFireworks);
+      }
+    }
+
+    function startFireworks(duration = 2600) {
+      stopFireworks();
+      resizeFireworksCanvas();
+
+      fireworks = [];
+      fireworksRunning = true;
+
+      fwCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      for (let i = 0; i < 5; i++) {
+        window.setTimeout(() => launchFirework(), i * 180);
+      }
+
+      fireworksLauncherId = window.setInterval(() => {
+        launchFirework();
+
+        if (Math.random() > 0.55) {
+          launchFirework();
+        }
+      }, 320);
+
+      updateFireworks();
+
+      window.setTimeout(() => {
+        stopFireworks();
+      }, duration);
+    }
+
+    function stopFireworks() {
+      fireworksRunning = false;
+
+      if (fireworkAnimationId) {
+        cancelAnimationFrame(fireworkAnimationId);
+        fireworkAnimationId = null;
+      }
+
+      if (fireworksLauncherId) {
+        clearInterval(fireworksLauncherId);
+        fireworksLauncherId = null;
+      }
+
+      window.setTimeout(() => {
+        fwCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        fireworks = [];
+      }, 150);
+    }
+
+    function drawWinners() {
+      if (isDrawing) return;
+
+      const participants = parseNames(participantsEl.value);
+      const winnerCount = Number.parseInt(winnerCountEl.value, 10);
+
+      if (participants.length === 0) {
+        setStatus("請先輸入至少一位參加者。", "error");
+        participantsEl.focus();
+        return;
+      }
+
+      if (!Number.isInteger(winnerCount) || winnerCount < 1) {
+        setStatus("抽獎人數必須是大於 0 的整數。", "error");
+        winnerCountEl.focus();
+        return;
+      }
+
+      if (winnerCount > participants.length) {
+        setStatus(`抽獎人數不可多於有效參加者人數（${participants.length} 位）。`, "error");
+        winnerCountEl.focus();
+        return;
+      }
+
+      const shuffledParticipants = shuffle(participants);
+      const selectedWinners = shuffledParticipants.slice(0, winnerCount);
+      const notDrawnNames = shuffledParticipants.slice(winnerCount);
+
+      setDrawingState(true);
+      startEffect();
+      showOverlay();
+      playBgm();
+
+      window.setTimeout(() => {
+        winnersEl.value = selectedWinners.join("\n");
+        notDrawnEl.value = notDrawnNames.join("\n");
+
+        stopEffect();
+
+        overlayTitle.textContent = "抽獎完成";
+        overlayCount.textContent = "🎊";
+        overlaySubtext.textContent = `已一次過抽出 ${selectedWinners.length} 位得獎者`;
+
+        startFireworks(2600);
+
+        setStatus(
+          `恭喜！已抽出 ${selectedWinners.length} 位得獎者，另有 ${notDrawnNames.length} 位未抽中。`,
+          "success"
+        );
+      }, 2750);
+
+      window.setTimeout(() => {
+        stopFireworks();
+        hideOverlay();
+        stopBgm();
+        setDrawingState(false);
+      }, 5400);
+    }
+
+    participantsEl.addEventListener("input", updateParticipantCount);
+    drawButton.addEventListener("click", drawWinners);
+
+    document.querySelectorAll("[data-action]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.target);
+        const action = button.dataset.action;
+
+        if (action === "copy") {
+          await copyText(target.value);
+        }
+
+        if (action === "paste") {
+          await pasteText(target);
+        }
+
+        if (action === "clear") {
+          clearText(target);
+        }
+      });
+    });
+
+    window.addEventListener("resize", resizeFireworksCanvas);
+
+    resizeFireworksCanvas();
+    updateParticipantCount();
+  </script>
+</body>
+</html>
+```
+
+Sources
+[1] Window: requestAnimationFrame() method - Web APIs | MDN https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame
+[2] Window：requestAnimationFrame() 方法- Web API | MDN https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame
+[3] <audio> HTML embed audio element - MDN Web Docs https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/audio
+[4] DedicatedWorkerGlobalScope：requestAnimationFrame() 方法 https://mdn.org.cn/en-US/docs/Web/API/DedicatedWorkerGlobalScope/requestAnimationFrame
+[5] Applying Web Audio API with the HTML5 Canvas Element - https://sonoport.github.io/web-audio-and-canva-partI.html
+[6] AnalyserNode.getFloatFrequencyData() - Web API | MDN https://developer.mozilla.org/zh-CN/docs/Web/API/AnalyserNode/getFloatFrequencyData
+[7] Window: requestAnimationFrame() 메서드 - Web API | MDN https://developer.mozilla.org/ko/docs/Web/API/Window/requestAnimationFrame
+[8] <audio> HTML Audio-Element einbetten - HTML - MDN Web Docs https://developer.mozilla.org/de/docs/Web/HTML/Reference/Elements/audio
+[9] Window.requestAnimationFrame() - Web API | MDN - Mozilla https://developer.mozilla.org/zh-TW/docs/Web/API/Window/requestAnimationFrame
+[10] Using the Web Audio API - MDN Web Docs https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API
