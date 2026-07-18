@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>幸運抽獎｜Fantasy Lucky Draw</title>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #101e3a;
+      --panel: rgba(20, 35, 63, 0.78);
+      --panel-border: rgba(131, 181, 239, 0.22);
+      --text: #f4f8ff;
+      --muted: #b9c8e5;
+      --gold: #ffd166;
+      --gold-deep: #ff9f5f;
+      --cyan: #53d8fb;
+      --pink: #ff5fa2;
+      --purple: #9f8cff;
+      --success: #69e6a4;
+      --danger: #ff8695;
+      --shadow: 0 20px 56px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family:
+        "Noto Sans TC",
+        "PingFang HK",
+        "Microsoft JhengHei",
+        system-ui,
+        sans-serif;
+      background:
+        radial-gradient(circle at 10% 12%, rgba(83, 216, 251, 0.16), transparent 24%),
+        radial-gradient(circle at 92% 76%, rgba(255, 95, 162, 0.15), transparent 25%),
+        radial-gradient(circle at 50% 118%, rgba(159, 140, 255, 0.16), transparent 33%),
+        var(--bg);
+    }
+
+    .page {
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 54px;
+    }
+
+    header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      letter-spacing: 0.1em;
+      text-shadow:
+        0 0 16px rgba(83, 216, 251, 0.75),
+        0 0 50px rgba(83, 216, 251, 0.2);
+    }
+
+    header p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.2fr) minmax(260px, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 20px;
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .hint {
+      min-height: 42px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    textarea {
+      width: 100%;
+      height: 390px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid rgba(181, 213, 255, 0.22);
+      border-radius: 14px;
+      outline: none;
+      color: var(--text);
+      background: rgba(3, 10, 25, 0.52);
+      font: inherit;
+      line-height: 1.6;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(83, 216, 251, 0.16);
+    }
+
+    textarea[readonly] {
+      opacity: 0.96;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      min-height: 44px;
+      padding: 10px 13px;
+      border: 0;
+      border-radius: 12px;
+      cursor: pointer;
+      color: #07111f;
+      background: #dcecff;
+      font-weight: 800;
+      transition:
+        transform 180ms ease,
+        filter 180ms ease,
+        opacity 180ms ease,
+        box-shadow 180ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-2px);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0) scale(0.98);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .button-row.two {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .paste-btn {
+      background: #a8d8ff;
+    }
+
+    .clear-btn {
+      background: #ffb6c0;
+    }
+
+    .copy-btn {
+      background: #b7f4d3;
+    }
+
+    .stage-panel {
+      position: sticky;
+      top: 18px;
+      min-height: 530px;
+      overflow: hidden;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(83, 216, 251, 0.15), transparent 30%),
+        linear-gradient(155deg, rgba(17, 39, 77, 0.92), rgba(8, 16, 39, 0.94));
+    }
+
+    .stage-panel::before,
+    .stage-panel::after {
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      content: "";
+      border-radius: 50%;
+      opacity: 0.45;
+      filter: blur(30px);
+      pointer-events: none;
+    }
+
+    .stage-panel::before {
+      top: -110px;
+      left: -115px;
+      background: rgba(83, 216, 251, 0.24);
+    }
+
+    .stage-panel::after {
+      right: -100px;
+      bottom: -120px;
+      background: rgba(255, 95, 162, 0.18);
+    }
+
+    .stage-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .stage-title {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .stage-subtitle {
+      min-height: 23px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .mini-stage {
+      position: relative;
+      display: grid;
+      width: min(100%, 300px);
+      height: 210px;
+      place-items: center;
+      overflow: hidden;
+      margin: 22px auto 18px;
+      border: 1px solid rgba(83, 216, 251, 0.34);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(255, 209, 102, 0.16), transparent 30%),
+        radial-gradient(circle, rgba(83, 216, 251, 0.22), transparent 66%),
+        rgba(3, 9, 25, 0.45);
+      box-shadow:
+        inset 0 0 35px rgba(83, 216, 251, 0.16),
+        0 0 25px rgba(83, 216, 251, 0.12);
+    }
+
+    .mini-stage-icon {
+      z-index: 2;
+      font-size: 5rem;
+      filter: drop-shadow(0 0 18px rgba(255, 209, 102, 0.8));
+    }
+
+    .mini-orbit {
+      position: absolute;
+      width: 68%;
+      aspect-ratio: 1;
+      border: 1px dashed rgba(83, 216, 251, 0.6);
+      border-radius: 50%;
+      animation: slowSpin 9s linear infinite;
+    }
+
+    .mini-orbit::before,
+    .mini-orbit::after {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      content: "";
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 15px var(--gold);
+    }
+
+    .mini-orbit::before {
+      top: -6px;
+      left: 50%;
+    }
+
+    .mini-orbit::after {
+      right: -6px;
+      bottom: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan);
+    }
+
+    .mini-stage.running {
+      animation: stagePulse 0.55s ease-in-out infinite alternate;
+    }
+
+    .mini-stage.running .mini-stage-icon {
+      animation: iconBounce 0.38s ease-in-out infinite alternate;
+    }
+
+    .mini-stage.running .mini-orbit {
+      animation-duration: 1.1s;
+    }
+
+    .draw-controls {
+      display: grid;
+      gap: 12px;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    .draw-controls label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    input[type="number"] {
+      width: 110px;
+      margin-left: 10px;
+      padding: 10px;
+      border: 1px solid rgba(181, 213, 255, 0.24);
+      border-radius: 10px;
+      outline: none;
+      color: var(--text);
+      background: rgba(3, 10, 25, 0.56);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    #drawButton {
+      min-height: 58px;
+      color: #172033;
+      background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+      box-shadow: 0 12px 32px rgba(255, 184, 76, 0.28);
+      font-size: 1.12rem;
+    }
+
+    .count-note {
+      min-height: 24px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status {
+      min-height: 42px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    /* Full-screen five-second entertainment stage */
+
+    .draw-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      place-items: center;
+      overflow: hidden;
+      color: #fff;
+      background: rgba(2, 5, 18, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .draw-overlay.show {
+      display: grid;
+    }
+
+    .draw-overlay.drawing {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 220, 116, 0.16), transparent 12%),
+        radial-gradient(circle at 18% 24%, rgba(83, 216, 251, 0.28), transparent 24%),
+        radial-gradient(circle at 82% 72%, rgba(255, 95, 162, 0.25), transparent 28%),
+        radial-gradient(circle at 50% 112%, rgba(159, 140, 255, 0.25), transparent 38%),
+        rgba(2, 5, 18, 0.9);
+      animation:
+        overlayIn 350ms ease-out both,
+        cosmicShift 2200ms ease-in-out infinite alternate;
+    }
+
+    .draw-overlay.reveal {
+      background:
+        radial-gradient(circle at center,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 244, 186, 0.96) 9%,
+          rgba(255, 170, 74, 0.6) 23%,
+          rgba(255, 95, 162, 0.25) 44%,
+          rgba(2, 5, 18, 0.94) 76%);
+      animation:
+        winnerWhiteFlash 1100ms cubic-bezier(.16, .8, .2, 1) both,
+        revealPulse 1500ms ease-out both;
+    }
+
+    .draw-overlay.phase-chaos {
+      animation:
+        overlayIn 350ms ease-out both,
+        screenShake 320ms linear infinite,
+        cosmicShift 1300ms ease-in-out infinite alternate;
+    }
+
+    .draw-overlay.phase-countdown {
+      animation:
+        overlayIn 350ms ease-out both,
+        screenShake 210ms linear infinite,
+        cosmicShift 850ms ease-in-out infinite alternate;
+    }
+
+    .draw-overlay.phase-final {
+      animation:
+        overlayIn 350ms ease-out both,
+        screenShake 115ms linear infinite,
+        cosmicShift 460ms ease-in-out infinite alternate;
+    }
+
+    .fireworks-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .magic-rings {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: min(92vw, 940px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: transform 400ms ease, filter 400ms ease;
+    }
+
+    .magic-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 3px solid rgba(126, 238, 255, 0.78);
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow:
+        0 0 20px rgba(83, 216, 251, 0.9),
+        inset 0 0 30px rgba(83, 216, 251, 0.24);
+    }
+
+    .magic-ring::before,
+    .magic-ring::after {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      content: "";
+      border-radius: 50%;
+      background: #fff5a8;
+      box-shadow: 0 0 20px 7px #ffd166;
+    }
+
+    .magic-ring::before {
+      top: -8px;
+      left: 50%;
+    }
+
+    .magic-ring::after {
+      right: -8px;
+      bottom: 50%;
+    }
+
+    .draw-overlay.drawing .magic-ring {
+      opacity: 1;
+    }
+
+    .ring-one {
+      width: 40%;
+      height: 40%;
+      transform: translate(-50%, -50%);
+      animation: spinForward 1.25s linear infinite;
+    }
+
+    .ring-two {
+      width: 65%;
+      height: 65%;
+      border-color: rgba(255, 99, 191, 0.74);
+      transform: translate(-50%, -50%);
+      box-shadow:
+        0 0 25px rgba(255, 95, 162, 0.84),
+        inset 0 0 34px rgba(255, 95, 162, 0.2);
+      animation: spinReverse 1.9s linear infinite;
+    }
+
+    .ring-three {
+      width: 92%;
+      height: 92%;
+      border-style: dashed;
+      border-color: rgba(255, 215, 100, 0.72);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 35px rgba(255, 209, 102, 0.74);
+      animation:
+        spinForward 3.2s linear infinite,
+        ringBreath 580ms ease-in-out infinite alternate;
+    }
+
+    .magic-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 17%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle,
+          #fff 0 8%,
+          #ffe887 15%,
+          #ff79c6 40%,
+          rgba(83, 216, 251, 0.12) 68%,
+          transparent 72%);
+      box-shadow:
+        0 0 42px 18px rgba(255, 222, 115, 0.95),
+        0 0 112px 48px rgba(255, 73, 183, 0.36);
+    }
+
+    .draw-overlay.drawing .magic-core {
+      opacity: 1;
+      animation: corePulse 520ms ease-in-out infinite alternate;
+    }
+
+    .meteor-field {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .meteor {
+      position: absolute;
+      width: 190px;
+      height: 4px;
+      border-radius: 999px;
+      opacity: 0;
+      transform: rotate(-36deg);
+      background: linear-gradient(90deg, transparent, currentColor);
+      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+    }
+
+    .meteor-1 { top: 8%; left: -25%; color: var(--cyan); }
+    .meteor-2 { top: 22%; left: -36%; color: var(--pink); animation-delay: 0.35s !important; }
+    .meteor-3 { top: 40%; left: -18%; color: var(--gold); animation-delay: 0.8s !important; }
+    .meteor-4 { top: 58%; left: -38%; color: var(--purple); animation-delay: 1.15s !important; }
+    .meteor-5 { top: 73%; left: -20%; color: var(--success); animation-delay: 1.6s !important; }
+    .meteor-6 { top: 88%; left: -42%; color: #ff9b62; animation-delay: 2.05s !important; }
+
+    .draw-overlay.drawing .meteor {
+      animation: meteorRush 1.45s linear infinite;
+    }
+
+    .energy-wave {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 15px;
+      aspect-ratio: 1;
+      border: 4px solid rgba(255, 235, 134, 0.88);
+      border-radius: 50%;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 25px rgba(255, 201, 80, 0.82);
+      pointer-events: none;
+    }
+
+    .draw-overlay.drawing .energy-wave {
+      animation: energyExpand 1350ms ease-out infinite;
+    }
+
+    .wave-two {
+      border-color: rgba(83, 216, 251, 0.82);
+      animation-delay: 450ms !important;
+    }
+
+    .wave-three {
+      border-color: rgba(255, 96, 183, 0.76);
+      animation-delay: 900ms !important;
+    }
+
+    .laser {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: 150vmax;
+      height: 14px;
+      border-radius: 999px;
+      opacity: 0.7;
+      transform-origin: 0 50%;
+      filter: blur(2px);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #53d8fb 45%,
+        #fff 50%,
+        #53d8fb 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #53d8fb, 0 0 45px #53d8fb;
+    }
+
+    .laser-a {
+      transform: rotate(18deg);
+      animation: laserSpin 2200ms linear infinite;
+    }
+
+    .laser-b {
+      transform: rotate(83deg);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #ff5fa2 45%,
+        #fff 50%,
+        #ff5fa2 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #ff5fa2, 0 0 45px #ff5fa2;
+      animation: laserSpin 1550ms linear infinite reverse;
+    }
+
+    .laser-c {
+      transform: rotate(145deg);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #ffd166 45%,
+        #fff 50%,
+        #ffd166 55%,
+        transparent
+      );
+      box-shadow: 0 0 18px #ffd166, 0 0 45px #ffd166;
+      animation: laserSpin 2800ms linear infinite;
+    }
+
+    .particle {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      color: hsl(var(--hue), 100%, 70%);
+      opacity: 0;
+      background: currentColor;
+      box-shadow: 0 0 13px currentColor;
+      animation: particleFly 1550ms ease-out infinite;
+      animation-delay: var(--delay);
+    }
+
+    .overlay-content {
+      position: relative;
+      z-index: 3;
+      width: min(92vw, 980px);
+      text-align: center;
+      text-shadow: 0 0 16px rgba(83, 216, 251, 0.9);
+    }
+
+    .draw-overlay.drawing .overlay-content {
+      animation: contentWarp 450ms ease-in-out infinite alternate;
+    }
+
+    .draw-overlay.reveal .overlay-content {
+      animation: revealCelebrate 900ms cubic-bezier(.15, .9, .2, 1.18) both;
+    }
+
+    .mega-icon {
+      margin-bottom: 10px;
+      font-size: clamp(4.4rem, 14vw, 11rem);
+      filter: drop-shadow(0 0 32px rgba(255, 210, 85, 0.95));
+    }
+
+    .draw-overlay.drawing .mega-icon {
+      animation: iconCrazy 330ms ease-in-out infinite alternate;
+    }
+
+    .overlay-title {
+      font-size: clamp(1.45rem, 4.4vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
+    }
+
+    .overlay-count {
+      min-height: 1.15em;
+      margin: 2px 0;
+      color: var(--gold);
+      font-size: clamp(8rem, 30vw, 23rem);
+      font-weight: 1000;
+      line-height: 1;
+      text-shadow:
+        0 0 18px #fff,
+        0 0 46px var(--gold),
+        0 0 92px #ff8b4a;
+    }
+
+    .overlay-count.pop {
+      animation: numberPop 670ms cubic-bezier(.12, .9, .24, 1.35) both;
+    }
+
+    .draw-overlay.drawing .overlay-count:not(.pop) {
+      animation: countThrob 390ms ease-in-out infinite alternate;
+    }
+
+    .overlay-subtext {
+      margin-top: 10px;
+      color: #dcecff;
+      font-size: clamp(1rem, 2.8vw, 1.8rem);
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    /* Stage escalation by phase */
+
+    .draw-overlay.phase-awaken .magic-rings {
+      filter: saturate(0.8);
+      transform: translate(-50%, -50%) scale(0.78);
+    }
+
+    .draw-overlay.phase-awaken .magic-core {
+      animation-duration: 1150ms !important;
+    }
+
+    .draw-overlay.phase-awaken .meteor {
+      animation-duration: 2400ms !important;
+    }
+
+    .draw-overlay.phase-charge .magic-rings {
+      filter: saturate(1.25) brightness(1.08);
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    .draw-overlay.phase-charge .magic-core {
+      animation-duration: 680ms !important;
+    }
+
+    .draw-overlay.phase-charge .energy-wave {
+      animation-duration: 1100ms !important;
+    }
+
+    .draw-overlay.phase-chaos .magic-rings {
+      filter: saturate(1.55) hue-rotate(25deg);
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    .draw-overlay.phase-chaos .magic-core {
+      animation-duration: 360ms !important;
+      box-shadow:
+        0 0 55px 24px rgba(255, 222, 115, 0.98),
+        0 0 155px 72px rgba(255, 73, 183, 0.58);
+    }
+
+    .draw-overlay.phase-chaos .meteor {
+      animation-duration: 820ms !important;
+    }
+
+    .draw-overlay.phase-countdown .magic-rings {
+      filter: saturate(1.8) brightness(1.12);
+      transform: translate(-50%, -50%) scale(1.18);
+    }
+
+    .draw-overlay.phase-countdown .magic-core {
+      animation-duration: 240ms !important;
+    }
+
+    .draw-overlay.phase-countdown .energy-wave {
+      animation-duration: 720ms !important;
+    }
+
+    .draw-overlay.phase-countdown .meteor {
+      animation-duration: 560ms !important;
+    }
+
+    .draw-overlay.phase-final .magic-rings {
+      filter: saturate(2) brightness(1.35);
+      transform: translate(-50%, -50%) scale(1.32);
+    }
+
+    .draw-overlay.phase-final .magic-core {
+      animation-duration: 130ms !important;
+      box-shadow:
+        0 0 70px 36px rgba(255, 255, 255, 1),
+        0 0 190px 100px rgba(255, 73, 183, 0.75);
+    }
+
+    .draw-overlay.phase-final .energy-wave {
+      animation-duration: 420ms !important;
+    }
+
+    .draw-overlay.phase-final .meteor {
+      animation-duration: 360ms !important;
+    }
+
+    .draw-overlay.phase-final .overlay-count {
+      animation: finalNumberBlast 340ms ease-in-out infinite alternate !important;
+    }
+
+    @keyframes slowSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes stagePulse {
+      from {
+        box-shadow:
+          inset 0 0 25px rgba(83, 216, 251, 0.12),
+          0 0 10px rgba(83, 216, 251, 0.08);
+      }
+      to {
+        box-shadow:
+          inset 0 0 54px rgba(255, 209, 102, 0.24),
+          0 0 32px rgba(83, 216, 251, 0.34);
+      }
+    }
+
+    @keyframes iconBounce {
+      from { transform: scale(0.9) rotate(-8deg); }
+      to { transform: scale(1.14) rotate(8deg); }
+    }
+
+    @keyframes overlayIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes cosmicShift {
+      from { filter: hue-rotate(0deg) saturate(1.05); }
+      to { filter: hue-rotate(30deg) saturate(1.5); }
+    }
+
+    @keyframes screenShake {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+      20% { transform: translate3d(-10px, 5px, 0) rotate(-0.25deg); }
+      40% { transform: translate3d(10px, -7px, 0) rotate(0.25deg); }
+      60% { transform: translate3d(-8px, -6px, 0) rotate(-0.18deg); }
+      80% { transform: translate3d(8px, 7px, 0) rotate(0.18deg); }
+    }
+
+    @keyframes winnerWhiteFlash {
+      0% { opacity: 0.78; filter: brightness(1); }
+      10% { opacity: 1; filter: brightness(4.2); }
+      28% { filter: brightness(1.65); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+
+    @keyframes revealPulse {
+      0% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes spinForward {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes spinReverse {
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    @keyframes ringBreath {
+      from { scale: 0.96; opacity: 0.56; }
+      to { scale: 1.05; opacity: 1; }
+    }
+
+    @keyframes corePulse {
+      from {
+        transform: translate(-50%, -50%) scale(0.84);
+        filter: hue-rotate(0);
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1.32);
+        filter: hue-rotate(55deg);
+      }
+    }
+
+    @keyframes meteorRush {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(-36deg) scaleX(0.35);
+      }
+
+      14% { opacity: 1; }
+      75% { opacity: 0.95; }
+
+      100% {
+        opacity: 0;
+        transform: translate3d(155vw, 75vh, 0) rotate(-36deg) scaleX(1.25);
+      }
+    }
+
+    @keyframes energyExpand {
+      0% {
+        width: 15px;
+        opacity: 1;
+      }
+
+      100% {
+        width: min(145vmax, 2200px);
+        opacity: 0;
+      }
+    }
+
+    @keyframes laserSpin {
+      from { rotate: 0deg; }
+      to { rotate: 360deg; }
+    }
+
+    @keyframes particleFly {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.3);
+      }
+
+      12% { opacity: 1; }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.3);
+      }
+    }
+
+    @keyframes contentWarp {
+      from { transform: scale(0.98) rotate(-0.7deg); }
+      to { transform: scale(1.035) rotate(0.7deg); }
+    }
+
+    @keyframes iconCrazy {
+      from { transform: scale(0.87) rotate(-15deg); }
+      to { transform: scale(1.28) rotate(15deg); }
+    }
+
+    @keyframes numberPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.15) rotate(-18deg);
+      }
+
+      62% {
+        opacity: 1;
+        transform: scale(1.22) rotate(6deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes countThrob {
+      from {
+        transform: scale(0.88);
+        color: var(--cyan);
+        text-shadow: 0 0 20px var(--cyan), 0 0 70px var(--pink);
+      }
+
+      to {
+        transform: scale(1.18);
+        color: #fff4a3;
+        text-shadow:
+          0 0 24px #fff,
+          0 0 62px var(--gold),
+          0 0 120px var(--pink);
+      }
+    }
+
+    @keyframes finalNumberBlast {
+      from {
+        transform: scale(0.85);
+        color: var(--cyan);
+        text-shadow: 0 0 25px var(--cyan), 0 0 80px var(--pink);
+      }
+
+      to {
+        transform: scale(1.3);
+        color: #fff;
+        text-shadow:
+          0 0 18px #fff,
+          0 0 55px var(--gold),
+          0 0 130px var(--pink),
+          0 0 210px var(--cyan);
+      }
+    }
+
+    @keyframes revealCelebrate {
+      0% {
+        opacity: 0;
+        transform: scale(0.25) rotate(-8deg);
+      }
+
+      58% {
+        opacity: 1;
+        transform: scale(1.18) rotate(3deg);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .layout {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stage-panel {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        position: relative;
+        top: auto;
+      }
+
+      textarea {
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        width: min(100% - 20px, 680px);
+        padding-top: 20px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stage-panel {
+        grid-column: auto;
+      }
+
+      .panel {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      textarea {
+        height: 220px;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+
+      .button-row.two {
+        grid-template-columns: 1fr;
+      }
+
+      .overlay-title {
+        letter-spacing: 0.1em;
+      }
+
+      .laser {
+        height: 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header>
+      <h1>幸運抽獎</h1>
+      <p>輸入參加者名單，設定抽獎人數，享受一場五秒鐘的幸運揭曉秀。</p>
+    </header>
+
+    <section class="layout">
+      <section class="panel">
+        <h2>參加者名單</h2>
+        <p class="hint">每行一個姓名，或以逗號分隔；重複姓名會自動合併。</p>
+
+        <textarea
+          id="participants"
+          placeholder="例如：
+陳大文
+李小美, 王小明
+張美玲"
+        ></textarea>
+
+        <div class="button-row">
+          <button type="button" data-action="copy" data-target="participants">全部複製</button>
+          <button type="button" class="paste-btn" data-action="paste" data-target="participants">貼上名單</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="participants">清除</button>
+        </div>
+      </section>
+
+      <section class="panel stage-panel">
+        <h2 class="stage-title">幸運舞台</h2>
+        <p class="stage-subtitle">一場 5 秒鐘的命運表演</p>
+
+        <div id="miniStage" class="mini-stage" aria-live="polite">
+          <div class="mini-orbit"></div>
+          <div class="mini-stage-icon">🎁</div>
+        </div>
+
+        <div class="draw-controls">
+          <label for="winnerCount">
+            抽獎人數
+            <input id="winnerCount" type="number" min="1" value="1" inputmode="numeric" />
+          </label>
+
+          <button id="drawButton" type="button">✨ 開始抽獎</button>
+
+          <p id="participantCount" class="count-note">目前 0 位有效參加者</p>
+        </div>
+
+        <p id="status" class="status">請先輸入參加者名單。</p>
+      </section>
+
+      <section class="panel">
+        <h2>得獎結果</h2>
+        <p class="hint">抽獎完成後，所有得獎者會同時顯示在此。</p>
+
+        <textarea id="winners" readonly placeholder="尚未抽獎"></textarea>
+
+        <div class="button-row two">
+          <button type="button" class="copy-btn" data-action="copy" data-target="winners">複製得獎名單</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="winners">清除結果</button>
+        </div>
+
+        <h2 style="margin-top: 24px;">未抽中名單</h2>
+        <p class="hint">本輪未獲獎的有效參加者會顯示在此。</p>
+
+        <textarea id="notDrawn" readonly placeholder="尚未抽獎"></textarea>
+
+        <div class="button-row two">
+          <button type="button" class="copy-btn" data-action="copy" data-target="notDrawn">複製未抽中名單</button>
+          <button type="button" class="clear-btn" data-action="clear" data-target="notDrawn">清除結果</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Optional background music: put the MP3 at ./audio/lucky-draw-bgm.mp3 -->
+  <audio id="bgm" preload="auto" loop>
+    <source src="./audio/lucky-draw-bgm.mp3" type="audio/mpeg" />
+    <source src="./audio/lucky-draw-bgm.ogg" type="audio/ogg" />
+  </audio>
+
+  <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <div class="magic-rings" aria-hidden="true">
+      <div class="magic-ring ring-one"></div>
+      <div class="magic-ring ring-two"></div>
+      <div class="magic-ring ring-three"></div>
+      <div class="magic-core"></div>
+    </div>
+
+    <div class="meteor-field" aria-hidden="true">
+      <i class="meteor meteor-1"></i>
+      <i class="meteor meteor-2"></i>
+      <i class="meteor meteor-3"></i>
+      <i class="meteor meteor-4"></i>
+      <i class="meteor meteor-5"></i>
+      <i class="meteor meteor-6"></i>
+    </div>
+
+    <div class="energy-wave wave-one"></div>
+    <div class="energy-wave wave-two"></div>
+    <div class="energy-wave wave-three"></div>
+
+    <div class="laser laser-a"></div>
+    <div class="laser laser-b"></div>
+    <div class="laser laser-c"></div>
+
+    <div id="particles"></div>
+
+    <div class="overlay-content">
+      <div class="mega-icon">🎉</div>
+      <div id="overlayTitle" class="overlay-title">命運正在甦醒</div>
+      <div id="overlayCount" class="overlay-count">✦</div>
+      <div id="overlaySubtext" class="overlay-subtext">幸運之門即將開啟</div>
+    </div>
+  </div>
+
+  <script>
+    const participantsEl = document.getElementById("participants");
+    const winnersEl = document.getElementById("winners");
+    const notDrawnEl = document.getElementById("notDrawn");
+    const winnerCountEl = document.getElementById("winnerCount");
+    const drawButton = document.getElementById("drawButton");
+    const participantCountEl = document.getElementById("participantCount");
+    const miniStage = document.getElementById("miniStage");
+    const statusEl = document.getElementById("status");
+    const bgm = document.getElementById("bgm");
+
+    const drawOverlay = document.getElementById("drawOverlay");
+    const overlayTitle = document.getElementById("overlayTitle");
+    const overlayCount = document.getElementById("overlayCount");
+    const overlaySubtext = document.getElementById("overlaySubtext");
+    const particlesEl = document.getElementById("particles");
+
+    const fireworksCanvas = document.getElementById("fireworksCanvas");
+    const fwCtx = fireworksCanvas.getContext("2d");
+
+    let isDrawing = false;
+    let fireworks = [];
+    let fireworksRunning = false;
+    let fireworksFrameId = null;
+    let fireworksLauncherId = null;
+
+    function parseNames(text) {
+      const seen = new Set();
+
+      return text
+        .split(/[\n,，]+/)
+        .map(name => name.trim())
+        .filter(name => {
+          if (!name) return false;
+
+          const key = name.toLocaleLowerCase();
+
+          if (seen.has(key)) return false;
+
+          seen.add(key);
+          return true;
+        });
+    }
+
+    function updateParticipantCount() {
+      const total = parseNames(participantsEl.value).length;
+      participantCountEl.textContent = `目前 ${total} 位有效參加者`;
+    }
+
+    function setStatus(message, type = "") {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+    }
+
+    function secureShuffle(items) {
+      const result = [...items];
+
+      for (let i = result.length - 1; i > 0; i--) {
+        const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
+        const index = randomValue % (i + 1);
+
+        [result[i], result[index]] = [result[index], result[i]];
+      }
+
+      return result;
+    }
+
+    async function copyText(text) {
+      if (!text.trim()) {
+        setStatus("沒有內容可複製。", "error");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        setStatus("已複製到剪貼簿。", "success");
+      } catch {
+        setStatus("無法自動複製，請手動選取文字後複製。", "error");
+      }
+    }
+
+    async function pasteText(target) {
+      try {
+        target.value = await navigator.clipboard.readText();
+        target.dispatchEvent(new Event("input"));
+        setStatus("已從剪貼簿貼上名單。", "success");
+      } catch {
+        setStatus("瀏覽器未允許讀取剪貼簿，請在文字框內手動貼上。", "error");
+      }
+    }
+
+    function clearText(target) {
+      if (isDrawing) return;
+
+      target.value = "";
+      target.dispatchEvent(new Event("input"));
+
+      if (target === winnersEl || target === notDrawnEl) {
+        setStatus("已清除抽獎結果。", "success");
+      } else {
+        setStatus("已清除參加者名單。", "success");
+      }
+    }
+
+    function setDrawingState(drawing) {
+      isDrawing = drawing;
+      drawButton.disabled = drawing;
+      winnerCountEl.disabled = drawing;
+
+      document.querySelectorAll("[data-action]").forEach(button => {
+        button.disabled = drawing;
+      });
+    }
+
+    async function playBgm() {
+      bgm.currentTime = 0;
+      bgm.volume = 0.58;
+
+      try {
+        await bgm.play();
+      } catch {
+        // The visual experience still works if autoplay/audio is blocked.
+      }
+    }
+
+    function stopBgm() {
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
+    function startStage() {
+      miniStage.classList.add("running");
+      winnersEl.value = "";
+      notDrawnEl.value = "";
+      setStatus("抽獎進行中，命運正在選擇幸運得主。");
+    }
+
+    function stopStage() {
+      miniStage.classList.remove("running");
+    }
+
+    function createParticles(total = 220) {
+      particlesEl.innerHTML = "";
+
+      for (let i = 0; i < total; i++) {
+        const particle = document.createElement("i");
+        particle.className = "particle";
+
+        particle.style.setProperty("--angle", `${Math.random() * 360}deg`);
+        particle.style.setProperty("--distance", `${35 + Math.random() * 85}vmax`);
+        particle.style.setProperty("--size", `${4 + Math.random() * 13}px`);
+        particle.style.setProperty("--hue", Math.floor(Math.random() * 360));
+        particle.style.setProperty("--delay", `${-(Math.random() * 1.55)}s`);
+
+        particlesEl.appendChild(particle);
+      }
+    }
+
+    function changeOverlay(title, number, subtitle, phase) {
+      drawOverlay.classList.remove(
+        "phase-awaken",
+        "phase-charge",
+        "phase-chaos",
+        "phase-countdown",
+        "phase-final"
+      );
+
+      drawOverlay.classList.add(phase);
+
+      overlayCount.classList.remove("pop");
+      void overlayCount.offsetWidth;
+
+      overlayTitle.textContent = title;
+      overlayCount.textContent = number;
+      overlaySubtext.textContent = subtitle;
+
+      overlayCount.classList.add("pop");
+    }
+
+    function startFiveSecondShow() {
+      const timeline = [
+        {
+          at: 0,
+          title: "命運正在甦醒",
+          number: "✦",
+          subtitle: "幸運之門即將開啟",
+          phase: "phase-awaken"
+        },
+        {
+          at: 950,
+          title: "能量正在聚集",
+          number: "✧",
+          subtitle: "星光正在尋找幸運得主",
+          phase: "phase-charge"
+        },
+        {
+          at: 1900,
+          title: "幸運正在選擇",
+          number: "✦",
+          subtitle: "請屏住呼吸",
+          phase: "phase-chaos"
+        },
+        {
+          at: 2900,
+          title: "最後倒數",
+          number: "3",
+          subtitle: "命運即將揭曉",
+          phase: "phase-countdown"
+        },
+        {
+          at: 3550,
+          title: "最後倒數",
+          number: "2",
+          subtitle: "能量已到達極限",
+          phase: "phase-countdown"
+        },
+        {
+          at: 4200,
+          title: "最後倒數",
+          number: "1",
+          subtitle: "幸運得主即將誕生",
+          phase: "phase-final"
+        }
+      ];
+
+      timeline.forEach(item => {
+        window.setTimeout(() => {
+          changeOverlay(item.title, item.number, item.subtitle, item.phase);
+        }, item.at);
+      });
+    }
+
+    function showOverlay() {
+      createParticles(220);
+
+      drawOverlay.className = "draw-overlay show drawing phase-awaken";
+      drawOverlay.setAttribute("aria-hidden", "false");
+
+      overlayTitle.textContent = "命運正在甦醒";
+      overlayCount.textContent = "✦";
+      overlaySubtext.textContent = "幸運之門即將開啟";
+
+      startFiveSecondShow();
+    }
+
+    function hideOverlay() {
+      stopFireworks();
+      drawOverlay.className = "draw-overlay";
+      drawOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    function resizeFireworksCanvas() {
+      const ratio = window.devicePixelRatio || 1;
+
+      fireworksCanvas.width = Math.floor(window.innerWidth * ratio);
+      fireworksCanvas.height = Math.floor(window.innerHeight * ratio);
+
+      fireworksCanvas.style.width = `${window.innerWidth}px`;
+      fireworksCanvas.style.height = `${window.innerHeight}px`;
+
+      fwCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createBurst(x, y, hue) {
+      const count = 95;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count;
+        const speed = random(1.6, 7.4);
+
+        fireworks.push({
+          type: "spark",
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: random(42, 86),
+          alpha: 1,
+          radius: random(1.5, 3.8),
+          hue: (hue + random(-35, 35) + 360) % 360,
+          gravity: 0.045,
+          decay: random(0.010, 0.020)
+        });
+      }
+    }
+
+    function launchFirework() {
+      const startX = random(window.innerWidth * 0.14, window.innerWidth * 0.86);
+      const startY = window.innerHeight + 24;
+      const targetX = random(window.innerWidth * 0.14, window.innerWidth * 0.86);
+      const targetY = random(window.innerHeight * 0.10, window.innerHeight * 0.46);
+      const hue = Math.floor(random(0, 360));
+
+      fireworks.push({
+        type: "rocket",
+        x: startX,
+        y: startY,
+        vx: (targetX - startX) / random(32, 54),
+        vy: (targetY - startY) / random(32, 54),
+        targetY,
+        hue,
+        trail: []
+      });
+    }
+
+    function drawRocket(item) {
+      item.trail.push({ x: item.x, y: item.y });
+
+      if (item.trail.length > 8) {
+        item.trail.shift();
+      }
+
+      if (item.trail.length > 1) {
+        fwCtx.beginPath();
+        fwCtx.moveTo(item.trail[0].x, item.trail[0].y);
+
+        item.trail.forEach(point => {
+          fwCtx.lineTo(point.x, point.y);
+        });
+
+        fwCtx.strokeStyle = `hsla(${item.hue}, 100%, 65%, 0.62)`;
+        fwCtx.lineWidth = 2;
+        fwCtx.stroke();
+      }
+
+      fwCtx.beginPath();
+      fwCtx.arc(item.x, item.y, 3, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsl(${item.hue}, 100%, 68%)`;
+      fwCtx.shadowBlur = 16;
+      fwCtx.shadowColor = `hsl(${item.hue}, 100%, 62%)`;
+      fwCtx.fill();
+      fwCtx.shadowBlur = 0;
+    }
+
+    function drawSpark(item) {
+      fwCtx.beginPath();
+      fwCtx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+      fwCtx.fillStyle = `hsla(${item.hue}, 100%, 64%, ${item.alpha})`;
+      fwCtx.shadowBlur = 12;
+      fwCtx.shadowColor = `hsla(${item.hue}, 100%, 58%, ${item.alpha})`;
+      fwCtx.fill();
+      fwCtx.shadowBlur = 0;
+    }
+
+    function updateFireworks() {
+      fwCtx.fillStyle = "rgba(3, 7, 20, 0.20)";
+      fwCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        const item = fireworks[i];
+
+        if (item.type === "rocket") {
+          item.x += item.vx;
+          item.y += item.vy;
+
+          drawRocket(item);
+
+          if (item.y <= item.targetY) {
+            createBurst(item.x, item.y, item.hue);
+            fireworks.splice(i, 1);
+          }
+
+          continue;
+        }
+
+        item.x += item.vx;
+        item.y += item.vy;
+        item.vy += item.gravity;
+        item.alpha -= item.decay;
+        item.life -= 1;
+
+        drawSpark(item);
+
+        if (item.life <= 0 || item.alpha <= 0) {
+          fireworks.splice(i, 1);
+        }
+      }
+
+      if (fireworksRunning) {
+        fireworksFrameId = requestAnimationFrame(updateFireworks);
+      }
+    }
+
+    function startFireworks(duration = 2700) {
+      stopFireworks();
+      resizeFireworksCanvas();
+
+      fireworks = [];
+      fireworksRunning = true;
+      fwCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      for (let i = 0; i < 7; i++) {
+        window.setTimeout(launchFirework, i * 135);
+      }
+
+      fireworksLauncherId = window.setInterval(() => {
+        launchFirework();
+
+        if (Math.random() > 0.4) {
+          launchFirework();
+        }
+      }, 250);
+
+      updateFireworks();
+
+      window.setTimeout(stopFireworks, duration);
+    }
+
+    function stopFireworks() {
+      fireworksRunning = false;
+
+      if (fireworksFrameId) {
+        cancelAnimationFrame(fireworksFrameId);
+        fireworksFrameId = null;
+      }
+
+      if (fireworksLauncherId) {
+        clearInterval(fireworksLauncherId);
+        fireworksLauncherId = null;
+      }
+
+      window.setTimeout(() => {
+        fwCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        fireworks = [];
+      }, 120);
+    }
+
+    function revealResults(selectedWinners, notDrawnNames) {
+      drawOverlay.classList.remove(
+        "drawing",
+        "phase-awaken",
+        "phase-charge",
+        "phase-chaos",
+        "phase-countdown",
+        "phase-final"
+      );
+
+      drawOverlay.classList.add("reveal");
+
+      overlayTitle.textContent = "結果揭曉";
+      overlayCount.textContent = "🎊";
+      overlaySubtext.textContent =
+        `恭喜！一次過抽出 ${selectedWinners.length} 位幸運得主`;
+
+      winnersEl.value = selectedWinners.join("\n");
+      notDrawnEl.value = notDrawnNames.join("\n");
+
+      stopStage();
+      startFireworks(2700);
+
+      setStatus(
+        `恭喜！已抽出 ${selectedWinners.length} 位得獎者，另有 ${notDrawnNames.length} 位未抽中。`,
+        "success"
+      );
+    }
+
+    function drawWinners() {
+      if (isDrawing) return;
+
+      const participants = parseNames(participantsEl.value);
+      const winnerCount = Number.parseInt(winnerCountEl.value, 10);
+
+      if (!participants.length) {
+        setStatus("請先輸入至少一位參加者。", "error");
+        participantsEl.focus();
+        return;
+      }
+
+      if (!Number.isInteger(winnerCount) || winnerCount < 1) {
+        setStatus("抽獎人數必須是大於 0 的整數。", "error");
+        winnerCountEl.focus();
+        return;
+      }
+
+      if (winnerCount > participants.length) {
+        setStatus(
+          `抽獎人數不可多於有效參加者人數（${participants.length} 位）。`,
+          "error"
+        );
+        winnerCountEl.focus();
+        return;
+      }
+
+      const shuffledParticipants = secureShuffle(participants);
+      const selectedWinners = shuffledParticipants.slice(0, winnerCount);
+      const notDrawnNames = shuffledParticipants.slice(winnerCount);
+
+      setDrawingState(true);
+      startStage();
+      showOverlay();
+      playBgm();
+
+      window.setTimeout(() => {
+        revealResults(selectedWinners, notDrawnNames);
+      }, 5000);
+
+      window.setTimeout(() => {
+        stopFireworks();
+        hideOverlay();
+        stopBgm();
+        setDrawingState(false);
+      }, 8000);
+    }
+
+    participantsEl.addEventListener("input", updateParticipantCount);
+    drawButton.addEventListener("click", drawWinners);
+
+    document.querySelectorAll("[data-action]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.target);
+        const action = button.dataset.action;
+
+        if (action === "copy") {
+          await copyText(target.value);
+        }
+
+        if (action === "paste") {
+          await pasteText(target);
+        }
+
+        if (action === "clear") {
+          clearText(target);
+        }
+      });
+    });
+
+    window.addEventListener("resize", resizeFireworksCanvas);
+
+    resizeFireworksCanvas();
+    updateParticipantCount();
+  </script>
+</body>
+</html>
