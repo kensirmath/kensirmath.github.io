@@ -399,9 +399,6 @@
       background:
         radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.22), transparent 60%),
         linear-gradient(135deg, rgba(41, 29, 8, 0.88), rgba(12, 24, 52, 0.9));
-      box-shadow:
-        inset 0 0 28px rgba(255, 209, 102, 0.12),
-        0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .marquee-label {
@@ -424,9 +421,6 @@
       font-weight: 900;
       line-height: 1.2;
       text-align: center;
-      text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.72),
-        0 0 26px rgba(255, 209, 102, 0.68);
     }
 
     .marquee-progress {
@@ -449,7 +443,6 @@
       border-radius: 9px;
       color: #fff7be;
       background: rgba(35, 28, 10, 0.82);
-      box-shadow: 0 0 14px rgba(255, 209, 102, 0.15);
       font-size: 0.82rem;
       font-weight: 800;
     }
@@ -459,7 +452,7 @@
       background: #ffd166;
     }
 
-    /* 全螢幕得獎名單走馬燈 */
+    /* 全螢幕走馬燈 */
 
     .full-marquee-overlay {
       position: fixed;
@@ -468,126 +461,118 @@
       display: none;
       overflow: hidden;
       color: #fff;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.19), transparent 28%),
-        radial-gradient(circle at 12% 15%, rgba(83, 216, 251, 0.2), transparent 26%),
-        radial-gradient(circle at 88% 84%, rgba(255, 95, 162, 0.19), transparent 30%),
-        #061025;
+      background: #000;
     }
 
     .full-marquee-overlay.show {
       display: block;
     }
 
-    .full-marquee-overlay::before,
-    .full-marquee-overlay::after {
-      position: absolute;
-      inset: -20%;
-      content: "";
-      pointer-events: none;
-      background:
-        repeating-radial-gradient(
-          circle at 50% 50%,
-          transparent 0 56px,
-          rgba(255, 209, 102, 0.08) 57px 59px,
-          transparent 60px 100px
-        );
-      animation: fullMarqueeAura 14s linear infinite;
-    }
-
-    .full-marquee-overlay::after {
-      opacity: 0.52;
-      transform: scale(1.35);
-      animation-direction: reverse;
-    }
-
     .full-marquee-header {
       position: absolute;
       z-index: 2;
-      top: clamp(16px, 3vw, 40px);
-      left: 50%;
-      display: flex;
-      width: min(92vw, 1100px);
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      transform: translateX(-50%);
+      top: 12px;
+      right: 16px;
     }
 
     .full-marquee-title {
-      margin: 0;
-      color: #fff1a7;
-      font-size: clamp(1rem, 2.2vw, 1.6rem);
-      letter-spacing: 0.16em;
-      text-shadow: 0 0 18px rgba(255, 209, 102, 0.8);
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
     }
 
     .full-marquee-exit {
       min-height: 44px;
       padding: 9px 16px;
-      border: 1px solid rgba(255, 233, 161, 0.75);
-      border-radius: 12px;
-      color: #fff9d5;
-      background: rgba(20, 18, 25, 0.72);
-      font-size: 0.92rem;
+      border: 1px solid #d580ff;
+      border-radius: 8px;
+      color: #f8eaff;
+      background: #13001e;
+      font-size: 0.9rem;
     }
 
     .full-marquee-exit:hover {
-      color: #172033;
-      background: #ffd166;
+      color: #000;
+      background: #de69ff;
     }
 
     .full-marquee-stage {
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
       overflow: hidden;
-      padding: 110px 24px 76px;
+      padding: 68px 14px 42px;
     }
 
     .full-marquee-list {
-      position: relative;
-      z-index: 1;
       display: grid;
-      width: min(90vw, 1100px);
-      min-height: min(64vh, 620px);
-      align-content: center;
-      gap: clamp(16px, 3vh, 34px);
+      width: 100%;
+      height: 100%;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      align-items: center;
+      column-gap: 10px;
+      row-gap: 10px;
     }
 
     .full-marquee-name {
+      display: grid;
+      min-width: 0;
+      min-height: 0;
       margin: 0;
+      place-items: center;
       overflow-wrap: anywhere;
-      color: #fff8cf;
-      font-size: clamp(2.2rem, 7vw, 6.5rem);
+      color: #e25cff;
+      font-size: 28pt;
       font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: 0.05em;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
       text-align: center;
       text-shadow:
-        0 0 10px #fff,
-        0 0 28px rgba(255, 209, 102, 0.92),
-        0 0 72px rgba(83, 216, 251, 0.46);
+        0 0 8px rgba(226, 92, 255, 0.95),
+        0 0 28px rgba(163, 34, 255, 0.75);
     }
 
     .full-marquee-name.full-marquee-rise {
-      animation: fullMarqueeRise 5.6s cubic-bezier(.16, .75, .2, 1) both;
+      animation: fullMarqueeRise 11s linear both;
     }
 
     .full-marquee-counter {
       position: absolute;
       z-index: 2;
-      bottom: clamp(18px, 3vw, 40px);
+      bottom: 10px;
       left: 50%;
-      color: #cfeaff;
-      font-size: clamp(0.9rem, 1.8vw, 1.2rem);
-      font-weight: 800;
-      letter-spacing: 0.1em;
+      color: #dfa3ff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       transform: translateX(-50%);
     }
 
-    /* 抽獎覆蓋效果 */
+    @keyframes fullMarqueeRise {
+      0% {
+        opacity: 0;
+        transform: translateY(110vh) scale(0.88);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      84% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-110vh) scale(0.94);
+      }
+    }
+
+    /* 抽獎畫面 */
 
     .draw-overlay {
       position: fixed;
@@ -599,7 +584,6 @@
       color: #fff;
       background: rgba(2, 5, 18, 0.9);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
     }
 
     .draw-overlay.show {
@@ -611,11 +595,7 @@
         radial-gradient(circle at 50% 50%, rgba(255, 220, 116, 0.16), transparent 12%),
         radial-gradient(circle at 18% 24%, rgba(83, 216, 251, 0.28), transparent 24%),
         radial-gradient(circle at 82% 72%, rgba(255, 95, 162, 0.25), transparent 28%),
-        radial-gradient(circle at 50% 112%, rgba(159, 140, 255, 0.25), transparent 38%),
         rgba(2, 5, 18, 0.9);
-      animation:
-        overlayIn 350ms ease-out both,
-        cosmicShift 2200ms ease-in-out infinite alternate;
     }
 
     .draw-overlay.reveal {
@@ -628,30 +608,6 @@
           rgba(255, 95, 162, 0.25) 44%,
           rgba(2, 5, 18, 0.94) 76%
         );
-      animation:
-        winnerWhiteFlash 1100ms cubic-bezier(.16, .8, .2, 1) both,
-        revealPulse 1500ms ease-out both;
-    }
-
-    .draw-overlay.phase-chaos {
-      animation:
-        overlayIn 350ms ease-out both,
-        screenShake 320ms linear infinite,
-        cosmicShift 1300ms ease-in-out infinite alternate;
-    }
-
-    .draw-overlay.phase-countdown {
-      animation:
-        overlayIn 350ms ease-out both,
-        screenShake 210ms linear infinite,
-        cosmicShift 850ms ease-in-out infinite alternate;
-    }
-
-    .draw-overlay.phase-final {
-      animation:
-        overlayIn 350ms ease-out both,
-        screenShake 115ms linear infinite,
-        cosmicShift 460ms ease-in-out infinite alternate;
     }
 
     .fireworks-canvas {
@@ -663,243 +619,6 @@
       pointer-events: none;
     }
 
-    .magic-rings {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      width: min(92vw, 940px);
-      aspect-ratio: 1;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      transition: transform 400ms ease, filter 400ms ease;
-    }
-
-    .magic-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      border: 3px solid rgba(126, 238, 255, 0.78);
-      border-radius: 50%;
-      opacity: 0;
-      box-shadow:
-        0 0 20px rgba(83, 216, 251, 0.9),
-        inset 0 0 30px rgba(83, 216, 251, 0.24);
-    }
-
-    .magic-ring::before,
-    .magic-ring::after {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      content: "";
-      border-radius: 50%;
-      background: #fff5a8;
-      box-shadow: 0 0 20px 7px #ffd166;
-    }
-
-    .magic-ring::before {
-      top: -8px;
-      left: 50%;
-    }
-
-    .magic-ring::after {
-      right: -8px;
-      bottom: 50%;
-    }
-
-    .draw-overlay.drawing .magic-ring {
-      opacity: 1;
-    }
-
-    .ring-one {
-      width: 40%;
-      height: 40%;
-      transform: translate(-50%, -50%);
-      animation: spinForward 1.25s linear infinite;
-    }
-
-    .ring-two {
-      width: 65%;
-      height: 65%;
-      border-color: rgba(255, 99, 191, 0.74);
-      transform: translate(-50%, -50%);
-      box-shadow:
-        0 0 25px rgba(255, 95, 162, 0.84),
-        inset 0 0 34px rgba(255, 95, 162, 0.2);
-      animation: spinReverse 1.9s linear infinite;
-    }
-
-    .ring-three {
-      width: 92%;
-      height: 92%;
-      border-style: dashed;
-      border-color: rgba(255, 215, 100, 0.72);
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 35px rgba(255, 209, 102, 0.74);
-      animation:
-        spinForward 3.2s linear infinite,
-        ringBreath 580ms ease-in-out infinite alternate;
-    }
-
-    .magic-core {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 17%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      opacity: 0;
-      transform: translate(-50%, -50%);
-      background:
-        radial-gradient(
-          circle,
-          #fff 0 8%,
-          #ffe887 15%,
-          #ff79c6 40%,
-          rgba(83, 216, 251, 0.12) 68%,
-          transparent 72%
-        );
-      box-shadow:
-        0 0 42px 18px rgba(255, 222, 115, 0.95),
-        0 0 112px 48px rgba(255, 73, 183, 0.36);
-    }
-
-    .draw-overlay.drawing .magic-core {
-      opacity: 1;
-      animation: corePulse 520ms ease-in-out infinite alternate;
-    }
-
-    .meteor-field {
-      position: absolute;
-      z-index: 1;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .meteor {
-      position: absolute;
-      width: 190px;
-      height: 4px;
-      border-radius: 999px;
-      opacity: 0;
-      transform: rotate(-36deg);
-      background: linear-gradient(90deg, transparent, currentColor);
-      box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
-    }
-
-    .meteor-1 { top: 8%; left: -25%; color: var(--cyan); }
-    .meteor-2 { top: 22%; left: -36%; color: var(--pink); animation-delay: 0.35s !important; }
-    .meteor-3 { top: 40%; left: -18%; color: var(--gold); animation-delay: 0.8s !important; }
-    .meteor-4 { top: 58%; left: -38%; color: var(--purple); animation-delay: 1.15s !important; }
-    .meteor-5 { top: 73%; left: -20%; color: var(--success); animation-delay: 1.6s !important; }
-    .meteor-6 { top: 88%; left: -42%; color: #ff9b62; animation-delay: 2.05s !important; }
-
-    .draw-overlay.drawing .meteor {
-      animation: meteorRush 1.45s linear infinite;
-    }
-
-    .energy-wave {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      width: 15px;
-      aspect-ratio: 1;
-      border: 4px solid rgba(255, 235, 134, 0.88);
-      border-radius: 50%;
-      opacity: 0;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 25px rgba(255, 201, 80, 0.82);
-      pointer-events: none;
-    }
-
-    .draw-overlay.drawing .energy-wave {
-      animation: energyExpand 1350ms ease-out infinite;
-    }
-
-    .wave-two {
-      border-color: rgba(83, 216, 251, 0.82);
-      animation-delay: 450ms !important;
-    }
-
-    .wave-three {
-      border-color: rgba(255, 96, 183, 0.76);
-      animation-delay: 900ms !important;
-    }
-
-    .laser {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      width: 150vmax;
-      height: 14px;
-      border-radius: 999px;
-      opacity: 0.7;
-      transform-origin: 0 50%;
-      filter: blur(2px);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #53d8fb 45%,
-        #fff 50%,
-        #53d8fb 55%,
-        transparent
-      );
-      box-shadow: 0 0 18px #53d8fb, 0 0 45px #53d8fb;
-    }
-
-    .laser-a {
-      transform: rotate(18deg);
-      animation: laserSpin 2200ms linear infinite;
-    }
-
-    .laser-b {
-      transform: rotate(83deg);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #ff5fa2 45%,
-        #fff 50%,
-        #ff5fa2 55%,
-        transparent
-      );
-      box-shadow: 0 0 18px #ff5fa2, 0 0 45px #ff5fa2;
-      animation: laserSpin 1550ms linear infinite reverse;
-    }
-
-    .laser-c {
-      transform: rotate(145deg);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        #ffd166 45%,
-        #fff 50%,
-        #ffd166 55%,
-        transparent
-      );
-      box-shadow: 0 0 18px #ffd166, 0 0 45px #ffd166;
-      animation: laserSpin 2800ms linear infinite;
-    }
-
-    .particle {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      width: var(--size);
-      height: var(--size);
-      border-radius: 50%;
-      color: hsl(var(--hue), 100%, 70%);
-      opacity: 0;
-      background: currentColor;
-      box-shadow: 0 0 13px currentColor;
-      animation: particleFly 1550ms ease-out infinite;
-      animation-delay: var(--delay);
-    }
-
     .overlay-content {
       position: relative;
       z-index: 3;
@@ -908,22 +627,9 @@
       text-shadow: 0 0 16px rgba(83, 216, 251, 0.9);
     }
 
-    .draw-overlay.drawing .overlay-content {
-      animation: contentWarp 450ms ease-in-out infinite alternate;
-    }
-
-    .draw-overlay.reveal .overlay-content {
-      animation: revealCelebrate 900ms cubic-bezier(.15, .9, .2, 1.18) both;
-    }
-
     .mega-icon {
       margin-bottom: 10px;
       font-size: clamp(4.4rem, 14vw, 11rem);
-      filter: drop-shadow(0 0 32px rgba(255, 210, 85, 0.95));
-    }
-
-    .draw-overlay.drawing .mega-icon {
-      animation: iconCrazy 330ms ease-in-out infinite alternate;
     }
 
     .overlay-title {
@@ -945,14 +651,6 @@
         0 0 92px #ff8b4a;
     }
 
-    .overlay-count.pop {
-      animation: numberPop 670ms cubic-bezier(.12, .9, .24, 1.35) both;
-    }
-
-    .draw-overlay.drawing .overlay-count:not(.pop) {
-      animation: countThrob 390ms ease-in-out infinite alternate;
-    }
-
     .overlay-subtext {
       margin-top: 10px;
       color: #dcecff;
@@ -961,91 +659,26 @@
       letter-spacing: 0.1em;
     }
 
-    .draw-overlay.phase-awaken .magic-rings {
-      filter: saturate(0.8);
-      transform: translate(-50%, -50%) scale(0.78);
-    }
-
-    .draw-overlay.phase-awaken .magic-core {
-      animation-duration: 1150ms !important;
-    }
-
-    .draw-overlay.phase-awaken .meteor {
-      animation-duration: 2400ms !important;
-    }
-
-    .draw-overlay.phase-charge .magic-rings {
-      filter: saturate(1.25) brightness(1.08);
-      transform: translate(-50%, -50%) scale(0.95);
-    }
-
-    .draw-overlay.phase-charge .magic-core {
-      animation-duration: 680ms !important;
-    }
-
-    .draw-overlay.phase-charge .energy-wave {
-      animation-duration: 1100ms !important;
-    }
-
-    .draw-overlay.phase-chaos .magic-rings {
-      filter: saturate(1.55) hue-rotate(25deg);
-      transform: translate(-50%, -50%) scale(1.08);
-    }
-
-    .draw-overlay.phase-chaos .magic-core {
-      animation-duration: 360ms !important;
-      box-shadow:
-        0 0 55px 24px rgba(255, 222, 115, 0.98),
-        0 0 155px 72px rgba(255, 73, 183, 0.58);
-    }
-
-    .draw-overlay.phase-chaos .meteor {
-      animation-duration: 820ms !important;
-    }
-
-    .draw-overlay.phase-countdown .magic-rings {
-      filter: saturate(1.8) brightness(1.12);
-      transform: translate(-50%, -50%) scale(1.18);
-    }
-
-    .draw-overlay.phase-countdown .magic-core {
-      animation-duration: 240ms !important;
-    }
-
-    .draw-overlay.phase-countdown .energy-wave {
-      animation-duration: 720ms !important;
-    }
-
-    .draw-overlay.phase-countdown .meteor {
-      animation-duration: 560ms !important;
-    }
-
-    .draw-overlay.phase-final .magic-rings {
-      filter: saturate(2) brightness(1.35);
-      transform: translate(-50%, -50%) scale(1.32);
-    }
-
-    .draw-overlay.phase-final .magic-core {
-      animation-duration: 130ms !important;
-      box-shadow:
-        0 0 70px 36px rgba(255, 255, 255, 1),
-        0 0 190px 100px rgba(255, 73, 183, 0.75);
-    }
-
-    .draw-overlay.phase-final .energy-wave {
-      animation-duration: 420ms !important;
-    }
-
-    .draw-overlay.phase-final .meteor {
-      animation-duration: 360ms !important;
-    }
-
-    .draw-overlay.phase-final .overlay-count {
-      animation: finalNumberBlast 340ms ease-in-out infinite alternate !important;
+    .particle {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      color: hsl(var(--hue), 100%, 70%);
+      opacity: 0;
+      background: currentColor;
+      box-shadow: 0 0 13px currentColor;
+      animation: particleFly 1550ms ease-out infinite;
+      animation-delay: var(--delay);
     }
 
     @keyframes slowSpin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes stagePulse {
@@ -1063,95 +696,13 @@
     }
 
     @keyframes iconBounce {
-      from { transform: scale(0.9) rotate(-8deg); }
-      to { transform: scale(1.14) rotate(8deg); }
-    }
-
-    @keyframes overlayIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes cosmicShift {
-      from { filter: hue-rotate(0deg) saturate(1.05); }
-      to { filter: hue-rotate(30deg) saturate(1.5); }
-    }
-
-    @keyframes screenShake {
-      0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
-      20% { transform: translate3d(-10px, 5px, 0) rotate(-0.25deg); }
-      40% { transform: translate3d(10px, -7px, 0) rotate(0.25deg); }
-      60% { transform: translate3d(-8px, -6px, 0) rotate(-0.18deg); }
-      80% { transform: translate3d(8px, 7px, 0) rotate(0.18deg); }
-    }
-
-    @keyframes winnerWhiteFlash {
-      0% { opacity: 0.78; filter: brightness(1); }
-      10% { opacity: 1; filter: brightness(4.2); }
-      28% { filter: brightness(1.65); }
-      100% { opacity: 1; filter: brightness(1); }
-    }
-
-    @keyframes revealPulse {
-      0% { transform: scale(1.02); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes spinForward {
-      to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    @keyframes spinReverse {
-      to { transform: translate(-50%, -50%) rotate(-360deg); }
-    }
-
-    @keyframes ringBreath {
-      from { scale: 0.96; opacity: 0.56; }
-      to { scale: 1.05; opacity: 1; }
-    }
-
-    @keyframes corePulse {
       from {
-        transform: translate(-50%, -50%) scale(0.84);
-        filter: hue-rotate(0);
+        transform: scale(0.9) rotate(-8deg);
       }
 
       to {
-        transform: translate(-50%, -50%) scale(1.32);
-        filter: hue-rotate(55deg);
+        transform: scale(1.14) rotate(8deg);
       }
-    }
-
-    @keyframes meteorRush {
-      0% {
-        opacity: 0;
-        transform: translate3d(0, 0, 0) rotate(-36deg) scaleX(0.35);
-      }
-
-      14% { opacity: 1; }
-      75% { opacity: 0.95; }
-
-      100% {
-        opacity: 0;
-        transform: translate3d(155vw, 75vh, 0) rotate(-36deg) scaleX(1.25);
-      }
-    }
-
-    @keyframes energyExpand {
-      0% {
-        width: 15px;
-        opacity: 1;
-      }
-
-      100% {
-        width: min(145vmax, 2200px);
-        opacity: 0;
-      }
-    }
-
-    @keyframes laserSpin {
-      from { rotate: 0deg; }
-      to { rotate: 360deg; }
     }
 
     @keyframes particleFly {
@@ -1160,116 +711,14 @@
         transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.3);
       }
 
-      12% { opacity: 1; }
+      12% {
+        opacity: 1;
+      }
 
       100% {
         opacity: 0;
         transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.3);
       }
-    }
-
-    @keyframes contentWarp {
-      from { transform: scale(0.98) rotate(-0.7deg); }
-      to { transform: scale(1.035) rotate(0.7deg); }
-    }
-
-    @keyframes iconCrazy {
-      from { transform: scale(0.87) rotate(-15deg); }
-      to { transform: scale(1.28) rotate(15deg); }
-    }
-
-    @keyframes numberPop {
-      0% {
-        opacity: 0;
-        transform: scale(0.15) rotate(-18deg);
-      }
-
-      62% {
-        opacity: 1;
-        transform: scale(1.22) rotate(6deg);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    @keyframes countThrob {
-      from {
-        transform: scale(0.88);
-        color: var(--cyan);
-        text-shadow: 0 0 20px var(--cyan), 0 0 70px var(--pink);
-      }
-
-      to {
-        transform: scale(1.18);
-        color: #fff4a3;
-        text-shadow:
-          0 0 24px #fff,
-          0 0 62px var(--gold),
-          0 0 120px var(--pink);
-      }
-    }
-
-    @keyframes finalNumberBlast {
-      from {
-        transform: scale(0.85);
-        color: var(--cyan);
-        text-shadow: 0 0 25px var(--cyan), 0 0 80px var(--pink);
-      }
-
-      to {
-        transform: scale(1.3);
-        color: #fff;
-        text-shadow:
-          0 0 18px #fff,
-          0 0 55px var(--gold),
-          0 0 130px var(--pink),
-          0 0 210px var(--cyan);
-      }
-    }
-
-    @keyframes revealCelebrate {
-      0% {
-        opacity: 0;
-        transform: scale(0.25) rotate(-8deg);
-      }
-
-      58% {
-        opacity: 1;
-        transform: scale(1.18) rotate(3deg);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1) rotate(0);
-      }
-    }
-
-    @keyframes fullMarqueeRise {
-      0% {
-        opacity: 0;
-        transform: translateY(110vh) scale(0.88);
-      }
-
-      16% {
-        opacity: 1;
-      }
-
-      82% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translateY(-110vh) scale(0.94);
-      }
-    }
-
-    @keyframes fullMarqueeAura {
-      to { transform: rotate(360deg); }
     }
 
     @media (max-width: 1050px) {
@@ -1317,22 +766,28 @@
         grid-template-columns: 1fr;
       }
 
-      .full-marquee-header {
-        align-items: flex-start;
+      .full-marquee-stage {
+        padding: 62px 8px 36px;
       }
 
-      .full-marquee-title {
-        max-width: 52%;
+      .full-marquee-list {
+        column-gap: 4px;
+        row-gap: 6px;
+      }
+
+      .full-marquee-name {
+        font-size: 28pt;
+      }
+
+      .full-marquee-header {
+        top: 8px;
+        right: 8px;
       }
 
       .full-marquee-exit {
-        min-height: 42px;
-        padding: 8px 10px;
-        font-size: 0.8rem;
-      }
-
-      .laser {
-        height: 9px;
+        min-height: 38px;
+        padding: 7px 9px;
+        font-size: 0.72rem;
       }
     }
 
@@ -1392,7 +847,6 @@
           </label>
 
           <button id="drawButton" type="button">✨ 開始抽獎</button>
-
           <p id="participantCount" class="count-note">目前 0 位有效參加者</p>
         </div>
 
@@ -1410,12 +864,7 @@
           <span id="marqueeName" class="marquee-name">完成抽獎後可開始播放</span>
           <span id="marqueeProgress" class="marquee-progress"></span>
 
-          <button
-            id="marqueeToggle"
-            class="marquee-toggle"
-            type="button"
-            disabled
-          >
+          <button id="marqueeToggle" class="marquee-toggle" type="button" disabled>
             ⛶ 全螢幕走馬燈
           </button>
         </div>
@@ -1451,14 +900,13 @@
     <source src="./audio/lucky-draw-bgm.ogg" type="audio/ogg" />
   </audio>
 
-  <!-- 全螢幕得獎名單走馬燈 -->
   <div
     id="fullMarqueeOverlay"
     class="full-marquee-overlay"
     aria-hidden="true"
     role="dialog"
     aria-modal="true"
-    aria-label="得獎名單全螢幕走馬燈"
+    aria-label="得獎名單全螢幕走馬燈，每行三個名字，共三行"
   >
     <div class="full-marquee-header">
       <h2 class="full-marquee-title">幸運得獎名單</h2>
@@ -1475,34 +923,8 @@
     <div id="fullMarqueeCounter" class="full-marquee-counter"></div>
   </div>
 
-  <!-- 抽獎特效 -->
   <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
     <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
-
-    <div class="magic-rings" aria-hidden="true">
-      <div class="magic-ring ring-one"></div>
-      <div class="magic-ring ring-two"></div>
-      <div class="magic-ring ring-three"></div>
-      <div class="magic-core"></div>
-    </div>
-
-    <div class="meteor-field" aria-hidden="true">
-      <i class="meteor meteor-1"></i>
-      <i class="meteor meteor-2"></i>
-      <i class="meteor meteor-3"></i>
-      <i class="meteor meteor-4"></i>
-      <i class="meteor meteor-5"></i>
-      <i class="meteor meteor-6"></i>
-    </div>
-
-    <div class="energy-wave wave-one"></div>
-    <div class="energy-wave wave-two"></div>
-    <div class="energy-wave wave-three"></div>
-
-    <div class="laser laser-a"></div>
-    <div class="laser laser-b"></div>
-    <div class="laser laser-c"></div>
-
     <div id="particles"></div>
 
     <div class="overlay-content">
@@ -1524,7 +946,6 @@
     const statusEl = document.getElementById("status");
     const bgm = document.getElementById("bgm");
 
-    const winnerMarquee = document.getElementById("winnerMarquee");
     const marqueeName = document.getElementById("marqueeName");
     const marqueeProgress = document.getElementById("marqueeProgress");
     const marqueeToggle = document.getElementById("marqueeToggle");
@@ -1544,7 +965,6 @@
     const fwCtx = fireworksCanvas.getContext("2d");
 
     let isDrawing = false;
-
     let fireworks = [];
     let fireworksRunning = false;
     let fireworksFrameId = null;
@@ -1588,7 +1008,6 @@
       for (let i = result.length - 1; i > 0; i--) {
         const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
         const index = randomValue % (i + 1);
-
         [result[i], result[index]] = [result[index], result[i]];
       }
 
@@ -1660,7 +1079,7 @@
       try {
         await bgm.play();
       } catch {
-        /* 瀏覽器封鎖聲音自動播放時，視覺效果仍可正常運作 */
+        /* 瀏覽器阻擋聲音自動播放時，抽獎仍可繼續 */
       }
     }
 
@@ -1686,7 +1105,7 @@
       miniStage.classList.remove("running");
     }
 
-    function createParticles(total = 220) {
+    function createParticles(total = 150) {
       particlesEl.innerHTML = "";
 
       for (let i = 0; i < total; i++) {
@@ -1703,25 +1122,10 @@
       }
     }
 
-    function changeOverlay(title, number, subtitle, phase) {
-      drawOverlay.classList.remove(
-        "phase-awaken",
-        "phase-charge",
-        "phase-chaos",
-        "phase-countdown",
-        "phase-final"
-      );
-
-      drawOverlay.classList.add(phase);
-
-      overlayCount.classList.remove("pop");
-      void overlayCount.offsetWidth;
-
+    function changeOverlay(title, number, subtitle) {
       overlayTitle.textContent = title;
       overlayCount.textContent = number;
       overlaySubtext.textContent = subtitle;
-
-      overlayCount.classList.add("pop");
     }
 
     function startFiveSecondShow() {
@@ -1730,57 +1134,51 @@
           at: 0,
           title: "命運正在甦醒",
           number: "✦",
-          subtitle: "幸運之門即將開啟",
-          phase: "phase-awaken"
+          subtitle: "幸運之門即將開啟"
         },
         {
           at: 950,
           title: "能量正在聚集",
           number: "✧",
-          subtitle: "星光正在尋找幸運得主",
-          phase: "phase-charge"
+          subtitle: "星光正在尋找幸運得主"
         },
         {
           at: 1900,
           title: "幸運正在選擇",
           number: "✦",
-          subtitle: "請屏住呼吸",
-          phase: "phase-chaos"
+          subtitle: "請屏住呼吸"
         },
         {
           at: 2900,
           title: "最後倒數",
           number: "3",
-          subtitle: "命運即將揭曉",
-          phase: "phase-countdown"
+          subtitle: "命運即將揭曉"
         },
         {
           at: 3550,
           title: "最後倒數",
           number: "2",
-          subtitle: "能量已到達極限",
-          phase: "phase-countdown"
+          subtitle: "能量已到達極限"
         },
         {
           at: 4200,
           title: "最後倒數",
           number: "1",
-          subtitle: "幸運得主即將誕生",
-          phase: "phase-final"
+          subtitle: "幸運得主即將誕生"
         }
       ];
 
       timeline.forEach(item => {
         window.setTimeout(() => {
-          changeOverlay(item.title, item.number, item.subtitle, item.phase);
+          changeOverlay(item.title, item.number, item.subtitle);
         }, item.at);
       });
     }
 
     function showOverlay() {
-      createParticles(220);
+      createParticles(150);
 
-      drawOverlay.className = "draw-overlay show drawing phase-awaken";
+      drawOverlay.className = "draw-overlay show drawing";
       drawOverlay.setAttribute("aria-hidden", "false");
 
       overlayTitle.textContent = "命運正在甦醒";
@@ -1792,7 +1190,6 @@
 
     function hideOverlay() {
       stopFireworks();
-
       drawOverlay.className = "draw-overlay";
       drawOverlay.setAttribute("aria-hidden", "true");
     }
@@ -1814,7 +1211,7 @@
     }
 
     function createBurst(x, y, hue) {
-      const count = 95;
+      const count = 85;
 
       for (let i = 0; i < count; i++) {
         const angle = (Math.PI * 2 * i) / count;
@@ -1978,7 +1375,27 @@
       }, 120);
     }
 
-    /* 全螢幕走馬燈：每頁最多 3 位得獎者 */
+    function fitFullMarqueeName(item) {
+      const defaultFontSize = 28 * (96 / 72);
+      const maximumSize = Math.min(
+        defaultFontSize,
+        item.clientWidth * 0.8,
+        item.clientHeight * 0.65
+      );
+
+      const minimumSize = 12;
+      let fontSize = maximumSize;
+
+      item.style.fontSize = `${fontSize}px`;
+
+      while (
+        fontSize > minimumSize &&
+        (item.scrollWidth > item.clientWidth || item.scrollHeight > item.clientHeight)
+      ) {
+        fontSize -= 1;
+        item.style.fontSize = `${fontSize}px`;
+      }
+    }
 
     function renderFullMarqueePage() {
       const names = parseNames(winnersEl.value);
@@ -1987,10 +1404,10 @@
         return;
       }
 
-      const pageSize = 3;
+      const pageSize = 9;
 
       const page = Array.from(
-        { length: Math.min(pageSize, names.length) },
+        { length: pageSize },
         (_, offset) => names[(fullMarqueeIndex + offset) % names.length]
       );
 
@@ -1998,20 +1415,28 @@
 
       page.forEach(name => {
         const item = document.createElement("p");
+
         item.className = "full-marquee-name full-marquee-rise";
         item.textContent = name;
+
         fullMarqueeList.appendChild(item);
+
+        /* 固定使用 28pt；名字過長才逐步縮小 */
+        fitFullMarqueeName(item);
       });
 
       const start = fullMarqueeIndex + 1;
-      const end = fullMarqueeIndex + page.length;
+      const end = fullMarqueeIndex + pageSize;
 
       fullMarqueeCounter.textContent =
-        `得獎者 ${start}–${end} ／ 共 ${names.length} 位`;
+        `每行 3 位得獎者 · ${start}–${end} ／ 共 ${names.length} 位`;
 
       fullMarqueeIndex = (fullMarqueeIndex + pageSize) % names.length;
 
-      fullMarqueeTimerId = window.setTimeout(renderFullMarqueePage, 5600);
+      fullMarqueeTimerId = window.setTimeout(
+        renderFullMarqueePage,
+        11000
+      );
     }
 
     function openFullMarquee() {
@@ -2059,15 +1484,7 @@
     }
 
     function revealResults(selectedWinners, notDrawnNames) {
-      drawOverlay.classList.remove(
-        "drawing",
-        "phase-awaken",
-        "phase-charge",
-        "phase-chaos",
-        "phase-countdown",
-        "phase-final"
-      );
-
+      drawOverlay.classList.remove("drawing");
       drawOverlay.classList.add("reveal");
 
       overlayTitle.textContent = "結果揭曉";
