@@ -16,7 +16,6 @@
       --gold-deep: #ff9f5f;
       --cyan: #53d8fb;
       --pink: #ff5fa2;
-      --purple: #9f8cff;
       --success: #69e6a4;
       --danger: #ff8695;
       --shadow: 0 20px 56px rgba(0, 0, 0, 0.34);
@@ -44,7 +43,6 @@
       background:
         radial-gradient(circle at 10% 12%, rgba(83, 216, 251, 0.16), transparent 24%),
         radial-gradient(circle at 92% 76%, rgba(255, 95, 162, 0.15), transparent 25%),
-        radial-gradient(circle at 50% 118%, rgba(159, 140, 255, 0.16), transparent 33%),
         var(--bg);
     }
 
@@ -88,7 +86,6 @@
       background: var(--panel);
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
     }
 
     .panel h2 {
@@ -130,7 +127,6 @@
       font-size: clamp(1.25rem, 1.7vw, 1.55rem);
       font-weight: 800;
       line-height: 1.85;
-      text-shadow: 0 0 12px rgba(255, 209, 102, 0.22);
     }
 
     #notDrawn {
@@ -165,8 +161,7 @@
       transition:
         transform 180ms ease,
         filter 180ms ease,
-        opacity 180ms ease,
-        box-shadow 180ms ease;
+        opacity 180ms ease;
     }
 
     button:hover:not(:disabled) {
@@ -290,29 +285,6 @@
       border: 1px dashed rgba(83, 216, 251, 0.6);
       border-radius: 50%;
       animation: slowSpin 9s linear infinite;
-    }
-
-    .mini-orbit::before,
-    .mini-orbit::after {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      content: "";
-      border-radius: 50%;
-      background: var(--gold);
-      box-shadow: 0 0 15px var(--gold);
-    }
-
-    .mini-orbit::before {
-      top: -6px;
-      left: 50%;
-    }
-
-    .mini-orbit::after {
-      right: -6px;
-      bottom: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 15px var(--cyan);
     }
 
     .mini-stage.running {
@@ -452,7 +424,7 @@
       background: #ffd166;
     }
 
-    /* 全螢幕走馬燈 */
+    /* 全螢幕連續走馬燈 */
 
     .full-marquee-overlay {
       position: fixed;
@@ -470,7 +442,7 @@
 
     .full-marquee-header {
       position: absolute;
-      z-index: 2;
+      z-index: 3;
       top: 12px;
       right: 16px;
     }
@@ -503,18 +475,19 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      padding: 68px 14px 42px;
+      padding: 0 10px;
     }
 
     .full-marquee-list {
       display: grid;
       width: 100%;
-      height: 100%;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(0, 1fr));
+      grid-auto-rows: 33.333vh;
+      grid-auto-flow: row;
       align-items: center;
-      column-gap: 10px;
-      row-gap: 10px;
+      column-gap: 8px;
+      row-gap: 0;
+      will-change: transform;
     }
 
     .full-marquee-name {
@@ -522,57 +495,46 @@
       min-width: 0;
       min-height: 0;
       margin: 0;
+      padding: 6px 2px;
       place-items: center;
       overflow-wrap: anywhere;
-      color: #e25cff;
-      font-size: 28pt;
+      color: #ed6aff;
+      font-size: min(14vw, 13rem);
       font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.04em;
+      line-height: 0.88;
+      letter-spacing: -0.06em;
       text-align: center;
       text-shadow:
-        0 0 8px rgba(226, 92, 255, 0.95),
-        0 0 28px rgba(163, 34, 255, 0.75);
+        0 0 7px #f4a2ff,
+        0 0 24px rgba(204, 54, 255, 0.92);
     }
 
-    .full-marquee-name.full-marquee-rise {
-      animation: fullMarqueeRise 11s linear both;
+    .full-marquee-track {
+      animation: continuousMarqueeUp var(--marquee-duration) linear infinite;
     }
 
     .full-marquee-counter {
       position: absolute;
-      z-index: 2;
-      bottom: 10px;
+      z-index: 3;
+      bottom: 8px;
       left: 50%;
-      color: #dfa3ff;
-      font-size: 0.84rem;
+      color: #e7a3ff;
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       transform: translateX(-50%);
+      text-align: center;
     }
 
-    @keyframes fullMarqueeRise {
-      0% {
-        opacity: 0;
-        transform: translateY(110vh) scale(0.88);
+    @keyframes continuousMarqueeUp {
+      from {
+        transform: translateY(0);
       }
 
-      12% {
-        opacity: 1;
-      }
-
-      84% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-
-      100% {
-        opacity: 0;
-        transform: translateY(-110vh) scale(0.94);
+      to {
+        transform: translateY(calc(-1 * var(--marquee-loop-height)));
       }
     }
-
-    /* 抽獎畫面 */
 
     .draw-overlay {
       position: fixed;
@@ -767,16 +729,15 @@
       }
 
       .full-marquee-stage {
-        padding: 62px 8px 36px;
+        padding: 0 4px;
       }
 
       .full-marquee-list {
-        column-gap: 4px;
-        row-gap: 6px;
+        column-gap: 3px;
       }
 
       .full-marquee-name {
-        font-size: 28pt;
+        font-size: min(15vw, 7rem);
       }
 
       .full-marquee-header {
@@ -859,7 +820,7 @@
 
         <textarea id="winners" readonly placeholder="尚未抽獎"></textarea>
 
-        <div id="winnerMarquee" class="winner-marquee" aria-live="polite">
+        <div class="winner-marquee" aria-live="polite">
           <span class="marquee-label">得獎名單走馬燈</span>
           <span id="marqueeName" class="marquee-name">完成抽獎後可開始播放</span>
           <span id="marqueeProgress" class="marquee-progress"></span>
@@ -906,7 +867,7 @@
     aria-hidden="true"
     role="dialog"
     aria-modal="true"
-    aria-label="得獎名單全螢幕走馬燈，每行三個名字，共三行"
+    aria-label="得獎名單全螢幕走馬燈，每行三個名字，連續向上捲動"
   >
     <div class="full-marquee-header">
       <h2 class="full-marquee-title">幸運得獎名單</h2>
@@ -969,9 +930,6 @@
     let fireworksRunning = false;
     let fireworksFrameId = null;
     let fireworksLauncherId = null;
-
-    let fullMarqueeTimerId = null;
-    let fullMarqueeIndex = 0;
     let fullMarqueePlaying = false;
 
     function parseNames(text) {
@@ -985,7 +943,9 @@
 
           const key = name.toLocaleLowerCase();
 
-          if (seen.has(key)) return false;
+          if (seen.has(key)) {
+            return false;
+          }
 
           seen.add(key);
           return true;
@@ -1008,6 +968,7 @@
       for (let i = result.length - 1; i > 0; i--) {
         const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
         const index = randomValue % (i + 1);
+
         [result[i], result[index]] = [result[index], result[i]];
       }
 
@@ -1039,7 +1000,9 @@
     }
 
     function clearText(target) {
-      if (isDrawing) return;
+      if (isDrawing) {
+        return;
+      }
 
       target.value = "";
       target.dispatchEvent(new Event("input"));
@@ -1065,7 +1028,8 @@
 
       drawButton.disabled = drawing;
       winnerCountEl.disabled = drawing;
-      marqueeToggle.disabled = drawing || parseNames(winnersEl.value).length === 0;
+      marqueeToggle.disabled =
+        drawing || parseNames(winnersEl.value).length === 0;
 
       document.querySelectorAll("[data-action]").forEach(button => {
         button.disabled = drawing;
@@ -1079,7 +1043,7 @@
       try {
         await bgm.play();
       } catch {
-        /* 瀏覽器阻擋聲音自動播放時，抽獎仍可繼續 */
+        /* 若瀏覽器封鎖音訊，仍維持視覺抽獎效果 */
       }
     }
 
@@ -1110,8 +1074,8 @@
 
       for (let i = 0; i < total; i++) {
         const particle = document.createElement("i");
-        particle.className = "particle";
 
+        particle.className = "particle";
         particle.style.setProperty("--angle", `${Math.random() * 360}deg`);
         particle.style.setProperty("--distance", `${35 + Math.random() * 85}vmax`);
         particle.style.setProperty("--size", `${4 + Math.random() * 13}px`);
@@ -1130,48 +1094,18 @@
 
     function startFiveSecondShow() {
       const timeline = [
-        {
-          at: 0,
-          title: "命運正在甦醒",
-          number: "✦",
-          subtitle: "幸運之門即將開啟"
-        },
-        {
-          at: 950,
-          title: "能量正在聚集",
-          number: "✧",
-          subtitle: "星光正在尋找幸運得主"
-        },
-        {
-          at: 1900,
-          title: "幸運正在選擇",
-          number: "✦",
-          subtitle: "請屏住呼吸"
-        },
-        {
-          at: 2900,
-          title: "最後倒數",
-          number: "3",
-          subtitle: "命運即將揭曉"
-        },
-        {
-          at: 3550,
-          title: "最後倒數",
-          number: "2",
-          subtitle: "能量已到達極限"
-        },
-        {
-          at: 4200,
-          title: "最後倒數",
-          number: "1",
-          subtitle: "幸運得主即將誕生"
-        }
+        ["命運正在甦醒", "✦", "幸運之門即將開啟", 0],
+        ["能量正在聚集", "✧", "星光正在尋找幸運得主", 950],
+        ["幸運正在選擇", "✦", "請屏住呼吸", 1900],
+        ["最後倒數", "3", "命運即將揭曉", 2900],
+        ["最後倒數", "2", "能量已到達極限", 3550],
+        ["最後倒數", "1", "幸運得主即將誕生", 4200]
       ];
 
-      timeline.forEach(item => {
+      timeline.forEach(([title, number, subtitle, delay]) => {
         window.setTimeout(() => {
-          changeOverlay(item.title, item.number, item.subtitle);
-        }, item.at);
+          changeOverlay(title, number, subtitle);
+        }, delay);
       });
     }
 
@@ -1190,6 +1124,7 @@
 
     function hideOverlay() {
       stopFireworks();
+
       drawOverlay.className = "draw-overlay";
       drawOverlay.setAttribute("aria-hidden", "true");
     }
@@ -1199,7 +1134,6 @@
 
       fireworksCanvas.width = Math.floor(window.innerWidth * ratio);
       fireworksCanvas.height = Math.floor(window.innerHeight * ratio);
-
       fireworksCanvas.style.width = `${window.innerWidth}px`;
       fireworksCanvas.style.height = `${window.innerHeight}px`;
 
@@ -1375,68 +1309,103 @@
       }, 120);
     }
 
+    /* 連續走馬燈 */
+
+    function getMarqueeRows(names) {
+      const columns = 3;
+      const source = [...names];
+
+      while (source.length % columns !== 0) {
+        source.push(names[source.length % names.length]);
+      }
+
+      return source;
+    }
+
     function fitFullMarqueeName(item) {
-      const defaultFontSize = 28 * (96 / 72);
       const maximumSize = Math.min(
-        defaultFontSize,
-        item.clientWidth * 0.8,
-        item.clientHeight * 0.65
+        window.innerWidth * 0.14,
+        window.innerHeight * 0.28
       );
 
-      const minimumSize = 12;
+      const minimumSize = 22;
       let fontSize = maximumSize;
 
       item.style.fontSize = `${fontSize}px`;
 
       while (
         fontSize > minimumSize &&
-        (item.scrollWidth > item.clientWidth || item.scrollHeight > item.clientHeight)
+        (
+          item.scrollWidth > item.clientWidth ||
+          item.scrollHeight > item.clientHeight
+        )
       ) {
-        fontSize -= 1;
+        fontSize -= 2;
         item.style.fontSize = `${fontSize}px`;
       }
     }
 
-    function renderFullMarqueePage() {
+    function buildContinuousMarquee() {
       const names = parseNames(winnersEl.value);
 
-      if (!fullMarqueePlaying || names.length === 0) {
+      if (names.length === 0) {
         return;
       }
 
-      const pageSize = 9;
+      const visibleRows = 3;
+      const columns = 3;
+      const itemsPerVisibleScreen = visibleRows * columns;
 
-      const page = Array.from(
-        { length: pageSize },
-        (_, offset) => names[(fullMarqueeIndex + offset) % names.length]
+      const normalizedNames = getMarqueeRows(names);
+
+      const minimumItems = Math.max(
+        normalizedNames.length,
+        itemsPerVisibleScreen * 2
       );
 
-      fullMarqueeList.innerHTML = "";
+      const repeatingNames = [];
 
-      page.forEach(name => {
+      for (let i = 0; i < minimumItems; i++) {
+        repeatingNames.push(
+          normalizedNames[i % normalizedNames.length]
+        );
+      }
+
+      const loopNames = [...repeatingNames, ...repeatingNames];
+
+      fullMarqueeList.innerHTML = "";
+      fullMarqueeList.className =
+        "full-marquee-list full-marquee-track";
+
+      loopNames.forEach(name => {
         const item = document.createElement("p");
 
-        item.className = "full-marquee-name full-marquee-rise";
+        item.className = "full-marquee-name";
         item.textContent = name;
 
         fullMarqueeList.appendChild(item);
 
-        /* 固定使用 28pt；名字過長才逐步縮小 */
         fitFullMarqueeName(item);
       });
 
-      const start = fullMarqueeIndex + 1;
-      const end = fullMarqueeIndex + pageSize;
+      const rowHeight = window.innerHeight / visibleRows;
+      const totalRowsPerLoop = repeatingNames.length / columns;
+      const loopHeight = totalRowsPerLoop * rowHeight;
+
+      const duration = Math.max(totalRowsPerLoop * 4, 18);
+
+      fullMarqueeList.style.setProperty(
+        "--marquee-loop-height",
+        `${loopHeight}px`
+      );
+
+      fullMarqueeList.style.setProperty(
+        "--marquee-duration",
+        `${duration}s`
+      );
 
       fullMarqueeCounter.textContent =
-        `每行 3 位得獎者 · ${start}–${end} ／ 共 ${names.length} 位`;
-
-      fullMarqueeIndex = (fullMarqueeIndex + pageSize) % names.length;
-
-      fullMarqueeTimerId = window.setTimeout(
-        renderFullMarqueePage,
-        11000
-      );
+        `每行 3 位得獎者 · 共 ${names.length} 位`;
     }
 
     function openFullMarquee() {
@@ -1452,25 +1421,21 @@
       }
 
       fullMarqueePlaying = true;
-      fullMarqueeIndex = 0;
 
       fullMarqueeOverlay.classList.add("show");
       fullMarqueeOverlay.setAttribute("aria-hidden", "false");
 
       document.body.style.overflow = "hidden";
 
-      renderFullMarqueePage();
+      buildContinuousMarquee();
+
       fullMarqueeExit.focus();
     }
 
     function closeFullMarquee() {
       fullMarqueePlaying = false;
 
-      if (fullMarqueeTimerId) {
-        window.clearTimeout(fullMarqueeTimerId);
-        fullMarqueeTimerId = null;
-      }
-
+      fullMarqueeList.className = "full-marquee-list";
       fullMarqueeList.innerHTML = "";
 
       fullMarqueeOverlay.classList.remove("show");
@@ -1502,7 +1467,6 @@
 
       marqueeToggle.disabled = false;
       marqueeToggle.textContent = "⛶ 全螢幕走馬燈";
-      marqueeToggle.setAttribute("aria-label", "開啟全螢幕得獎名單走馬燈");
 
       stopStage();
       startFireworks(2700);
@@ -1514,7 +1478,9 @@
     }
 
     function drawWinners() {
-      if (isDrawing) return;
+      if (isDrawing) {
+        return;
+      }
 
       const participants = parseNames(participantsEl.value);
       const winnerCount = Number.parseInt(winnerCountEl.value, 10);
@@ -1595,7 +1561,13 @@
       });
     });
 
-    window.addEventListener("resize", resizeFireworksCanvas);
+    window.addEventListener("resize", () => {
+      resizeFireworksCanvas();
+
+      if (fullMarqueePlaying) {
+        buildContinuousMarquee();
+      }
+    });
 
     resizeFireworksCanvas();
     updateParticipantCount();
