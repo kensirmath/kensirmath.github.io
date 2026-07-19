@@ -1,3 +1,6 @@
+以下為完整修改後的 HTML。走馬燈現為**全螢幕純黑背景、亮紫超大字、每行最多 3 個名字、持續由下至上連續移動**；如果得獎人數不是 3 的倍數，最後一行只顯示餘下名字，不會以第一或第二個名字補上。
+
+```html
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -34,12 +37,7 @@
       margin: 0;
       overflow-x: hidden;
       color: var(--text);
-      font-family:
-        "Noto Sans TC",
-        "PingFang HK",
-        "Microsoft JhengHei",
-        system-ui,
-        sans-serif;
+      font-family: "Noto Sans TC", "PingFang HK", "Microsoft JhengHei", system-ui, sans-serif;
       background:
         radial-gradient(circle at 10% 12%, rgba(83, 216, 251, 0.16), transparent 24%),
         radial-gradient(circle at 92% 76%, rgba(255, 95, 162, 0.15), transparent 25%),
@@ -1043,7 +1041,7 @@
       try {
         await bgm.play();
       } catch {
-        /* 若瀏覽器封鎖音訊，仍維持視覺抽獎效果 */
+        /* 瀏覽器阻擋音訊播放時，抽獎效果仍會正常進行 */
       }
     }
 
@@ -1309,8 +1307,7 @@
       }, 120);
     }
 
-    /* 連續走馬燈 */
-
+    /* 全螢幕連續走馬燈 */
 
     function fitFullMarqueeName(item) {
       const maximumSize = Math.min(
@@ -1335,76 +1332,77 @@
       }
     }
 
-function buildContinuousMarquee() {
-  const names = parseNames(winnersEl.value);
+    function buildContinuousMarquee() {
+      const names = parseNames(winnersEl.value);
 
-  if (names.length === 0) {
-    return;
-  }
+      if (names.length === 0) {
+        return;
+      }
 
-  const visibleRows = 3;
-  const columns = 3;
+      const visibleRows = 3;
+      const columns = 3;
 
-  /*
-    不補名字：
-    例如 10 位得獎者：
-    第 1 行：1、2、3
-    第 2 行：4、5、6
-    第 3 行：7、8、9
-    第 4 行：10
-    */
-  const originalNames = [...names];
+      /*
+        不會補名字。
+        例如有 10 位得獎者：
+        1、2、3
+        4、5、6
+        7、8、9
+        10、空白、空白
+      */
+      const originalNames = [...names];
 
-  /*
-    將完整名單複製一次作為無縫循環軌道。
-    不會以第一或第二位得獎者補滿最後一行。
-    下一輪的第一位得獎者只會在下一個循環段重新出現。
-    */
-  const loopNames = [...originalNames, ...originalNames];
+      /*
+        將原始名單完整複製一次，製造無限循環。
+        最後一行的空白欄位仍保留空白，
+        不會以最前面的名字補滿。
+      */
+      const loopNames = [...originalNames, ...originalNames];
 
-  fullMarqueeList.innerHTML = "";
-  fullMarqueeList.className =
-    "full-marquee-list full-marquee-track";
+      fullMarqueeList.innerHTML = "";
+      fullMarqueeList.className =
+        "full-marquee-list full-marquee-track";
 
-  loopNames.forEach(name => {
-    const item = document.createElement("p");
+      loopNames.forEach(name => {
+        const item = document.createElement("p");
 
-    item.className = "full-marquee-name";
-    item.textContent = name;
+        item.className = "full-marquee-name";
+        item.textContent = name;
 
-    fullMarqueeList.appendChild(item);
+        fullMarqueeList.appendChild(item);
 
-    /* 名字過長時才會由超大字逐步縮小 */
-    fitFullMarqueeName(item);
-  });
+        fitFullMarqueeName(item);
+      });
 
-  /*
-    行數採向上取整：
-    10 位得獎者 = 4 行，每行最多 3 人。
-    最後一行只會顯示第 10 位，另外兩格維持空白。
-    */
-  const rowsPerLoop = Math.ceil(originalNames.length / columns);
-  const rowHeight = window.innerHeight / visibleRows;
-  const loopHeight = rowsPerLoop * rowHeight;
+      /*
+        使用向上取整：
+        10 位得獎者 = 4 行。
+        第 4 行只有 1 位得獎者，右側 2 格保持空白。
+      */
+      const rowsPerLoop = Math.ceil(originalNames.length / columns);
+      const rowHeight = window.innerHeight / visibleRows;
+      const loopHeight = rowsPerLoop * rowHeight;
 
-  /*
-    每一行移動約 4 秒，最少完整循環 18 秒。
-    */
-  const duration = Math.max(rowsPerLoop * 4, 18);
+      /*
+        每行約移動 4 秒，完整循環至少 18 秒。
+      */
+      const duration = Math.max(rowsPerLoop * 4, 18);
 
-  fullMarqueeList.style.setProperty(
-    "--marquee-loop-height",
-    `${loopHeight}px`
-  );
+      fullMarqueeList.style.setProperty(
+        "--marquee-loop-height",
+        `${loopHeight}px`
+      );
 
-  fullMarqueeList.style.setProperty(
-    "--marquee-duration",
-    `${duration}s`
-  );
+      fullMarqueeList.style.setProperty(
+        "--marquee-duration",
+        `${duration}s`
+      );
 
-  fullMarqueeCounter.textContent =
-    `每行最多 3 位得獎者 · 共 ${names.length} 位`;
-}    function openFullMarquee() {
+      fullMarqueeCounter.textContent =
+        `每行最多 3 位得獎者 · 共 ${names.length} 位`;
+    }
+
+    function openFullMarquee() {
       const names = parseNames(winnersEl.value);
 
       if (names.length === 0) {
@@ -1570,3 +1568,4 @@ function buildContinuousMarquee() {
   </script>
 </body>
 </html>
+```
