@@ -1311,16 +1311,6 @@
 
     /* 連續走馬燈 */
 
-    function getMarqueeRows(names) {
-      const columns = 3;
-      const source = [...names];
-
-      while (source.length % columns !== 0) {
-        source.push(names[source.length % names.length]);
-      }
-
-      return source;
-    }
 
     function fitFullMarqueeName(item) {
       const maximumSize = Math.min(
