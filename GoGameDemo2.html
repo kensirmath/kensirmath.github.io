@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>圍棋教學棋盤 Pro</title>
+<style>
+:root{
+  --bg:#f5f3ed;
+  --panel:#fffdf8;
+  --soft:#f1ede3;
+  --text:#26231c;
+  --muted:#69655d;
+  --border:#d8d0c1;
+  --primary:#08777b;
+  --danger:#b33a30;
+  --wood1:#dfbb7b;
+  --wood2:#c99d5a;
+  --line:#65491f;
+  --shadow:0 10px 30px #342a1820;
+}
+
+[data-theme="dark"]{
+  --bg:#1d211f;
+  --panel:#282d2b;
+  --soft:#343b37;
+  --text:#f1eee7;
+  --muted:#b9b6ad;
+  --border:#4a514d;
+  --primary:#64c0c1;
+  --danger:#ff877a;
+  --wood1:#c69a57;
+  --wood2:#a8783e;
+  --line:#402b12;
+  --shadow:0 10px 30px #0006;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font:15px system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+}
+
+body{
+  overflow:hidden;
+}
+
+.app{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 390px;
+  height:100vh;
+  overflow:hidden;
+}
+
+.stage{
+  display:grid;
+  place-items:center;
+  padding:24px;
+  min-width:0;
+  height:100vh;
+  overflow:hidden;
+}
+
+.board-wrap{
+  position:relative;
+  width:min(92vmin,960px);
+  aspect-ratio:1;
+  background:linear-gradient(135deg,var(--wood1),var(--wood2));
+  box-shadow:var(--shadow);
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  cursor:crosshair;
+}
+
+.status{
+  position:absolute;
+  left:14px;
+  bottom:14px;
+  background:#111c;
+  color:#fff;
+  padding:7px 11px;
+  border-radius:999px;
+  font-size:13px;
+  pointer-events:none;
+}
+
+.panel{
+  background:var(--panel);
+  border-left:1px solid var(--border);
+  padding:18px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  height:100vh;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.top h1{
+  font-size:23px;
+  margin:0 0 3px;
+}
+
+.muted,
+.hint{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.section{
+  border-top:1px solid var(--border);
+  padding-top:14px;
+  margin-top:16px;
+}
+
+.section h2{
+  font-size:16px;
+  margin:0 0 10px;
+}
+
+.row,
+.tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.btn,
+select,
+input{
+  font:inherit;
+}
+
+.btn{
+  border:1px solid var(--border);
+  background:var(--soft);
+  color:var(--text);
+  padding:8px 10px;
+  min-height:38px;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.btn:hover{
+  filter:brightness(.96);
+}
+
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--primary) 45%,transparent);
+  outline-offset:2px;
+}
+
+.btn.primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+.btn.danger{
+  color:var(--danger);
+}
+
+.btn.active{
+  outline:2px solid var(--primary);
+  outline-offset:1px;
+}
+
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+select,
+input{
+  width:100%;
+  min-height:38px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--soft);
+  color:var(--text);
+  padding:0 9px;
+}
+
+label{
+  display:grid;
+  gap:5px;
+  font-weight:650;
+  font-size:13px;
+}
+
+.stat{
+  background:var(--soft);
+  border:1px solid var(--border);
+  padding:9px;
+  border-radius:10px;
+}
+
+.stat strong{
+  display:block;
+  font-size:21px;
+  margin-top:2px;
+}
+
+.moves{
+  padding-left:22px;
+  margin:6px 0;
+}
+
+.moves li{
+  padding:4px 0;
+  color:var(--muted);
+}
+
+.moves li.current{
+  font-weight:800;
+  color:var(--primary);
+}
+
+.range{
+  width:100%;
+}
+
+.toast{
+  position:fixed;
+  z-index:30;
+  left:50%;
+  bottom:22px;
+  transform:translate(-50%,120px);
+  background:#1e2421;
+  color:#fff;
+  padding:10px 15px;
+  border-radius:10px;
+  box-shadow:var(--shadow);
+  transition:.22s;
+  max-width:min(92vw,500px);
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+dialog{
+  border:0;
+  border-radius:14px;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:var(--shadow);
+  max-width:440px;
+  width:calc(100% - 32px);
+  padding:20px;
+}
+
+dialog::backdrop{
+  background:#0008;
+}
+
+dialog h3{
+  margin-top:0;
+}
+
+.dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:18px;
+}
+
+.save-list{
+  display:grid;
+  gap:7px;
+}
+
+.save-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:7px 8px;
+}
+
+.save-item span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.sr{
+  position:absolute;
+  width:1px;
+  height:1px;
+  clip:rect(0,0,0,0);
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+@media(max-width:900px){
+  body{
+    overflow:auto;
+  }
+
+  .app{
+    grid-template-columns:1fr;
+    height:auto;
+    overflow:visible;
+  }
+
+  .stage{
+    height:auto;
+    min-height:100vh;
+    padding:12px;
+    overflow:visible;
+  }
+
+  .board-wrap{
+    width:min(96vw,760px);
+  }
+
+  .panel{
+    height:auto;
+    max-height:none;
+    overflow:visible;
+    border-left:0;
+    border-top:1px solid var(--border);
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+  <section class="stage">
+    <div class="board-wrap">
+      <canvas id="board" width="1000" height="1000"
+        aria-label="圍棋棋盤；點擊交叉點落子"></canvas>
+      <div class="status" id="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="top">
+      <div>
+        <h1>圍棋教學棋盤 Pro</h1>
+        <div class="muted" id="autosaveStatus">本機草稿已啟用</div>
+      </div>
+      <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
+    </div>
+
+    <section class="section">
+      <h2>棋局</h2>
+
+      <div class="grid">
+        <label>
+          棋盤尺寸
+          <select id="size">
+            <option value="9">9 路</option>
+            <option value="13">13 路</option>
+            <option value="19" selected>19 路</option>
+          </select>
+        </label>
+
+        <label>
+          工具
+          <select id="tool">
+            <option value="play">行棋</option>
+            <option value="setup">擺盤</option>
+            <option value="label">文字標記</option>
+            <option value="erase">擦除（教學）</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row" style="margin-top:9px">
+        <button class="btn active" data-color="black">● 黑方</button>
+        <button class="btn" data-color="white">○ 白方</button>
+        <input id="labelText" placeholder="標記文字（最多 8 字）" aria-label="標記文字">
+      </div>
+
+      <div class="tools" style="margin-top:9px">
+        <button class="btn primary" id="pass">虛手</button>
+        <button class="btn" id="undo" title="Ctrl/⌘ Z">↶ 復原</button>
+        <button class="btn" id="redo" title="Ctrl/⌘ Shift Z">↷ 重做</button>
+        <button class="btn danger" id="clear">清空棋局</button>
+      </div>
+
+      <p class="hint">
+        「擺盤」不會計算手數；「行棋」才會顯示棋子中央手順號。
+        快捷鍵：←/→ 回放、Space 虛手、Ctrl/⌘ Z 復原。
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>回放</h2>
+
+      <div class="tools">
+        <button class="btn" id="prev">◀ 上一步</button>
+        <button class="btn" id="next">下一步 ▶</button>
+        <button class="btn" id="live">回到目前</button>
+      </div>
+
+      <input class="range" id="timeline" type="range" min="0" value="0" style="margin-top:10px">
+      <div class="hint" id="timelineText">第 0 / 0 項紀錄</div>
+    </section>
+
+    <section class="section">
+      <h2>棋局資料</h2>
+
+      <div class="tools">
+        <button class="btn" id="png">匯出 PNG</button>
+        <button class="btn" id="jsonSave">下載 JSON</button>
+        <button class="btn" id="jsonLoad">載入 JSON</button>
+        <input class="sr" type="file" id="file" accept="application/json,.json">
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <input id="saveName" maxlength="30" placeholder="命名存檔，例如：第3課死活題">
+        <button class="btn primary" id="saveSlot">儲存</button>
+      </div>
+
+      <div class="save-list" id="saveList" style="margin-top:9px"></div>
+
+      <p class="hint">
+        每次修改均會自動儲存到此瀏覽器；命名存檔最多保留 12 個。
+        匯入資料會先驗證，失敗不會覆蓋目前棋局。
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>統計</h2>
+
+      <div class="grid3">
+        <div class="stat">
+          <span class="muted">黑子</span>
+          <strong id="black">0</strong>
+        </div>
+
+        <div class="stat">
+          <span class="muted">白子</span>
+          <strong id="white">0</strong>
+        </div>
+
+        <div class="stat">
+          <span class="muted">提子</span>
+          <strong id="caps">0 : 0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>手順</h2>
+      <ol class="moves" id="moves"></ol>
+    </section>
+  </aside>
+</main>
+
+<dialog id="confirm">
+  <h3>清空目前棋局？</h3>
+  <p class="muted">這個動作可使用「復原」回退，但建議先建立命名存檔。</p>
+  <div class="dialog-actions">
+    <button class="btn" id="cancelClear">取消</button>
+    <button class="btn danger" id="confirmClear">確定清空</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+
+const $ = selector => document.querySelector(selector);
+const canvas = $("#board");
+const ctx = canvas.getContext("2d");
+
+const DRAFT_KEY = "teaching-go-pro-draft-v3";
+const SLOTS_KEY = "teaching-go-pro-slots-v3";
+
+const state = {
+  size: 19,
+  board: [],
+  current: "black",
+  moves: [],
+  captures: { black: 0, white: 0 },
+  history: [],
+  future: [],
+  view: null,
+  hover: null,
+  margin: 110,
+  cell: 0
+};
+
+const clone = value => JSON.parse(JSON.stringify(value));
+const emptyBoard = size => Array.from({ length: size }, () => Array(size).fill(null));
+const opposite = color => color === "black" ? "white" : "black";
+const pointKey = (x, y) => `${x},${y}`;
+
+function snapshot() {
+  return clone({
+    size: state.size,
+    board: state.board,
+    current: state.current,
+    moves: state.moves,
+    captures: state.captures
+  });
+}
+
+function validState(data) {
+  if (!data || ![9, 13, 19].includes(+data.size)) return false;
+  if (!Array.isArray(data.board) || data.board.length !== +data.size) return false;
+
+  if (data.board.some(row =>
+    !Array.isArray(row) ||
+    row.length !== +data.size ||
+    row.some(value => value !== null && value !== "black" && value !== "white")
+  )) return false;
+
+  if (!["black", "white"].includes(data.current)) return false;
+  if (!Array.isArray(data.moves)) return false;
+  if (!data.captures) return false;
+
+  return true;
+}
+
+function applyState(data, { record = false } = {}) {
+  if (!validState(data)) {
+    throw new Error("棋局資料格式不正確或不受支援。");
+  }
+
+  if (record) {
+    state.history.push(snapshot());
+    state.future = [];
+  }
+
+  state.size = +data.size;
+  state.board = clone(data.board);
+  state.current = data.current;
+  state.moves = clone(data.moves);
+  state.captures = {
+    black: +data.captures.black || 0,
+    white: +data.captures.white || 0
+  };
+
+  state.view = null;
+  $("#size").value = state.size;
+
+  render();
+  scheduleAutosave();
+}
+
+function newGame(size = 19) {
+  applyState({
+    size: +size,
+    board: emptyBoard(+size),
+    current: "black",
+    moves: [],
+    captures: { black: 0, white: 0 }
+  }, { record: true });
+
+  toast("已建立新棋局");
+}
+
+function inside(x, y) {
+  return x >= 0 && y >= 0 && x < state.size && y < state.size;
+}
+
+function neighbors(x, y) {
+  return [
+    [x - 1, y],
+    [x + 1, y],
+    [x, y - 1],
+    [x, y + 1]
+  ].filter(([nx, ny]) => inside(nx, ny));
+}
+
+function groupAt(board, x, y) {
+  const color = board[y][x];
+  const queue = [[x, y]];
+  const seen = new Set([pointKey(x, y)]);
+  const stones = [];
+  const liberties = new Set();
+
+  while (queue.length) {
+    const [cx, cy] = queue.pop();
+    stones.push([cx, cy]);
+
+    for (const [nx, ny] of neighbors(cx, cy)) {
+      const value = board[ny][nx];
+      const key = pointKey(nx, ny);
+
+      if (value === null) {
+        liberties.add(key);
+      } else if (value === color && !seen.has(key)) {
+        seen.add(key);
+        queue.push([nx, ny]);
+      }
+    }
+  }
+
+  return { stones, liberties };
+}
+
+function tryPlay(x, y, color, board = state.board) {
+  if (!inside(x, y) || board[y][x]) return null;
+
+  const nextBoard = clone(board);
+  nextBoard[y][x] = color;
+  const captured = [];
+
+  for (const [nx, ny] of neighbors(x, y)) {
+    if (nextBoard[ny][nx] !== opposite(color)) continue;
+
+    const enemyGroup = groupAt(nextBoard, nx, ny);
+
+    if (!enemyGroup.liberties.size) {
+      for (const [sx, sy] of enemyGroup.stones) {
+        nextBoard[sy][sx] = null;
+        captured.push([sx, sy]);
+      }
+    }
+  }
+
+  const ownGroup = groupAt(nextBoard, x, y);
+
+  if (!ownGroup.liberties.size) return null;
+
+  return { board: nextBoard, captured };
+}
+
+function commit(action) {
+  state.history.push(snapshot());
+  state.future = [];
+
+  action();
+
+  state.view = null;
+  render();
+  scheduleAutosave();
+}
+
+function setupStone(x, y) {
+  if (state.view !== null) {
+    toast("請先按「回到目前」才可修改棋局");
+    return;
+  }
+
+  if (state.board[y][x]) {
+    toast("此處已有棋子");
+    return;
+  }
+
+  commit(() => {
+    state.board[y][x] = state.current;
+    state.moves.push({
+      type: "setup",
+      x,
+      y,
+      color: state.current
+    });
+  });
+
+  toast(`已擺放${state.current === "black" ? "黑" : "白"}子`);
+}
+
+function playStone(x, y) {
+  if (state.view !== null) {
+    toast("請先按「回到目前」才可繼續行棋");
+    return;
+  }
+
+  const result = tryPlay(x, y, state.current);
+
+  if (!result) {
+    toast("此處不可落子（已有棋子或自殺）");
+    return;
+  }
+
+  commit(() => {
+    const color = state.current;
+
+    state.board = result.board;
+    state.captures[color] += result.captured.length;
+
+    state.moves.push({
+      type: "play",
+      x,
+      y,
+      color,
+      captured: result.captured.length
+    });
+
+    state.current = opposite(color);
+  });
+
+  toast(result.captured.length ? `提掉 ${result.captured.length} 子` : "已落子");
+}
+
+function pass() {
+  if (state.view !== null) {
+    toast("請先回到目前棋局");
+    return;
+  }
+
+  commit(() => {
+    state.moves.push({
+      type: "pass",
+      color: state.current
+    });
+
+    state.current = opposite(state.current);
+  });
+
+  toast("已虛手");
+}
+
+function undo() {
+  if (!state.history.length) {
+    toast("沒有可復原動作");
+    return;
+  }
+
+  state.future.push(snapshot());
+  applyState(state.history.pop());
+  toast("已復原");
+}
+
+function redo() {
+  if (!state.future.length) {
+    toast("沒有可重做動作");
+    return;
+  }
+
+  state.history.push(snapshot());
+  applyState(state.future.pop());
+  toast("已重做");
+}
+
+function replayTo(step) {
+  const replay = {
+    size: state.size,
+    board: emptyBoard(state.size),
+    current: "black",
+    moves: [],
+    captures: { black: 0, white: 0 }
+  };
+
+  for (let index = 0; index < step; index++) {
+    const move = state.moves[index];
+
+    if (move.type === "setup") {
+      replay.board[move.y][move.x] = move.color;
+      replay.moves.push(move);
+      continue;
+    }
+
+    if (move.type === "pass") {
+      replay.moves.push(move);
+      replay.current = opposite(move.color);
+      continue;
+    }
+
+    if (move.type === "play") {
+      const result = tryPlay(move.x, move.y, move.color, replay.board);
+
+      if (!result) break;
+
+      replay.board = result.board;
+      replay.captures[move.color] += result.captured.length;
+      replay.moves.push(move);
+      replay.current = opposite(move.color);
+    }
+  }
+
+  return replay;
+}
+
+function displayedState() {
+  return state.view === null ? snapshot() : replayTo(state.view);
+}
+
+function coord(x, y) {
+  const letters = "ABCDEFGHJKLMNOPQRST";
+  return letters[x] + (state.size - y);
+}
+
+function boardPosition(x, y) {
+  return {
+    x: state.margin + x * state.cell,
+    y: state.margin + y * state.cell
+  };
+}
+
+function drawStone(x, y, color, alpha = 1) {
+  const point = boardPosition(x, y);
+  const radius = state.cell * 0.43;
+
+  const gradient = ctx.createRadialGradient(
+    point.x - radius * 0.35,
+    point.y - radius * 0.35,
+    2,
+    point.x,
+    point.y,
+    radius
+  );
+
+  gradient.addColorStop(0, color === "black" ? "#666" : "#fff");
+  gradient.addColorStop(1, color === "black" ? "#111" : "#d6d6d6");
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = gradient;
+
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawBoard(display) {
+  const size = state.size;
+  const margin = state.margin;
+  const cell = (canvas.width - margin * 2) / (size - 1);
+
+  state.cell = cell;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const css = getComputedStyle(document.documentElement);
+  const lineColor = css.getPropertyValue("--line").trim();
+  const textColor = css.getPropertyValue("--text").trim();
+
+  ctx.strokeStyle = lineColor;
+  ctx.lineWidth = 2;
+
+  for (let i = 0; i < size; i++) {
+    const p = margin + i * cell;
+
+    ctx.beginPath();
+    ctx.moveTo(margin, p);
+    ctx.lineTo(canvas.width - margin, p);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(p, margin);
+    ctx.lineTo(p, canvas.height - margin);
+    ctx.stroke();
+  }
+
+  const starPoints = size === 19
+    ? [3, 9, 15]
+    : size === 13
+      ? [3, 6, 9]
+      : [2, 4, 6];
+
+  ctx.fillStyle = lineColor;
+
+  for (const x of starPoints) {
+    for (const y of starPoints) {
+      ctx.beginPath();
+      ctx.arc(margin + x * cell, margin + y * cell, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const letters = "ABCDEFGHJKLMNOPQRST";
+
+  ctx.fillStyle = textColor;
+  ctx.font = "600 19px system-ui";
+  ctx.textAlign = "center";
+
+  for (let i = 0; i < size; i++) {
+    const p = margin + i * cell;
+
+    ctx.fillText(letters[i], p, margin - cell);
+    ctx.fillText(letters[i], p, canvas.height - margin + cell);
+
+    ctx.textAlign = "right";
+    ctx.fillText(size - i, margin - cell, p + 6);
+
+    ctx.textAlign = "left";
+    ctx.fillText(size - i, canvas.width - margin + cell, p + 6);
+
+    ctx.textAlign = "center";
+  }
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if (display.board[y][x]) {
+        drawStone(x, y, display.board[y][x]);
+      }
+    }
+  }
+
+  let moveNumber = 0;
+
+  for (const move of display.moves) {
+    if (move.type !== "play") continue;
+
+    moveNumber++;
+
+    const point = boardPosition(move.x, move.y);
+
+    ctx.fillStyle = move.color === "black" ? "#fff" : "#111";
+    ctx.font = `700 ${Math.max(14, state.cell * 0.36)}px system-ui`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(moveNumber), point.x, point.y + 1);
+  }
+
+  ctx.textBaseline = "alphabetic";
+
+  if (
+    state.hover &&
+    state.view === null &&
+    $("#tool").value === "play"
+  ) {
+    const preview = tryPlay(state.hover.x, state.hover.y, state.current);
+
+    if (preview) {
+      drawStone(state.hover.x, state.hover.y, state.current, 0.38);
+    }
+  }
+}
+
+function render() {
+  const display = displayedState();
+
+  drawBoard(display);
+
+  $("#black").textContent =
+    display.board.flat().filter(value => value === "black").length;
+
+  $("#white").textContent =
+    display.board.flat().filter(value => value === "white").length;
+
+  $("#caps").textContent =
+    `${display.captures.black} : ${display.captures.white}`;
+
+  $("#status").textContent = state.view === null
+    ? `輪到${state.current === "black" ? "黑" : "白"}方行棋`
+    : `回放：第 ${state.view} 項紀錄`;
+
+  document.querySelectorAll("[data-color]").forEach(button => {
+    button.classList.toggle("active", button.dataset.color === state.current);
+  });
+
+  $("#undo").disabled = !state.history.length;
+  $("#redo").disabled = !state.future.length;
+
+  $("#timeline").max = state.moves.length;
+  $("#timeline").value = state.view === null ? state.moves.length : state.view;
+
+  $("#timelineText").textContent =
+    `第 ${$("#timeline").value} / ${state.moves.length} 項紀錄`;
+
+  let playNumber = 0;
+
+  $("#moves").innerHTML = state.moves.map((move, index) => {
+    let text = "";
+
+    if (move.type === "setup") {
+      text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+    } else if (move.type === "pass") {
+      playNumber++;
+      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛手`;
+    } else {
+      playNumber++;
+      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+
+      if (move.captured) {
+        text += `（提 ${move.captured}）`;
+      }
+    }
+
+    const currentClass = state.view === index + 1 ? "current" : "";
+    return `<li class="${currentClass}">${text}</li>`;
+  }).join("") || "<li>尚未有手順</li>";
+}
+
+function pointFromEvent(event) {
+  const rect = canvas.getBoundingClientRect();
+
+  const canvasX = (event.clientX - rect.left) * canvas.width / rect.width;
+  const canvasY = (event.clientY - rect.top) * canvas.height / rect.height;
+
+  const x = Math.round((canvasX - state.margin) / state.cell);
+  const y = Math.round((canvasY - state.margin) / state.cell);
+
+  return inside(x, y) ? { x, y } : null;
+}
+
+canvas.addEventListener("pointermove", event => {
+  state.hover = pointFromEvent(event);
+  render();
+});
+
+canvas.addEventListener("pointerleave", () => {
+  state.hover = null;
+  render();
+});
+
+canvas.addEventListener("click", event => {
+  const point = pointFromEvent(event);
+
+  if (!point) return;
+
+  const tool = $("#tool").value;
+
+  if (tool === "play") {
+    playStone(point.x, point.y);
+  } else if (tool === "setup") {
+    setupStone(point.x, point.y);
+  } else if (tool === "label") {
+    toast("文字標記功能可於下一版加入 SGF 相容標記。");
+  } else {
+    toast("擦除功能建議只用於教學擺盤模式。");
+  }
+});
+
+document.querySelectorAll("[data-color]").forEach(button => {
+  button.addEventListener("click", () => {
+    state.current = button.dataset.color;
+    render();
+    scheduleAutosave();
+  });
+});
+
+let autosaveTimer;
+
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+
+  $("#autosaveStatus").textContent = "正在儲存草稿…";
+
+  autosaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      $("#autosaveStatus").textContent = "本機草稿已自動儲存";
+    } catch {
+      $("#autosaveStatus").textContent = "無法自動儲存：瀏覽器空間不足";
+    }
+  }, 350);
+}
+
+function toast(message) {
+  const box = $("#toast");
+
+  box.textContent = message;
+  box.classList.add("show");
+
+  clearTimeout(box.timer);
+
+  box.timer = setTimeout(() => {
+    box.classList.remove("show");
+  }, 2200);
+}
+
+function getSlots() {
+  try {
+    return JSON.parse(localStorage.getItem(SLOTS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;"
+  }[char]));
+}
+
+function renderSlots() {
+  const slots = getSlots();
+
+  $("#saveList").innerHTML = slots.map((slot, index) => `
+    <div class="save-item">
+      <span title="${escapeHtml(slot.name)}">
+        ${escapeHtml(slot.name)}
+        <small class="muted">${new Date(slot.at).toLocaleString()}</small>
+      </span>
+      <div>
+        <button class="btn loadSlot" data-index="${index}">載入</button>
+        <button class="btn danger deleteSlot" data-index="${index}">×</button>
+      </div>
+    </div>
+  `).join("") || `<div class="hint">未有命名存檔</div>`;
+
+  document.querySelectorAll(".loadSlot").forEach(button => {
+    button.onclick = () => {
+      try {
+        applyState(getSlots()[+button.dataset.index].data, { record: true });
+        toast("已載入命名存檔");
+      } catch (error) {
+        toast(error.message);
+      }
+    };
+  });
+
+  document.querySelectorAll(".deleteSlot").forEach(button => {
+    button.onclick = () => {
+      const slots = getSlots();
+      slots.splice(+button.dataset.index, 1);
+
+      localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+      renderSlots();
+      toast("已刪除存檔");
+    };
+  });
+}
+
+$("#saveSlot").onclick = () => {
+  const name = $("#saveName").value.trim();
+
+  if (!name) {
+    toast("請輸入存檔名稱");
+    return;
+  }
+
+  const slots = getSlots();
+
+  slots.unshift({
+    name,
+    at: Date.now(),
+    data: snapshot()
+  });
+
+  try {
+    localStorage.setItem(SLOTS_KEY, JSON.stringify(slots.slice(0, 12)));
+    $("#saveName").value = "";
+    renderSlots();
+    toast("已建立命名存檔");
+  } catch {
+    toast("無法儲存，請檢查瀏覽器儲存空間");
+  }
+};
+
+$("#size").onchange = event => {
+  const nextSize = event.target.value;
+
+  if (confirm("更改棋盤尺寸會建立新棋局，是否繼續？")) {
+    newGame(nextSize);
+  } else {
+    event.target.value = state.size;
+  }
+};
+
+$("#pass").onclick = pass;
+$("#undo").onclick = undo;
+$("#redo").onclick = redo;
+
+$("#clear").onclick = () => $("#confirm").showModal();
+$("#cancelClear").onclick = () => $("#confirm").close();
+
+$("#confirmClear").onclick = () => {
+  $("#confirm").close();
+  newGame(state.size);
+};
+
+$("#prev").onclick = () => {
+  state.view = Math.max(0, (state.view ?? state.moves.length) - 1);
+  render();
+};
+
+$("#next").onclick = () => {
+  state.view = Math.min(state.moves.length, (state.view ?? state.moves.length) + 1);
+
+  if (state.view === state.moves.length) {
+    state.view = null;
+  }
+
+  render();
+};
+
+$("#live").onclick = () => {
+  state.view = null;
+  render();
+};
+
+$("#timeline").oninput = event => {
+  const target = +event.target.value;
+  state.view = target === state.moves.length ? null : target;
+  render();
+};
+
+$("#themeBtn").onclick = () => {
+  const root = document.documentElement;
+
+  root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+
+  localStorage.setItem("go-theme", root.dataset.theme);
+  render();
+};
+
+function download(blob, filename) {
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+$("#jsonSave").onclick = () => {
+  const data = JSON.stringify(snapshot(), null, 2);
+  download(new Blob([data], { type: "application/json" }), "go-game.json");
+};
+
+$("#jsonLoad").onclick = () => $("#file").click();
+
+$("#file").onchange = async event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  try {
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("檔案過大（上限為 5MB）");
+    }
+
+    const data = JSON.parse(await file.text());
+
+    applyState(data, { record: true });
+    toast("JSON 棋局已載入");
+  } catch (error) {
+    toast(`載入失敗：${error.message}`);
+  } finally {
+    event.target.value = "";
+  }
+};
+
+$("#png").onclick = () => {
+  drawBoard(displayedState());
+
+  canvas.toBlob(blob => {
+    download(blob, `go-${state.size}x${state.size}.png`);
+  }, "image/png");
+};
+
+document.addEventListener("keydown", event => {
+  const modifier = event.ctrlKey || event.metaKey;
+  const activeTag = document.activeElement.tagName;
+
+  if (modifier && event.key.toLowerCase() === "z") {
+    event.preventDefault();
+    event.shiftKey ? redo() : undo();
+    return;
+  }
+
+  if (event.code === "Space" && !["INPUT", "SELECT"].includes(activeTag)) {
+    event.preventDefault();
+    pass();
+    return;
+  }
+
+  if (event.key === "ArrowLeft") {
+    $("#prev").click();
+  }
+
+  if (event.key === "ArrowRight") {
+    $("#next").click();
+  }
+});
+
+try {
+  const saved = JSON.parse(localStorage.getItem(DRAFT_KEY));
+
+  if (validState(saved)) {
+    applyState(saved);
+    toast("已還原上次自動儲存的棋局");
+  } else {
+    newGame(19);
+  }
+} catch {
+  newGame(19);
+}
+
+document.documentElement.dataset.theme =
+  localStorage.getItem("go-theme") || "light";
+
+renderSlots();
+render();
+</script>
+</body>
+</html>
