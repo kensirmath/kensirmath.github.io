@@ -2,138 +2,70 @@
 <html lang="zh-Hant" data-theme="light">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>圍棋教學示範棋盤</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>圍棋教學棋盤 Pro</title>
     <style>
-        :root,
-        [data-theme="light"] {
-            --bg: #f7f6f2;
-            --surface: #fbfaf7;
-            --surface2: #f2efe8;
+        :root {
+            --bg: #f5f3ed;
+            --panel: #fffdf8;
+            --soft: #f1ede3;
             --text: #26231c;
-            --muted: #000000;
-            --border: #000000;
-            --primary: #01696f;
-            --primary-hover: #0d5257;
-            --wood1: #d8b06f;
-            --wood2: #c79c5a;
-            --line: #6c4d24;
-            --free: #b45000;
-            --shadow: 0 8px 24px rgba(0, 0, 0, .08);
-            --radius: 16px;
+            --muted: #69655d;
+            --border: #d8d0c1;
+            --primary: #08777b;
+            --danger: #b33a30;
+            --wood1: #dfbb7b;
+            --wood2: #c99d5a;
+            --line: #65491f;
+            --shadow: 0 10px 30px #342a1820
         }
 
         [data-theme="dark"] {
-            --bg: #f7f6f2;
-            --surface: #fbfaf7;
-            --surface2: #f2efe8;
+            --bg: #f5f3ed;
+            --panel: #fffdf8;
+            --soft: #f1ede3;
             --text: #26231c;
-            --muted: #a49f95;
-            --border: #3c3933;
-            --primary: #4f98a3;
-            --primary-hover: #67adb6;
+            --muted: #69655d;
+            --border: #d8d0c1;
+            --primary: #08777b;
+            --danger: #b33a30;
             --wood1: #ffffff;
             --wood2: #ffffff;
-            --line: #6c4d24;
-            --free: #b45000;
-            --shadow: 0 8px 24px rgba(0, 0, 0, .08);
+            --line: #65491f;
+            --shadow: 0 10px 30px #342a1820
         }
 
         * {
             box-sizing: border-box
         }
 
-        html,
         body {
             margin: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            font-family: Arial, "Noto Sans TC", "PingFang TC", sans-serif;
             background: var(--bg);
             color: var(--text);
-        }
-
-        button,
-        input,
-        select {
-            font: inherit
-        }
-
-        button {
-            cursor: pointer
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0
+            font: 15px system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif
         }
 
         .app {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 400px;
-            gap: 16px;
-            height: 100vh;
-            padding: 0;
-            overflow: hidden;
-            align-items: start;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            min-height: 100vh
         }
 
-        .panel,
-        .board-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
-
-        .board-panel {
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: 0;
-            overflow: hidden;
-            height: 100vh;
-            border-radius: 0;
-        }
-
-        .panel {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            border-radius: 0;
+        .stage {
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            min-width: 0
         }
 
         .board-wrap {
             position: relative;
-            width: min(92vmin, 920px);
-            height: min(92vmin, 920px);
-            aspect-ratio: 1/1;
-            margin: 0;
-            flex: 0 0 auto;
-        }
-
-        .board-bg {
-            position: absolute;
-            inset: 0;
-            border-radius: 0;
-            background:
-                linear-gradient(135deg, rgba(255, 255, 255, .16), transparent 35%),
-                repeating-linear-gradient(0deg, transparent 0 31px, rgba(255, 255, 255, .03) 31px 32px),
-                linear-gradient(135deg, var(--wood1), var(--wood2))
+            width: min(92vmin, 960px);
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--wood1), var(--wood2));
+            box-shadow: var(--shadow)
         }
 
         canvas {
@@ -141,1558 +73,1205 @@
             inset: 0;
             width: 100%;
             height: 100%;
-            touch-action: none
+            touch-action: none;
+            cursor: crosshair
         }
 
-        .overlay {
+        .status {
             position: absolute;
             left: 14px;
             bottom: 14px;
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(20, 20, 20, .72);
+            background: #111c;
             color: #fff;
-            font-size: 14px
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 13px;
+            pointer-events: none
         }
 
-        .topbar {
+        .panel {
+            background: var(--panel);
+            border-left: 1px solid var(--border);
+            padding: 18px;
+            overflow: auto;
+            max-height: 100vh
+        }
+
+        .top {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px
+            gap: 10px;
+            align-items: flex-start
         }
 
-        h1 {
-            margin: 0;
-            font-size: 28px
-        }
-
-        h2 {
-            margin: 0 0 6px;
-            font-size: 20px
+        .top h1 {
+            font-size: 23px;
+            margin: 0 0 3px
         }
 
         .muted,
         .hint {
             color: var(--muted);
-            font-size: 14px
+            font-size: 13px
         }
 
-        .row {
+        .section {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 16px
+        }
+
+        .section h2 {
+            font-size: 16px;
+            margin: 0 0 10px
+        }
+
+        .row,
+        .tools {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px
+            gap: 9px
         }
 
-        .controls,
-        .segment,
-        .playback {
-            display: flex;
-            flex-wrap: wrap;
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px
         }
 
+        .btn,
+        select,
+        input {
+            font: inherit
+        }
+
         .btn {
-            min-height: 40px;
-            padding: 8px 12px;
-            border-radius: 10px;
             border: 1px solid var(--border);
-            background: var(--surface2);
-            color: var(--text)
+            background: var(--soft);
+            color: var(--text);
+            padding: 8px 10px;
+            min-height: 38px;
+            border-radius: 9px;
+            cursor: pointer
         }
 
         .btn:hover {
-            filter: brightness(.98)
+            filter: brightness(.96)
+        }
+
+        .btn:focus-visible,
+        select:focus-visible,
+        input:focus-visible {
+            outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent);
+            outline-offset: 2px
         }
 
         .btn.primary {
             background: var(--primary);
-            border-color: var(--primary);
-            color: #fff
+            color: #fff;
+            border-color: var(--primary)
         }
 
-        .btn.primary:hover {
-            background: var(--primary-hover)
+        .btn.danger {
+            color: var(--danger)
         }
 
         .btn.active {
             outline: 2px solid var(--primary);
-            outline-offset: 2px
+            outline-offset: 1px
         }
 
-        .btn.free-active {
-            outline: 2px solid var(--free);
-            outline-offset: 2px
-        }
-
-        .btn.small {
-            min-height: 30px;
-            padding: 4px 8px;
-            font-size: 12px
-        }
-
-        label {
-            font-size: 14px;
-            font-weight: 700
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed
         }
 
         select,
-        input[type="text"] {
+        input {
             width: 100%;
-            min-height: 42px;
-            border-radius: 10px;
+            min-height: 38px;
+            border-radius: 9px;
             border: 1px solid var(--border);
-            background: var(--surface2);
-            padding: 0 12px;
-            color: var(--text)
+            background: var(--soft);
+            color: var(--text);
+            padding: 0 9px
         }
 
-        .stats {
+        label {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px
+            gap: 5px;
+            font-weight: 650;
+            font-size: 13px
         }
 
         .stat {
-            padding: 12px;
-            background: var(--surface2);
-            border-radius: 12px;
-            border: 1px solid var(--border)
+            background: var(--soft);
+            border: 1px solid var(--border);
+            padding: 9px;
+            border-radius: 10px
         }
 
         .stat strong {
             display: block;
-            font-size: 24px
-        }
-
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-size: 14px;
-            color: var(--muted)
-        }
-
-        .dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 6px;
-            vertical-align: middle
+            font-size: 21px;
+            margin-top: 2px
         }
 
         .moves {
-            max-height: none;
-            overflow: visible;
-            border-top: 1px solid var(--border);
-            padding-top: 10px
-        }
-
-        .moves ol {
-            margin: 0;
-            padding-left: 20px;
-            font-size: 14px
+            padding-left: 22px;
+            margin: 6px 0
         }
 
         .moves li {
-            margin: 8px 0;
+            padding: 4px 0;
             color: var(--muted)
         }
 
-        .move-row {
-            display: flex;
-            flex-direction: column;
-            gap: 6px
+        .moves li.current {
+            font-weight: 800;
+            color: var(--primary)
         }
 
-        .move-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px
-        }
-
-        .range-wrap {
-            display: grid;
-            gap: 8px
-        }
-
-        input[type="range"] {
+        .range {
             width: 100%
         }
 
-        .editor {
-            display: none;
+        .toast {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .45);
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 50
-        }
-
-        .editor.show {
-            display: flex
-        }
-
-        .editor-card {
-            width: min(460px, 100%);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            z-index: 30;
+            left: 50%;
+            bottom: 22px;
+            transform: translate(-50%, 120px);
+            background: #1e2421;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 10px;
             box-shadow: var(--shadow);
-            padding: 18px;
-            display: grid;
-            gap: 12px
+            transition: .22s;
+            max-width: min(92vw, 500px)
         }
 
-        .editor-actions {
+        .toast.show {
+            transform: translate(-50%, 0)
+        }
+
+        dialog {
+            border: 0;
+            border-radius: 14px;
+            background: var(--panel);
+            color: var(--text);
+            box-shadow: var(--shadow);
+            max-width: 440px;
+            width: calc(100% - 32px);
+            padding: 20px
+        }
+
+        dialog::backdrop {
+            background: #0008
+        }
+
+        dialog h3 {
+            margin-top: 0
+        }
+
+        .dialog-actions {
             display: flex;
+            justify-content: flex-end;
             gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end
+            margin-top: 18px
         }
 
-        @media (max-width:980px) {
+        .save-list {
+            display: grid;
+            gap: 7px
+        }
 
-            html,
-            body {
-                overflow: auto
-            }
+        .save-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            background: var(--soft);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 7px 8px
+        }
 
+        .save-item span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .sr {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            clip: rect(0, 0, 0, 0);
+            overflow: hidden;
+            white-space: nowrap
+        }
+
+        @media(max-width:900px) {
             .app {
-                grid-template-columns: 1fr;
-                height: auto;
+                grid-template-columns: 1fr
             }
 
-            .board-panel {
-                height: auto;
-                overflow: auto;
-            }
-
-            .panel {
-                height: auto;
-                overflow: visible;
+            .stage {
+                padding: 12px
             }
 
             .board-wrap {
-                width: min(96vw, 760px);
-                height: min(96vw, 760px);
+                width: min(96vw, 760px)
+            }
+
+            .panel {
+                max-height: none;
+                border-left: 0;
+                border-top: 1px solid var(--border)
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="app">
-        <main class="board-panel">
+    <main class="app">
+        <section class="stage">
             <div class="board-wrap">
-                <div class="board-bg"></div>
-                <canvas id="board" width="1000" height="1000" aria-label="圍棋棋盤"></canvas>
-                <div class="overlay" id="statusText">黑方行棋</div>
+                <canvas id="board" width="1000" height="1000" aria-label="圍棋棋盤；點擊交叉點落子"></canvas>
+                <div class="status" id="status" aria-live="polite"></div>
             </div>
-        </main>
+        </section>
 
-        <aside class="panel" tabindex="0" role="region" aria-label="功能區">
-            <section class="controls" id="extraTools">
-                <button class="btn" id="exportBtn">匯出 PNG</button>
-                <button class="btn" id="saveSgfBtn">匯出 SGF</button>
-                <button class="btn" id="loadSgfBtn">載入 SGF</button>
-                <button class="btn" id="saveJsonBtn">匯出 JSON</button>
-                <button class="btn" id="loadJsonBtn">載入 JSON</button>
-                <button class="btn" id="setupModeBtn">關手順擺盤</button>
-                <button class="btn" id="setupAutoBtn">擺盤自動</button>
-                <button class="btn" id="setupManualBtn">擺盤手動</button>
-                <button class="btn" id="freeModeBtn">自由模式</button>
-                <input class="sr-only" id="sgfInput" type="file" accept=".sgf,text/plain">
-                <input class="sr-only" id="jsonInput" type="file" accept=".json,application/json">
-            </section>
-
-            <section>
-                <h2>手順播放</h2>
-                <div class="playback">
-                    <button class="btn" id="prevStepBtn">上一步</button>
-                    <button class="btn" id="playBtn">播放</button>
-                    <button class="btn" id="nextStepBtn">下一步</button>
-                </div>
-                <div class="range-wrap" style="margin-top:10px">
-                    <label for="timeline">手順時間軸</label>
-                    <input id="timeline" type="range" min="0" max="0" value="0">
-                    <div class="hint" id="timelineText">目前顯示：第 0 手 / 共 0 手</div>
-                </div>
-            </section>
-
-            <div class="topbar">
+        <aside class="panel">
+            <div class="top">
                 <div>
-                    <h1>圍棋教學示範棋盤</h1>
-                    <div class="muted">固定棋盤 + 右欄獨立滾動 + 1 起始座標 + 順序手順</div>
+                    <h1>圍棋教學棋盤 Pro</h1>
+                    <div class="muted" id="autosaveStatus">本機草稿已啟用</div>
                 </div>
                 <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
             </div>
 
-            <section>
-                <div class="row">
-                    <div>
-                        <label for="sizeSelect">棋盤大小</label>
-                        <select id="sizeSelect">
+            <section class="section">
+                <h2>棋局</h2>
+
+                <div class="grid">
+                    <label>
+                        棋盤尺寸
+                        <select id="size">
                             <option value="9">9 路</option>
                             <option value="13">13 路</option>
                             <option value="19" selected>19 路</option>
                         </select>
-                    </div>
-                    <div>
-                        <label for="toolSelect">目前工具</label>
-                        <select id="toolSelect">
-                            <option value="play">落子</option>
-                            <option value="label">標記文字</option>
-                            <option value="erase">擦除</option>
+                    </label>
+
+                    <label>
+                        工具
+                        <select id="tool">
+                            <option value="play">行棋</option>
+                            <option value="setup">擺盤</option>
+                            <option value="label">文字標記</option>
+                            <option value="erase">擦除（教學）</option>
                         </select>
-                    </div>
+                    </label>
+                </div>
+
+                <div class="row" style="margin-top:9px">
+                    <button class="btn active" data-color="black">● 黑方</button>
+                    <button class="btn" data-color="white">○ 白方</button>
+                    <input id="labelText" placeholder="標記文字（最多 8 字）" aria-label="標記文字">
+                </div>
+
+                <div class="tools" style="margin-top:9px">
+                    <button class="btn primary" id="pass">虛手</button>
+                    <button class="btn" id="undo" title="Ctrl/⌘ Z">↶ 復原</button>
+                    <button class="btn" id="redo" title="Ctrl/⌘ Shift Z">↷ 重做</button>
+                    <button class="btn danger" id="clear">清空棋局</button>
+                </div>
+
+                <p class="hint">
+                    「擺盤」不會計算手數；「行棋」才會顯示棋子中央手順號。
+                    快捷鍵：←/→ 回放、Space 虛手、Ctrl/⌘ Z 復原。
+                </p>
+            </section>
+
+            <section class="section">
+                <h2>回放</h2>
+                <div class="tools">
+                    <button class="btn" id="prev">◀ 上一步</button>
+                    <button class="btn" id="next">下一步 ▶</button>
+                    <button class="btn" id="live">回到目前</button>
+                </div>
+                <input class="range" id="timeline" type="range" min="0" value="0" style="margin-top:10px">
+                <div class="hint" id="timelineText">第 0 / 0 項紀錄</div>
+            </section>
+
+            <section class="section">
+                <h2>棋局資料</h2>
+
+                <div class="tools">
+                    <button class="btn" id="png">匯出 PNG</button>
+                    <button class="btn" id="jsonSave">下載 JSON</button>
+                    <button class="btn" id="jsonLoad">載入 JSON</button>
+                    <input class="sr" type="file" id="file" accept="application/json,.json">
+                </div>
+
+                <div class="row" style="margin-top:10px">
+                    <input id="saveName" maxlength="30" placeholder="命名存檔，例如：第3課死活題">
+                    <button class="btn primary" id="saveSlot">儲存</button>
+                </div>
+
+                <div class="save-list" id="saveList" style="margin-top:9px"></div>
+
+                <p class="hint">
+                    每次修改均會自動儲存到此瀏覽器；命名存檔最多保留 12 個。
+                    匯入資料會先驗證，失敗不會覆蓋目前棋局。
+                </p>
+            </section>
+
+            <section class="section">
+                <h2>統計</h2>
+                <div class="grid3">
+                    <div class="stat"><span class="muted">黑子</span><strong id="black">0</strong></div>
+                    <div class="stat"><span class="muted">白子</span><strong id="white">0</strong></div>
+                    <div class="stat"><span class="muted">提子</span><strong id="caps">0 : 0</strong></div>
                 </div>
             </section>
 
-            <section>
-                <div class="segment" id="stoneChooser">
-                    <button class="btn active" data-color="black">黑先</button>
-                    <button class="btn" data-color="white">白先</button>
-                </div>
-            </section>
-
-            <section>
-                <label for="customLabel">自訂標記文字</label>
-                <input id="customLabel" type="text" placeholder="例如：斷點、厚勢、先手">
-            </section>
-
-            <section class="controls">
-                <button class="btn primary" id="passBtn">虛手</button>
-                <button class="btn" id="undoBtn">悔棋</button>
-                <button class="btn" id="clearBtn">清空棋盤</button>
-                <button class="btn" id="scoreBtn">重新計目</button>
-            </section>
-
-            <section>
-                <h2>即時計目</h2>
-                <div class="stats">
-                    <div class="stat"><span class="muted">黑子數</span><strong id="blackStones">0</strong></div>
-                    <div class="stat"><span class="muted">白子數</span><strong id="whiteStones">0</strong></div>
-                    <div class="stat"><span class="muted">黑地</span><strong id="blackTerritory">0</strong></div>
-                    <div class="stat"><span class="muted">白地</span><strong id="whiteTerritory">0</strong></div>
-                    <div class="stat"><span class="muted">中立點</span><strong id="neutralPoints">0</strong></div>
-                    <div class="stat"><span class="muted">形勢</span><strong id="scoreLead">平手</strong></div>
-                </div>
-                <p class="hint">計目為教學估算，不含貼目與死活終局判定。</p>
-            </section>
-
-            <section>
-                <h2>提子統計</h2>
-                <div class="stats">
-                    <div class="stat"><span class="muted">黑提子</span><strong id="blackCaptures">0</strong></div>
-                    <div class="stat"><span class="muted">白提子</span><strong id="whiteCaptures">0</strong></div>
-                </div>
-                <p class="hint" id="modeText">一般示範模式，可自由落子與標記。</p>
-            </section>
-
-            <section>
-                <h2>圖例</h2>
-                <div class="legend">
-                    <span><i class="dot" style="background:#111"></i>正式黑子</span>
-                    <span><i class="dot" style="background:#fff;border:1px solid #000"></i>正式白子</span>
-                    <span><i class="dot" style="background:#01696f"></i>正式標記</span>
-                    <span><i class="dot" style="background:#b45000"></i>自由標記/自由棋子</span>
-                </div>
-            </section>
-
-            <section class="moves">
-                <h2>手順記錄</h2>
-                <ol id="moveList"></ol>
+            <section class="section">
+                <h2>手順</h2>
+                <ol class="moves" id="moves"></ol>
             </section>
         </aside>
-    </div>
+    </main>
 
-    <div class="editor" id="moveEditor">
-        <div class="editor-card">
-            <h2>編輯手順</h2>
-            <div class="row">
-                <div>
-                    <label for="editType">類型</label>
-                    <select id="editType">
-                        <option value="play">落子</option>
-                        <option value="pass">虛手</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="editColor">顏色</label>
-                    <select id="editColor">
-                        <option value="black">黑</option>
-                        <option value="white">白</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div>
-                    <label for="editX">X 座標</label>
-                    <input id="editX" type="text" placeholder="1">
-                </div>
-                <div>
-                    <label for="editY">Y 座標</label>
-                    <input id="editY" type="text" placeholder="1">
-                </div>
-            </div>
-            <div class="hint">座標以 1 開始，例如左上角是 1,1；虛手可不用填 X/Y。</div>
-            <div class="editor-actions">
-                <button class="btn" id="cancelEditBtn">取消</button>
-                <button class="btn primary" id="saveEditBtn">儲存</button>
-            </div>
+    <dialog id="confirm">
+        <h3>清空目前棋局？</h3>
+        <p class="muted">這個動作可使用「復原」回退，但建議先建立命名存檔。</p>
+        <div class="dialog-actions">
+            <button class="btn" id="cancelClear">取消</button>
+            <button class="btn danger" id="confirmClear">確定清空</button>
         </div>
-    </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status"></div>
 
     <script>
-        const canvas = document.getElementById('board');
-        const ctx = canvas.getContext('2d');
-        const sizeSelect = document.getElementById('sizeSelect');
-        const toolSelect = document.getElementById('toolSelect');
-        const customLabel = document.getElementById('customLabel');
-        const statusText = document.getElementById('statusText');
-        const moveList = document.getElementById('moveList');
-        const moveEditor = document.getElementById('moveEditor');
-        const editType = document.getElementById('editType');
-        const editColor = document.getElementById('editColor');
-        const editX = document.getElementById('editX');
-        const editY = document.getElementById('editY');
+        "use strict";
+
+        const $ = selector => document.querySelector(selector);
+        const canvas = $("#board");
+        const ctx = canvas.getContext("2d");
+
+        const DRAFT_KEY = "teaching-go-pro-draft-v3";
+        const SLOTS_KEY = "teaching-go-pro-slots-v3";
 
         const state = {
             size: 19,
-            current: 'black',
             board: [],
-            freeBoard: [],
-            labels: new Map(),
-            freeLabels: new Map(),
+            current: "black",
             moves: [],
-            captureLog: [],
-            replayMeta: { version: '1.0', steps: [] },
-            margin: 70,
-            cell: 0,
-            starPoints: [],
             captures: { black: 0, white: 0 },
-            setupMode: false,
-            setupPlacement: 'auto',
-            freeMode: false,
-            viewStep: null,
-            autoplay: false,
-            autoplayTimer: null,
-            baseState: null,
-            editingMoveNo: null
+            history: [],
+            future: [],
+            view: null,
+            hover: null,
+            margin: 110,
+            cell: 0
         };
 
-        function key(x, y) { return `${x},${y}`; }
-        function parseKey(k) { return k.split(',').map(Number); }
-        function cloneBoard(board) { return board.map(row => row.slice()); }
+        const clone = value => JSON.parse(JSON.stringify(value));
+        const emptyBoard = size => Array.from({ length: size }, () => Array(size).fill(null));
+        const opposite = color => color === "black" ? "white" : "black";
+        const pointKey = (x, y) => `${x},${y}`;
 
-        function updateStarPoints() {
-            const stars = { 19: [3, 9, 15], 13: [3, 6, 9], 9: [2, 4, 6] };
-            const pts = stars[state.size] || [];
-            state.starPoints = [];
-            pts.forEach(y => pts.forEach(x => state.starPoints.push([x, y])));
+        function snapshot() {
+            return clone({
+                size: state.size,
+                board: state.board,
+                current: state.current,
+                moves: state.moves,
+                captures: state.captures
+            });
+        }
+
+        function validState(data) {
+            if (!data || ![9, 13, 19].includes(+data.size)) return false;
+            if (!Array.isArray(data.board) || data.board.length !== +data.size) return false;
+
+            if (data.board.some(row =>
+                !Array.isArray(row) ||
+                row.length !== +data.size ||
+                row.some(value => value !== null && value !== "black" && value !== "white")
+            )) return false;
+
+            if (!["black", "white"].includes(data.current)) return false;
+            if (!Array.isArray(data.moves)) return false;
+            if (!data.captures) return false;
+
+            return true;
+        }
+
+        function applyState(data, { record = false } = {}) {
+            if (!validState(data)) {
+                throw new Error("棋局資料格式不正確或不受支援。");
+            }
+
+            if (record) {
+                state.history.push(snapshot());
+                state.future = [];
+            }
+
+            state.size = +data.size;
+            state.board = clone(data.board);
+            state.current = data.current;
+            state.moves = clone(data.moves);
+            state.captures = {
+                black: +data.captures.black || 0,
+                white: +data.captures.white || 0
+            };
+            state.view = null;
+
+            $("#size").value = state.size;
+            render();
+            scheduleAutosave();
+        }
+
+        function newGame(size = 19) {
+            applyState({
+                size: +size,
+                board: emptyBoard(+size),
+                current: "black",
+                moves: [],
+                captures: { black: 0, white: 0 }
+            }, { record: true });
+
+            toast("已建立新棋局");
+        }
+
+        function inside(x, y) {
+            return x >= 0 && y >= 0 && x < state.size && y < state.size;
         }
 
         function neighbors(x, y) {
-            return [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]
-                .filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < state.size && ny < state.size);
-        }
-
-        function moveCount() {
-            return state.moves.filter(m => m.type === 'play' || m.type === 'pass').length;
-        }
-
-        function stopAutoplay(silent = false) {
-            state.autoplay = false;
-            if (state.autoplayTimer) clearInterval(state.autoplayTimer);
-            state.autoplayTimer = null;
-            if (!silent) updateTimeline();
-        }
-
-        function resetBoard(size = state.size) {
-            state.size = Number(size);
-            state.board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.labels = new Map();
-            state.freeLabels = new Map();
-            state.moves = [];
-            state.captureLog = [];
-            state.replayMeta = { version: '1.0', steps: [] };
-            state.current = 'black';
-            state.captures = { black: 0, white: 0 };
-            state.setupMode = false;
-            state.setupPlacement = 'auto';
-            state.freeMode = false;
-            state.viewStep = null;
-            stopAutoplay(true);
-            updateStarPoints();
-            syncUI();
-            draw();
-        }
-
-        function snapshotBaseState() {
-            state.baseState = {
-                size: state.size,
-                current: state.current,
-                board: cloneBoard(state.board),
-                labels: [...state.labels.entries()],
-                moves: state.moves.map(v => ({ ...v })),
-                captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
-                replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
-                captures: { ...state.captures },
-                setupMode: state.setupMode,
-                setupPlacement: state.setupPlacement
-            };
-        }
-
-        function restoreBaseState() {
-            if (!state.baseState) return;
-            const b = state.baseState;
-            state.size = b.size;
-            state.current = b.current;
-            state.board = cloneBoard(b.board);
-            state.freeBoard = Array.from({ length: b.size }, () => Array(b.size).fill(null));
-            state.labels = new Map(b.labels);
-            state.freeLabels = new Map();
-            state.moves = b.moves.map(v => ({ ...v }));
-            state.captureLog = b.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
-            state.replayMeta = JSON.parse(JSON.stringify(b.replayMeta || { version: '1.0', steps: [] }));
-            state.captures = { ...b.captures };
-            state.setupMode = !!b.setupMode;
-            state.setupPlacement = b.setupPlacement || 'auto';
-            state.freeMode = false;
-            updateStarPoints();
+            return [
+                [x - 1, y],
+                [x + 1, y],
+                [x, y - 1],
+                [x, y + 1]
+            ].filter(([nx, ny]) => inside(nx, ny));
         }
 
         function groupAt(board, x, y) {
             const color = board[y][x];
-            if (!color) return null;
+            const queue = [[x, y]];
+            const seen = new Set([pointKey(x, y)]);
             const stones = [];
             const liberties = new Set();
-            const seen = new Set([key(x, y)]);
-            const queue = [[x, y]];
+
             while (queue.length) {
                 const [cx, cy] = queue.pop();
                 stones.push([cx, cy]);
-                neighbors(cx, cy).forEach(([nx, ny]) => {
-                    const v = board[ny][nx];
-                    if (v === color && !seen.has(key(nx, ny))) {
-                        seen.add(key(nx, ny));
+
+                for (const [nx, ny] of neighbors(cx, cy)) {
+                    const value = board[ny][nx];
+                    const key = pointKey(nx, ny);
+
+                    if (value === null) {
+                        liberties.add(key);
+                    } else if (value === color && !seen.has(key)) {
+                        seen.add(key);
                         queue.push([nx, ny]);
-                    } else if (!v) {
-                        liberties.add(key(nx, ny));
                     }
+                }
+            }
+
+            return { stones, liberties };
+        }
+
+        function tryPlay(x, y, color, board = state.board) {
+            if (!inside(x, y) || board[y][x]) return null;
+
+            const nextBoard = clone(board);
+            nextBoard[y][x] = color;
+
+            const captured = [];
+
+            for (const [nx, ny] of neighbors(x, y)) {
+                if (nextBoard[ny][nx] !== opposite(color)) continue;
+
+                const enemyGroup = groupAt(nextBoard, nx, ny);
+
+                if (!enemyGroup.liberties.size) {
+                    for (const [sx, sy] of enemyGroup.stones) {
+                        nextBoard[sy][sx] = null;
+                        captured.push([sx, sy]);
+                    }
+                }
+            }
+
+            const ownGroup = groupAt(nextBoard, x, y);
+
+            if (!ownGroup.liberties.size) return null;
+
+            return { board: nextBoard, captured };
+        }
+
+        function commit(action) {
+            state.history.push(snapshot());
+            state.future = [];
+            action();
+            state.view = null;
+            render();
+            scheduleAutosave();
+        }
+
+        function setupStone(x, y) {
+            if (state.view !== null) {
+                toast("請先按「回到目前」才可修改棋局");
+                return;
+            }
+
+            if (state.board[y][x]) {
+                toast("此處已有棋子");
+                return;
+            }
+
+            commit(() => {
+                state.board[y][x] = state.current;
+                state.moves.push({
+                    type: "setup",
+                    x,
+                    y,
+                    color: state.current
                 });
-            }
-            return { color, stones, liberties };
-        }
-
-        function findCapturedGroups(board, colorJustPlayed, x, y) {
-            const enemy = colorJustPlayed === 'black' ? 'white' : 'black';
-            const groups = [];
-            const seen = new Set();
-            neighbors(x, y).forEach(([nx, ny]) => {
-                if (board[ny][nx] !== enemy) return;
-                const k = key(nx, ny);
-                if (seen.has(k)) return;
-                const grp = groupAt(board, nx, ny);
-                if (!grp) return;
-                grp.stones.forEach(([sx, sy]) => seen.add(key(sx, sy)));
-                if (grp.liberties.size === 0) groups.push(grp.stones.map(([sx, sy]) => [sx, sy]));
             });
-            return groups;
+
+            toast(`已擺放${state.current === "black" ? "黑" : "白"}子`);
         }
 
-        function removeCaptured(board, colorJustPlayed, x, y) {
-            let removed = 0;
-            const groups = findCapturedGroups(board, colorJustPlayed, x, y);
-            groups.forEach(stones => {
-                stones.forEach(([sx, sy]) => {
-                    board[sy][sx] = null;
-                    removed++;
+        function playStone(x, y) {
+            if (state.view !== null) {
+                toast("請先按「回到目前」才可繼續行棋");
+                return;
+            }
+
+            const result = tryPlay(x, y, state.current);
+
+            if (!result) {
+                toast("此處不可落子（已有棋子或自殺）");
+                return;
+            }
+
+            commit(() => {
+                const color = state.current;
+
+                state.board = result.board;
+                state.captures[color] += result.captured.length;
+
+                state.moves.push({
+                    type: "play",
+                    x,
+                    y,
+                    color,
+                    captured: result.captured.length
                 });
-            });
-            return { removed, groups };
-        }
 
-        function isLegalMoveOnBoard(board, x, y, color) {
-            if (board[y][x]) return false;
-            const test = cloneBoard(board);
-            test[y][x] = color;
-            removeCaptured(test, color, x, y);
-            const grp = groupAt(test, x, y);
-            return grp && grp.liberties.size > 0;
-        }
-
-        function recordReplayStep(step) {
-            state.replayMeta.steps.push(JSON.parse(JSON.stringify(step)));
-        }
-
-        function isPlayableStep(step) {
-            return step.type === 'play' || step.type === 'pass';
-        }
-
-        function renumberPlayableSteps() {
-            let n = 1;
-            state.replayMeta.steps.forEach(step => {
-                if (isPlayableStep(step)) step.moveNo = n++;
-            });
-        }
-
-        function rebuildBoardFromReplaySteps(steps) {
-            const board = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            const labels = new Map();
-            let current = 'black';
-            let captures = { black: 0, white: 0 };
-
-            steps.forEach(step => {
-                if (step.type === 'setup') {
-                    board[step.y][step.x] = step.color;
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'play') {
-                    if (step.x >= 0 && step.y >= 0 && step.x < state.size && step.y < state.size) {
-                        board[step.y][step.x] = step.color;
-                        const result = removeCaptured(board, step.color, step.x, step.y);
-                        step.captures = result.groups.flat().map(([x, y]) => [x, y]);
-                        if (result.removed) captures[step.color] += result.removed;
-                    } else {
-                        step.captures = [];
-                    }
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'pass') {
-                    current = step.color === 'black' ? 'white' : 'black';
-                } else if (step.type === 'label') {
-                    labels.set(key(step.x, step.y), step.text);
-                } else if (step.type === 'erase') {
-                    board[step.y][step.x] = null;
-                    labels.delete(key(step.x, step.y));
-                }
+                state.current = opposite(color);
             });
 
-            return { board, labels, current, captures };
+            toast(result.captured.length ? `提掉 ${result.captured.length} 子` : "已落子");
         }
 
-        function rebuildAllFromReplayMeta() {
-            renumberPlayableSteps();
-            const rebuilt = rebuildBoardFromReplaySteps(state.replayMeta.steps);
-
-            state.board = rebuilt.board;
-            state.labels = rebuilt.labels;
-            state.current = rebuilt.current;
-            state.captures = rebuilt.captures;
-            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.freeLabels = new Map();
-            state.moves = [];
-            state.captureLog = [];
-
-            state.replayMeta.steps.forEach(step => {
-                if (step.type === 'setup') {
-                    state.moves.push({ type: 'setup', x: step.x, y: step.y, color: step.color });
-                } else if (step.type === 'play') {
-                    const captured = (step.captures || []).length;
-                    state.moves.push({ type: 'play', x: step.x, y: step.y, color: step.color, moveNo: step.moveNo, captured });
-                    if (captured) {
-                        state.captureLog.push({ moveNo: step.moveNo, by: step.color, captures: (step.captures || []).map(([x, y]) => [x, y]) });
-                    }
-                } else if (step.type === 'pass') {
-                    state.moves.push({ type: 'pass', color: step.color, moveNo: step.moveNo });
-                } else if (step.type === 'label') {
-                    state.moves.push({ type: 'label', x: step.x, y: step.y, text: step.text });
-                } else if (step.type === 'erase') {
-                    state.moves.push({ type: 'erase', x: step.x, y: step.y });
-                }
-            });
-
-            snapshotBaseState();
-            state.viewStep = null;
-            syncUI();
-            draw();
-        }
-
-        function placeStone(x, y) {
-            state.baseState = null;
-
-            if (state.freeMode) {
-                if (state.freeBoard[y][x] || state.board[y][x]) return;
-                state.freeBoard[y][x] = state.current;
-                if (state.setupPlacement === 'auto') state.current = state.current === 'black' ? 'white' : 'black';
-                syncUI();
-                draw();
+        function pass() {
+            if (state.view !== null) {
+                toast("請先回到目前棋局");
                 return;
             }
 
-            if (state.board[y][x]) return;
+            commit(() => {
+                state.moves.push({
+                    type: "pass",
+                    color: state.current
+                });
 
-            if (state.setupMode) {
-                const setupColor = state.current;
-                state.board[y][x] = setupColor;
-                state.moves.push({ type: 'setup', x, y, color: setupColor });
-                recordReplayStep({ type: 'setup', x, y, color: setupColor });
-                if (state.setupPlacement === 'auto') state.current = state.current === 'black' ? 'white' : 'black';
-                syncUI();
-                draw();
+                state.current = opposite(state.current);
+            });
+
+            toast("已虛手");
+        }
+
+        function undo() {
+            if (!state.history.length) {
+                toast("沒有可復原動作");
                 return;
             }
 
-            if (!isLegalMoveOnBoard(state.board, x, y, state.current)) return;
-
-            state.board[y][x] = state.current;
-            const moveNo = moveCount() + 1;
-            const result = removeCaptured(state.board, state.current, x, y);
-
-            if (result.removed) {
-                state.captures[state.current] += result.removed;
-                state.captureLog.push({ moveNo, by: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) });
-            }
-
-            state.moves.push({ type: 'play', x, y, color: state.current, moveNo, captured: result.removed });
-            recordReplayStep({ type: 'play', moveNo, x, y, color: state.current, captures: result.groups.flat().map(([sx, sy]) => [sx, sy]) });
-
-            state.current = state.current === 'black' ? 'white' : 'black';
-            syncUI();
-            draw();
+            state.future.push(snapshot());
+            applyState(state.history.pop());
+            toast("已復原");
         }
 
-        function addLabel(x, y, text) {
-            if (!text) return;
-            state.baseState = null;
-
-            if (state.freeMode) {
-                state.freeLabels.set(key(x, y), text.slice(0, 8));
-                syncUI();
-                draw();
+        function redo() {
+            if (!state.future.length) {
+                toast("沒有可重做動作");
                 return;
             }
 
-            state.labels.set(key(x, y), text.slice(0, 8));
-            state.moves.push({ type: 'label', x, y, text: text.slice(0, 8) });
-            recordReplayStep({ type: 'label', x, y, text: text.slice(0, 8) });
-            syncUI();
-            draw();
+            state.history.push(snapshot());
+            applyState(state.future.pop());
+            toast("已重做");
         }
 
-        function eraseAt(x, y) {
-            const k = key(x, y);
+        function replayTo(step) {
+            const replay = {
+                size: state.size,
+                board: emptyBoard(state.size),
+                current: "black",
+                moves: [],
+                captures: { black: 0, white: 0 }
+            };
 
-            if (state.freeMode) {
-                state.freeBoard[y][x] = null;
-                state.freeLabels.delete(k);
-                syncUI();
-                draw();
-                return;
-            }
+            for (let index = 0; index < step; index++) {
+                const move = state.moves[index];
 
-            state.baseState = null;
-            state.board[y][x] = null;
-            state.labels.delete(k);
-            state.moves.push({ type: 'erase', x, y });
-            recordReplayStep({ type: 'erase', x, y });
-            syncUI();
-            draw();
-        }
-
-        function territoryEstimate() {
-            const visited = new Set();
-            let blackStones = 0, whiteStones = 0, blackTerritory = 0, whiteTerritory = 0, neutral = 0;
-            for (let y = 0; y < state.size; y++) {
-                for (let x = 0; x < state.size; x++) {
-                    const v = state.board[y][x];
-                    const fv = state.freeBoard[y]?.[x];
-                    if (v === 'black' || fv === 'black') blackStones++;
-                    if (v === 'white' || fv === 'white') whiteStones++;
-                    if (v || fv || visited.has(key(x, y))) continue;
-                    const queue = [[x, y]];
-                    const empties = [];
-                    const touches = new Set();
-                    visited.add(key(x, y));
-                    while (queue.length) {
-                        const [cx, cy] = queue.pop();
-                        empties.push([cx, cy]);
-                        neighbors(cx, cy).forEach(([nx, ny]) => {
-                            const nv = state.board[ny][nx] || state.freeBoard[ny][nx];
-                            if (!nv && !visited.has(key(nx, ny))) {
-                                visited.add(key(nx, ny));
-                                queue.push([nx, ny]);
-                            } else if (nv) {
-                                touches.add(nv);
-                            }
-                        });
-                    }
-                    if (touches.size === 1 && touches.has('black')) blackTerritory += empties.length;
-                    else if (touches.size === 1 && touches.has('white')) whiteTerritory += empties.length;
-                    else neutral += empties.length;
-                }
-            }
-            return { blackStones, whiteStones, blackTerritory, whiteTerritory, neutral };
-        }
-
-        function getPlayableMoves() {
-            return state.moves.filter(m => m.type === 'play' || m.type === 'pass');
-        }
-
-        function rebuildToStep(step) {
-            if (!state.baseState) snapshotBaseState();
-            restoreBaseState();
-
-            const setupSteps = state.baseState.replayMeta.steps.filter(s => !isPlayableStep(s));
-            const playSteps = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s));
-            const merged = [...setupSteps, ...playSteps.slice(0, step)];
-            const rebuilt = rebuildBoardFromReplaySteps(JSON.parse(JSON.stringify(merged)));
-
-            state.board = rebuilt.board;
-            state.labels = rebuilt.labels;
-            state.current = rebuilt.current;
-            state.captures = rebuilt.captures;
-            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.freeLabels = new Map();
-            state.moves = [];
-            state.captureLog = [];
-
-            merged.forEach(s => {
-                if (s.type === 'setup') state.moves.push({ type: 'setup', x: s.x, y: s.y, color: s.color });
-                if (s.type === 'play') {
-                    const captured = (s.captures || []).length;
-                    state.moves.push({ type: 'play', x: s.x, y: s.y, color: s.color, moveNo: s.moveNo, captured });
-                    if (captured) state.captureLog.push({ moveNo: s.moveNo, by: s.color, captures: s.captures.map(([x, y]) => [x, y]) });
-                }
-                if (s.type === 'pass') state.moves.push({ type: 'pass', color: s.color, moveNo: s.moveNo });
-            });
-
-            setupSteps.forEach(s => {
-                if (s.type === 'label') state.moves.push({ type: 'label', x: s.x, y: s.y, text: s.text });
-                if (s.type === 'erase') state.moves.push({ type: 'erase', x: s.x, y: s.y });
-            });
-
-            syncUI();
-            draw();
-        }
-
-        function updateTimeline() {
-            const total = state.baseState
-                ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length
-                : getPlayableMoves().length;
-            const tl = document.getElementById('timeline');
-            const displayStep = state.viewStep == null ? total : state.viewStep;
-            tl.max = String(total);
-            tl.value = String(Math.min(displayStep, total));
-            document.getElementById('timelineText').textContent = `目前顯示：第 ${Math.min(displayStep, total)} 手 / 共 ${total} 手`;
-            document.getElementById('playBtn').textContent = state.autoplay ? '暫停' : '播放';
-        }
-
-        function setViewStep(step) {
-            if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length;
-            const s = Math.max(0, Math.min(total, step));
-            state.viewStep = s;
-            rebuildToStep(s);
-            updateTimeline();
-        }
-
-        function startAutoplay() {
-            if (!state.baseState) snapshotBaseState();
-            const total = state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length;
-            if ((state.viewStep ?? total) >= total) state.viewStep = 0;
-            state.autoplay = true;
-            updateTimeline();
-            state.autoplayTimer = setInterval(() => {
-                const cur = state.viewStep ?? total;
-                if (cur >= total) {
-                    stopAutoplay();
-                    return;
-                }
-                setViewStep(cur + 1);
-            }, 850);
-        }
-
-        function getPlayableIndexes() {
-            return state.replayMeta.steps
-                .map((step, index) => ({ step, index }))
-                .filter(({ step }) => isPlayableStep(step));
-        }
-
-        function movePlayableStep(direction, moveNo) {
-            const playable = getPlayableIndexes();
-            const pos = playable.findIndex(v => v.step.moveNo === moveNo);
-            if (pos === -1) return;
-            const swapPos = direction === 'up' ? pos - 1 : pos + 1;
-            if (swapPos < 0 || swapPos >= playable.length) return;
-            const a = playable[pos].index;
-            const b = playable[swapPos].index;
-            [state.replayMeta.steps[a], state.replayMeta.steps[b]] = [state.replayMeta.steps[b], state.replayMeta.steps[a]];
-            rebuildAllFromReplayMeta();
-        }
-
-        function deletePlayableStep(moveNo) {
-            const idx = state.replayMeta.steps.findIndex(step => isPlayableStep(step) && step.moveNo === moveNo);
-            if (idx === -1) return;
-            state.replayMeta.steps.splice(idx, 1);
-            rebuildAllFromReplayMeta();
-        }
-
-        function openEditPlayableStep(moveNo) {
-            const step = state.replayMeta.steps.find(s => isPlayableStep(s) && s.moveNo === moveNo);
-            if (!step) return;
-            state.editingMoveNo = moveNo;
-            editType.value = step.type;
-            editColor.value = step.color;
-            editX.value = step.type === 'play' ? String(step.x + 1) : '';
-            editY.value = step.type === 'play' ? String(step.y + 1) : '';
-            editX.disabled = step.type === 'pass';
-            editY.disabled = step.type === 'pass';
-            moveEditor.classList.add('show');
-        }
-
-        function saveEditPlayableStep() {
-            const step = state.replayMeta.steps.find(s => isPlayableStep(s) && s.moveNo === state.editingMoveNo);
-            if (!step) return;
-            const type = editType.value;
-            const color = editColor.value;
-
-            if (type === 'pass') {
-                step.type = 'pass';
-                step.color = color;
-                delete step.x;
-                delete step.y;
-                delete step.captures;
-            } else {
-                const x1 = Number(editX.value);
-                const y1 = Number(editY.value);
-                const x = x1 - 1;
-                const y = y1 - 1;
-
-                if (Number.isNaN(x1) || Number.isNaN(y1) || x1 < 1 || y1 < 1 || x1 > state.size || y1 > state.size) {
-                    alert('座標無效');
-                    return;
+                if (move.type === "setup") {
+                    replay.board[move.y][move.x] = move.color;
+                    replay.moves.push(move);
+                    continue;
                 }
 
-                step.type = 'play';
-                step.color = color;
-                step.x = x;
-                step.y = y;
-                step.captures = [];
-            }
-
-            moveEditor.classList.remove('show');
-            state.editingMoveNo = null;
-            rebuildAllFromReplayMeta();
-        }
-
-        function renderMoves() {
-            moveList.innerHTML = '';
-
-            state.moves.forEach(item => {
-                const li = document.createElement('li');
-
-                if (item.type === 'play' || item.type === 'pass') {
-                    const wrap = document.createElement('div');
-                    wrap.className = 'move-row';
-
-                    const text = document.createElement('div');
-                    text.textContent = item.type === 'play'
-                        ? `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})${item.captured ? `，提 ${item.captured} 子` : ''}`
-                        : `第 ${item.moveNo} 手：${item.color === 'black' ? '黑' : '白'} 虛手`;
-
-                    const actions = document.createElement('div');
-                    actions.className = 'move-actions';
-
-                    const upBtn = document.createElement('button');
-                    upBtn.className = 'btn small';
-                    upBtn.textContent = '上移';
-                    upBtn.addEventListener('click', () => movePlayableStep('up', item.moveNo));
-
-                    const downBtn = document.createElement('button');
-                    downBtn.className = 'btn small';
-                    downBtn.textContent = '下移';
-                    downBtn.addEventListener('click', () => movePlayableStep('down', item.moveNo));
-
-                    const editBtn = document.createElement('button');
-                    editBtn.className = 'btn small';
-                    editBtn.textContent = '編輯';
-                    editBtn.addEventListener('click', () => openEditPlayableStep(item.moveNo));
-
-                    const delBtn = document.createElement('button');
-                    delBtn.className = 'btn small';
-                    delBtn.textContent = '刪除';
-                    delBtn.addEventListener('click', () => deletePlayableStep(item.moveNo));
-
-                    actions.appendChild(upBtn);
-                    actions.appendChild(downBtn);
-                    actions.appendChild(editBtn);
-                    actions.appendChild(delBtn);
-
-                    wrap.appendChild(text);
-                    wrap.appendChild(actions);
-                    li.appendChild(wrap);
-                } else {
-                    if (item.type === 'setup') li.textContent = `擺盤：${item.color === 'black' ? '黑' : '白'} (${item.x + 1},${item.y + 1})`;
-                    else if (item.type === 'label') li.textContent = `標記：(${item.x + 1},${item.y + 1}) → ${item.text}`;
-                    else if (item.type === 'erase') li.textContent = `擦除：(${item.x + 1},${item.y + 1})`;
+                if (move.type === "pass") {
+                    replay.moves.push(move);
+                    replay.current = opposite(move.color);
+                    continue;
                 }
 
-                moveList.appendChild(li);
-            });
-        }
+                if (move.type === "play") {
+                    const result = tryPlay(move.x, move.y, move.color, replay.board);
 
-        function syncUI() {
-            const s = territoryEstimate();
-            document.getElementById('blackStones').textContent = s.blackStones;
-            document.getElementById('whiteStones').textContent = s.whiteStones;
-            document.getElementById('blackTerritory').textContent = s.blackTerritory;
-            document.getElementById('whiteTerritory').textContent = s.whiteTerritory;
-            document.getElementById('neutralPoints').textContent = s.neutral;
+                    if (!result) break;
 
-            const blackTotal = s.blackStones + s.blackTerritory + state.captures.black;
-            const whiteTotal = s.whiteStones + s.whiteTerritory + state.captures.white;
-            document.getElementById('scoreLead').textContent =
-                blackTotal === whiteTotal ? '平手' :
-                    (blackTotal > whiteTotal ? `黑領先 ${blackTotal - whiteTotal}` : `白領先 ${whiteTotal - blackTotal}`);
-
-            statusText.textContent = `${state.current === 'black' ? '黑方' : '白方'}行棋`;
-            document.getElementById('blackCaptures').textContent = state.captures.black;
-            document.getElementById('whiteCaptures').textContent = state.captures.white;
-
-            document.getElementById('modeText').textContent = state.freeMode
-                ? '自由模式：可自由標記與下棋，不作記錄，也不匯出。'
-                : state.setupMode
-                    ? `擺盤模式：暫時不記手順，可自由擺黑白棋（${state.setupPlacement === 'auto' ? '自動輪流' : '手動選色'}）。`
-                    : '一般示範模式，可自由落子與標記。';
-
-            renderMoves();
-            updateTimeline();
-            document.querySelectorAll('#stoneChooser .btn').forEach(btn => btn.classList.toggle('active', btn.dataset.color === state.current));
-            document.getElementById('setupModeBtn').classList.toggle('active', state.setupMode);
-            document.getElementById('setupAutoBtn').classList.toggle('active', state.setupPlacement === 'auto');
-            document.getElementById('setupManualBtn').classList.toggle('active', state.setupPlacement === 'manual');
-            document.getElementById('freeModeBtn').classList.toggle('free-active', state.freeMode);
-        }
-
-        function drawGrid() {
-            const { size, margin } = state;
-            state.cell = (canvas.width - margin * 2) / (size - 1);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--line').trim();
-            ctx.lineWidth = 2;
-            for (let i = 0; i < size; i++) {
-                const p = margin + i * state.cell;
-                ctx.beginPath(); ctx.moveTo(margin, p); ctx.lineTo(canvas.width - margin, p); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(p, margin); ctx.lineTo(p, canvas.height - margin); ctx.stroke();
+                    replay.board = result.board;
+                    replay.captures[move.color] += result.captured.length;
+                    replay.moves.push(move);
+                    replay.current = opposite(move.color);
+                }
             }
-            ctx.fillStyle = ctx.strokeStyle;
-            state.starPoints.forEach(([sx, sy]) => {
-                ctx.beginPath();
-                ctx.arc(margin + sx * state.cell, margin + sy * state.cell, 7, 0, Math.PI * 2);
-                ctx.fill();
-            });
+
+            return replay;
         }
 
-        function drawCoordinates() {
-            const letters = 'ABCDEFGHJKLMNOPQRST';
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
-            ctx.font = `600 ${Math.max(16, state.cell * 0.25)}px Arial`;
-            ctx.textAlign = 'center';
-            for (let i = 0; i < state.size; i++) {
-                const px = state.margin + i * state.cell;
-                ctx.fillText(letters[i], px, state.margin - 28 - state.margin / 3);
-                ctx.fillText(letters[i], px, canvas.height - state.margin + 36 + state.margin / 3);
-            }
-            ctx.textAlign = 'right';
-            for (let i = 0; i < state.size; i++) {
-                const py = state.margin + i * state.cell;
-                const n = state.size - i;
-                ctx.fillText(n, state.margin - 18 - state.margin / 3, py + 6);
-                ctx.textAlign = 'left';
-                ctx.fillText(n, canvas.width - state.margin + 18 + state.margin / 3, py + 6);
-                ctx.textAlign = 'right';
-            }
+        function displayedState() {
+            return state.view === null ? snapshot() : replayTo(state.view);
         }
 
-        function drawStoneAt(px, py, stone, r, alpha = 1) {
+        function coord(x, y) {
+            const letters = "ABCDEFGHJKLMNOPQRST";
+            return letters[x] + (state.size - y);
+        }
+
+        function boardPosition(x, y) {
+            return {
+                x: state.margin + x * state.cell,
+                y: state.margin + y * state.cell
+            };
+        }
+
+        function drawStone(x, y, color, alpha = 1) {
+            const point = boardPosition(x, y);
+            const radius = state.cell * 0.43;
+
+            const gradient = ctx.createRadialGradient(
+                point.x - radius * 0.35,
+                point.y - radius * 0.35,
+                2,
+                point.x,
+                point.y,
+                radius
+            );
+
+            gradient.addColorStop(0, color === "black" ? "#666" : "#fff");
+            gradient.addColorStop(1, color === "black" ? "#111" : "#d6d6d6");
+
             ctx.save();
             ctx.globalAlpha = alpha;
-            const grad = ctx.createRadialGradient(px - r * .35, py - r * .35, 2, px, py, r);
-            if (stone === 'black') { grad.addColorStop(0, '#666'); grad.addColorStop(1, '#111'); }
-            else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#dbdbdb'); }
-            ctx.fillStyle = grad;
-            ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = stone === 'black' ? '#000' : '#000';
-            ctx.lineWidth = 1.4;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = "#111";
+            ctx.lineWidth = 1.2;
             ctx.stroke();
             ctx.restore();
         }
 
-        function drawStones() {
-            for (let y = 0; y < state.size; y++) {
-                for (let x = 0; x < state.size; x++) {
-                    const stone = state.board[y][x];
-                    const px = state.margin + x * state.cell;
-                    const py = state.margin + y * state.cell;
-                    if (stone) drawStoneAt(px, py, stone, state.cell * 0.42, 1);
+        function drawBoard(display) {
+            const size = state.size;
+            const margin = state.margin;
+            const cell = (canvas.width - margin * 2) / (size - 1);
+
+            state.cell = cell;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const css = getComputedStyle(document.documentElement);
+            const lineColor = css.getPropertyValue("--line").trim();
+            const textColor = css.getPropertyValue("--text").trim();
+
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < size; i++) {
+                const p = margin + i * cell;
+
+                ctx.beginPath();
+                ctx.moveTo(margin, p);
+                ctx.lineTo(canvas.width - margin, p);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(p, margin);
+                ctx.lineTo(p, canvas.height - margin);
+                ctx.stroke();
+            }
+
+            const starPoints = size === 19 ? [3, 9, 15] : size === 13 ? [3, 6, 9] : [2, 4, 6];
+
+            ctx.fillStyle = lineColor;
+
+            for (const x of starPoints) {
+                for (const y of starPoints) {
+                    ctx.beginPath();
+                    ctx.arc(margin + x * cell, margin + y * cell, 6, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
 
-            for (let y = 0; y < state.size; y++) {
-                for (let x = 0; x < state.size; x++) {
-                    const stone = state.freeBoard[y][x];
-                    if (!stone) continue;
-                    const px = state.margin + x * state.cell;
-                    const py = state.margin + y * state.cell;
-                    drawStoneAt(px, py, stone, state.cell * 0.34, 0.72);
+            /* 座標放於棋盤格線外一格 */
+            const letters = "ABCDEFGHJKLMNOPQRST";
+
+            ctx.fillStyle = textColor;
+            ctx.font = "600 19px system-ui";
+            ctx.textAlign = "center";
+
+            for (let i = 0; i < size; i++) {
+                const p = margin + i * cell;
+
+                ctx.fillText(letters[i], p, margin - cell);
+                ctx.fillText(letters[i], p, canvas.height - margin + cell);
+
+                ctx.textAlign = "right";
+                ctx.fillText(size - i, margin - cell, p + 6);
+
+                ctx.textAlign = "left";
+                ctx.fillText(size - i, canvas.width - margin + cell, p + 6);
+
+                ctx.textAlign = "center";
+            }
+
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    if (display.board[y][x]) {
+                        drawStone(x, y, display.board[y][x]);
+                    }
                 }
             }
 
-            state.moves.filter(m => m.type === 'play').forEach(m => {
-                const px = state.margin + m.x * state.cell;
-                const py = state.margin + m.y * state.cell;
-                ctx.fillStyle = m.color === 'black' ? '#fff' : '#111';
-                ctx.font = `700 ${Math.max(16, state.cell * 0.38)}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(String(m.moveNo), px, py + 1);
-            });
-        }
+            /* 僅正式行棋顯示手順號；擺盤棋子不顯示 */
+            let moveNumber = 0;
 
-        function drawLabels() {
-            state.labels.forEach((text, k) => {
-                const [x, y] = parseKey(k);
-                const px = state.margin + x * state.cell;
-                const py = state.margin + y * state.cell;
-                ctx.fillStyle = 'rgba(1,105,111,.92)';
-                if (ctx.roundRect) {
-                    ctx.beginPath();
-                    ctx.roundRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36, 10);
-                    ctx.fill();
-                } else {
-                    ctx.fillRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36);
+            for (const move of display.moves) {
+                if (move.type !== "play") continue;
+
+                moveNumber++;
+
+                const point = boardPosition(move.x, move.y);
+
+                ctx.fillStyle = move.color === "black" ? "#fff" : "#111";
+                ctx.font = `700 ${Math.max(14, state.cell * 0.36)}px system-ui`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(String(moveNumber), point.x, point.y + 1);
+            }
+
+            ctx.textBaseline = "alphabetic";
+
+            /* 不繪製最後一手方框 */
+            if (
+                state.hover &&
+                state.view === null &&
+                $("#tool").value === "play"
+            ) {
+                const preview = tryPlay(state.hover.x, state.hover.y, state.current);
+
+                if (preview) {
+                    drawStone(state.hover.x, state.hover.y, state.current, 0.38);
                 }
-                ctx.fillStyle = '#fff';
-                ctx.font = `700 ${Math.max(14, state.cell * 0.22)}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(text, px, py);
+            }
+        }
+
+        function render() {
+            const display = displayedState();
+
+            drawBoard(display);
+
+            $("#black").textContent =
+                display.board.flat().filter(value => value === "black").length;
+
+            $("#white").textContent =
+                display.board.flat().filter(value => value === "white").length;
+
+            $("#caps").textContent =
+                `${display.captures.black} : ${display.captures.white}`;
+
+            $("#status").textContent = state.view === null
+                ? `輪到${state.current === "black" ? "黑" : "白"}方行棋`
+                : `回放：第 ${state.view} 項紀錄`;
+
+            document.querySelectorAll("[data-color]").forEach(button => {
+                button.classList.toggle("active", button.dataset.color === state.current);
             });
 
-            state.freeLabels.forEach((text, k) => {
-                const [x, y] = parseKey(k);
-                const px = state.margin + x * state.cell;
-                const py = state.margin + y * state.cell;
-                ctx.save();
-                ctx.globalAlpha = 0.82;
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--free').trim();
-                if (ctx.roundRect) {
-                    ctx.beginPath();
-                    ctx.roundRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36, 10);
-                    ctx.fill();
+            $("#undo").disabled = !state.history.length;
+            $("#redo").disabled = !state.future.length;
+
+            $("#timeline").max = state.moves.length;
+            $("#timeline").value = state.view === null ? state.moves.length : state.view;
+
+            $("#timelineText").textContent =
+                `第 ${$("#timeline").value} / ${state.moves.length} 項紀錄`;
+
+            let playNumber = 0;
+
+            $("#moves").innerHTML = state.moves.map((move, index) => {
+                let text = "";
+
+                if (move.type === "setup") {
+                    text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+                } else if (move.type === "pass") {
+                    playNumber++;
+                    text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛手`;
                 } else {
-                    ctx.fillRect(px - state.cell * .34, py - state.cell * .18, state.cell * .68, state.cell * .36);
+                    playNumber++;
+                    text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+                    if (move.captured) text += `（提 ${move.captured}）`;
                 }
-                ctx.fillStyle = '#fff';
-                ctx.font = `700 ${Math.max(14, state.cell * 0.22)}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(text, px, py);
-                ctx.restore();
-            });
+
+                const currentClass = state.view === index + 1 ? "current" : "";
+                return `<li class="${currentClass}">${text}</li>`;
+            }).join("") || "<li>尚未有手順</li>";
         }
 
-        function draw() {
-            drawGrid();
-            drawCoordinates();
-            drawStones();
-            drawLabels();
-        }
-
-        function pointFromEvent(evt) {
+        function pointFromEvent(event) {
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (evt.clientX - rect.left) * scaleX;
-            const y = (evt.clientY - rect.top) * scaleY;
-            const gx = Math.round((x - state.margin) / state.cell);
-            const gy = Math.round((y - state.margin) / state.cell);
-            if (gx < 0 || gy < 0 || gx >= state.size || gy >= state.size) return null;
-            return { x: gx, y: gy };
+
+            const canvasX = (event.clientX - rect.left) * canvas.width / rect.width;
+            const canvasY = (event.clientY - rect.top) * canvas.height / rect.height;
+
+            const x = Math.round((canvasX - state.margin) / state.cell);
+            const y = Math.round((canvasY - state.margin) / state.cell);
+
+            return inside(x, y) ? { x, y } : null;
         }
 
-        function coordToSgf(x, y) {
-            return String.fromCharCode(97 + x) + String.fromCharCode(97 + y);
-        }
+        canvas.addEventListener("pointermove", event => {
+            state.hover = pointFromEvent(event);
+            render();
+        });
 
-        function sgfToCoord(s) {
-            return { x: s.charCodeAt(0) - 97, y: s.charCodeAt(1) - 97 };
-        }
+        canvas.addEventListener("pointerleave", () => {
+            state.hover = null;
+            render();
+        });
 
-        function esc(s) {
-            return String(s).replace(/\\/g, '\\\\').replace(/]/g, '\\]');
-        }
+        canvas.addEventListener("click", event => {
+            const point = pointFromEvent(event);
+            if (!point) return;
 
-        function exportPNG() {
-            draw();
-            const a = document.createElement('a');
-            a.href = canvas.toDataURL('image/png');
-            a.download = `go-board-${state.size}x${state.size}.png`;
-            a.click();
-        }
+            const tool = $("#tool").value;
 
-        function buildSGF() {
-            const parts = [`(;FF[4]GM[1]CA[UTF-8]AP[TeachingGoBoard:3.2]SZ[${state.size}]`];
-            const blacks = [];
-            const whites = [];
-            const empties = [];
-
-            const playMoves = state.moves.filter(m => m.type === 'play' || m.type === 'pass');
-            const setupSteps = state.replayMeta.steps.filter(s => s.type === 'setup');
-            const setupKeys = new Set(setupSteps.map(s => key(s.x, s.y)));
-
-            for (let y = 0; y < state.size; y++) {
-                for (let x = 0; x < state.size; x++) {
-                    const k = key(x, y);
-                    const stone = state.board[y][x];
-                    if (!stone) continue;
-                    if (setupKeys.has(k)) {
-                        if (stone === 'black') blacks.push(coordToSgf(x, y));
-                        if (stone === 'white') whites.push(coordToSgf(x, y));
-                    }
-                }
+            if (tool === "play") {
+                playStone(point.x, point.y);
+            } else if (tool === "setup") {
+                setupStone(point.x, point.y);
+            } else if (tool === "label") {
+                toast("文字標記功能可於下一版加入 SGF 相容標記。");
+            } else {
+                toast("擦除功能建議只用於教學擺盤模式。");
             }
+        });
 
-            state.replayMeta.steps.filter(s => s.type === 'erase').forEach(s => {
-                empties.push(coordToSgf(s.x, s.y));
+        document.querySelectorAll("[data-color]").forEach(button => {
+            button.addEventListener("click", () => {
+                state.current = button.dataset.color;
+                render();
+                scheduleAutosave();
             });
+        });
 
-            if (blacks.length) parts.push(`AB${blacks.map(v => `[${v}]`).join('')}`);
-            if (whites.length) parts.push(`AW${whites.map(v => `[${v}]`).join('')}`);
-            if (empties.length) parts.push(`AE${[...new Set(empties)].map(v => `[${v}]`).join('')}`);
-            parts.push(`PL[${state.current === 'black' ? 'B' : 'W'}]`);
+        let autosaveTimer;
 
-            const lb = [...state.labels.entries()].map(([k, v]) => {
-                const [x, y] = parseKey(k);
-                return `[${coordToSgf(x, y)}:${esc(v)}]`;
-            }).join('');
-            if (lb) parts.push(`LB${lb}`);
+        function scheduleAutosave() {
+            clearTimeout(autosaveTimer);
 
-            playMoves.forEach(m => {
-                if (m.type === 'play') parts.push(`;${m.color === 'black' ? 'B' : 'W'}[${coordToSgf(m.x, m.y)}]MN[${m.moveNo}]`);
-                else parts.push(`;${m.color === 'black' ? 'B' : 'W'}[]MN[${m.moveNo}]`);
-            });
+            $("#autosaveStatus").textContent = "正在儲存草稿…";
 
-            parts.push(')');
-            return parts.join('');
-        }
-
-        function downloadSGF() {
-            const blob = new Blob([buildSGF()], { type: 'application/x-go-sgf' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'teaching-board.sgf';
-            a.click();
-            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-        }
-
-        function exportReplayJSONData() {
-            return {
-                version: 'teaching-go-json-2.2',
-                size: state.size,
-                current: state.current,
-                board: cloneBoard(state.board),
-                labels: [...state.labels.entries()],
-                moves: state.moves.map(v => ({ ...v })),
-                captureLog: state.captureLog.map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) })),
-                replayMeta: JSON.parse(JSON.stringify(state.replayMeta)),
-                captures: { ...state.captures },
-                setupMode: state.setupMode,
-                setupPlacement: state.setupPlacement
-            };
-        }
-
-        function downloadReplayJSON() {
-            const blob = new Blob([JSON.stringify(exportReplayJSONData(), null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'teaching-board-replay.json';
-            a.click();
-            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-        }
-
-        function restoreStateFromJSON(data) {
-            resetBoard(data.size || 19);
-            state.size = data.size || 19;
-            sizeSelect.value = String(state.size);
-            state.current = data.current || 'black';
-            state.board = Array.isArray(data.board)
-                ? data.board.map(row => row.slice())
-                : Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-            state.labels = new Map(data.labels || []);
-            state.freeLabels = new Map();
-            state.moves = (data.moves || []).map(v => ({ ...v }));
-            state.captureLog = (data.captureLog || []).map(v => ({ ...v, captures: (v.captures || []).map(([x, y]) => [x, y]) }));
-            state.replayMeta = data.replayMeta || { version: '1.0', steps: [] };
-            state.captures = data.captures || { black: 0, white: 0 };
-            state.setupMode = !!data.setupMode;
-            state.setupPlacement = data.setupPlacement || 'auto';
-            state.freeMode = false;
-            updateStarPoints();
-            snapshotBaseState();
-            state.viewStep = null;
-            syncUI();
-            draw();
-        }
-
-        async function loadReplayJSONFile(file) {
-            const text = await file.text();
-            const data = JSON.parse(text);
-            restoreStateFromJSON(data);
-        }
-
-        function parseProps(node) {
-            const props = {};
-            const re = /([A-Z]+)((?:\[(?:\\.|[^\]])*\])+)/g;
-            let m;
-            while ((m = re.exec(node))) {
-                props[m[1]] = [...m[2].matchAll(/\[((?:\\.|[^\]])*)\]/g)]
-                    .map(v => v[1].replace(/\\]/g, ']').replace(/\\\\/g, '\\'));
-            }
-            return props;
-        }
-
-        function loadSGFText(text) {
-            const sz = /SZ\[(\d+)/.exec(text);
-            resetBoard(sz ? Number(sz[1]) : state.size);
-            if (sz) sizeSelect.value = sz[1];
-
-            const nodes = [...text.matchAll(/;([^;()]+)/g)].map(m => m[1]);
-            nodes.forEach((node, index) => {
-                const p = parseProps(node);
-                if (index === 0) {
-                    (p.AB || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.board[y][x] = 'black';
-                        state.moves.push({ type: 'setup', x, y, color: 'black' });
-                        recordReplayStep({ type: 'setup', x, y, color: 'black' });
-                    });
-                    (p.AW || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.board[y][x] = 'white';
-                        state.moves.push({ type: 'setup', x, y, color: 'white' });
-                        recordReplayStep({ type: 'setup', x, y, color: 'white' });
-                    });
-                    (p.AE || []).forEach(pt => {
-                        const { x, y } = sgfToCoord(pt);
-                        state.board[y][x] = null;
-                        state.moves.push({ type: 'erase', x, y });
-                        recordReplayStep({ type: 'erase', x, y });
-                    });
-                    if (p.PL?.[0]) state.current = p.PL[0] === 'B' ? 'black' : 'white';
-
-                    (p.LB || []).forEach(v => {
-                        const [pt, label] = v.split(':');
-                        if (!pt || label == null) return;
-                        const { x, y } = sgfToCoord(pt);
-                        state.labels.set(key(x, y), label);
-                        state.moves.push({ type: 'label', x, y, text: label });
-                        recordReplayStep({ type: 'label', x, y, text: label });
-                    });
-                } else {
-                    if (p.B) {
-                        state.current = 'black';
-                        if (p.B[0] !== '') {
-                            const c = sgfToCoord(p.B[0]);
-                            state.board[c.y][c.x] = 'black';
-                            const moveNo = moveCount() + 1;
-                            const result = removeCaptured(state.board, 'black', c.x, c.y);
-                            if (result.removed) state.captures.black += result.removed;
-                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'black', moveNo, captured: result.removed });
-                            recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'black', captures: result.groups.flat().map(([x, y]) => [x, y]) });
-                            state.current = 'white';
-                        } else {
-                            const moveNo = moveCount() + 1;
-                            state.moves.push({ type: 'pass', color: 'black', moveNo });
-                            recordReplayStep({ type: 'pass', color: 'black', moveNo });
-                            state.current = 'white';
-                        }
-                    }
-                    if (p.W) {
-                        state.current = 'white';
-                        if (p.W[0] !== '') {
-                            const c = sgfToCoord(p.W[0]);
-                            state.board[c.y][c.x] = 'white';
-                            const moveNo = moveCount() + 1;
-                            const result = removeCaptured(state.board, 'white', c.x, c.y);
-                            if (result.removed) state.captures.white += result.removed;
-                            state.moves.push({ type: 'play', x: c.x, y: c.y, color: 'white', moveNo, captured: result.removed });
-                            recordReplayStep({ type: 'play', moveNo, x: c.x, y: c.y, color: 'white', captures: result.groups.flat().map(([x, y]) => [x, y]) });
-                            state.current = 'black';
-                        } else {
-                            const moveNo = moveCount() + 1;
-                            state.moves.push({ type: 'pass', color: 'white', moveNo });
-                            recordReplayStep({ type: 'pass', color: 'white', moveNo });
-                            state.current = 'black';
-                        }
-                    }
+            autosaveTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+                    $("#autosaveStatus").textContent = "本機草稿已自動儲存";
+                } catch {
+                    $("#autosaveStatus").textContent = "無法自動儲存：瀏覽器空間不足";
                 }
-            });
-
-            rebuildAllFromReplayMeta();
-            state.setupMode = false;
-            state.freeMode = false;
-            state.viewStep = null;
-            syncUI();
-            draw();
+            }, 350);
         }
 
-        canvas.addEventListener('click', evt => {
-            const p = pointFromEvent(evt);
-            if (!p) return;
-            const tool = toolSelect.value;
-            if (tool === 'play') placeStone(p.x, p.y);
-            else if (tool === 'label') addLabel(p.x, p.y, customLabel.value.trim() || '標');
-            else if (tool === 'erase') eraseAt(p.x, p.y);
-        });
+        function toast(message) {
+            const box = $("#toast");
 
-        document.querySelectorAll('#stoneChooser .btn').forEach(btn => btn.addEventListener('click', () => {
-            state.current = btn.dataset.color;
-            syncUI();
-        }));
+            box.textContent = message;
+            box.classList.add("show");
 
-        sizeSelect.addEventListener('change', e => {
-            state.baseState = null;
-            resetBoard(e.target.value);
-        });
+            clearTimeout(box.timer);
 
-        document.getElementById('clearBtn').addEventListener('click', () => {
-            state.baseState = null;
-            resetBoard(state.size);
-            snapshotBaseState();
-        });
+            box.timer = setTimeout(() => {
+                box.classList.remove("show");
+            }, 2200);
+        }
 
-        document.getElementById('scoreBtn').addEventListener('click', syncUI);
+        function getSlots() {
+            try {
+                return JSON.parse(localStorage.getItem(SLOTS_KEY) || "[]");
+            } catch {
+                return [];
+            }
+        }
 
-        document.getElementById('passBtn').addEventListener('click', () => {
-            state.baseState = null;
-            if (state.setupMode || state.freeMode) return;
-            const moveNo = moveCount() + 1;
-            state.moves.push({ type: 'pass', color: state.current, moveNo });
-            recordReplayStep({ type: 'pass', color: state.current, moveNo });
-            state.current = state.current === 'black' ? 'white' : 'black';
-            syncUI();
-            draw();
-        });
+        function escapeHtml(text) {
+            return String(text).replace(/[&<>"]/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "\"": "&quot;"
+            }[char]));
+        }
 
-        document.getElementById('undoBtn').addEventListener('click', () => {
-            if (state.freeMode) {
-                state.freeBoard = Array.from({ length: state.size }, () => Array(state.size).fill(null));
-                state.freeLabels = new Map();
-                syncUI();
-                draw();
+        function renderSlots() {
+            const slots = getSlots();
+
+            $("#saveList").innerHTML = slots.map((slot, index) => `
+    <div class="save-item">
+      <span title="${escapeHtml(slot.name)}">
+        ${escapeHtml(slot.name)}
+        <small class="muted">${new Date(slot.at).toLocaleString()}</small>
+      </span>
+      <div>
+        <button class="btn loadSlot" data-index="${index}">載入</button>
+        <button class="btn danger deleteSlot" data-index="${index}">×</button>
+      </div>
+    </div>
+  `).join("") || `<div class="hint">未有命名存檔</div>`;
+
+            document.querySelectorAll(".loadSlot").forEach(button => {
+                button.onclick = () => {
+                    try {
+                        applyState(getSlots()[+button.dataset.index].data, { record: true });
+                        toast("已載入命名存檔");
+                    } catch (error) {
+                        toast(error.message);
+                    }
+                };
+            });
+
+            document.querySelectorAll(".deleteSlot").forEach(button => {
+                button.onclick = () => {
+                    const slots = getSlots();
+                    slots.splice(+button.dataset.index, 1);
+                    localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+                    renderSlots();
+                    toast("已刪除存檔");
+                };
+            });
+        }
+
+        $("#saveSlot").onclick = () => {
+            const name = $("#saveName").value.trim();
+
+            if (!name) {
+                toast("請輸入存檔名稱");
                 return;
             }
-            if (!state.replayMeta.steps.length) return;
-            state.replayMeta.steps.pop();
-            rebuildAllFromReplayMeta();
-        });
 
-        document.getElementById('themeBtn').addEventListener('click', () => {
+            const slots = getSlots();
+
+            slots.unshift({
+                name,
+                at: Date.now(),
+                data: snapshot()
+            });
+
+            try {
+                localStorage.setItem(SLOTS_KEY, JSON.stringify(slots.slice(0, 12)));
+                $("#saveName").value = "";
+                renderSlots();
+                toast("已建立命名存檔");
+            } catch {
+                toast("無法儲存，請檢查瀏覽器儲存空間");
+            }
+        };
+
+        $("#size").onchange = event => {
+            const nextSize = event.target.value;
+
+            if (confirm("更改棋盤尺寸會建立新棋局，是否繼續？")) {
+                newGame(nextSize);
+            } else {
+                event.target.value = state.size;
+            }
+        };
+
+        $("#pass").onclick = pass;
+        $("#undo").onclick = undo;
+        $("#redo").onclick = redo;
+
+        $("#clear").onclick = () => $("#confirm").showModal();
+        $("#cancelClear").onclick = () => $("#confirm").close();
+
+        $("#confirmClear").onclick = () => {
+            $("#confirm").close();
+            newGame(state.size);
+        };
+
+        $("#prev").onclick = () => {
+            state.view = Math.max(0, (state.view ?? state.moves.length) - 1);
+            render();
+        };
+
+        $("#next").onclick = () => {
+            state.view = Math.min(state.moves.length, (state.view ?? state.moves.length) + 1);
+
+            if (state.view === state.moves.length) {
+                state.view = null;
+            }
+
+            render();
+        };
+
+        $("#live").onclick = () => {
+            state.view = null;
+            render();
+        };
+
+        $("#timeline").oninput = event => {
+            const target = +event.target.value;
+            state.view = target === state.moves.length ? null : target;
+            render();
+        };
+
+        $("#themeBtn").onclick = () => {
             const root = document.documentElement;
-            root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-            draw();
-        });
 
-        document.getElementById('exportBtn').addEventListener('click', exportPNG);
-        document.getElementById('saveSgfBtn').addEventListener('click', downloadSGF);
-        document.getElementById('loadSgfBtn').addEventListener('click', () => document.getElementById('sgfInput').click());
-        document.getElementById('saveJsonBtn').addEventListener('click', downloadReplayJSON);
-        document.getElementById('loadJsonBtn').addEventListener('click', () => document.getElementById('jsonInput').click());
+            root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
 
-        document.getElementById('sgfInput').addEventListener('change', async e => {
-            const file = e.target.files[0];
+            localStorage.setItem("go-theme", root.dataset.theme);
+            render();
+        };
+
+        function download(blob, filename) {
+            const link = document.createElement("a");
+
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+
+            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        }
+
+        $("#jsonSave").onclick = () => {
+            const data = JSON.stringify(snapshot(), null, 2);
+            download(new Blob([data], { type: "application/json" }), "go-game.json");
+        };
+
+        $("#jsonLoad").onclick = () => $("#file").click();
+
+        $("#file").onchange = async event => {
+            const file = event.target.files[0];
             if (!file) return;
-            loadSGFText(await file.text());
-            e.target.value = '';
-        });
 
-        document.getElementById('jsonInput').addEventListener('change', async e => {
-            const file = e.target.files[0];
-            if (!file) return;
-            await loadReplayJSONFile(file);
-            e.target.value = '';
-        });
+            try {
+                if (file.size > 5 * 1024 * 1024) {
+                    throw new Error("檔案過大（上限為 5MB）");
+                }
 
-        document.getElementById('setupModeBtn').addEventListener('click', () => {
-            if (state.freeMode) state.freeMode = false;
-            state.setupMode = !state.setupMode;
-            state.baseState = null;
-            state.viewStep = null;
-            if (!state.setupMode) snapshotBaseState();
-            syncUI();
-            draw();
-        });
+                const data = JSON.parse(await file.text());
 
-        document.getElementById('setupAutoBtn').addEventListener('click', () => {
-            state.setupPlacement = 'auto';
-            syncUI();
-            draw();
-        });
+                applyState(data, { record: true });
+                toast("JSON 棋局已載入");
+            } catch (error) {
+                toast(`載入失敗：${error.message}`);
+            } finally {
+                event.target.value = "";
+            }
+        };
 
-        document.getElementById('setupManualBtn').addEventListener('click', () => {
-            state.setupPlacement = 'manual';
-            syncUI();
-            draw();
-        });
+        $("#png").onclick = () => {
+            drawBoard(displayedState());
 
-        document.getElementById('freeModeBtn').addEventListener('click', () => {
-            if (state.setupMode) state.setupMode = false;
-            state.freeMode = !state.freeMode;
-            syncUI();
-            draw();
-        });
+            canvas.toBlob(blob => {
+                download(blob, `go-${state.size}x${state.size}.png`);
+            }, "image/png");
+        };
 
-        document.getElementById('prevStepBtn').addEventListener('click', () => {
-            stopAutoplay();
-            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length : getPlayableMoves().length;
-            setViewStep((state.viewStep ?? total) - 1);
-        });
+        document.addEventListener("keydown", event => {
+            const modifier = event.ctrlKey || event.metaKey;
+            const activeTag = document.activeElement.tagName;
 
-        document.getElementById('nextStepBtn').addEventListener('click', () => {
-            stopAutoplay();
-            const total = state.baseState ? state.baseState.replayMeta.steps.filter(s => isPlayableStep(s)).length : getPlayableMoves().length;
-            setViewStep((state.viewStep ?? total) + 1);
-        });
+            if (modifier && event.key.toLowerCase() === "z") {
+                event.preventDefault();
+                event.shiftKey ? redo() : undo();
+                return;
+            }
 
-        document.getElementById('playBtn').addEventListener('click', () => {
-            state.autoplay ? stopAutoplay() : startAutoplay();
-        });
+            if (event.code === "Space" && !["INPUT", "SELECT"].includes(activeTag)) {
+                event.preventDefault();
+                pass();
+                return;
+            }
 
-        document.getElementById('timeline').addEventListener('input', e => {
-            stopAutoplay();
-            setViewStep(Number(e.target.value));
-        });
+            if (event.key === "ArrowLeft") {
+                $("#prev").click();
+            }
 
-        editType.addEventListener('change', () => {
-            const pass = editType.value === 'pass';
-            editX.disabled = pass;
-            editY.disabled = pass;
-        });
-
-        document.getElementById('cancelEditBtn').addEventListener('click', () => {
-            moveEditor.classList.remove('show');
-            state.editingMoveNo = null;
-        });
-
-        document.getElementById('saveEditBtn').addEventListener('click', saveEditPlayableStep);
-
-        moveEditor.addEventListener('click', e => {
-            if (e.target === moveEditor) {
-                moveEditor.classList.remove('show');
-                state.editingMoveNo = null;
+            if (event.key === "ArrowRight") {
+                $("#next").click();
             }
         });
 
-        resetBoard(19);
-        snapshotBaseState();
-        updateTimeline();
+        try {
+            const saved = JSON.parse(localStorage.getItem(DRAFT_KEY));
+
+            if (validState(saved)) {
+                applyState(saved);
+                toast("已還原上次自動儲存的棋局");
+            } else {
+                newGame(19);
+            }
+        } catch {
+            newGame(19);
+        }
+
+        document.documentElement.dataset.theme =
+            localStorage.getItem("go-theme") || "light";
+
+        renderSlots();
+        render();
     </script>
 </body>
 
