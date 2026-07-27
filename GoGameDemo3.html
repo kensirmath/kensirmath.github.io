@@ -22,18 +22,18 @@
 }
 
 [data-theme="dark"]{
-  --bg:#1d211f;
-  --panel:#282d2b;
-  --soft:#343b37;
-  --text:#f1eee7;
-  --muted:#b9b6ad;
-  --border:#4a514d;
-  --primary:#64c0c1;
-  --danger:#ff877a;
-  --wood1:#c69a57;
-  --wood2:#a8783e;
-  --line:#402b12;
-  --shadow:0 10px 30px #0006;
+  --bg:#f5f3ed;
+  --panel:#fffdf8;
+  --soft:#f1ede3;
+  --text:#26231c;
+  --muted:#69655d;
+  --border:#d8d0c1;
+  --primary:#08777b;
+  --danger:#b33a30;
+  --wood1:#fff;
+  --wood2:#f5f5f5;
+  --line:#65491f;
+  --shadow:0 10px 30px #342a1820;
 }
 
 *{
@@ -400,6 +400,46 @@ dialog h3{
   border-top:1px solid var(--border);
 }
 
+/* 紅色棋盤游標 */
+canvas{
+  cursor:crosshair;
+}
+
+.board-wrap::after{
+  content:"";
+  position:absolute;
+  width:17px;
+  height:17px;
+  border:2px solid #e53935;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  left:var(--cursor-x,-100px);
+  top:var(--cursor-y,-100px);
+  z-index:2;
+  box-shadow:0 0 0 1px #fff8;
+}
+
+.board-wrap.cursor-hidden::after{
+  display:none;
+}
+
+/* 黑夜模式保留日間介面配色，只把棋盤改為白色 */
+[data-theme="dark"]{
+  --bg:#f5f3ed;
+  --panel:#fffdf8;
+  --soft:#f1ede3;
+  --text:#26231c;
+  --muted:#69655d;
+  --border:#d8d0c1;
+  --primary:#08777b;
+  --danger:#b33a30;
+  --wood1:#fff;
+  --wood2:#f5f5f5;
+  --line:#65491f;
+  --shadow:0 10px 30px #342a1820;
+}
+
 @media(max-width:900px){
   body{
     overflow:auto;
@@ -443,7 +483,7 @@ dialog h3{
 <body>
 <main class="app">
   <section class="stage">
-    <div class="board-wrap">
+    <div class="board-wrap cursor-hidden">
       <canvas
         id="board"
         width="1000"
@@ -621,11 +661,12 @@ dialog h3{
 const $ = selector => document.querySelector(selector);
 const canvas = $("#board");
 const ctx = canvas.getContext("2d");
+const boardWrap = canvas.closest(".board-wrap");
 
-const DRAFT_KEY = "teaching-go-pro-draft-v4";
-const SLOTS_KEY = "teaching-go-pro-slots-v4";
-const LAYOUT_KEY = "teaching-go-pro-layout-v1";
-const THEME_KEY = "teaching-go-pro-theme-v1";
+const DRAFT_KEY = "teaching-go-pro-draft-v5";
+const SLOTS_KEY = "teaching-go-pro-slots-v5";
+const LAYOUT_KEY = "teaching-go-pro-layout-v2";
+const THEME_KEY = "teaching-go-pro-theme-v2";
 
 const state = {
   size: 19,
@@ -659,19 +700,21 @@ function snapshot() {
 function validState(data) {
   if (!data || ![9, 13, 19].includes(Number(data.size))) return false;
   if (!Array.isArray(data.board) || data.board.length !== Number(data.size)) return false;
+
   if (!data.board.every(row =>
     Array.isArray(row) &&
     row.length === Number(data.size) &&
     row.every(cell => cell === null || cell === "black" || cell === "white")
-  )) return false;
+  )) {
+    return false;
+  }
 
-  return [
-    "black",
-    "white"
-  ].includes(data.current) &&
+  return (
+    ["black", "white"].includes(data.current) &&
     Array.isArray(data.moves) &&
     data.captures &&
-    typeof data.captures === "object";
+    typeof data.captures === "object"
+  );
 }
 
 function applyState(data, { record = false } = {}) {
@@ -753,9 +796,7 @@ function groupAt(board, x, y) {
 }
 
 function tryPlay(x, y, color, board = state.board) {
-  if (!insideBoard(x, y) || board[y][x]) {
-    return null;
-  }
+  if (!insideBoard(x, y) || board[y][x]) return null;
 
   const nextBoard = clone(board);
   const captured = [];
@@ -775,11 +816,7 @@ function tryPlay(x, y, color, board = state.board) {
     }
   }
 
-  const ownGroup = groupAt(nextBoard, x, y);
-
-  if (ownGroup.liberties.size === 0) {
-    return null;
-  }
+  if (groupAt(nextBoard, x, y).liberties.size === 0) return null;
 
   return { board: nextBoard, captured };
 }
@@ -850,11 +887,7 @@ function playStone(x, y) {
     state.current = opposite(color);
   });
 
-  toast(
-    result.captured.length
-      ? `提掉 ${result.captured.length} 子`
-      : "已落子"
-  );
+  toast(result.captured.length ? `提掉 ${result.captured.length} 子` : "已落子");
 }
 
 function passMove() {
@@ -883,7 +916,6 @@ function undo() {
 
   state.future.push(snapshot());
   applyState(state.history.pop());
-
   toast("已復原");
 }
 
@@ -895,7 +927,6 @@ function redo() {
 
   state.history.push(snapshot());
   applyState(state.future.pop());
-
   toast("已重做");
 }
 
@@ -1188,11 +1219,27 @@ function pointFromEvent(event) {
 }
 
 canvas.addEventListener("pointermove", event => {
+  const rect = canvas.getBoundingClientRect();
+
+  boardWrap.style.setProperty(
+    "--cursor-x",
+    `${event.clientX - rect.left}px`
+  );
+
+  boardWrap.style.setProperty(
+    "--cursor-y",
+    `${event.clientY - rect.top}px`
+  );
+
+  boardWrap.classList.remove("cursor-hidden");
+
   state.hover = pointFromEvent(event);
   render();
 });
 
 canvas.addEventListener("pointerleave", () => {
+  boardWrap.classList.add("cursor-hidden");
+
   state.hover = null;
   render();
 });
@@ -1288,7 +1335,7 @@ function renderSlots() {
   `).join("") || `<div class="hint">未有命名存檔</div>`;
 
   document.querySelectorAll(".loadSlot").forEach(button => {
-    button.onclick = () => {
+    button.addEventListener("click", () => {
       try {
         applyState(
           getSlots()[Number(button.dataset.index)].data,
@@ -1299,11 +1346,11 @@ function renderSlots() {
       } catch (error) {
         toast(error.message);
       }
-    };
+    });
   });
 
   document.querySelectorAll(".deleteSlot").forEach(button => {
-    button.onclick = () => {
+    button.addEventListener("click", () => {
       const slots = getSlots();
 
       slots.splice(Number(button.dataset.index), 1);
@@ -1311,7 +1358,7 @@ function renderSlots() {
       localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
       renderSlots();
       toast("已刪除存檔");
-    };
+    });
   });
 }
 
@@ -1453,7 +1500,7 @@ $("#themeBtn").addEventListener("click", () => {
   try {
     localStorage.setItem(THEME_KEY, root.dataset.theme);
   } catch {
-    /* 忽略 localStorage 例外 */
+    /* localStorage 不可用時只切換當前畫面 */
   }
 
   render();
@@ -1563,12 +1610,18 @@ try {
   createNewGame(19);
 }
 
-document.documentElement.dataset.theme =
-  localStorage.getItem(THEME_KEY) || "light";
+try {
+  document.documentElement.dataset.theme =
+    localStorage.getItem(THEME_KEY) || "light";
+} catch {
+  document.documentElement.dataset.theme = "light";
+}
 
-setLayout(
-  localStorage.getItem(LAYOUT_KEY) || "right"
-);
+try {
+  setLayout(localStorage.getItem(LAYOUT_KEY) || "right");
+} catch {
+  setLayout("right");
+}
 
 initLayoutButtons();
 renderSlots();
