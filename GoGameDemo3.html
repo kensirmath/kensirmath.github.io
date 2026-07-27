@@ -436,31 +436,6 @@ dialog h3{
   [data-layout] .board-wrap{
     width:min(96vw,760px);
   }
-
-  .app{
-    grid-template-columns:1fr;
-    height:auto;
-    overflow:visible;
-  }
-
-  .stage{
-    height:auto;
-    min-height:100vh;
-    padding:12px;
-    overflow:visible;
-  }
-
-  .board-wrap{
-    width:min(96vw,760px);
-  }
-
-  .panel{
-    height:auto;
-    max-height:none;
-    overflow:visible;
-    border-left:0;
-    border-top:1px solid var(--border);
-  }
 }
 </style>
 </head>
@@ -487,17 +462,17 @@ dialog h3{
         <div class="muted" id="autosaveStatus">本機草稿已啟用</div>
       </div>
 
-      <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
+      <button class="btn" id="themeBtn" type="button" aria-label="切換深淺色">◐</button>
     </div>
 
     <section class="section">
       <h2>版面位置</h2>
 
       <div class="tools" id="layoutButtons">
-        <button class="btn active" data-layout="right">右側</button>
-        <button class="btn" data-layout="left">左側</button>
-        <button class="btn" data-layout="top">上方</button>
-        <button class="btn" data-layout="bottom">下方</button>
+        <button class="btn active" type="button" data-layout="right">右側</button>
+        <button class="btn" type="button" data-layout="left">左側</button>
+        <button class="btn" type="button" data-layout="top">上方</button>
+        <button class="btn" type="button" data-layout="bottom">下方</button>
       </div>
 
       <p class="hint">
@@ -530,8 +505,8 @@ dialog h3{
       </div>
 
       <div class="row" style="margin-top:9px">
-        <button class="btn active" data-color="black">● 黑方</button>
-        <button class="btn" data-color="white">○ 白方</button>
+        <button class="btn active" type="button" data-color="black">● 黑方</button>
+        <button class="btn" type="button" data-color="white">○ 白方</button>
         <input
           id="labelText"
           placeholder="標記文字（最多 8 字）"
@@ -540,10 +515,10 @@ dialog h3{
       </div>
 
       <div class="tools" style="margin-top:9px">
-        <button class="btn primary" id="pass">虛手</button>
-        <button class="btn" id="undo" title="Ctrl/⌘ Z">↶ 復原</button>
-        <button class="btn" id="redo" title="Ctrl/⌘ Shift Z">↷ 重做</button>
-        <button class="btn danger" id="clear">清空棋局</button>
+        <button class="btn primary" id="pass" type="button">虛手</button>
+        <button class="btn" id="undo" type="button" title="Ctrl/⌘ Z">↶ 復原</button>
+        <button class="btn" id="redo" type="button" title="Ctrl/⌘ Shift Z">↷ 重做</button>
+        <button class="btn danger" id="clear" type="button">清空棋局</button>
       </div>
 
       <p class="hint">
@@ -556,9 +531,9 @@ dialog h3{
       <h2>回放</h2>
 
       <div class="tools">
-        <button class="btn" id="prev">◀ 上一步</button>
-        <button class="btn" id="next">下一步 ▶</button>
-        <button class="btn" id="live">回到目前</button>
+        <button class="btn" id="prev" type="button">◀ 上一步</button>
+        <button class="btn" id="next" type="button">下一步 ▶</button>
+        <button class="btn" id="live" type="button">回到目前</button>
       </div>
 
       <input
@@ -577,15 +552,10 @@ dialog h3{
       <h2>棋局資料</h2>
 
       <div class="tools">
-        <button class="btn" id="png">匯出 PNG</button>
-        <button class="btn" id="jsonSave">下載 JSON</button>
-        <button class="btn" id="jsonLoad">載入 JSON</button>
-        <input
-          class="sr"
-          type="file"
-          id="file"
-          accept="application/json,.json"
-        >
+        <button class="btn" id="png" type="button">匯出 PNG</button>
+        <button class="btn" id="jsonSave" type="button">下載 JSON</button>
+        <button class="btn" id="jsonLoad" type="button">載入 JSON</button>
+        <input class="sr" type="file" id="file" accept="application/json,.json">
       </div>
 
       <div class="row" style="margin-top:10px">
@@ -594,7 +564,7 @@ dialog h3{
           maxlength="30"
           placeholder="命名存檔，例如：第3課死活題"
         >
-        <button class="btn primary" id="saveSlot">儲存</button>
+        <button class="btn primary" id="saveSlot" type="button">儲存</button>
       </div>
 
       <div class="save-list" id="saveList" style="margin-top:9px"></div>
@@ -638,8 +608,8 @@ dialog h3{
   <p class="muted">這個動作可使用「復原」回退，但建議先建立命名存檔。</p>
 
   <div class="dialog-actions">
-    <button class="btn" id="cancelClear">取消</button>
-    <button class="btn danger" id="confirmClear">確定清空</button>
+    <button class="btn" id="cancelClear" type="button">取消</button>
+    <button class="btn danger" id="confirmClear" type="button">確定清空</button>
   </div>
 </dialog>
 
@@ -652,18 +622,17 @@ const $ = selector => document.querySelector(selector);
 const canvas = $("#board");
 const ctx = canvas.getContext("2d");
 
-const DRAFT_KEY = "teaching-go-pro-draft-v3";
-const SLOTS_KEY = "teaching-go-pro-slots-v3";
+const DRAFT_KEY = "teaching-go-pro-draft-v4";
+const SLOTS_KEY = "teaching-go-pro-slots-v4";
+const LAYOUT_KEY = "teaching-go-pro-layout-v1";
+const THEME_KEY = "teaching-go-pro-theme-v1";
 
 const state = {
   size: 19,
   board: [],
   current: "black",
   moves: [],
-  captures: {
-    black: 0,
-    white: 0
-  },
+  captures: { black: 0, white: 0 },
   history: [],
   future: [],
   view: null,
@@ -673,15 +642,9 @@ const state = {
 };
 
 const clone = value => JSON.parse(JSON.stringify(value));
-
-const emptyBoard = size =>
-  Array.from({ length: size }, () => Array(size).fill(null));
-
-const opposite = color =>
-  color === "black" ? "white" : "black";
-
-const pointKey = (x, y) =>
-  `${x},${y}`;
+const emptyBoard = size => Array.from({ length: size }, () => Array(size).fill(null));
+const opposite = color => color === "black" ? "white" : "black";
+const pointKey = (x, y) => `${x},${y}`;
 
 function snapshot() {
   return clone({
@@ -694,39 +657,21 @@ function snapshot() {
 }
 
 function validState(data) {
-  if (!data || ![9, 13, 19].includes(+data.size)) {
-    return false;
-  }
+  if (!data || ![9, 13, 19].includes(Number(data.size))) return false;
+  if (!Array.isArray(data.board) || data.board.length !== Number(data.size)) return false;
+  if (!data.board.every(row =>
+    Array.isArray(row) &&
+    row.length === Number(data.size) &&
+    row.every(cell => cell === null || cell === "black" || cell === "white")
+  )) return false;
 
-  if (!Array.isArray(data.board) || data.board.length !== +data.size) {
-    return false;
-  }
-
-  if (data.board.some(row =>
-    !Array.isArray(row) ||
-    row.length !== +data.size ||
-    row.some(value =>
-      value !== null &&
-      value !== "black" &&
-      value !== "white"
-    )
-  )) {
-    return false;
-  }
-
-  if (!["black", "white"].includes(data.current)) {
-    return false;
-  }
-
-  if (!Array.isArray(data.moves)) {
-    return false;
-  }
-
-  if (!data.captures) {
-    return false;
-  }
-
-  return true;
+  return [
+    "black",
+    "white"
+  ].includes(data.current) &&
+    Array.isArray(data.moves) &&
+    data.captures &&
+    typeof data.captures === "object";
 }
 
 function applyState(data, { record = false } = {}) {
@@ -739,43 +684,36 @@ function applyState(data, { record = false } = {}) {
     state.future = [];
   }
 
-  state.size = +data.size;
+  state.size = Number(data.size);
   state.board = clone(data.board);
   state.current = data.current;
   state.moves = clone(data.moves);
-
   state.captures = {
-    black: +data.captures.black || 0,
-    white: +data.captures.white || 0
+    black: Number(data.captures.black) || 0,
+    white: Number(data.captures.white) || 0
   };
 
   state.view = null;
-  $("#size").value = state.size;
+  $("#size").value = String(state.size);
 
   render();
   scheduleAutosave();
 }
 
-function newGame(size = 19) {
+function createNewGame(size = 19) {
   applyState({
-    size: +size,
-    board: emptyBoard(+size),
+    size: Number(size),
+    board: emptyBoard(Number(size)),
     current: "black",
     moves: [],
-    captures: {
-      black: 0,
-      white: 0
-    }
+    captures: { black: 0, white: 0 }
   }, { record: true });
 
   toast("已建立新棋局");
 }
 
-function inside(x, y) {
-  return x >= 0 &&
-    y >= 0 &&
-    x < state.size &&
-    y < state.size;
+function insideBoard(x, y) {
+  return x >= 0 && y >= 0 && x < state.size && y < state.size;
 }
 
 function neighbors(x, y) {
@@ -784,7 +722,7 @@ function neighbors(x, y) {
     [x + 1, y],
     [x, y - 1],
     [x, y + 1]
-  ].filter(([nx, ny]) => inside(nx, ny));
+  ].filter(([nx, ny]) => insideBoard(nx, ny));
 }
 
 function groupAt(board, x, y) {
@@ -811,47 +749,39 @@ function groupAt(board, x, y) {
     }
   }
 
-  return {
-    stones,
-    liberties
-  };
+  return { stones, liberties };
 }
 
 function tryPlay(x, y, color, board = state.board) {
-  if (!inside(x, y) || board[y][x]) {
+  if (!insideBoard(x, y) || board[y][x]) {
     return null;
   }
 
   const nextBoard = clone(board);
-  nextBoard[y][x] = color;
-
   const captured = [];
 
+  nextBoard[y][x] = color;
+
   for (const [nx, ny] of neighbors(x, y)) {
-    if (nextBoard[ny][nx] !== opposite(color)) {
-      continue;
-    }
+    if (nextBoard[ny][nx] !== opposite(color)) continue;
 
     const enemyGroup = groupAt(nextBoard, nx, ny);
 
-    if (!enemyGroup.liberties.size) {
-      for (const [sx, sy] of enemyGroup.stones) {
+    if (enemyGroup.liberties.size === 0) {
+      enemyGroup.stones.forEach(([sx, sy]) => {
         nextBoard[sy][sx] = null;
         captured.push([sx, sy]);
-      }
+      });
     }
   }
 
   const ownGroup = groupAt(nextBoard, x, y);
 
-  if (!ownGroup.liberties.size) {
+  if (ownGroup.liberties.size === 0) {
     return null;
   }
 
-  return {
-    board: nextBoard,
-    captured
-  };
+  return { board: nextBoard, captured };
 }
 
 function commit(action) {
@@ -879,7 +809,6 @@ function setupStone(x, y) {
 
   commit(() => {
     state.board[y][x] = state.current;
-
     state.moves.push({
       type: "setup",
       x,
@@ -928,7 +857,7 @@ function playStone(x, y) {
   );
 }
 
-function pass() {
+function passMove() {
   if (state.view !== null) {
     toast("請先回到目前棋局");
     return;
@@ -976,10 +905,7 @@ function replayTo(step) {
     board: emptyBoard(state.size),
     current: "black",
     moves: [],
-    captures: {
-      black: 0,
-      white: 0
-    }
+    captures: { black: 0, white: 0 }
   };
 
   for (let index = 0; index < step; index++) {
@@ -998,16 +924,9 @@ function replayTo(step) {
     }
 
     if (move.type === "play") {
-      const result = tryPlay(
-        move.x,
-        move.y,
-        move.color,
-        replay.board
-      );
+      const result = tryPlay(move.x, move.y, move.color, replay.board);
 
-      if (!result) {
-        break;
-      }
+      if (!result) break;
 
       replay.board = result.board;
       replay.captures[move.color] += result.captured.length;
@@ -1020,12 +939,10 @@ function replayTo(step) {
 }
 
 function displayedState() {
-  return state.view === null
-    ? snapshot()
-    : replayTo(state.view);
+  return state.view === null ? snapshot() : replayTo(state.view);
 }
 
-function coord(x, y) {
+function coordinateName(x, y) {
   const letters = "ABCDEFGHJKLMNOPQRST";
   return letters[x] + (state.size - y);
 }
@@ -1106,8 +1023,8 @@ function drawBoard(display) {
 
   ctx.fillStyle = lineColor;
 
-  for (const x of starPoints) {
-    for (const y of starPoints) {
+  starPoints.forEach(x => {
+    starPoints.forEach(y => {
       ctx.beginPath();
       ctx.arc(
         margin + x * cell,
@@ -1117,8 +1034,8 @@ function drawBoard(display) {
         Math.PI * 2
       );
       ctx.fill();
-    }
-  }
+    });
+  });
 
   const letters = "ABCDEFGHJKLMNOPQRST";
 
@@ -1129,7 +1046,6 @@ function drawBoard(display) {
   for (let i = 0; i < size; i++) {
     const p = margin + i * cell;
 
-    /* 座標放在棋盤格線外一格 */
     ctx.fillText(letters[i], p, margin - cell);
     ctx.fillText(letters[i], p, canvas.height - margin + cell);
 
@@ -1150,13 +1066,10 @@ function drawBoard(display) {
     }
   }
 
-  /* 只有正式行棋顯示手順號；擺盤不顯示 */
   let moveNumber = 0;
 
-  for (const move of display.moves) {
-    if (move.type !== "play") {
-      continue;
-    }
+  display.moves.forEach(move => {
+    if (move.type !== "play") return;
 
     moveNumber++;
 
@@ -1167,11 +1080,10 @@ function drawBoard(display) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(String(moveNumber), point.x, point.y + 1);
-  }
+  });
 
   ctx.textBaseline = "alphabetic";
 
-  /* 移除最後一手正方框；僅顯示合法落子預覽 */
   if (
     state.hover &&
     state.view === null &&
@@ -1233,25 +1145,23 @@ function render() {
   let playNumber = 0;
 
   $("#moves").innerHTML = state.moves.map((move, index) => {
-    let text = "";
+    let text;
 
     if (move.type === "setup") {
-      text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+      text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
     } else if (move.type === "pass") {
       playNumber++;
       text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛手`;
     } else {
       playNumber++;
-      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
 
       if (move.captured) {
         text += `（提 ${move.captured}）`;
       }
     }
 
-    const currentClass = state.view === index + 1
-      ? "current"
-      : "";
+    const currentClass = state.view === index + 1 ? "current" : "";
 
     return `<li class="${currentClass}">${text}</li>`;
   }).join("") || "<li>尚未有手順</li>";
@@ -1274,7 +1184,7 @@ function pointFromEvent(event) {
     (canvasY - state.margin) / state.cell
   );
 
-  return inside(x, y) ? { x, y } : null;
+  return insideBoard(x, y) ? { x, y } : null;
 }
 
 canvas.addEventListener("pointermove", event => {
@@ -1290,9 +1200,7 @@ canvas.addEventListener("pointerleave", () => {
 canvas.addEventListener("click", event => {
   const point = pointFromEvent(event);
 
-  if (!point) {
-    return;
-  }
+  if (!point) return;
 
   const tool = $("#tool").value;
 
@@ -1324,13 +1232,8 @@ function scheduleAutosave() {
 
   autosaveTimer = setTimeout(() => {
     try {
-      localStorage.setItem(
-        DRAFT_KEY,
-        JSON.stringify(snapshot())
-      );
-
-      $("#autosaveStatus").textContent =
-        "本機草稿已自動儲存";
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      $("#autosaveStatus").textContent = "本機草稿已自動儲存";
     } catch {
       $("#autosaveStatus").textContent =
         "無法自動儲存：瀏覽器空間不足";
@@ -1344,9 +1247,9 @@ function toast(message) {
   box.textContent = message;
   box.classList.add("show");
 
-  clearTimeout(box.timer);
+  clearTimeout(box._timer);
 
-  box.timer = setTimeout(() => {
+  box._timer = setTimeout(() => {
     box.classList.remove("show");
   }, 2200);
 }
@@ -1378,8 +1281,8 @@ function renderSlots() {
         <small class="muted">${new Date(slot.at).toLocaleString()}</small>
       </span>
       <div>
-        <button class="btn loadSlot" data-index="${index}">載入</button>
-        <button class="btn danger deleteSlot" data-index="${index}">×</button>
+        <button class="btn loadSlot" type="button" data-index="${index}">載入</button>
+        <button class="btn danger deleteSlot" type="button" data-index="${index}">×</button>
       </div>
     </div>
   `).join("") || `<div class="hint">未有命名存檔</div>`;
@@ -1388,7 +1291,7 @@ function renderSlots() {
     button.onclick = () => {
       try {
         applyState(
-          getSlots()[+button.dataset.index].data,
+          getSlots()[Number(button.dataset.index)].data,
           { record: true }
         );
 
@@ -1403,20 +1306,49 @@ function renderSlots() {
     button.onclick = () => {
       const slots = getSlots();
 
-      slots.splice(+button.dataset.index, 1);
+      slots.splice(Number(button.dataset.index), 1);
 
-      localStorage.setItem(
-        SLOTS_KEY,
-        JSON.stringify(slots)
-      );
-
+      localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
       renderSlots();
       toast("已刪除存檔");
     };
   });
 }
 
-$("#saveSlot").onclick = () => {
+function setLayout(position) {
+  const allowed = ["right", "left", "top", "bottom"];
+  const nextPosition = allowed.includes(position) ? position : "right";
+
+  document.documentElement.dataset.layout = nextPosition;
+
+  try {
+    localStorage.setItem(LAYOUT_KEY, nextPosition);
+  } catch {
+    /* localStorage 不可用時仍可切換版面 */
+  }
+
+  document
+    .querySelectorAll("#layoutButtons button[data-layout]")
+    .forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.layout === nextPosition
+      );
+    });
+}
+
+function initLayoutButtons() {
+  document
+    .querySelectorAll("#layoutButtons button[data-layout]")
+    .forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        setLayout(button.dataset.layout);
+      });
+    });
+}
+
+$("#saveSlot").addEventListener("click", () => {
   const name = $("#saveName").value.trim();
 
   if (!name) {
@@ -1440,50 +1372,49 @@ $("#saveSlot").onclick = () => {
 
     $("#saveName").value = "";
     renderSlots();
-
     toast("已建立命名存檔");
   } catch {
     toast("無法儲存，請檢查瀏覽器儲存空間");
   }
-};
+});
 
-$("#size").onchange = event => {
+$("#size").addEventListener("change", event => {
   const nextSize = event.target.value;
 
   if (confirm("更改棋盤尺寸會建立新棋局，是否繼續？")) {
-    newGame(nextSize);
+    createNewGame(nextSize);
   } else {
-    event.target.value = state.size;
+    event.target.value = String(state.size);
   }
-};
+});
 
-$("#pass").onclick = pass;
-$("#undo").onclick = undo;
-$("#redo").onclick = redo;
+$("#pass").addEventListener("click", passMove);
+$("#undo").addEventListener("click", undo);
+$("#redo").addEventListener("click", redo);
 
-$("#clear").onclick = () => {
+$("#clear").addEventListener("click", () => {
   $("#confirm").showModal();
-};
+});
 
-$("#cancelClear").onclick = () => {
+$("#cancelClear").addEventListener("click", () => {
   $("#confirm").close();
-};
+});
 
-$("#confirmClear").onclick = () => {
+$("#confirmClear").addEventListener("click", () => {
   $("#confirm").close();
-  newGame(state.size);
-};
+  createNewGame(state.size);
+});
 
-$("#prev").onclick = () => {
+$("#prev").addEventListener("click", () => {
   state.view = Math.max(
     0,
     (state.view ?? state.moves.length) - 1
   );
 
   render();
-};
+});
 
-$("#next").onclick = () => {
+$("#next").addEventListener("click", () => {
   state.view = Math.min(
     state.moves.length,
     (state.view ?? state.moves.length) + 1
@@ -1494,24 +1425,24 @@ $("#next").onclick = () => {
   }
 
   render();
-};
+});
 
-$("#live").onclick = () => {
+$("#live").addEventListener("click", () => {
   state.view = null;
   render();
-};
+});
 
-$("#timeline").oninput = event => {
-  const target = +event.target.value;
+$("#timeline").addEventListener("input", event => {
+  const target = Number(event.target.value);
 
   state.view = target === state.moves.length
     ? null
     : target;
 
   render();
-};
+});
 
-$("#themeBtn").onclick = () => {
+$("#themeBtn").addEventListener("click", () => {
   const root = document.documentElement;
 
   root.dataset.theme =
@@ -1519,10 +1450,14 @@ $("#themeBtn").onclick = () => {
       ? "light"
       : "dark";
 
-  localStorage.setItem("go-theme", root.dataset.theme);
+  try {
+    localStorage.setItem(THEME_KEY, root.dataset.theme);
+  } catch {
+    /* 忽略 localStorage 例外 */
+  }
 
   render();
-};
+});
 
 function download(blob, filename) {
   const link = document.createElement("a");
@@ -1536,34 +1471,34 @@ function download(blob, filename) {
   }, 1000);
 }
 
-$("#jsonSave").onclick = () => {
-  const data = JSON.stringify(snapshot(), null, 2);
-
+$("#jsonSave").addEventListener("click", () => {
   download(
-    new Blob([data], { type: "application/json" }),
+    new Blob(
+      [JSON.stringify(snapshot(), null, 2)],
+      { type: "application/json" }
+    ),
     "go-game.json"
   );
-};
+});
 
-$("#jsonLoad").onclick = () => {
+$("#jsonLoad").addEventListener("click", () => {
   $("#file").click();
-};
+});
 
-$("#file").onchange = async event => {
+$("#file").addEventListener("change", async event => {
   const file = event.target.files[0];
 
-  if (!file) {
-    return;
-  }
+  if (!file) return;
 
   try {
     if (file.size > 5 * 1024 * 1024) {
       throw new Error("檔案過大（上限為 5MB）");
     }
 
-    const data = JSON.parse(await file.text());
-
-    applyState(data, { record: true });
+    applyState(
+      JSON.parse(await file.text()),
+      { record: true }
+    );
 
     toast("JSON 棋局已載入");
   } catch (error) {
@@ -1571,36 +1506,14 @@ $("#file").onchange = async event => {
   } finally {
     event.target.value = "";
   }
-};
+});
 
-$("#png").onclick = () => {
+$("#png").addEventListener("click", () => {
   drawBoard(displayedState());
 
   canvas.toBlob(blob => {
-    download(
-      blob,
-      `go-${state.size}x${state.size}.png`
-    );
+    download(blob, `go-${state.size}x${state.size}.png`);
   }, "image/png");
-};
-
-function setLayout(position) {
-  document.documentElement.dataset.layout = position;
-
-  localStorage.setItem("go-layout", position);
-
-  document.querySelectorAll("[data-layout]").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.layout === position
-    );
-  });
-}
-
-document.querySelectorAll("[data-layout]").forEach(button => {
-  button.addEventListener("click", () => {
-    setLayout(button.dataset.layout);
-  });
 });
 
 document.addEventListener("keydown", event => {
@@ -1624,7 +1537,7 @@ document.addEventListener("keydown", event => {
     !["INPUT", "SELECT"].includes(activeTag)
   ) {
     event.preventDefault();
-    pass();
+    passMove();
     return;
   }
 
@@ -1638,27 +1551,26 @@ document.addEventListener("keydown", event => {
 });
 
 try {
-  const saved = JSON.parse(
-    localStorage.getItem(DRAFT_KEY)
-  );
+  const saved = JSON.parse(localStorage.getItem(DRAFT_KEY));
 
   if (validState(saved)) {
     applyState(saved);
     toast("已還原上次自動儲存的棋局");
   } else {
-    newGame(19);
+    createNewGame(19);
   }
 } catch {
-  newGame(19);
+  createNewGame(19);
 }
 
 document.documentElement.dataset.theme =
-  localStorage.getItem("go-theme") || "light";
+  localStorage.getItem(THEME_KEY) || "light";
 
 setLayout(
-  localStorage.getItem("go-layout") || "right"
+  localStorage.getItem(LAYOUT_KEY) || "right"
 );
 
+initLayoutButtons();
 renderSlots();
 render();
 </script>
