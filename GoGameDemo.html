@@ -38,7 +38,7 @@
         }
 
         * {
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         html,
@@ -51,7 +51,7 @@
         }
 
         body {
-            overflow: hidden;
+            overflow: hidden
         }
 
         .app {
@@ -117,13 +117,13 @@
 
         .top h1 {
             font-size: 23px;
-            margin: 0 0 3px;
+            margin: 0 0 3px
         }
 
         .muted,
         .hint {
             color: var(--muted);
-            font-size: 13px;
+            font-size: 13px
         }
 
         .section {
@@ -134,32 +134,32 @@
 
         .section h2 {
             font-size: 16px;
-            margin: 0 0 10px;
+            margin: 0 0 10px
         }
 
         .row,
         .tools {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            flex-wrap: wrap
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 9px;
+            gap: 9px
         }
 
         .grid3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            gap: 8px
         }
 
         .btn,
         select,
         input {
-            font: inherit;
+            font: inherit
         }
 
         .btn {
@@ -173,7 +173,7 @@
         }
 
         .btn:hover {
-            filter: brightness(.96);
+            filter: brightness(.96)
         }
 
         .btn:focus-visible,
@@ -190,7 +190,7 @@
         }
 
         .btn.danger {
-            color: var(--danger);
+            color: var(--danger)
         }
 
         .btn.active {
@@ -200,7 +200,7 @@
 
         .btn:disabled {
             opacity: .45;
-            cursor: not-allowed;
+            cursor: not-allowed
         }
 
         select,
@@ -231,26 +231,26 @@
         .stat strong {
             display: block;
             font-size: 21px;
-            margin-top: 2px;
+            margin-top: 2px
         }
 
         .moves {
             padding-left: 22px;
-            margin: 6px 0;
+            margin: 6px 0
         }
 
         .moves li {
             padding: 4px 0;
-            color: var(--muted);
+            color: var(--muted)
         }
 
         .moves li.current {
             font-weight: 800;
-            color: var(--primary);
+            color: var(--primary)
         }
 
         .range {
-            width: 100%;
+            width: 100%
         }
 
         .toast {
@@ -269,7 +269,7 @@
         }
 
         .toast.show {
-            transform: translate(-50%, 0);
+            transform: translate(-50%, 0)
         }
 
         dialog {
@@ -284,11 +284,11 @@
         }
 
         dialog::backdrop {
-            background: #0008;
+            background: #0008
         }
 
         dialog h3 {
-            margin-top: 0;
+            margin-top: 0
         }
 
         .dialog-actions {
@@ -300,7 +300,7 @@
 
         .save-list {
             display: grid;
-            gap: 7px;
+            gap: 7px
         }
 
         .save-item {
@@ -329,7 +329,7 @@
             white-space: nowrap;
         }
 
-        /* 可切換控制面板位置 */
+        /* 面板位置 */
         [data-layout="left"] .app {
             grid-template-columns: 390px minmax(0, 1fr);
         }
@@ -401,11 +401,7 @@
             border-top: 1px solid var(--border);
         }
 
-        /* 紅色棋盤游標 */
-        canvas {
-            cursor: crosshair;
-        }
-
+        /* 紅色滑鼠游標 */
         .board-wrap::after {
             content: "";
             position: absolute;
@@ -422,28 +418,12 @@
         }
 
         .board-wrap.cursor-hidden::after {
-            display: none;
-        }
-
-        /* 黑夜模式保留日間介面配色，只把棋盤改為白色 */
-        [data-theme="dark"] {
-            --bg: #f5f3ed;
-            --panel: #fffdf8;
-            --soft: #f1ede3;
-            --text: #26231c;
-            --muted: #69655d;
-            --border: #d8d0c1;
-            --primary: #08777b;
-            --danger: #b33a30;
-            --wood1: #fff;
-            --wood2: #f5f5f5;
-            --line: #65491f;
-            --shadow: 0 10px 30px #342a1820;
+            display: none
         }
 
         @media(max-width:900px) {
             body {
-                overflow: auto;
+                overflow: auto
             }
 
             [data-layout] .app {
@@ -486,7 +466,6 @@
         <section class="stage">
             <div class="board-wrap cursor-hidden">
                 <canvas id="board" width="1000" height="1000" aria-label="圍棋棋盤；點擊交叉點落子"></canvas>
-
                 <div class="status" id="status" aria-live="polite"></div>
             </div>
         </section>
@@ -497,23 +476,18 @@
                     <h1>圍棋教學棋盤 Pro</h1>
                     <div class="muted" id="autosaveStatus">本機草稿已啟用</div>
                 </div>
-
                 <button class="btn" id="themeBtn" type="button" aria-label="切換深淺色">◐</button>
             </div>
 
             <section class="section">
                 <h2>版面位置</h2>
-
                 <div class="tools" id="layoutButtons">
                     <button class="btn active" type="button" data-layout="right">右側</button>
                     <button class="btn" type="button" data-layout="left">左側</button>
                     <button class="btn" type="button" data-layout="top">上方</button>
                     <button class="btn" type="button" data-layout="bottom">下方</button>
                 </div>
-
-                <p class="hint">
-                    可一鍵把控制面板移至棋盤的上、下、左或右；偏好會自動保存。
-                </p>
+                <p class="hint">可一鍵把控制面板移至棋盤的上、下、左或右；偏好會自動保存。</p>
             </section>
 
             <section class="section">
@@ -543,7 +517,7 @@
                 <div class="row" style="margin-top:9px">
                     <button class="btn active" type="button" data-color="black">● 黑方</button>
                     <button class="btn" type="button" data-color="white">○ 白方</button>
-                    <input id="labelText" placeholder="標記文字（最多 8 字）" aria-label="標記文字">
+                    <input id="labelText" maxlength="8" placeholder="標記文字（最多 8 字）" aria-label="標記文字">
                 </div>
 
                 <div class="tools" style="margin-top:9px">
@@ -555,27 +529,23 @@
 
                 <p class="hint">
                     「擺盤」不會計算手數；「行棋」才會顯示棋子中央手順號。
-                    快捷鍵：←/→ 回放、Space 虛手、Ctrl/⌘ Z 復原。
+                    文字標記：輸入文字、選擇「文字標記」、點擊棋盤。
                 </p>
             </section>
 
             <section class="section">
                 <h2>回放</h2>
-
                 <div class="tools">
                     <button class="btn" id="prev" type="button">◀ 上一步</button>
                     <button class="btn" id="next" type="button">下一步 ▶</button>
                     <button class="btn" id="live" type="button">回到目前</button>
                 </div>
-
                 <input class="range" id="timeline" type="range" min="0" value="0" style="margin-top:10px">
-
                 <div class="hint" id="timelineText">第 0 / 0 項紀錄</div>
             </section>
 
             <section class="section">
                 <h2>棋局資料</h2>
-
                 <div class="tools">
                     <button class="btn" id="png" type="button">匯出 PNG</button>
                     <button class="btn" id="jsonSave" type="button">下載 JSON</button>
@@ -589,31 +559,14 @@
                 </div>
 
                 <div class="save-list" id="saveList" style="margin-top:9px"></div>
-
-                <p class="hint">
-                    每次修改均會自動儲存到此瀏覽器；命名存檔最多保留 12 個。
-                    匯入資料會先驗證，失敗不會覆蓋目前棋局。
-                </p>
             </section>
 
             <section class="section">
                 <h2>統計</h2>
-
                 <div class="grid3">
-                    <div class="stat">
-                        <span class="muted">黑子</span>
-                        <strong id="black">0</strong>
-                    </div>
-
-                    <div class="stat">
-                        <span class="muted">白子</span>
-                        <strong id="white">0</strong>
-                    </div>
-
-                    <div class="stat">
-                        <span class="muted">提子</span>
-                        <strong id="caps">0 : 0</strong>
-                    </div>
+                    <div class="stat"><span class="muted">黑子</span><strong id="black">0</strong></div>
+                    <div class="stat"><span class="muted">白子</span><strong id="white">0</strong></div>
+                    <div class="stat"><span class="muted">提子</span><strong id="caps">0 : 0</strong></div>
                 </div>
             </section>
 
@@ -627,7 +580,6 @@
     <dialog id="confirm">
         <h3>清空目前棋局？</h3>
         <p class="muted">這個動作可使用「復原」回退，但建議先建立命名存檔。</p>
-
         <div class="dialog-actions">
             <button class="btn" id="cancelClear" type="button">取消</button>
             <button class="btn danger" id="confirmClear" type="button">確定清空</button>
@@ -644,16 +596,17 @@
         const ctx = canvas.getContext("2d");
         const boardWrap = canvas.closest(".board-wrap");
 
-        const DRAFT_KEY = "teaching-go-pro-draft-v5";
-        const SLOTS_KEY = "teaching-go-pro-slots-v5";
-        const LAYOUT_KEY = "teaching-go-pro-layout-v2";
-        const THEME_KEY = "teaching-go-pro-theme-v2";
+        const DRAFT_KEY = "teaching-go-pro-draft-v6";
+        const SLOTS_KEY = "teaching-go-pro-slots-v6";
+        const LAYOUT_KEY = "teaching-go-pro-layout-v3";
+        const THEME_KEY = "teaching-go-pro-theme-v3";
 
         const state = {
             size: 19,
             board: [],
             current: "black",
             moves: [],
+            labels: [],
             captures: { black: 0, white: 0 },
             history: [],
             future: [],
@@ -674,6 +627,7 @@
                 board: state.board,
                 current: state.current,
                 moves: state.moves,
+                labels: state.labels,
                 captures: state.captures
             });
         }
@@ -690,12 +644,12 @@
                 return false;
             }
 
-            return (
-                ["black", "white"].includes(data.current) &&
-                Array.isArray(data.moves) &&
-                data.captures &&
-                typeof data.captures === "object"
-            );
+            if (!["black", "white"].includes(data.current)) return false;
+            if (!Array.isArray(data.moves)) return false;
+            if (data.labels !== undefined && !Array.isArray(data.labels)) return false;
+            if (!data.captures || typeof data.captures !== "object") return false;
+
+            return true;
         }
 
         function applyState(data, { record = false } = {}) {
@@ -712,6 +666,7 @@
             state.board = clone(data.board);
             state.current = data.current;
             state.moves = clone(data.moves);
+            state.labels = clone(data.labels || []);
             state.captures = {
                 black: Number(data.captures.black) || 0,
                 white: Number(data.captures.white) || 0
@@ -730,6 +685,7 @@
                 board: emptyBoard(Number(size)),
                 current: "black",
                 moves: [],
+                labels: [],
                 captures: { black: 0, white: 0 }
             }, { record: true });
 
@@ -809,7 +765,6 @@
             action();
 
             state.view = null;
-
             render();
             scheduleAutosave();
         }
@@ -827,6 +782,7 @@
 
             commit(() => {
                 state.board[y][x] = state.current;
+
                 state.moves.push({
                     type: "setup",
                     x,
@@ -871,6 +827,68 @@
             toast(result.captured.length ? `提掉 ${result.captured.length} 子` : "已落子");
         }
 
+        function addLabel(x, y) {
+            if (state.view !== null) {
+                toast("請先按「回到目前」才可修改棋局");
+                return;
+            }
+
+            const text = $("#labelText").value.trim().slice(0, 8);
+
+            if (!text) {
+                toast("請先輸入標記文字");
+                return;
+            }
+
+            commit(() => {
+                state.labels = state.labels.filter(label =>
+                    label.x !== x || label.y !== y
+                );
+
+                state.labels.push({
+                    x,
+                    y,
+                    text
+                });
+            });
+
+            toast("已加入文字標記");
+        }
+
+        function eraseAt(x, y) {
+            if (state.view !== null) {
+                toast("請先按「回到目前」才可修改棋局");
+                return;
+            }
+
+            const hasStone = Boolean(state.board[y][x]);
+
+            const hasLabel = state.labels.some(label =>
+                label.x === x && label.y === y
+            );
+
+            if (!hasStone && !hasLabel) {
+                toast("此處沒有可擦除項目");
+                return;
+            }
+
+            commit(() => {
+                state.board[y][x] = null;
+
+                state.labels = state.labels.filter(label =>
+                    label.x !== x || label.y !== y
+                );
+
+                state.moves.push({
+                    type: "erase",
+                    x,
+                    y
+                });
+            });
+
+            toast("已擦除");
+        }
+
         function passMove() {
             if (state.view !== null) {
                 toast("請先回到目前棋局");
@@ -897,6 +915,7 @@
 
             state.future.push(snapshot());
             applyState(state.history.pop());
+
             toast("已復原");
         }
 
@@ -908,6 +927,7 @@
 
             state.history.push(snapshot());
             applyState(state.future.pop());
+
             toast("已重做");
         }
 
@@ -917,6 +937,7 @@
                 board: emptyBoard(state.size),
                 current: "black",
                 moves: [],
+                labels: [],
                 captures: { black: 0, white: 0 }
             };
 
@@ -925,6 +946,12 @@
 
                 if (move.type === "setup") {
                     replay.board[move.y][move.x] = move.color;
+                    replay.moves.push(move);
+                    continue;
+                }
+
+                if (move.type === "erase") {
+                    replay.board[move.y][move.x] = null;
                     replay.moves.push(move);
                     continue;
                 }
@@ -1078,6 +1105,22 @@
                 }
             }
 
+            for (const label of display.labels || []) {
+                const point = boardPosition(label.x, label.y);
+                const stone = display.board[label.y][label.x];
+
+                ctx.save();
+                ctx.font = `700 ${Math.max(13, state.cell * 0.3)}px system-ui`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = stone === "black" ? "#111" : "#fff";
+                ctx.fillStyle = stone === "black" ? "#fff" : "#b01919";
+                ctx.strokeText(label.text, point.x, point.y);
+                ctx.fillText(label.text, point.x, point.y);
+                ctx.restore();
+            }
+
             let moveNumber = 0;
 
             display.moves.forEach(move => {
@@ -1161,6 +1204,8 @@
 
                 if (move.type === "setup") {
                     text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
+                } else if (move.type === "erase") {
+                    text = `擦除 ${coordinateName(move.x, move.y)}`;
                 } else if (move.type === "pass") {
                     playNumber++;
                     text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛手`;
@@ -1188,13 +1233,8 @@
             const canvasY =
                 (event.clientY - rect.top) * canvas.height / rect.height;
 
-            const x = Math.round(
-                (canvasX - state.margin) / state.cell
-            );
-
-            const y = Math.round(
-                (canvasY - state.margin) / state.cell
-            );
+            const x = Math.round((canvasX - state.margin) / state.cell);
+            const y = Math.round((canvasY - state.margin) / state.cell);
 
             return insideBoard(x, y) ? { x, y } : null;
         }
@@ -1220,7 +1260,6 @@
 
         canvas.addEventListener("pointerleave", () => {
             boardWrap.classList.add("cursor-hidden");
-
             state.hover = null;
             render();
         });
@@ -1237,9 +1276,9 @@
             } else if (tool === "setup") {
                 setupStone(point.x, point.y);
             } else if (tool === "label") {
-                toast("文字標記功能可於下一版加入 SGF 相容標記。");
-            } else {
-                toast("擦除功能建議只用於教學擺盤模式。");
+                addLabel(point.x, point.y);
+            } else if (tool === "erase") {
+                eraseAt(point.x, point.y);
             }
         });
 
@@ -1351,9 +1390,7 @@
 
             try {
                 localStorage.setItem(LAYOUT_KEY, nextPosition);
-            } catch {
-                /* localStorage 不可用時仍可切換版面 */
-            }
+            } catch { }
 
             document
                 .querySelectorAll("#layoutButtons button[data-layout]")
@@ -1434,11 +1471,7 @@
         });
 
         $("#prev").addEventListener("click", () => {
-            state.view = Math.max(
-                0,
-                (state.view ?? state.moves.length) - 1
-            );
-
+            state.view = Math.max(0, (state.view ?? state.moves.length) - 1);
             render();
         });
 
@@ -1463,10 +1496,7 @@
         $("#timeline").addEventListener("input", event => {
             const target = Number(event.target.value);
 
-            state.view = target === state.moves.length
-                ? null
-                : target;
-
+            state.view = target === state.moves.length ? null : target;
             render();
         });
 
@@ -1474,15 +1504,11 @@
             const root = document.documentElement;
 
             root.dataset.theme =
-                root.dataset.theme === "dark"
-                    ? "light"
-                    : "dark";
+                root.dataset.theme === "dark" ? "light" : "dark";
 
             try {
                 localStorage.setItem(THEME_KEY, root.dataset.theme);
-            } catch {
-                /* localStorage 不可用時只切換當前畫面 */
-            }
+            } catch { }
 
             render();
         });
