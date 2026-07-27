@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="zh-Hant" data-theme="light">
+<html lang="zh-Hant" data-theme="light" data-layout="right">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>圍棋教學棋盤 Pro</title>
+
     <style>
         :root {
             --bg: #f5f3ed;
@@ -18,7 +19,7 @@
             --wood1: #dfbb7b;
             --wood2: #c99d5a;
             --line: #65491f;
-            --shadow: 0 10px 30px #342a1820
+            --shadow: 0 10px 30px #342a1820;
         }
 
         [data-theme="dark"] {
@@ -30,34 +31,43 @@
             --border: #d8d0c1;
             --primary: #08777b;
             --danger: #b33a30;
-            --wood1: #ffffff;
-            --wood2: #ffffff;
+            --wood1: #fff;
+            --wood2: #f5f5f5;
             --line: #65491f;
-            --shadow: 0 10px 30px #342a1820
+            --shadow: 0 10px 30px #342a1820;
         }
 
         * {
-            box-sizing: border-box
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font: 15px system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
         }
 
         body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font: 15px system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif
+            overflow: hidden;
         }
 
         .app {
             display: grid;
             grid-template-columns: minmax(0, 1fr) 390px;
-            min-height: 100vh
+            height: 100vh;
+            overflow: hidden;
         }
 
         .stage {
             display: grid;
             place-items: center;
             padding: 24px;
-            min-width: 0
+            min-width: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .board-wrap {
@@ -65,7 +75,7 @@
             width: min(92vmin, 960px);
             aspect-ratio: 1;
             background: linear-gradient(135deg, var(--wood1), var(--wood2));
-            box-shadow: var(--shadow)
+            box-shadow: var(--shadow);
         }
 
         canvas {
@@ -74,7 +84,7 @@
             width: 100%;
             height: 100%;
             touch-action: none;
-            cursor: crosshair
+            cursor: crosshair;
         }
 
         .status {
@@ -86,69 +96,70 @@
             padding: 7px 11px;
             border-radius: 999px;
             font-size: 13px;
-            pointer-events: none
+            pointer-events: none;
         }
 
         .panel {
             background: var(--panel);
             border-left: 1px solid var(--border);
             padding: 18px;
-            overflow: auto;
-            max-height: 100vh
+            overflow-y: auto;
+            overflow-x: hidden;
+            height: 100vh;
         }
 
         .top {
             display: flex;
             justify-content: space-between;
             gap: 10px;
-            align-items: flex-start
+            align-items: flex-start;
         }
 
         .top h1 {
             font-size: 23px;
-            margin: 0 0 3px
+            margin: 0 0 3px;
         }
 
         .muted,
         .hint {
             color: var(--muted);
-            font-size: 13px
+            font-size: 13px;
         }
 
         .section {
             border-top: 1px solid var(--border);
             padding-top: 14px;
-            margin-top: 16px
+            margin-top: 16px;
         }
 
         .section h2 {
             font-size: 16px;
-            margin: 0 0 10px
+            margin: 0 0 10px;
         }
 
         .row,
         .tools {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap
+            flex-wrap: wrap;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 9px
+            gap: 9px;
         }
 
         .grid3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px
+            gap: 8px;
         }
 
         .btn,
         select,
         input {
-            font: inherit
+            font: inherit;
         }
 
         .btn {
@@ -158,38 +169,38 @@
             padding: 8px 10px;
             min-height: 38px;
             border-radius: 9px;
-            cursor: pointer
+            cursor: pointer;
         }
 
         .btn:hover {
-            filter: brightness(.96)
+            filter: brightness(.96);
         }
 
         .btn:focus-visible,
         select:focus-visible,
         input:focus-visible {
             outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent);
-            outline-offset: 2px
+            outline-offset: 2px;
         }
 
         .btn.primary {
             background: var(--primary);
             color: #fff;
-            border-color: var(--primary)
+            border-color: var(--primary);
         }
 
         .btn.danger {
-            color: var(--danger)
+            color: var(--danger);
         }
 
         .btn.active {
             outline: 2px solid var(--primary);
-            outline-offset: 1px
+            outline-offset: 1px;
         }
 
         .btn:disabled {
             opacity: .45;
-            cursor: not-allowed
+            cursor: not-allowed;
         }
 
         select,
@@ -200,46 +211,46 @@
             border: 1px solid var(--border);
             background: var(--soft);
             color: var(--text);
-            padding: 0 9px
+            padding: 0 9px;
         }
 
         label {
             display: grid;
             gap: 5px;
             font-weight: 650;
-            font-size: 13px
+            font-size: 13px;
         }
 
         .stat {
             background: var(--soft);
             border: 1px solid var(--border);
             padding: 9px;
-            border-radius: 10px
+            border-radius: 10px;
         }
 
         .stat strong {
             display: block;
             font-size: 21px;
-            margin-top: 2px
+            margin-top: 2px;
         }
 
         .moves {
             padding-left: 22px;
-            margin: 6px 0
+            margin: 6px 0;
         }
 
         .moves li {
             padding: 4px 0;
-            color: var(--muted)
+            color: var(--muted);
         }
 
         .moves li.current {
             font-weight: 800;
-            color: var(--primary)
+            color: var(--primary);
         }
 
         .range {
-            width: 100%
+            width: 100%;
         }
 
         .toast {
@@ -254,11 +265,11 @@
             border-radius: 10px;
             box-shadow: var(--shadow);
             transition: .22s;
-            max-width: min(92vw, 500px)
+            max-width: min(92vw, 500px);
         }
 
         .toast.show {
-            transform: translate(-50%, 0)
+            transform: translate(-50%, 0);
         }
 
         dialog {
@@ -269,27 +280,27 @@
             box-shadow: var(--shadow);
             max-width: 440px;
             width: calc(100% - 32px);
-            padding: 20px
+            padding: 20px;
         }
 
         dialog::backdrop {
-            background: #0008
+            background: #0008;
         }
 
         dialog h3 {
-            margin-top: 0
+            margin-top: 0;
         }
 
         .dialog-actions {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            margin-top: 18px
+            margin-top: 18px;
         }
 
         .save-list {
             display: grid;
-            gap: 7px
+            gap: 7px;
         }
 
         .save-item {
@@ -300,13 +311,13 @@
             background: var(--soft);
             border: 1px solid var(--border);
             border-radius: 9px;
-            padding: 7px 8px
+            padding: 7px 8px;
         }
 
         .save-item span {
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap
+            white-space: nowrap;
         }
 
         .sr {
@@ -315,26 +326,156 @@
             height: 1px;
             clip: rect(0, 0, 0, 0);
             overflow: hidden;
-            white-space: nowrap
+            white-space: nowrap;
+        }
+
+        /* 可切換控制面板位置 */
+        [data-layout="left"] .app {
+            grid-template-columns: 390px minmax(0, 1fr);
+        }
+
+        [data-layout="left"] .panel {
+            grid-column: 1;
+            grid-row: 1;
+            border-left: 0;
+            border-right: 1px solid var(--border);
+        }
+
+        [data-layout="left"] .stage {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        [data-layout="right"] .panel {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        [data-layout="right"] .stage {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        [data-layout="top"] .app {
+            grid-template-columns: 1fr;
+            grid-template-rows: minmax(0, 42vh) minmax(0, 58vh);
+        }
+
+        [data-layout="top"] .panel {
+            grid-column: 1;
+            grid-row: 1;
+            height: 42vh;
+            border-left: 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        [data-layout="top"] .stage {
+            grid-column: 1;
+            grid-row: 2;
+            height: 58vh;
+            padding: 12px;
+        }
+
+        [data-layout="top"] .board-wrap,
+        [data-layout="bottom"] .board-wrap {
+            width: min(54vmin, 620px);
+        }
+
+        [data-layout="bottom"] .app {
+            grid-template-columns: 1fr;
+            grid-template-rows: minmax(0, 58vh) minmax(0, 42vh);
+        }
+
+        [data-layout="bottom"] .stage {
+            grid-column: 1;
+            grid-row: 1;
+            height: 58vh;
+            padding: 12px;
+        }
+
+        [data-layout="bottom"] .panel {
+            grid-column: 1;
+            grid-row: 2;
+            height: 42vh;
+            border-left: 0;
+            border-top: 1px solid var(--border);
+        }
+
+        /* 紅色棋盤游標 */
+        canvas {
+            cursor: crosshair;
+        }
+
+        .board-wrap::after {
+            content: "";
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            border: 2px solid #e53935;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            left: var(--cursor-x, -100px);
+            top: var(--cursor-y, -100px);
+            z-index: 2;
+            box-shadow: 0 0 0 1px #fff8;
+        }
+
+        .board-wrap.cursor-hidden::after {
+            display: none;
+        }
+
+        /* 黑夜模式保留日間介面配色，只把棋盤改為白色 */
+        [data-theme="dark"] {
+            --bg: #f5f3ed;
+            --panel: #fffdf8;
+            --soft: #f1ede3;
+            --text: #26231c;
+            --muted: #69655d;
+            --border: #d8d0c1;
+            --primary: #08777b;
+            --danger: #b33a30;
+            --wood1: #fff;
+            --wood2: #f5f5f5;
+            --line: #65491f;
+            --shadow: 0 10px 30px #342a1820;
         }
 
         @media(max-width:900px) {
-            .app {
-                grid-template-columns: 1fr
+            body {
+                overflow: auto;
             }
 
-            .stage {
-                padding: 12px
+            [data-layout] .app {
+                grid-template-columns: 1fr;
+                grid-template-rows: none;
+                height: auto;
+                overflow: visible;
             }
 
-            .board-wrap {
-                width: min(96vw, 760px)
+            [data-layout] .stage {
+                grid-column: 1;
+                grid-row: auto;
+                height: auto;
+                min-height: 100vh;
+                padding: 12px;
+                overflow: visible;
             }
 
-            .panel {
+            [data-layout] .panel {
+                grid-column: 1;
+                grid-row: auto;
+                height: auto;
                 max-height: none;
+                overflow: visible;
                 border-left: 0;
-                border-top: 1px solid var(--border)
+                border-right: 0;
+                border-top: 1px solid var(--border);
+                border-bottom: 0;
+            }
+
+            [data-layout] .board-wrap {
+                width: min(96vw, 760px);
             }
         }
     </style>
@@ -343,8 +484,9 @@
 <body>
     <main class="app">
         <section class="stage">
-            <div class="board-wrap">
+            <div class="board-wrap cursor-hidden">
                 <canvas id="board" width="1000" height="1000" aria-label="圍棋棋盤；點擊交叉點落子"></canvas>
+
                 <div class="status" id="status" aria-live="polite"></div>
             </div>
         </section>
@@ -355,8 +497,24 @@
                     <h1>圍棋教學棋盤 Pro</h1>
                     <div class="muted" id="autosaveStatus">本機草稿已啟用</div>
                 </div>
-                <button class="btn" id="themeBtn" aria-label="切換深淺色">◐</button>
+
+                <button class="btn" id="themeBtn" type="button" aria-label="切換深淺色">◐</button>
             </div>
+
+            <section class="section">
+                <h2>版面位置</h2>
+
+                <div class="tools" id="layoutButtons">
+                    <button class="btn active" type="button" data-layout="right">右側</button>
+                    <button class="btn" type="button" data-layout="left">左側</button>
+                    <button class="btn" type="button" data-layout="top">上方</button>
+                    <button class="btn" type="button" data-layout="bottom">下方</button>
+                </div>
+
+                <p class="hint">
+                    可一鍵把控制面板移至棋盤的上、下、左或右；偏好會自動保存。
+                </p>
+            </section>
 
             <section class="section">
                 <h2>棋局</h2>
@@ -383,16 +541,16 @@
                 </div>
 
                 <div class="row" style="margin-top:9px">
-                    <button class="btn active" data-color="black">● 黑方</button>
-                    <button class="btn" data-color="white">○ 白方</button>
+                    <button class="btn active" type="button" data-color="black">● 黑方</button>
+                    <button class="btn" type="button" data-color="white">○ 白方</button>
                     <input id="labelText" placeholder="標記文字（最多 8 字）" aria-label="標記文字">
                 </div>
 
                 <div class="tools" style="margin-top:9px">
-                    <button class="btn primary" id="pass">虛手</button>
-                    <button class="btn" id="undo" title="Ctrl/⌘ Z">↶ 復原</button>
-                    <button class="btn" id="redo" title="Ctrl/⌘ Shift Z">↷ 重做</button>
-                    <button class="btn danger" id="clear">清空棋局</button>
+                    <button class="btn primary" id="pass" type="button">虛手</button>
+                    <button class="btn" id="undo" type="button" title="Ctrl/⌘ Z">↶ 復原</button>
+                    <button class="btn" id="redo" type="button" title="Ctrl/⌘ Shift Z">↷ 重做</button>
+                    <button class="btn danger" id="clear" type="button">清空棋局</button>
                 </div>
 
                 <p class="hint">
@@ -403,12 +561,15 @@
 
             <section class="section">
                 <h2>回放</h2>
+
                 <div class="tools">
-                    <button class="btn" id="prev">◀ 上一步</button>
-                    <button class="btn" id="next">下一步 ▶</button>
-                    <button class="btn" id="live">回到目前</button>
+                    <button class="btn" id="prev" type="button">◀ 上一步</button>
+                    <button class="btn" id="next" type="button">下一步 ▶</button>
+                    <button class="btn" id="live" type="button">回到目前</button>
                 </div>
+
                 <input class="range" id="timeline" type="range" min="0" value="0" style="margin-top:10px">
+
                 <div class="hint" id="timelineText">第 0 / 0 項紀錄</div>
             </section>
 
@@ -416,15 +577,15 @@
                 <h2>棋局資料</h2>
 
                 <div class="tools">
-                    <button class="btn" id="png">匯出 PNG</button>
-                    <button class="btn" id="jsonSave">下載 JSON</button>
-                    <button class="btn" id="jsonLoad">載入 JSON</button>
+                    <button class="btn" id="png" type="button">匯出 PNG</button>
+                    <button class="btn" id="jsonSave" type="button">下載 JSON</button>
+                    <button class="btn" id="jsonLoad" type="button">載入 JSON</button>
                     <input class="sr" type="file" id="file" accept="application/json,.json">
                 </div>
 
                 <div class="row" style="margin-top:10px">
                     <input id="saveName" maxlength="30" placeholder="命名存檔，例如：第3課死活題">
-                    <button class="btn primary" id="saveSlot">儲存</button>
+                    <button class="btn primary" id="saveSlot" type="button">儲存</button>
                 </div>
 
                 <div class="save-list" id="saveList" style="margin-top:9px"></div>
@@ -437,10 +598,22 @@
 
             <section class="section">
                 <h2>統計</h2>
+
                 <div class="grid3">
-                    <div class="stat"><span class="muted">黑子</span><strong id="black">0</strong></div>
-                    <div class="stat"><span class="muted">白子</span><strong id="white">0</strong></div>
-                    <div class="stat"><span class="muted">提子</span><strong id="caps">0 : 0</strong></div>
+                    <div class="stat">
+                        <span class="muted">黑子</span>
+                        <strong id="black">0</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span class="muted">白子</span>
+                        <strong id="white">0</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span class="muted">提子</span>
+                        <strong id="caps">0 : 0</strong>
+                    </div>
                 </div>
             </section>
 
@@ -454,9 +627,10 @@
     <dialog id="confirm">
         <h3>清空目前棋局？</h3>
         <p class="muted">這個動作可使用「復原」回退，但建議先建立命名存檔。</p>
+
         <div class="dialog-actions">
-            <button class="btn" id="cancelClear">取消</button>
-            <button class="btn danger" id="confirmClear">確定清空</button>
+            <button class="btn" id="cancelClear" type="button">取消</button>
+            <button class="btn danger" id="confirmClear" type="button">確定清空</button>
         </div>
     </dialog>
 
@@ -468,9 +642,12 @@
         const $ = selector => document.querySelector(selector);
         const canvas = $("#board");
         const ctx = canvas.getContext("2d");
+        const boardWrap = canvas.closest(".board-wrap");
 
-        const DRAFT_KEY = "teaching-go-pro-draft-v3";
-        const SLOTS_KEY = "teaching-go-pro-slots-v3";
+        const DRAFT_KEY = "teaching-go-pro-draft-v5";
+        const SLOTS_KEY = "teaching-go-pro-slots-v5";
+        const LAYOUT_KEY = "teaching-go-pro-layout-v2";
+        const THEME_KEY = "teaching-go-pro-theme-v2";
 
         const state = {
             size: 19,
@@ -502,20 +679,23 @@
         }
 
         function validState(data) {
-            if (!data || ![9, 13, 19].includes(+data.size)) return false;
-            if (!Array.isArray(data.board) || data.board.length !== +data.size) return false;
+            if (!data || ![9, 13, 19].includes(Number(data.size))) return false;
+            if (!Array.isArray(data.board) || data.board.length !== Number(data.size)) return false;
 
-            if (data.board.some(row =>
-                !Array.isArray(row) ||
-                row.length !== +data.size ||
-                row.some(value => value !== null && value !== "black" && value !== "white")
-            )) return false;
+            if (!data.board.every(row =>
+                Array.isArray(row) &&
+                row.length === Number(data.size) &&
+                row.every(cell => cell === null || cell === "black" || cell === "white")
+            )) {
+                return false;
+            }
 
-            if (!["black", "white"].includes(data.current)) return false;
-            if (!Array.isArray(data.moves)) return false;
-            if (!data.captures) return false;
-
-            return true;
+            return (
+                ["black", "white"].includes(data.current) &&
+                Array.isArray(data.moves) &&
+                data.captures &&
+                typeof data.captures === "object"
+            );
         }
 
         function applyState(data, { record = false } = {}) {
@@ -528,25 +708,26 @@
                 state.future = [];
             }
 
-            state.size = +data.size;
+            state.size = Number(data.size);
             state.board = clone(data.board);
             state.current = data.current;
             state.moves = clone(data.moves);
             state.captures = {
-                black: +data.captures.black || 0,
-                white: +data.captures.white || 0
+                black: Number(data.captures.black) || 0,
+                white: Number(data.captures.white) || 0
             };
-            state.view = null;
 
-            $("#size").value = state.size;
+            state.view = null;
+            $("#size").value = String(state.size);
+
             render();
             scheduleAutosave();
         }
 
-        function newGame(size = 19) {
+        function createNewGame(size = 19) {
             applyState({
-                size: +size,
-                board: emptyBoard(+size),
+                size: Number(size),
+                board: emptyBoard(Number(size)),
                 current: "black",
                 moves: [],
                 captures: { black: 0, white: 0 }
@@ -555,7 +736,7 @@
             toast("已建立新棋局");
         }
 
-        function inside(x, y) {
+        function insideBoard(x, y) {
             return x >= 0 && y >= 0 && x < state.size && y < state.size;
         }
 
@@ -565,7 +746,7 @@
                 [x + 1, y],
                 [x, y - 1],
                 [x, y + 1]
-            ].filter(([nx, ny]) => inside(nx, ny));
+            ].filter(([nx, ny]) => insideBoard(nx, ny));
         }
 
         function groupAt(board, x, y) {
@@ -596,29 +777,27 @@
         }
 
         function tryPlay(x, y, color, board = state.board) {
-            if (!inside(x, y) || board[y][x]) return null;
+            if (!insideBoard(x, y) || board[y][x]) return null;
 
             const nextBoard = clone(board);
-            nextBoard[y][x] = color;
-
             const captured = [];
+
+            nextBoard[y][x] = color;
 
             for (const [nx, ny] of neighbors(x, y)) {
                 if (nextBoard[ny][nx] !== opposite(color)) continue;
 
                 const enemyGroup = groupAt(nextBoard, nx, ny);
 
-                if (!enemyGroup.liberties.size) {
-                    for (const [sx, sy] of enemyGroup.stones) {
+                if (enemyGroup.liberties.size === 0) {
+                    enemyGroup.stones.forEach(([sx, sy]) => {
                         nextBoard[sy][sx] = null;
                         captured.push([sx, sy]);
-                    }
+                    });
                 }
             }
 
-            const ownGroup = groupAt(nextBoard, x, y);
-
-            if (!ownGroup.liberties.size) return null;
+            if (groupAt(nextBoard, x, y).liberties.size === 0) return null;
 
             return { board: nextBoard, captured };
         }
@@ -626,8 +805,11 @@
         function commit(action) {
             state.history.push(snapshot());
             state.future = [];
+
             action();
+
             state.view = null;
+
             render();
             scheduleAutosave();
         }
@@ -689,7 +871,7 @@
             toast(result.captured.length ? `提掉 ${result.captured.length} 子` : "已落子");
         }
 
-        function pass() {
+        function passMove() {
             if (state.view !== null) {
                 toast("請先回到目前棋局");
                 return;
@@ -772,7 +954,7 @@
             return state.view === null ? snapshot() : replayTo(state.view);
         }
 
-        function coord(x, y) {
+        function coordinateName(x, y) {
             const letters = "ABCDEFGHJKLMNOPQRST";
             return letters[x] + (state.size - y);
         }
@@ -803,12 +985,15 @@
             ctx.save();
             ctx.globalAlpha = alpha;
             ctx.fillStyle = gradient;
+
             ctx.beginPath();
             ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
             ctx.fill();
+
             ctx.strokeStyle = "#111";
             ctx.lineWidth = 1.2;
             ctx.stroke();
+
             ctx.restore();
         }
 
@@ -842,19 +1027,28 @@
                 ctx.stroke();
             }
 
-            const starPoints = size === 19 ? [3, 9, 15] : size === 13 ? [3, 6, 9] : [2, 4, 6];
+            const starPoints = size === 19
+                ? [3, 9, 15]
+                : size === 13
+                    ? [3, 6, 9]
+                    : [2, 4, 6];
 
             ctx.fillStyle = lineColor;
 
-            for (const x of starPoints) {
-                for (const y of starPoints) {
+            starPoints.forEach(x => {
+                starPoints.forEach(y => {
                     ctx.beginPath();
-                    ctx.arc(margin + x * cell, margin + y * cell, 6, 0, Math.PI * 2);
+                    ctx.arc(
+                        margin + x * cell,
+                        margin + y * cell,
+                        6,
+                        0,
+                        Math.PI * 2
+                    );
                     ctx.fill();
-                }
-            }
+                });
+            });
 
-            /* 座標放於棋盤格線外一格 */
             const letters = "ABCDEFGHJKLMNOPQRST";
 
             ctx.fillStyle = textColor;
@@ -884,11 +1078,10 @@
                 }
             }
 
-            /* 僅正式行棋顯示手順號；擺盤棋子不顯示 */
             let moveNumber = 0;
 
-            for (const move of display.moves) {
-                if (move.type !== "play") continue;
+            display.moves.forEach(move => {
+                if (move.type !== "play") return;
 
                 moveNumber++;
 
@@ -899,20 +1092,28 @@
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
                 ctx.fillText(String(moveNumber), point.x, point.y + 1);
-            }
+            });
 
             ctx.textBaseline = "alphabetic";
 
-            /* 不繪製最後一手方框 */
             if (
                 state.hover &&
                 state.view === null &&
                 $("#tool").value === "play"
             ) {
-                const preview = tryPlay(state.hover.x, state.hover.y, state.current);
+                const preview = tryPlay(
+                    state.hover.x,
+                    state.hover.y,
+                    state.current
+                );
 
                 if (preview) {
-                    drawStone(state.hover.x, state.hover.y, state.current, 0.38);
+                    drawStone(
+                        state.hover.x,
+                        state.hover.y,
+                        state.current,
+                        0.38
+                    );
                 }
             }
         }
@@ -936,14 +1137,19 @@
                 : `回放：第 ${state.view} 項紀錄`;
 
             document.querySelectorAll("[data-color]").forEach(button => {
-                button.classList.toggle("active", button.dataset.color === state.current);
+                button.classList.toggle(
+                    "active",
+                    button.dataset.color === state.current
+                );
             });
 
             $("#undo").disabled = !state.history.length;
             $("#redo").disabled = !state.future.length;
 
             $("#timeline").max = state.moves.length;
-            $("#timeline").value = state.view === null ? state.moves.length : state.view;
+            $("#timeline").value = state.view === null
+                ? state.moves.length
+                : state.view;
 
             $("#timelineText").textContent =
                 `第 ${$("#timeline").value} / ${state.moves.length} 項紀錄`;
@@ -951,20 +1157,24 @@
             let playNumber = 0;
 
             $("#moves").innerHTML = state.moves.map((move, index) => {
-                let text = "";
+                let text;
 
                 if (move.type === "setup") {
-                    text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
+                    text = `擺盤 ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
                 } else if (move.type === "pass") {
                     playNumber++;
                     text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛手`;
                 } else {
                     playNumber++;
-                    text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coord(move.x, move.y)}`;
-                    if (move.captured) text += `（提 ${move.captured}）`;
+                    text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
+
+                    if (move.captured) {
+                        text += `（提 ${move.captured}）`;
+                    }
                 }
 
                 const currentClass = state.view === index + 1 ? "current" : "";
+
                 return `<li class="${currentClass}">${text}</li>`;
             }).join("") || "<li>尚未有手順</li>";
         }
@@ -972,27 +1182,52 @@
         function pointFromEvent(event) {
             const rect = canvas.getBoundingClientRect();
 
-            const canvasX = (event.clientX - rect.left) * canvas.width / rect.width;
-            const canvasY = (event.clientY - rect.top) * canvas.height / rect.height;
+            const canvasX =
+                (event.clientX - rect.left) * canvas.width / rect.width;
 
-            const x = Math.round((canvasX - state.margin) / state.cell);
-            const y = Math.round((canvasY - state.margin) / state.cell);
+            const canvasY =
+                (event.clientY - rect.top) * canvas.height / rect.height;
 
-            return inside(x, y) ? { x, y } : null;
+            const x = Math.round(
+                (canvasX - state.margin) / state.cell
+            );
+
+            const y = Math.round(
+                (canvasY - state.margin) / state.cell
+            );
+
+            return insideBoard(x, y) ? { x, y } : null;
         }
 
         canvas.addEventListener("pointermove", event => {
+            const rect = canvas.getBoundingClientRect();
+
+            boardWrap.style.setProperty(
+                "--cursor-x",
+                `${event.clientX - rect.left}px`
+            );
+
+            boardWrap.style.setProperty(
+                "--cursor-y",
+                `${event.clientY - rect.top}px`
+            );
+
+            boardWrap.classList.remove("cursor-hidden");
+
             state.hover = pointFromEvent(event);
             render();
         });
 
         canvas.addEventListener("pointerleave", () => {
+            boardWrap.classList.add("cursor-hidden");
+
             state.hover = null;
             render();
         });
 
         canvas.addEventListener("click", event => {
             const point = pointFromEvent(event);
+
             if (!point) return;
 
             const tool = $("#tool").value;
@@ -1028,7 +1263,8 @@
                     localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
                     $("#autosaveStatus").textContent = "本機草稿已自動儲存";
                 } catch {
-                    $("#autosaveStatus").textContent = "無法自動儲存：瀏覽器空間不足";
+                    $("#autosaveStatus").textContent =
+                        "無法自動儲存：瀏覽器空間不足";
                 }
             }, 350);
         }
@@ -1039,9 +1275,9 @@
             box.textContent = message;
             box.classList.add("show");
 
-            clearTimeout(box.timer);
+            clearTimeout(box._timer);
 
-            box.timer = setTimeout(() => {
+            box._timer = setTimeout(() => {
                 box.classList.remove("show");
             }, 2200);
         }
@@ -1055,12 +1291,12 @@
         }
 
         function escapeHtml(text) {
-            return String(text).replace(/[&<>"]/g, char => ({
+            return String(text).replace(/[&<>"]/g, character => ({
                 "&": "&amp;",
                 "<": "&lt;",
                 ">": "&gt;",
                 "\"": "&quot;"
-            }[char]));
+            }[character]));
         }
 
         function renderSlots() {
@@ -1073,35 +1309,74 @@
         <small class="muted">${new Date(slot.at).toLocaleString()}</small>
       </span>
       <div>
-        <button class="btn loadSlot" data-index="${index}">載入</button>
-        <button class="btn danger deleteSlot" data-index="${index}">×</button>
+        <button class="btn loadSlot" type="button" data-index="${index}">載入</button>
+        <button class="btn danger deleteSlot" type="button" data-index="${index}">×</button>
       </div>
     </div>
   `).join("") || `<div class="hint">未有命名存檔</div>`;
 
             document.querySelectorAll(".loadSlot").forEach(button => {
-                button.onclick = () => {
+                button.addEventListener("click", () => {
                     try {
-                        applyState(getSlots()[+button.dataset.index].data, { record: true });
+                        applyState(
+                            getSlots()[Number(button.dataset.index)].data,
+                            { record: true }
+                        );
+
                         toast("已載入命名存檔");
                     } catch (error) {
                         toast(error.message);
                     }
-                };
+                });
             });
 
             document.querySelectorAll(".deleteSlot").forEach(button => {
-                button.onclick = () => {
+                button.addEventListener("click", () => {
                     const slots = getSlots();
-                    slots.splice(+button.dataset.index, 1);
+
+                    slots.splice(Number(button.dataset.index), 1);
+
                     localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
                     renderSlots();
                     toast("已刪除存檔");
-                };
+                });
             });
         }
 
-        $("#saveSlot").onclick = () => {
+        function setLayout(position) {
+            const allowed = ["right", "left", "top", "bottom"];
+            const nextPosition = allowed.includes(position) ? position : "right";
+
+            document.documentElement.dataset.layout = nextPosition;
+
+            try {
+                localStorage.setItem(LAYOUT_KEY, nextPosition);
+            } catch {
+                /* localStorage 不可用時仍可切換版面 */
+            }
+
+            document
+                .querySelectorAll("#layoutButtons button[data-layout]")
+                .forEach(button => {
+                    button.classList.toggle(
+                        "active",
+                        button.dataset.layout === nextPosition
+                    );
+                });
+        }
+
+        function initLayoutButtons() {
+            document
+                .querySelectorAll("#layoutButtons button[data-layout]")
+                .forEach(button => {
+                    button.addEventListener("click", event => {
+                        event.preventDefault();
+                        setLayout(button.dataset.layout);
+                    });
+                });
+        }
+
+        $("#saveSlot").addEventListener("click", () => {
             const name = $("#saveName").value.trim();
 
             if (!name) {
@@ -1118,71 +1393,99 @@
             });
 
             try {
-                localStorage.setItem(SLOTS_KEY, JSON.stringify(slots.slice(0, 12)));
+                localStorage.setItem(
+                    SLOTS_KEY,
+                    JSON.stringify(slots.slice(0, 12))
+                );
+
                 $("#saveName").value = "";
                 renderSlots();
                 toast("已建立命名存檔");
             } catch {
                 toast("無法儲存，請檢查瀏覽器儲存空間");
             }
-        };
+        });
 
-        $("#size").onchange = event => {
+        $("#size").addEventListener("change", event => {
             const nextSize = event.target.value;
 
             if (confirm("更改棋盤尺寸會建立新棋局，是否繼續？")) {
-                newGame(nextSize);
+                createNewGame(nextSize);
             } else {
-                event.target.value = state.size;
+                event.target.value = String(state.size);
             }
-        };
+        });
 
-        $("#pass").onclick = pass;
-        $("#undo").onclick = undo;
-        $("#redo").onclick = redo;
+        $("#pass").addEventListener("click", passMove);
+        $("#undo").addEventListener("click", undo);
+        $("#redo").addEventListener("click", redo);
 
-        $("#clear").onclick = () => $("#confirm").showModal();
-        $("#cancelClear").onclick = () => $("#confirm").close();
+        $("#clear").addEventListener("click", () => {
+            $("#confirm").showModal();
+        });
 
-        $("#confirmClear").onclick = () => {
+        $("#cancelClear").addEventListener("click", () => {
             $("#confirm").close();
-            newGame(state.size);
-        };
+        });
 
-        $("#prev").onclick = () => {
-            state.view = Math.max(0, (state.view ?? state.moves.length) - 1);
+        $("#confirmClear").addEventListener("click", () => {
+            $("#confirm").close();
+            createNewGame(state.size);
+        });
+
+        $("#prev").addEventListener("click", () => {
+            state.view = Math.max(
+                0,
+                (state.view ?? state.moves.length) - 1
+            );
+
             render();
-        };
+        });
 
-        $("#next").onclick = () => {
-            state.view = Math.min(state.moves.length, (state.view ?? state.moves.length) + 1);
+        $("#next").addEventListener("click", () => {
+            state.view = Math.min(
+                state.moves.length,
+                (state.view ?? state.moves.length) + 1
+            );
 
             if (state.view === state.moves.length) {
                 state.view = null;
             }
 
             render();
-        };
+        });
 
-        $("#live").onclick = () => {
+        $("#live").addEventListener("click", () => {
             state.view = null;
             render();
-        };
+        });
 
-        $("#timeline").oninput = event => {
-            const target = +event.target.value;
-            state.view = target === state.moves.length ? null : target;
+        $("#timeline").addEventListener("input", event => {
+            const target = Number(event.target.value);
+
+            state.view = target === state.moves.length
+                ? null
+                : target;
+
             render();
-        };
+        });
 
-        $("#themeBtn").onclick = () => {
+        $("#themeBtn").addEventListener("click", () => {
             const root = document.documentElement;
 
-            root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+            root.dataset.theme =
+                root.dataset.theme === "dark"
+                    ? "light"
+                    : "dark";
 
-            localStorage.setItem("go-theme", root.dataset.theme);
+            try {
+                localStorage.setItem(THEME_KEY, root.dataset.theme);
+            } catch {
+                /* localStorage 不可用時只切換當前畫面 */
+            }
+
             render();
-        };
+        });
 
         function download(blob, filename) {
             const link = document.createElement("a");
@@ -1191,18 +1494,28 @@
             link.download = filename;
             link.click();
 
-            setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+            }, 1000);
         }
 
-        $("#jsonSave").onclick = () => {
-            const data = JSON.stringify(snapshot(), null, 2);
-            download(new Blob([data], { type: "application/json" }), "go-game.json");
-        };
+        $("#jsonSave").addEventListener("click", () => {
+            download(
+                new Blob(
+                    [JSON.stringify(snapshot(), null, 2)],
+                    { type: "application/json" }
+                ),
+                "go-game.json"
+            );
+        });
 
-        $("#jsonLoad").onclick = () => $("#file").click();
+        $("#jsonLoad").addEventListener("click", () => {
+            $("#file").click();
+        });
 
-        $("#file").onchange = async event => {
+        $("#file").addEventListener("change", async event => {
             const file = event.target.files[0];
+
             if (!file) return;
 
             try {
@@ -1210,24 +1523,26 @@
                     throw new Error("檔案過大（上限為 5MB）");
                 }
 
-                const data = JSON.parse(await file.text());
+                applyState(
+                    JSON.parse(await file.text()),
+                    { record: true }
+                );
 
-                applyState(data, { record: true });
                 toast("JSON 棋局已載入");
             } catch (error) {
                 toast(`載入失敗：${error.message}`);
             } finally {
                 event.target.value = "";
             }
-        };
+        });
 
-        $("#png").onclick = () => {
+        $("#png").addEventListener("click", () => {
             drawBoard(displayedState());
 
             canvas.toBlob(blob => {
                 download(blob, `go-${state.size}x${state.size}.png`);
             }, "image/png");
-        };
+        });
 
         document.addEventListener("keydown", event => {
             const modifier = event.ctrlKey || event.metaKey;
@@ -1235,13 +1550,22 @@
 
             if (modifier && event.key.toLowerCase() === "z") {
                 event.preventDefault();
-                event.shiftKey ? redo() : undo();
+
+                if (event.shiftKey) {
+                    redo();
+                } else {
+                    undo();
+                }
+
                 return;
             }
 
-            if (event.code === "Space" && !["INPUT", "SELECT"].includes(activeTag)) {
+            if (
+                event.code === "Space" &&
+                !["INPUT", "SELECT"].includes(activeTag)
+            ) {
                 event.preventDefault();
-                pass();
+                passMove();
                 return;
             }
 
@@ -1261,15 +1585,26 @@
                 applyState(saved);
                 toast("已還原上次自動儲存的棋局");
             } else {
-                newGame(19);
+                createNewGame(19);
             }
         } catch {
-            newGame(19);
+            createNewGame(19);
         }
 
-        document.documentElement.dataset.theme =
-            localStorage.getItem("go-theme") || "light";
+        try {
+            document.documentElement.dataset.theme =
+                localStorage.getItem(THEME_KEY) || "light";
+        } catch {
+            document.documentElement.dataset.theme = "light";
+        }
 
+        try {
+            setLayout(localStorage.getItem(LAYOUT_KEY) || "right");
+        } catch {
+            setLayout("right");
+        }
+
+        initLayoutButtons();
         renderSlots();
         render();
     </script>
