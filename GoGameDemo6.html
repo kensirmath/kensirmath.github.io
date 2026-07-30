@@ -1,0 +1,1762 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="light" data-layout="right">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>圍棋棋盤</title>
+
+<style>
+:root{
+  --bg:#f5f3ed;
+  --panel:#fffdf8;
+  --soft:#f1ede3;
+  --text:#26231c;
+  --muted:#69655d;
+  --border:#d8d0c1;
+  --primary:#08777b;
+  --danger:#b33a30;
+  --wood1:#dfbb7b;
+  --wood2:#c99d5a;
+  --line:#65491f;
+  --shadow:0 8px 22px #342a1820;
+}
+
+[data-theme="dark"]{
+  --bg:#f5f3ed;
+  --panel:#fffdf8;
+  --soft:#f1ede3;
+  --text:#26231c;
+  --muted:#69655d;
+  --border:#d8d0c1;
+  --primary:#08777b;
+  --danger:#b33a30;
+  --wood1:#fff;
+  --wood2:#f5f5f5;
+  --line:#65491f;
+  --shadow:0 8px 22px #342a1820;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font:14px system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+}
+
+body{
+  overflow:hidden;
+}
+
+.app{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  height:100vh;
+  overflow:hidden;
+}
+
+.stage{
+  display:grid;
+  place-items:center;
+  padding:12px;
+  min-width:0;
+  height:100vh;
+  overflow:hidden;
+}
+
+.board-wrap{
+  position:relative;
+  width:min(94vmin,960px);
+  aspect-ratio:1;
+  background:linear-gradient(135deg,var(--wood1),var(--wood2));
+  box-shadow:var(--shadow);
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  touch-action:none;
+  cursor:crosshair;
+}
+
+.status{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  z-index:3;
+  background:#111c;
+  color:#fff;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:12px;
+  pointer-events:none;
+}
+
+.panel{
+  background:var(--panel);
+  border-left:1px solid var(--border);
+  padding:10px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  height:100vh;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  align-items:flex-start;
+}
+
+.top h1{
+  font-size:19px;
+  margin:0;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.hint{
+  display:none;
+}
+
+.section{
+  border-top:1px solid var(--border);
+  padding-top:9px;
+  margin-top:9px;
+}
+
+.section h2{
+  font-size:14px;
+  margin:0 0 6px;
+}
+
+.row,
+.tools{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+
+.btn,
+select,
+input{
+  font:inherit;
+}
+
+.btn{
+  border:1px solid var(--border);
+  background:var(--soft);
+  color:var(--text);
+  padding:4px 7px;
+  min-height:30px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.btn:hover{
+  filter:brightness(.96);
+}
+
+.btn:focus-visible,
+select:focus-visible,
+input:focus-visible{
+  outline:3px solid color-mix(in srgb,var(--primary) 45%,transparent);
+  outline-offset:2px;
+}
+
+.btn.primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+.btn.danger{
+  color:var(--danger);
+}
+
+.btn.active{
+  outline:2px solid var(--primary);
+  outline-offset:1px;
+}
+
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+select,
+input{
+  width:100%;
+  min-height:30px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--soft);
+  color:var(--text);
+  padding:0 7px;
+  font-size:13px;
+}
+
+label{
+  display:grid;
+  gap:3px;
+  font-weight:650;
+  font-size:12px;
+}
+
+.stat{
+  background:var(--soft);
+  border:1px solid var(--border);
+  padding:6px;
+  border-radius:7px;
+}
+
+.stat strong{
+  display:block;
+  font-size:17px;
+  margin-top:0;
+}
+
+.moves{
+  padding-left:18px;
+  margin:3px 0;
+  font-size:13px;
+}
+
+.moves li{
+  padding:2px 0;
+  color:var(--muted);
+}
+
+.moves li.current{
+  font-weight:800;
+  color:var(--primary);
+}
+
+.range{
+  width:100%;
+}
+
+.toast{
+  position:fixed;
+  z-index:30;
+  left:50%;
+  bottom:18px;
+  transform:translate(-50%,120px);
+  background:#1e2421;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:8px;
+  box-shadow:var(--shadow);
+  transition:.22s;
+  max-width:min(92vw,500px);
+  font-size:13px;
+}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+dialog{
+  border:0;
+  border-radius:12px;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:var(--shadow);
+  max-width:400px;
+  width:calc(100% - 32px);
+  padding:16px;
+}
+
+dialog::backdrop{
+  background:#0008;
+}
+
+dialog h3{
+  margin-top:0;
+}
+
+.dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:5px;
+  margin-top:14px;
+}
+
+.save-list{
+  display:grid;
+  gap:4px;
+}
+
+.save-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:5px;
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:5px 6px;
+}
+
+.save-item span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.sr{
+  position:absolute;
+  width:1px;
+  height:1px;
+  clip:rect(0,0,0,0);
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+/* 面板位置 */
+[data-layout="left"] .app{
+  grid-template-columns:330px minmax(0,1fr);
+}
+
+[data-layout="left"] .panel{
+  grid-column:1;
+  grid-row:1;
+  border-left:0;
+  border-right:1px solid var(--border);
+}
+
+[data-layout="left"] .stage{
+  grid-column:2;
+  grid-row:1;
+}
+
+[data-layout="right"] .panel{
+  grid-column:2;
+  grid-row:1;
+}
+
+[data-layout="right"] .stage{
+  grid-column:1;
+  grid-row:1;
+}
+
+[data-layout="top"] .app{
+  grid-template-columns:1fr;
+  grid-template-rows:minmax(0,35vh) minmax(0,65vh);
+}
+
+[data-layout="top"] .panel{
+  grid-column:1;
+  grid-row:1;
+  height:35vh;
+  border-left:0;
+  border-bottom:1px solid var(--border);
+}
+
+[data-layout="top"] .stage{
+  grid-column:1;
+  grid-row:2;
+  height:65vh;
+  padding:8px;
+}
+
+[data-layout="top"] .board-wrap,
+[data-layout="bottom"] .board-wrap{
+  width:min(60vmin,650px);
+}
+
+[data-layout="bottom"] .app{
+  grid-template-columns:1fr;
+  grid-template-rows:minmax(0,65vh) minmax(0,35vh);
+}
+
+[data-layout="bottom"] .stage{
+  grid-column:1;
+  grid-row:1;
+  height:65vh;
+  padding:8px;
+}
+
+[data-layout="bottom"] .panel{
+  grid-column:1;
+  grid-row:2;
+  height:35vh;
+  border-left:0;
+  border-top:1px solid var(--border);
+}
+
+/* 紅色游標 */
+.board-wrap::after{
+  content:"";
+  position:absolute;
+  width:17px;
+  height:17px;
+  border:2px solid #e53935;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  left:var(--cursor-x,-100px);
+  top:var(--cursor-y,-100px);
+  z-index:2;
+  box-shadow:0 0 0 1px #fff8;
+}
+
+.board-wrap.cursor-hidden::after{
+  display:none;
+}
+
+#layoutButtons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  width:100%;
+}
+
+#layoutButtons .btn{
+  min-width:0;
+  padding:4px 2px;
+}
+
+@media(max-width:900px){
+  body{
+    overflow:auto;
+  }
+
+  [data-layout] .app{
+    grid-template-columns:1fr;
+    grid-template-rows:none;
+    height:auto;
+    overflow:visible;
+  }
+
+  [data-layout] .stage{
+    grid-column:1;
+    grid-row:auto;
+    height:auto;
+    min-height:100vh;
+    padding:10px;
+    overflow:visible;
+  }
+
+  [data-layout] .panel{
+    grid-column:1;
+    grid-row:auto;
+    height:auto;
+    max-height:none;
+    overflow:visible;
+    border-left:0;
+    border-right:0;
+    border-top:1px solid var(--border);
+    border-bottom:0;
+  }
+
+  [data-layout] .board-wrap{
+    width:min(96vw,760px);
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+  <section class="stage">
+    <div class="board-wrap cursor-hidden">
+      <canvas id="board" width="1000" height="1000" aria-label="圍棋棋盤"></canvas>
+      <div class="status" id="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="top">
+      <div>
+        <h1>圍棋棋盤</h1>
+        <div class="muted" id="autosaveStatus">草稿</div>
+      </div>
+      <button class="btn" id="themeBtn" type="button" title="白色棋盤模式">◐</button>
+    </div>
+
+    <section class="section">
+      <h2>棋局</h2>
+
+      <div class="grid">
+        <label>
+          路數
+          <select id="size">
+            <option value="9">9</option>
+            <option value="13">13</option>
+            <option value="19" selected>19</option>
+          </select>
+        </label>
+
+        <label>
+          工具
+          <select id="tool">
+            <option value="play">落子</option>
+            <option value="setup">擺盤</option>
+            <option value="label">標字</option>
+            <option value="erase">擦除</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row" style="margin-top:5px">
+        <button class="btn active" type="button" data-color="black">黑</button>
+        <button class="btn" type="button" data-color="white">白</button>
+        <input id="labelText" maxlength="8" placeholder="標記">
+      </div>
+
+      <div class="tools" style="margin-top:5px">
+        <button class="btn primary" id="pass" type="button">虛手</button>
+        <button class="btn" id="undo" type="button">復原</button>
+        <button class="btn" id="redo" type="button">重做</button>
+        <button class="btn danger" id="clear" type="button">清盤</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>回放</h2>
+
+      <div class="tools">
+        <button class="btn" id="prev" type="button" title="上一步">←</button>
+        <button class="btn" id="next" type="button" title="下一步">→</button>
+        <button class="btn" id="live" type="button">最新</button>
+      </div>
+
+      <input class="range" id="timeline" type="range" min="0" value="0">
+      <div class="muted" id="timelineText">0 / 0</div>
+    </section>
+
+    <section class="section">
+      <h2>檔案</h2>
+
+      <div class="tools">
+        <button class="btn" id="png" type="button">PNG</button>
+        <button class="btn" id="jsonSave" type="button">JSON↓</button>
+        <button class="btn" id="jsonLoad" type="button">JSON↑</button>
+        <input class="sr" type="file" id="file" accept="application/json,.json">
+      </div>
+
+      <div class="tools" id="layoutButtons" style="margin-top:5px">
+        <button class="btn active" type="button" data-layout="right" title="右">右</button>
+        <button class="btn" type="button" data-layout="left" title="左">左</button>
+        <button class="btn" type="button" data-layout="top" title="上">上</button>
+        <button class="btn" type="button" data-layout="bottom" title="下">下</button>
+      </div>
+
+      <div class="row" style="margin-top:5px">
+        <input id="saveName" maxlength="30" placeholder="存檔名">
+        <button class="btn primary" id="saveSlot" type="button">存</button>
+      </div>
+
+      <div class="save-list" id="saveList" style="margin-top:5px"></div>
+    </section>
+
+    <section class="section">
+      <h2>統計</h2>
+
+      <div class="grid3">
+        <div class="stat">
+          <span class="muted">黑</span>
+          <strong id="black">0</strong>
+        </div>
+
+        <div class="stat">
+          <span class="muted">白</span>
+          <strong id="white">0</strong>
+        </div>
+
+        <div class="stat">
+          <span class="muted">提</span>
+          <strong id="caps">0 : 0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>手順</h2>
+      <ol class="moves" id="moves"></ol>
+    </section>
+  </aside>
+</main>
+
+<dialog id="confirm">
+  <h3>清盤？</h3>
+  <div class="dialog-actions">
+    <button class="btn" id="cancelClear" type="button">取消</button>
+    <button class="btn danger" id="confirmClear" type="button">清盤</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+
+const $ = selector => document.querySelector(selector);
+const canvas = $("#board");
+const ctx = canvas.getContext("2d");
+const boardWrap = canvas.closest(".board-wrap");
+
+const DRAFT_KEY = "go-board-draft-v7";
+const SLOTS_KEY = "go-board-slots-v7";
+const LAYOUT_KEY = "go-board-layout-v4";
+const THEME_KEY = "go-board-theme-v4";
+
+const state = {
+  size: 19,
+  board: [],
+  current: "black",
+  moves: [],
+  labels: [],
+  captures: { black: 0, white: 0 },
+  history: [],
+  future: [],
+  view: null,
+  hover: null,
+  margin: 110,
+  cell: 0
+};
+
+const clone = value => JSON.parse(JSON.stringify(value));
+const emptyBoard = size => Array.from({ length: size }, () => Array(size).fill(null));
+const opposite = color => color === "black" ? "white" : "black";
+const pointKey = (x, y) => `${x},${y}`;
+
+function snapshot() {
+  return clone({
+    size: state.size,
+    board: state.board,
+    current: state.current,
+    moves: state.moves,
+    labels: state.labels,
+    captures: state.captures
+  });
+}
+
+function validState(data) {
+  if (!data || ![9, 13, 19].includes(Number(data.size))) return false;
+  if (!Array.isArray(data.board) || data.board.length !== Number(data.size)) return false;
+
+  if (!data.board.every(row =>
+    Array.isArray(row) &&
+    row.length === Number(data.size) &&
+    row.every(cell => cell === null || cell === "black" || cell === "white")
+  )) {
+    return false;
+  }
+
+  if (!["black", "white"].includes(data.current)) return false;
+  if (!Array.isArray(data.moves)) return false;
+  if (data.labels !== undefined && !Array.isArray(data.labels)) return false;
+  if (!data.captures || typeof data.captures !== "object") return false;
+
+  return true;
+}
+
+function applyState(data, { record = false } = {}) {
+  if (!validState(data)) {
+    throw new Error("棋局資料錯誤");
+  }
+
+  if (record) {
+    state.history.push(snapshot());
+    state.future = [];
+  }
+
+  state.size = Number(data.size);
+  state.board = clone(data.board);
+  state.current = data.current;
+  state.moves = clone(data.moves);
+  state.labels = clone(data.labels || []);
+  state.captures = {
+    black: Number(data.captures.black) || 0,
+    white: Number(data.captures.white) || 0
+  };
+
+  state.view = null;
+  $("#size").value = String(state.size);
+
+  render();
+  scheduleAutosave();
+}
+
+function createNewGame(size = 19) {
+  applyState({
+    size: Number(size),
+    board: emptyBoard(Number(size)),
+    current: "black",
+    moves: [],
+    labels: [],
+    captures: { black: 0, white: 0 }
+  }, { record: true });
+
+  toast("新棋局");
+}
+
+function insideBoard(x, y) {
+  return x >= 0 && y >= 0 && x < state.size && y < state.size;
+}
+
+function neighbors(x, y) {
+  return [
+    [x - 1, y],
+    [x + 1, y],
+    [x, y - 1],
+    [x, y + 1]
+  ].filter(([nx, ny]) => insideBoard(nx, ny));
+}
+
+function groupAt(board, x, y) {
+  const color = board[y][x];
+  const queue = [[x, y]];
+  const seen = new Set([pointKey(x, y)]);
+  const stones = [];
+  const liberties = new Set();
+
+  while (queue.length) {
+    const [cx, cy] = queue.pop();
+    stones.push([cx, cy]);
+
+    for (const [nx, ny] of neighbors(cx, cy)) {
+      const value = board[ny][nx];
+      const key = pointKey(nx, ny);
+
+      if (value === null) {
+        liberties.add(key);
+      } else if (value === color && !seen.has(key)) {
+        seen.add(key);
+        queue.push([nx, ny]);
+      }
+    }
+  }
+
+  return { stones, liberties };
+}
+
+function tryPlay(x, y, color, board = state.board) {
+  if (!insideBoard(x, y) || board[y][x]) return null;
+
+  const nextBoard = clone(board);
+  const captured = [];
+
+  nextBoard[y][x] = color;
+
+  for (const [nx, ny] of neighbors(x, y)) {
+    if (nextBoard[ny][nx] !== opposite(color)) continue;
+
+    const enemyGroup = groupAt(nextBoard, nx, ny);
+
+    if (enemyGroup.liberties.size === 0) {
+      enemyGroup.stones.forEach(([sx, sy]) => {
+        nextBoard[sy][sx] = null;
+        captured.push([sx, sy]);
+      });
+    }
+  }
+
+  if (groupAt(nextBoard, x, y).liberties.size === 0) return null;
+
+  return { board: nextBoard, captured };
+}
+
+function commit(action) {
+  state.history.push(snapshot());
+  state.future = [];
+
+  action();
+
+  state.view = null;
+  render();
+  scheduleAutosave();
+}
+
+function setupStone(x, y) {
+  if (state.view !== null) {
+    toast("先回到最新");
+    return;
+  }
+
+  if (state.board[y][x]) {
+    toast("已有棋子");
+    return;
+  }
+
+  commit(() => {
+    state.board[y][x] = state.current;
+
+    state.moves.push({
+      type: "setup",
+      x,
+      y,
+      color: state.current
+    });
+  });
+
+  toast("擺盤");
+}
+
+function playStone(x, y) {
+  if (state.view !== null) {
+    toast("先回到最新");
+    return;
+  }
+
+  const result = tryPlay(x, y, state.current);
+
+  if (!result) {
+    toast("不可落子");
+    return;
+  }
+
+  commit(() => {
+    const color = state.current;
+
+    state.board = result.board;
+    state.captures[color] += result.captured.length;
+
+    state.moves.push({
+      type: "play",
+      x,
+      y,
+      color,
+      captured: result.captured.length
+    });
+
+    state.current = opposite(color);
+  });
+
+  toast(result.captured.length ? `提 ${result.captured.length}` : "落子");
+}
+
+function addLabel(x, y) {
+  if (state.view !== null) {
+    toast("先回到最新");
+    return;
+  }
+
+  const text = $("#labelText").value.trim().slice(0, 8);
+
+  if (!text) {
+    toast("輸入標記");
+    return;
+  }
+
+  commit(() => {
+    state.labels = state.labels.filter(label =>
+      label.x !== x || label.y !== y
+    );
+
+    state.labels.push({
+      x,
+      y,
+      text
+    });
+  });
+
+  toast("標記");
+}
+
+function eraseAt(x, y) {
+  if (state.view !== null) {
+    toast("先回到最新");
+    return;
+  }
+
+  const hasStone = Boolean(state.board[y][x]);
+
+  const hasLabel = state.labels.some(label =>
+    label.x === x && label.y === y
+  );
+
+  if (!hasStone && !hasLabel) {
+    toast("沒有項目");
+    return;
+  }
+
+  commit(() => {
+    state.board[y][x] = null;
+
+    state.labels = state.labels.filter(label =>
+      label.x !== x || label.y !== y
+    );
+
+    state.moves.push({
+      type: "erase",
+      x,
+      y
+    });
+  });
+
+  toast("擦除");
+}
+
+function passMove() {
+  if (state.view !== null) {
+    toast("先回到最新");
+    return;
+  }
+
+  commit(() => {
+    state.moves.push({
+      type: "pass",
+      color: state.current
+    });
+
+    state.current = opposite(state.current);
+  });
+
+  toast("虛手");
+}
+
+function undo() {
+  if (!state.history.length) {
+    toast("不可復原");
+    return;
+  }
+
+  state.future.push(snapshot());
+  applyState(state.history.pop());
+
+  toast("復原");
+}
+
+function redo() {
+  if (!state.future.length) {
+    toast("不可重做");
+    return;
+  }
+
+  state.history.push(snapshot());
+  applyState(state.future.pop());
+
+  toast("重做");
+}
+
+function replayTo(step) {
+  const replay = {
+    size: state.size,
+    board: emptyBoard(state.size),
+    current: "black",
+    moves: [],
+    labels: [],
+    captures: { black: 0, white: 0 }
+  };
+
+  for (let index = 0; index < step; index++) {
+    const move = state.moves[index];
+
+    if (move.type === "setup") {
+      replay.board[move.y][move.x] = move.color;
+      replay.moves.push(move);
+      continue;
+    }
+
+    if (move.type === "erase") {
+      replay.board[move.y][move.x] = null;
+      replay.moves.push(move);
+      continue;
+    }
+
+    if (move.type === "pass") {
+      replay.moves.push(move);
+      replay.current = opposite(move.color);
+      continue;
+    }
+
+    if (move.type === "play") {
+      const result = tryPlay(move.x, move.y, move.color, replay.board);
+
+      if (!result) break;
+
+      replay.board = result.board;
+      replay.captures[move.color] += result.captured.length;
+      replay.moves.push(move);
+      replay.current = opposite(move.color);
+    }
+  }
+
+  return replay;
+}
+
+function displayedState() {
+  return state.view === null ? snapshot() : replayTo(state.view);
+}
+
+function coordinateName(x, y) {
+  const letters = "ABCDEFGHJKLMNOPQRST";
+  return letters[x] + (state.size - y);
+}
+
+function boardPosition(x, y) {
+  return {
+    x: state.margin + x * state.cell,
+    y: state.margin + y * state.cell
+  };
+}
+
+function drawStone(x, y, color, alpha = 1) {
+  const point = boardPosition(x, y);
+  const radius = state.cell * 0.43;
+
+  const gradient = ctx.createRadialGradient(
+    point.x - radius * 0.35,
+    point.y - radius * 0.35,
+    2,
+    point.x,
+    point.y,
+    radius
+  );
+
+  gradient.addColorStop(0, color === "black" ? "#666" : "#fff");
+  gradient.addColorStop(1, color === "black" ? "#111" : "#d6d6d6");
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = gradient;
+
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#111";
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawBoard(display) {
+  const size = state.size;
+  const margin = state.margin;
+  const cell = (canvas.width - margin * 2) / (size - 1);
+
+  state.cell = cell;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const css = getComputedStyle(document.documentElement);
+  const lineColor = css.getPropertyValue("--line").trim();
+  const textColor = css.getPropertyValue("--text").trim();
+
+  ctx.strokeStyle = lineColor;
+  ctx.lineWidth = 2;
+
+  for (let i = 0; i < size; i++) {
+    const p = margin + i * cell;
+
+    ctx.beginPath();
+    ctx.moveTo(margin, p);
+    ctx.lineTo(canvas.width - margin, p);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(p, margin);
+    ctx.lineTo(p, canvas.height - margin);
+    ctx.stroke();
+  }
+
+  const starPoints = size === 19
+    ? [3, 9, 15]
+    : size === 13
+      ? [3, 6, 9]
+      : [2, 4, 6];
+
+  ctx.fillStyle = lineColor;
+
+  starPoints.forEach(x => {
+    starPoints.forEach(y => {
+      ctx.beginPath();
+      ctx.arc(
+        margin + x * cell,
+        margin + y * cell,
+        6,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+    });
+  });
+
+  const letters = "ABCDEFGHJKLMNOPQRST";
+
+  ctx.fillStyle = textColor;
+  ctx.font = "600 19px system-ui";
+  ctx.textAlign = "center";
+
+  for (let i = 0; i < size; i++) {
+    const p = margin + i * cell;
+
+    ctx.fillText(letters[i], p, margin - cell);
+    ctx.fillText(letters[i], p, canvas.height - margin + cell);
+
+    ctx.textAlign = "right";
+    ctx.fillText(size - i, margin - cell, p + 6);
+
+    ctx.textAlign = "left";
+    ctx.fillText(size - i, canvas.width - margin + cell, p + 6);
+
+    ctx.textAlign = "center";
+  }
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      if (display.board[y][x]) {
+        drawStone(x, y, display.board[y][x]);
+      }
+    }
+  }
+
+  for (const label of display.labels || []) {
+    const point = boardPosition(label.x, label.y);
+    const stone = display.board[label.y][label.x];
+
+    ctx.save();
+    ctx.font = `700 ${Math.max(13, state.cell * 0.3)}px system-ui`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = stone === "black" ? "#111" : "#fff";
+    ctx.fillStyle = stone === "black" ? "#fff" : "#b01919";
+    ctx.strokeText(label.text, point.x, point.y);
+    ctx.fillText(label.text, point.x, point.y);
+    ctx.restore();
+  }
+
+  let moveNumber = 0;
+
+  display.moves.forEach(move => {
+    if (move.type !== "play") return;
+
+    moveNumber++;
+
+    const point = boardPosition(move.x, move.y);
+
+    ctx.fillStyle = move.color === "black" ? "#fff" : "#111";
+    ctx.font = `700 ${Math.max(14, state.cell * 0.36)}px system-ui`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(moveNumber), point.x, point.y + 1);
+  });
+
+  ctx.textBaseline = "alphabetic";
+
+  if (
+    state.hover &&
+    state.view === null &&
+    $("#tool").value === "play"
+  ) {
+    const preview = tryPlay(
+      state.hover.x,
+      state.hover.y,
+      state.current
+    );
+
+    if (preview) {
+      drawStone(
+        state.hover.x,
+        state.hover.y,
+        state.current,
+        0.38
+      );
+    }
+  }
+}
+
+function render() {
+  const display = displayedState();
+
+  drawBoard(display);
+
+  $("#black").textContent =
+    display.board.flat().filter(value => value === "black").length;
+
+  $("#white").textContent =
+    display.board.flat().filter(value => value === "white").length;
+
+  $("#caps").textContent =
+    `${display.captures.black} : ${display.captures.white}`;
+
+  $("#status").textContent = state.view === null
+    ? `${state.current === "black" ? "黑" : "白"}`
+    : `回放 ${state.view}`;
+
+  document.querySelectorAll("[data-color]").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.color === state.current
+    );
+  });
+
+  $("#undo").disabled = !state.history.length;
+  $("#redo").disabled = !state.future.length;
+
+  $("#timeline").max = state.moves.length;
+  $("#timeline").value = state.view === null
+    ? state.moves.length
+    : state.view;
+
+  $("#timelineText").textContent =
+    `${$("#timeline").value} / ${state.moves.length}`;
+
+  let playNumber = 0;
+
+  $("#moves").innerHTML = state.moves.map((move, index) => {
+    let text;
+
+    if (move.type === "setup") {
+      text = `擺 ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
+    } else if (move.type === "erase") {
+      text = `擦 ${coordinateName(move.x, move.y)}`;
+    } else if (move.type === "pass") {
+      playNumber++;
+      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} 虛`;
+    } else {
+      playNumber++;
+      text = `${playNumber}. ${move.color === "black" ? "黑" : "白"} ${coordinateName(move.x, move.y)}`;
+
+      if (move.captured) {
+        text += ` 提${move.captured}`;
+      }
+    }
+
+    const currentClass = state.view === index + 1 ? "current" : "";
+
+    return `<li class="${currentClass}">${text}</li>`;
+  }).join("") || "<li>—</li>";
+}
+
+function pointFromEvent(event) {
+  const rect = canvas.getBoundingClientRect();
+
+  const canvasX =
+    (event.clientX - rect.left) * canvas.width / rect.width;
+
+  const canvasY =
+    (event.clientY - rect.top) * canvas.height / rect.height;
+
+  const x = Math.round((canvasX - state.margin) / state.cell);
+  const y = Math.round((canvasY - state.margin) / state.cell);
+
+  return insideBoard(x, y) ? { x, y } : null;
+}
+
+canvas.addEventListener("pointermove", event => {
+  const rect = canvas.getBoundingClientRect();
+
+  boardWrap.style.setProperty(
+    "--cursor-x",
+    `${event.clientX - rect.left}px`
+  );
+
+  boardWrap.style.setProperty(
+    "--cursor-y",
+    `${event.clientY - rect.top}px`
+  );
+
+  boardWrap.classList.remove("cursor-hidden");
+
+  state.hover = pointFromEvent(event);
+  render();
+});
+
+canvas.addEventListener("pointerleave", () => {
+  boardWrap.classList.add("cursor-hidden");
+  state.hover = null;
+  render();
+});
+
+canvas.addEventListener("click", event => {
+  const point = pointFromEvent(event);
+
+  if (!point) return;
+
+  const tool = $("#tool").value;
+
+  if (tool === "play") {
+    playStone(point.x, point.y);
+  } else if (tool === "setup") {
+    setupStone(point.x, point.y);
+  } else if (tool === "label") {
+    addLabel(point.x, point.y);
+  } else if (tool === "erase") {
+    eraseAt(point.x, point.y);
+  }
+});
+
+document.querySelectorAll("[data-color]").forEach(button => {
+  button.addEventListener("click", () => {
+    state.current = button.dataset.color;
+    render();
+    scheduleAutosave();
+  });
+});
+
+let autosaveTimer;
+
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+
+  $("#autosaveStatus").textContent = "儲存";
+
+  autosaveTimer = setTimeout(() => {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(snapshot()));
+      $("#autosaveStatus").textContent = "已存";
+    } catch {
+      $("#autosaveStatus").textContent = "失敗";
+    }
+  }, 350);
+}
+
+function toast(message) {
+  const box = $("#toast");
+
+  box.textContent = message;
+  box.classList.add("show");
+
+  clearTimeout(box._timer);
+
+  box._timer = setTimeout(() => {
+    box.classList.remove("show");
+  }, 1600);
+}
+
+function getSlots() {
+  try {
+    return JSON.parse(localStorage.getItem(SLOTS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"]/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;"
+  }[character]));
+}
+
+function renderSlots() {
+  const slots = getSlots();
+
+  $("#saveList").innerHTML = slots.map((slot, index) => `
+    <div class="save-item">
+      <span title="${escapeHtml(slot.name)}">${escapeHtml(slot.name)}</span>
+      <div>
+        <button class="btn loadSlot" type="button" data-index="${index}">開</button>
+        <button class="btn danger deleteSlot" type="button" data-index="${index}">×</button>
+      </div>
+    </div>
+  `).join("") || "";
+
+  document.querySelectorAll(".loadSlot").forEach(button => {
+    button.addEventListener("click", () => {
+      try {
+        applyState(
+          getSlots()[Number(button.dataset.index)].data,
+          { record: true }
+        );
+
+        toast("已載入");
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+  });
+
+  document.querySelectorAll(".deleteSlot").forEach(button => {
+    button.addEventListener("click", () => {
+      const slots = getSlots();
+
+      slots.splice(Number(button.dataset.index), 1);
+
+      localStorage.setItem(SLOTS_KEY, JSON.stringify(slots));
+      renderSlots();
+      toast("已刪除");
+    });
+  });
+}
+
+function setLayout(position) {
+  const allowed = ["right", "left", "top", "bottom"];
+  const nextPosition = allowed.includes(position) ? position : "right";
+
+  document.documentElement.dataset.layout = nextPosition;
+
+  try {
+    localStorage.setItem(LAYOUT_KEY, nextPosition);
+  } catch {}
+
+  document
+    .querySelectorAll("#layoutButtons button[data-layout]")
+    .forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.layout === nextPosition
+      );
+    });
+}
+
+function initLayoutButtons() {
+  document
+    .querySelectorAll("#layoutButtons button[data-layout]")
+    .forEach(button => {
+      button.addEventListener("click", event => {
+        event.preventDefault();
+        setLayout(button.dataset.layout);
+      });
+    });
+}
+
+$("#saveSlot").addEventListener("click", () => {
+  const name = $("#saveName").value.trim();
+
+  if (!name) {
+    toast("輸入名稱");
+    return;
+  }
+
+  const slots = getSlots();
+
+  slots.unshift({
+    name,
+    at: Date.now(),
+    data: snapshot()
+  });
+
+  try {
+    localStorage.setItem(
+      SLOTS_KEY,
+      JSON.stringify(slots.slice(0, 12))
+    );
+
+    $("#saveName").value = "";
+    renderSlots();
+    toast("已存檔");
+  } catch {
+    toast("儲存失敗");
+  }
+});
+
+$("#size").addEventListener("change", event => {
+  const nextSize = event.target.value;
+
+  if (confirm("更改路數會清盤，繼續？")) {
+    createNewGame(nextSize);
+  } else {
+    event.target.value = String(state.size);
+  }
+});
+
+$("#pass").addEventListener("click", passMove);
+$("#undo").addEventListener("click", undo);
+$("#redo").addEventListener("click", redo);
+
+$("#clear").addEventListener("click", () => {
+  $("#confirm").showModal();
+});
+
+$("#cancelClear").addEventListener("click", () => {
+  $("#confirm").close();
+});
+
+$("#confirmClear").addEventListener("click", () => {
+  $("#confirm").close();
+  createNewGame(state.size);
+});
+
+$("#prev").addEventListener("click", () => {
+  state.view = Math.max(0, (state.view ?? state.moves.length) - 1);
+  render();
+});
+
+$("#next").addEventListener("click", () => {
+  state.view = Math.min(
+    state.moves.length,
+    (state.view ?? state.moves.length) + 1
+  );
+
+  if (state.view === state.moves.length) {
+    state.view = null;
+  }
+
+  render();
+});
+
+$("#live").addEventListener("click", () => {
+  state.view = null;
+  render();
+});
+
+$("#timeline").addEventListener("input", event => {
+  const target = Number(event.target.value);
+
+  state.view = target === state.moves.length ? null : target;
+  render();
+});
+
+$("#themeBtn").addEventListener("click", () => {
+  const root = document.documentElement;
+
+  root.dataset.theme =
+    root.dataset.theme === "dark" ? "light" : "dark";
+
+  try {
+    localStorage.setItem(THEME_KEY, root.dataset.theme);
+  } catch {}
+
+  render();
+});
+
+function download(blob, filename) {
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+
+  setTimeout(() => {
+    URL.revokeObjectURL(link.href);
+  }, 1000);
+}
+
+$("#jsonSave").addEventListener("click", () => {
+  download(
+    new Blob(
+      [JSON.stringify(snapshot(), null, 2)],
+      { type: "application/json" }
+    ),
+    "go-game.json"
+  );
+});
+
+$("#jsonLoad").addEventListener("click", () => {
+  $("#file").click();
+});
+
+$("#file").addEventListener("change", async event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  try {
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("檔案過大");
+    }
+
+    applyState(
+      JSON.parse(await file.text()),
+      { record: true }
+    );
+
+    toast("已載入");
+  } catch (error) {
+    toast(`失敗：${error.message}`);
+  } finally {
+    event.target.value = "";
+  }
+});
+
+$("#png").addEventListener("click", () => {
+  drawBoard(displayedState());
+
+  canvas.toBlob(blob => {
+    download(blob, `go-${state.size}x${state.size}.png`);
+  }, "image/png");
+});
+
+document.addEventListener("keydown", event => {
+  const tag = document.activeElement.tagName;
+  const editing = ["INPUT", "TEXTAREA", "SELECT"].includes(tag);
+
+  if (editing) {
+    if (event.key === "Escape") {
+      document.activeElement.blur();
+    }
+    return;
+  }
+
+  const key = event.key.toLowerCase();
+  const modifier = event.ctrlKey || event.metaKey;
+
+  if (modifier && key === "z") {
+    event.preventDefault();
+    event.shiftKey ? redo() : undo();
+    return;
+  }
+
+  if (modifier && key === "y") {
+    event.preventDefault();
+    redo();
+    return;
+  }
+
+  switch (key) {
+    case "arrowleft":
+      event.preventDefault();
+      $("#prev").click();
+      break;
+
+    case "arrowright":
+      event.preventDefault();
+      $("#next").click();
+      break;
+
+    case "home":
+      event.preventDefault();
+      $("#timeline").value = 0;
+      $("#timeline").dispatchEvent(new Event("input"));
+      break;
+
+    case "end":
+      event.preventDefault();
+      $("#live").click();
+      break;
+
+    case " ":
+      event.preventDefault();
+      passMove();
+      break;
+
+    case "p":
+      $("#tool").value = "play";
+      toast("落子");
+      render();
+      break;
+
+    case "s":
+      $("#tool").value = "setup";
+      toast("擺盤");
+      render();
+      break;
+
+    case "l":
+      $("#tool").value = "label";
+      $("#labelText").focus();
+      toast("標字");
+      render();
+      break;
+
+    case "e":
+    case "x":
+      $("#tool").value = "erase";
+      toast("擦除");
+      render();
+      break;
+
+    case "b":
+      state.current = "black";
+      toast("黑");
+      render();
+      scheduleAutosave();
+      break;
+
+    case "w":
+      state.current = "white";
+      toast("白");
+      render();
+      scheduleAutosave();
+      break;
+
+    case "r":
+      $("#clear").click();
+      break;
+
+    case "1":
+      setLayout("left");
+      toast("左");
+      break;
+
+    case "2":
+      setLayout("right");
+      toast("右");
+      break;
+
+    case "3":
+      setLayout("top");
+      toast("上");
+      break;
+
+    case "4":
+      setLayout("bottom");
+      toast("下");
+      break;
+
+    case "t":
+      $("#themeBtn").click();
+      break;
+
+    case "g":
+      $("#png").click();
+      break;
+
+    case "j":
+      $("#jsonSave").click();
+      break;
+
+    case "o":
+      $("#jsonLoad").click();
+      break;
+
+    case "escape":
+      state.hover = null;
+      render();
+      break;
+  }
+});
+
+try {
+  const saved = JSON.parse(localStorage.getItem(DRAFT_KEY));
+
+  if (validState(saved)) {
+    applyState(saved);
+  } else {
+    createNewGame(19);
+  }
+} catch {
+  createNewGame(19);
+}
+
+try {
+  document.documentElement.dataset.theme =
+    localStorage.getItem(THEME_KEY) || "light";
+} catch {
+  document.documentElement.dataset.theme = "light";
+}
+
+try {
+  setLayout(localStorage.getItem(LAYOUT_KEY) || "right");
+} catch {
+  setLayout("right");
+}
+
+initLayoutButtons();
+renderSlots();
+render();
+</script>
+</body>
+</html>
