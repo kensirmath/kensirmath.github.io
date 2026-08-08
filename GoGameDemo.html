@@ -440,11 +440,39 @@
         }
 
         #layoutButtons .btn {
-            min-height: 18px;
-            padding: 0 4px;
-            border-radius: 4px;
-            font-size: 12px;
-            line-height: 16px;
+
+            /* 多棋譜切換 */
+            .board-library {
+                display: grid;
+                gap: 5px;
+                margin-top: 6px;
+            }
+
+            .board-library[hidden] {
+                display: none;
+            }
+
+            .board-tabs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .board-tab {
+                min-height: 25px;
+                max-width: 145px;
+                padding: 2px 6px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 12px;
+            }
+
+            .board-tab.active {
+                background: var(--primary);
+                border-color: var(--primary);
+                color: #fff;
+            }
         }
 
         @media(max-width:900px) {
@@ -532,7 +560,7 @@
                     <button class="btn" id="png" type="button">PNG <span class="key">G</span></button>
                     <button class="btn" id="jsonSave" type="button">JSON↓ <span class="key">J</span></button>
                     <button class="btn" id="jsonLoad" type="button">JSON↑ <span class="key">O</span></button>
-                    <input class="sr" type="file" id="file" accept="application/json,.json">
+                    <input class="sr" type="file" id="file" accept="application/json,.json" multiple>
                 </div>
 
                 <div class="tools" id="layoutButtons" style="margin-top:5px">
@@ -540,6 +568,10 @@
                     <button class="btn" type="button" data-layout="left">左 <span class="key">1</span></button>
                     <button class="btn" type="button" data-layout="top">上 <span class="key">3</span></button>
                     <button class="btn" type="button" data-layout="bottom">下 <span class="key">4</span></button>
+                </div>
+                <div class="board-library" id="boardLibrary" hidden>
+                    <span class="status-text">棋譜切換</span>
+                    <div class="board-tabs" id="boardTabs"></div>
                 </div>
             </section>
 
@@ -630,6 +662,155 @@
         const emptyBoard = size => Array.from({ length: size }, () => Array(size).fill(null));
         const opposite = color => color === "black" ? "white" : "black";
         const pointKey = (x, y) => `${x},${y}`;
+
+        const boardLibrary = {
+            boards: [],
+            activeIndex: -1
+        };
+
+        function exportBoardData() {
+            return snapshot();
+        }
+
+        function saveActiveBoardToLibrary() {
+            if (
+                boardLibrary.activeIndex < 0 ||
+                !boardLibrary.boards[boardLibrary.activeIndex]
+            ) {
+                return;
+            }
+
+            boardLibrary.boards[boardLibrary.activeIndex].data =
+                clone(exportBoardData());
+        }
+
+        function boardNameFromFile(filename, index) {
+            const name = filename
+                .replace(/\.json$/i, "")
+                .trim()
+                .slice(0, 40);
+
+            return name || `棋譜 ${index + 1}`;
+        }
+
+        function renderBoardTabs() {
+            const library = $("#boardLibrary");
+            const tabs = $("#boardTabs");
+
+            library.hidden = boardLibrary.boards.length < 2;
+            tabs.innerHTML = "";
+
+            boardLibrary.boards.forEach((board, index) => {
+                const button = document.createElement("button");
+
+                button.type = "button";
+                button.className = `btn board-tab ${index === boardLibrary.activeIndex ? "active" : ""
+                    }`;
+                button.textContent = `${index + 1}. ${board.name}`;
+                button.title = board.name;
+
+                button.addEventListener("click", () => {
+                    switchBoard(index);
+                });
+
+                tabs.appendChild(button);
+            });
+        }
+
+        function switchBoard(index) {
+            if (
+                index < 0 ||
+                index >= boardLibrary.boards.length ||
+                index === boardLibrary.activeIndex
+            ) {
+                return;
+            }
+
+            saveActiveBoardToLibrary();
+
+            state.history = [];
+            state.future = [];
+
+            applyState(
+                clone(boardLibrary.boards[index].data),
+                { record: false }
+            );
+
+            syncCurrentPosition();
+
+            boardLibrary.activeIndex = index;
+            renderBoardTabs();
+
+            toast(`已切換：${boardLibrary.boards[index].name}`);
+        }
+
+        async function loadMultipleJsonFiles(fileList) {
+            const files = [...fileList];
+
+            if (!files.length) return;
+
+            const results = await Promise.all(
+                files.map(async (file, index) => {
+                    try {
+                        if (file.size > 5 * 1024 * 1024) {
+                            throw new Error("檔案過大");
+                        }
+
+                        const data = JSON.parse(await file.text());
+
+                        if (!validState(data)) {
+                            throw new Error("棋局資料錯誤");
+                        }
+
+                        return {
+                            ok: true,
+                            name: boardNameFromFile(file.name, index),
+                            data: clone(data)
+                        };
+                    } catch (error) {
+                        return {
+                            ok: false,
+                            name: file.name,
+                            error: error.message || "無法讀取"
+                        };
+                    }
+                })
+            );
+
+            const validBoards = results.filter(item => item.ok);
+            const failedBoards = results.filter(item => !item.ok);
+
+            if (!validBoards.length) {
+                throw new Error("沒有有效的 JSON 棋譜檔案");
+            }
+
+            boardLibrary.boards = validBoards.map(board => ({
+                name: board.name,
+                data: board.data
+            }));
+
+            boardLibrary.activeIndex = 0;
+
+            state.history = [];
+            state.future = [];
+
+            applyState(
+                clone(boardLibrary.boards[0].data),
+                { record: false }
+            );
+
+            syncCurrentPosition();
+            renderBoardTabs();
+
+            if (failedBoards.length) {
+                toast(
+                    `已載入 ${validBoards.length} 個；` +
+                    `${failedBoards.length} 個檔案失敗`
+                );
+            } else {
+                toast(`已載入 ${validBoards.length} 個棋譜`);
+            }
+        }
 
         function snapshot() {
             return clone({
@@ -1682,23 +1863,8 @@
         });
 
         $("#file").addEventListener("change", async event => {
-            const file = event.target.files[0];
-
-            if (!file) return;
-
             try {
-                if (file.size > 5 * 1024 * 1024) {
-                    throw new Error("檔案過大");
-                }
-
-                applyState(
-                    JSON.parse(await file.text()),
-                    { record: true }
-                );
-
-                syncCurrentPosition();
-                render();
-                toast("已載入");
+                await loadMultipleJsonFiles(event.target.files);
             } catch (error) {
                 toast(`失敗：${error.message}`);
             } finally {
