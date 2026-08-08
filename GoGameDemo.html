@@ -646,6 +646,7 @@
             size: 19,
             board: [],
             current: "black",
+            playStartColor: "black",
             tool: "play",
             moves: [],
             labels: [],
@@ -817,6 +818,7 @@
                 size: state.size,
                 board: state.board,
                 current: state.current,
+                playStartColor: state.playStartColor,
                 tool: state.tool,
                 moves: state.moves,
                 labels: state.labels,
@@ -858,6 +860,8 @@
             state.size = Number(data.size);
             state.board = clone(data.board);
             state.current = data.current;
+            state.playStartColor =
+                data.playStartColor === "white" ? "white" : "black";
             state.tool = data.tool || "play";
             state.moves = clone(data.moves);
             state.labels = clone(data.labels || []);
@@ -878,6 +882,7 @@
                 size: Number(size),
                 board: emptyBoard(Number(size)),
                 current: "black",
+                playStartColor: "black",
                 tool: "play",
                 moves: [],
                 labels: [],
@@ -968,7 +973,7 @@
             const captures = { black: 0, white: 0 };
             const captureMarks = [];
             const moves = [];
-            let current = "black";
+            let current = state.playStartColor || "black";
             let moveNumber = 0;
 
             for (let index = 0; index < stepCount; index++) {
@@ -1056,7 +1061,18 @@
             state.board = full.board;
             state.captures = full.captures;
             state.moves = full.moves;
-            state.current = full.current;
+
+            const hasFormalMove = state.moves.some(move =>
+                move.type === "play" || move.type === "pass"
+            );
+
+            /*
+              擺盤時保留用戶目前手動選擇的黑／白顏色；
+              正式手順開始後，才採用自動交替後的 current。
+            */
+            if (hasFormalMove) {
+                state.current = full.current;
+            }
 
             if (
                 state.selectedStep !== null &&
@@ -1139,6 +1155,14 @@
         function playStone(x, y) {
             if (state.selectedStep !== null) {
                 branchAtSelectedStep();
+            }
+
+            const hasFormalMove = state.moves.some(move =>
+                move.type === "play" || move.type === "pass"
+            );
+
+            if (!hasFormalMove) {
+                state.playStartColor = state.current;
             }
 
             const result = tryPlay(x, y, state.current, state.board);
@@ -1240,6 +1264,14 @@
         function passMove() {
             if (state.selectedStep !== null) {
                 branchAtSelectedStep();
+            }
+
+            const hasFormalMove = state.moves.some(move =>
+                move.type === "play" || move.type === "pass"
+            );
+
+            if (!hasFormalMove) {
+                state.playStartColor = state.current;
             }
 
             commit(() => {
@@ -1724,7 +1756,29 @@
 
         document.querySelectorAll("[data-color]").forEach(button => {
             button.addEventListener("click", () => {
-                state.current = button.dataset.color;
+                const selectedColor = button.dataset.color;
+
+                const hasFormalMove = state.moves.some(move =>
+                    move.type === "play" || move.type === "pass"
+                );
+
+                /*
+                  擺盤：永遠由用戶手動選色，並維持顏色。
+                  落子：只允許在第一手前決定起始顏色；
+                  第一手後由程式自動黑白交替。
+                */
+                if (state.tool === "setup") {
+                    state.current = selectedColor;
+                    toast(`擺盤：${selectedColor === "black" ? "黑" : "白"}`);
+                } else if (!hasFormalMove) {
+                    state.current = selectedColor;
+                    state.playStartColor = selectedColor;
+                    toast(`第一手：${selectedColor === "black" ? "黑" : "白"}`);
+                } else {
+                    toast("正式手順已開始，顏色會自動交替");
+                    return;
+                }
+
                 render();
                 scheduleAutosave();
             });
