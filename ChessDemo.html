@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國際象棋</title>
+
+    <style>
+        :root {
+            --page: #f4ede2;
+            --panel: #fffaf3;
+            --soft: #f7eadb;
+            --text: #30261e;
+            --muted: #887764;
+            --line: #d9c8b4;
+            --accent: #ad7135;
+            --button: #f4e5d3;
+            --button-hover: #e8cda9;
+            --frame: #795033;
+            --light: #ecd7b5;
+            --dark: #9b694a;
+            --select: #318cca;
+            --move: rgba(42, 118, 53, .72);
+            --last: rgba(240, 191, 65, .38);
+            --danger: rgba(184, 50, 40, .72);
+        }
+
+        body.dark {
+            --page: #ffffff;
+            --panel: #ffffff;
+            --soft: #f0f0f0;
+            --text: #181818;
+            --muted: #656565;
+            --line: #aaaaaa;
+            --accent: #17639a;
+            --button: #ffffff;
+            --button-hover: #e8e8e8;
+            --frame: #202020;
+            --light: #ffffff;
+            --dark: #c8cdd2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+            color: var(--text);
+            background: var(--page);
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .stage {
+            display: grid;
+            grid-template-columns: min-content minmax(0, 1fr);
+            width: 100vw;
+            min-height: 100vh;
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .stage.right {
+            grid-template-columns: min-content minmax(0, 1fr);
+        }
+
+        .stage.left {
+            grid-template-columns: minmax(0, 1fr) min-content;
+        }
+
+        .stage.left .board-column {
+            order: 2;
+        }
+
+        .stage.left .sidebar {
+            order: 1;
+        }
+
+        .board-column {
+            width: min(calc(100vw - clamp(280px, 28vw, 560px)),
+                    100vh);
+            height: min(calc(100vw - clamp(280px, 28vw, 560px)),
+                    100vh);
+            min-width: 280px;
+            min-height: 280px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .board-shell {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: 0;
+            background: transparent;
+        }
+
+        .board-wrap {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: clamp(24px, 2.5vw, 36px) 1fr clamp(24px, 2.5vw, 36px);
+            grid-template-rows: clamp(24px, 2.5vw, 36px) 1fr clamp(24px, 2.5vw, 36px);
+        }
+
+        .coordinates-top,
+        .coordinates-bottom {
+            grid-column: 2;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+        }
+
+        .coordinates-left,
+        .coordinates-right {
+            grid-row: 2;
+            display: grid;
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .coordinates-right {
+            grid-column: 3;
+        }
+
+        .coordinate {
+            display: grid;
+            place-items: center;
+            color: var(--accent);
+            font-size: clamp(14px, 1.6vw, 21px);
+            font-weight: 700;
+            user-select: none;
+        }
+
+        .board {
+            grid-row: 2;
+            grid-column: 2;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(8, minmax(0, 1fr));
+            overflow: hidden;
+            border: clamp(3px, .35vw, 6px) solid var(--frame);
+            aspect-ratio: 1 / 1;
+        }
+
+        .square {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-width: 0;
+            min-height: 0;
+            padding: 0;
+            border: 0;
+            overflow: hidden;
+            background: var(--light);
+            aspect-ratio: 1 / 1;
+        }
+
+        .square.dark-square {
+            background: var(--dark);
+        }
+
+        .square.selected {
+            z-index: 2;
+            box-shadow: inset 0 0 0 clamp(3px, .35vw, 5px) var(--select);
+        }
+
+        .square.last-move {
+            box-shadow: inset 0 0 0 999px var(--last);
+        }
+
+        .square.king-dead {
+            box-shadow: inset 0 0 0 999px var(--danger);
+        }
+
+        .square.legal::before {
+            content: "";
+            position: absolute;
+            width: 21%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: var(--move);
+        }
+
+        .square.legal.capture::before {
+            width: 76%;
+            border: clamp(3px, .35vw, 5px) solid var(--move);
+            background: transparent;
+        }
+
+        .piece {
+            z-index: 1;
+            display: block;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: visible;
+            font-family: "Times New Roman", serif;
+            font-size: clamp(38px, 9.2vw, 112px);
+            line-height: .88;
+            text-align: center;
+            transform: scale(1.12) translateY(2%);
+            transform-origin: center;
+        }
+
+        .white-piece {
+            color: #ffffff;
+            text-shadow:
+                -1px -1px 0 #171717,
+                1px -1px 0 #171717,
+                -1px 1px 0 #171717,
+                1px 1px 0 #171717;
+        }
+
+        .black-piece {
+            color: #211a16;
+            text-shadow: 1px 1px 0 #d5ad87;
+        }
+
+        .sidebar {
+            width: 100%;
+            min-width: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border: 0;
+            background: var(--panel);
+            font-size: 12px;
+        }
+
+        .control-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 7px;
+            min-height: 48px;
+            padding: 6px 9px;
+            border-bottom: 1px solid var(--line);
+            background: var(--panel);
+        }
+
+        .control-brand {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .control-logo {
+            width: 29px;
+            height: 29px;
+            display: grid;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .control-title {
+            color: var(--text);
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            white-space: nowrap;
+        }
+
+        .control-turn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 1px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .round-button {
+            width: 29px;
+            min-height: 29px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            color: var(--text);
+            background: var(--button);
+            font-size: 11px;
+        }
+
+        .setup-top-controls {
+            display: none;
+            width: 100%;
+        }
+
+        body.setup-active .control-header {
+            display: block;
+            min-height: 0;
+            padding: 5px;
+        }
+
+        body.setup-active .control-brand,
+        body.setup-active .round-button {
+            display: none;
+        }
+
+        body.setup-active .setup-top-controls {
+            display: block;
+        }
+
+        .setup-top-row {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+        }
+
+        .setup-top-button {
+            min-width: 0;
+            min-height: 27px;
+            padding: 2px 3px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--text);
+            background: var(--button);
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .setup-top-button.active,
+        .setup-top-button.primary {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--soft);
+        }
+
+        .setup-top-pieces {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .setup-top-piece {
+            min-width: 0;
+            height: 35px;
+            padding: 0;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--text);
+            background: var(--button);
+            font: 26px "Times New Roman", serif;
+        }
+
+        .setup-top-piece.active {
+            border: 3px solid var(--accent);
+            background: var(--soft);
+        }
+
+        .section {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .label {
+            color: var(--accent);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .1em;
+        }
+
+        .status-text {
+            margin-top: 3px;
+            font-size: 14px;
+        }
+
+        .captured-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 23px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .captured {
+            flex: 1;
+            color: var(--text);
+            font: 17px "Times New Roman", serif;
+        }
+
+        .position-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 7px;
+            margin-top: 7px;
+        }
+
+        select {
+            min-height: 27px;
+            border: 1px solid var(--line);
+            color: var(--text);
+            background: var(--soft);
+            font-size: 11px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 30px;
+            line-height: 1.25;
+        }
+
+        .history {
+            width: 100%;
+            height: 396px;
+            margin-top: 14px;
+            overflow-y: auto;
+            border-top: 1px solid var(--line);
+        }
+
+        .history-item {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr);
+            column-gap: 2px;
+            min-height: 54px;
+            padding: 12px 4px;
+            border: 0;
+            border-bottom: 1px solid var(--line);
+            color: var(--text);
+            background: transparent;
+            text-align: left;
+            font-size: 30px;
+            line-height: 1.3;
+        }
+
+        .history-item span:first-child {
+            padding-right: 1px;
+            font-size: 25px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .history-item span:last-child {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .history-item.active {
+            color: var(--accent);
+            background: var(--soft);
+            box-shadow: inset 3px 0 0 var(--accent);
+        }
+
+        .replay-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            padding: 9px;
+        }
+
+        .button {
+            min-height: 29px;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            color: var(--text);
+            background: var(--button);
+            font-size: 11px;
+        }
+
+        .replay-controls .button {
+            min-height: 48px;
+            font-size: 19px;
+        }
+
+        .button:hover:not(:disabled),
+        .round-button:hover {
+            border-color: var(--accent);
+            background: var(--button-hover);
+        }
+
+        .button.primary {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .button:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .file-box {
+            margin-top: 5px;
+            padding: 5px;
+            border: 1px dashed var(--line);
+            background: var(--soft);
+            font-size: 10px;
+        }
+
+        .import-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .import-button {
+            padding: 3px 6px;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            color: var(--text);
+            background: var(--panel);
+            font-size: 9px;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 10;
+            inset: 0;
+            display: none;
+            place-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, .52);
+        }
+
+        .modal.show {
+            display: grid;
+        }
+
+        .dialog {
+            width: min(430px, 100%);
+            padding: 24px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            text-align: center;
+        }
+
+        .promotion-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .promotion-option {
+            height: 70px;
+            border: 1px solid var(--line);
+            color: var(--text);
+            background: var(--button);
+            font: 48px "Times New Roman", serif;
+        }
+
+        body.dark .button,
+        body.dark .round-button,
+        body.dark .setup-top-button,
+        body.dark .setup-top-piece,
+        body.dark .promotion-option,
+        body.dark .import-button {
+            color: #111111;
+            background: #ffffff;
+            border-color: #5e5e5e;
+        }
+
+        body.dark .button.primary,
+        body.dark .setup-top-button.active,
+        body.dark .setup-top-button.primary,
+        body.dark .setup-top-piece.active {
+            color: #111111;
+            background: #dceeff;
+            border-color: #17639a;
+        }
+
+        body.dark select {
+            color: #111111;
+            background: #ffffff;
+            border-color: #666666;
+        }
+
+        .stage.top,
+        .stage.bottom {
+            display: grid;
+            grid-template-columns: 1fr;
+            width: 100vw;
+            margin: 0;
+            gap: 0;
+        }
+
+        .stage.top .sidebar {
+            order: 1;
+        }
+
+        .stage.top .board-column {
+            order: 2;
+        }
+
+        .stage.bottom .board-column {
+            order: 1;
+        }
+
+        .stage.bottom .sidebar {
+            order: 2;
+        }
+
+        .stage.top .board-column,
+        .stage.bottom .board-column {
+            width: min(100vw, calc(100vh - 260px));
+            height: min(100vw, calc(100vh - 260px));
+            min-width: 0;
+            min-height: 0;
+            margin: 0;
+        }
+
+        .stage.top .sidebar,
+        .stage.bottom .sidebar {
+            width: 100%;
+            height: auto;
+            max-height: 260px;
+        }
+
+        @media (max-width: 820px) {
+
+            html,
+            body {
+                overflow-y: auto;
+            }
+
+            .stage,
+            .stage.right,
+            .stage.left,
+            .stage.top,
+            .stage.bottom {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                min-height: 100vh;
+            }
+
+            .board-column,
+            .stage.left .board-column,
+            .stage.top .board-column,
+            .stage.bottom .board-column {
+                width: 100vw;
+                height: 100vw;
+                min-width: 0;
+                min-height: 0;
+                margin: 0;
+                order: 1;
+            }
+
+            .sidebar,
+            .stage.top .sidebar,
+            .stage.bottom .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: none;
+                min-height: 0;
+                order: 2;
+            }
+
+            .board-wrap {
+                grid-template-columns: 24px 1fr 24px;
+                grid-template-rows: 24px 1fr 24px;
+            }
+
+            .coordinate {
+                font-size: 13px;
+            }
+
+            .piece {
+                font-size: clamp(34px, 12vw, 92px);
+                transform: scale(1.08) translateY(2%);
+            }
+
+            .history-header {
+                font-size: 20px;
+            }
+
+            .history {
+                height: 285px;
+            }
+
+            .history-item {
+                grid-template-columns: 34px minmax(0, 1fr);
+                min-height: 42px;
+                padding: 9px 4px;
+                font-size: 19px;
+            }
+
+            .history-item span:first-child {
+                font-size: 16px;
+            }
+
+            .replay-controls .button {
+                min-height: 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="app">
+        <section class="stage right" id="gameStage">
+            <section class="board-column">
+                <div class="board-shell">
+                    <div class="board-wrap">
+                        <div class="coordinates-top" id="coordinatesTop"></div>
+                        <div class="coordinates-left" id="coordinatesLeft"></div>
+                        <div class="board" id="chessBoard"></div>
+                        <div class="coordinates-right" id="coordinatesRight"></div>
+                        <div class="coordinates-bottom" id="coordinatesBottom"></div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div class="control-header">
+                    <div class="setup-top-controls" id="setupTopControls">
+                        <div class="setup-top-row">
+                            <button class="setup-top-button active" data-top-color="w" type="button">白棋</button>
+                            <button class="setup-top-button" data-top-color="b" type="button">黑棋</button>
+
+                            <button class="setup-top-button active" data-top-turn="w" type="button">白先</button>
+                            <button class="setup-top-button" data-top-turn="b" type="button">黑先</button>
+
+                            <button class="setup-top-button" id="topRemoveButton" type="button">移除</button>
+                            <button class="setup-top-button" id="topClearButton" type="button">清盤</button>
+                            <button class="setup-top-button primary" id="topStartButton" type="button">開始</button>
+                            <button class="setup-top-button" id="topExitSetupButton" type="button">✕</button>
+                        </div>
+
+                        <div class="setup-top-pieces" id="setupTopPieces"></div>
+                    </div>
+
+                    <div class="control-brand">
+                        <div class="control-logo">♚</div>
+                        <div>
+                            <div class="control-title">國際象棋</div>
+                            <div class="control-turn">
+                                <span id="turnPiece">♟</span>
+                                <span id="turnLabel">白方回合</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="round-button" id="themeButton" type="button">☾</button>
+                </div>
+
+                <div class="section">
+                    <div class="label">對局狀態</div>
+                    <div class="status-text" id="statusText">白方先行</div>
+
+                    <div class="position-row">
+                        <span class="label">介面位置</span>
+                        <select id="positionSelect">
+                            <option value="right">右側</option>
+                            <option value="left">左側</option>
+                            <option value="top">上方</option>
+                            <option value="bottom">下方</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="captured-row">
+                        <span>白方吃子</span>
+                        <span class="captured" id="whiteCaptured">—</span>
+                    </div>
+
+                    <div class="captured-row">
+                        <span>黑方吃子</span>
+                        <span class="captured" id="blackCaptured">—</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="history-header">
+                        <span>走棋紀錄</span>
+                        <span id="moveCount">0 / 0 手</span>
+                    </div>
+
+                    <div class="history" id="history"></div>
+
+                    <div class="replay-controls">
+                        <button class="button" id="firstMoveButton" type="button">|◀</button>
+                        <button class="button" id="previousMoveButton" type="button">◀</button>
+                        <button class="button" id="nextMoveButton" type="button">▶</button>
+                        <button class="button" id="lastMoveButton" type="button">▶|</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="label">匯入 JSON</div>
+                    <div class="file-box">
+                        <input id="jsonFileInput" type="file" multiple accept=".json,application/json">
+                        <div class="import-list" id="importList"></div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="button" id="undoButton" type="button">↶ 悔棋</button>
+                    <button class="button" id="flipButton" type="button">↕ 翻轉</button>
+                    <button class="button primary" id="newGameButton" type="button">＋ 新局</button>
+                    <button class="button" id="exportJsonButton" type="button">⇩ JSON</button>
+                    <button class="button" id="exportPngButton" type="button">▣ PNG</button>
+                    <button class="button" id="exportRecordButton" type="button">⇩ 記錄</button>
+                    <button class="button" id="setupButton" type="button">♟ 擺設</button>
+                    <button class="button" id="helpButton" type="button">？</button>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <div class="modal" id="promotionModal">
+        <div class="dialog">
+            <h2>兵升變</h2>
+            <div class="promotion-options" id="promotionOptions"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="helpModal">
+        <div class="dialog">
+            <h2>快捷鍵</h2>
+            <p>
+                ←／↑／H：上一步<br>
+                →／↓／L：下一步<br>
+                Home／End：首步／尾步<br>
+                R：新局；U：悔棋；F：翻轉<br>
+                T：深淺模式；S：擺盤<br>
+                M：匯出記錄；P：PNG；I：JSON<br>
+                1／2／3／4：右／左／上／下
+            </p>
+            <button class="button primary" id="closeHelpButton" type="button">知道了</button>
+        </div>
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+
+        const SYMBOLS = {
+            w: { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" },
+            b: { k: "♚", q: "♛", r: "♜", b: "♝", n: "♞", p: "♟" }
+        };
+
+        const NAMES = {
+            w: { k: "白王", q: "白后", r: "白車", b: "白象", n: "白馬", p: "白兵" },
+            b: { k: "黑王", q: "黑后", r: "黑車", b: "黑象", n: "黑馬", p: "黑兵" }
+        };
+
+        const FILES = "ABCDEFGH";
+
+        let board;
+        let turn;
+        let selected = null;
+        let legalMoves = [];
+        let captured;
+        let moves = [];
+        let states = [];
+        let cursor = 0;
+        let lastMove = null;
+        let castling;
+        let enPassant = null;
+        let gameOver = false;
+        let winner = null;
+        let flipped = false;
+
+        let setupMode = false;
+        let setupColor = "w";
+        let setupType = "k";
+        let setupTurn = "w";
+        let removeMode = false;
+        let promotionData = null;
+        let importedGames = [];
+
+        function initialBoard() {
+            return [
+                ["br", "bn", "bb", "bq", "bk", "bb", "bn", "br"],
+                ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                [null, null, null, null, null, null, null, null],
+                ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+                ["wr", "wn", "wb", "wq", "wk", "wb", "wn", "wr"]
+            ];
+        }
+
+        const colorOf = piece => piece ? piece[0] : null;
+        const typeOf = piece => piece ? piece[1] : null;
+        const otherColor = color => color === "w" ? "b" : "w";
+        const inside = (row, col) => row >= 0 && row < 8 && col >= 0 && col < 8;
+        const squareName = (row, col) => FILES[col] + (8 - row);
+
+        function saveState() {
+            return JSON.stringify({
+                board,
+                turn,
+                captured,
+                lastMove,
+                castling,
+                enPassant,
+                gameOver,
+                winner
+            });
+        }
+
+        function loadState(serialized) {
+            const state = typeof serialized === "string"
+                ? JSON.parse(serialized)
+                : serialized;
+
+            board = state.board;
+            turn = state.turn;
+            captured = state.captured;
+            lastMove = state.lastMove;
+            castling = state.castling;
+            enPassant = state.enPassant;
+            gameOver = state.gameOver;
+            winner = state.winner;
+
+            selected = null;
+            legalMoves = [];
+        }
+
+        function resetGame() {
+            board = initialBoard();
+            turn = "w";
+            selected = null;
+            legalMoves = [];
+            captured = { w: [], b: [] };
+            moves = [];
+            cursor = 0;
+            lastMove = null;
+            castling = { wk: true, wq: true, bk: true, bq: true };
+            enPassant = null;
+            gameOver = false;
+            winner = null;
+            states = [saveState()];
+
+            render();
+        }
+
+        function addMove(list, row, col, extra = {}) {
+            if (!inside(row, col)) return false;
+
+            const target = board[row][col];
+
+            if (!target) {
+                list.push({ row, col, capture: false, ...extra });
+                return true;
+            }
+
+            if (colorOf(target) !== turn) {
+                list.push({ row, col, capture: true, ...extra });
+            }
+
+            return false;
+        }
+
+        function getMoves(row, col) {
+            const piece = board[row][col];
+
+            if (!piece || colorOf(piece) !== turn || gameOver) {
+                return [];
+            }
+
+            const color = colorOf(piece);
+            const type = typeOf(piece);
+            const list = [];
+
+            if (type === "p") {
+                const direction = color === "w" ? -1 : 1;
+                const startRow = color === "w" ? 6 : 1;
+
+                if (inside(row + direction, col) && !board[row + direction][col]) {
+                    list.push({ row: row + direction, col, capture: false });
+
+                    if (row === startRow && !board[row + direction * 2][col]) {
+                        list.push({
+                            row: row + direction * 2,
+                            col,
+                            capture: false,
+                            doublePawn: true
+                        });
+                    }
+                }
+
+                [-1, 1].forEach(offset => {
+                    const nextRow = row + direction;
+                    const nextCol = col + offset;
+
+                    if (
+                        inside(nextRow, nextCol) &&
+                        board[nextRow][nextCol] &&
+                        colorOf(board[nextRow][nextCol]) !== color
+                    ) {
+                        list.push({
+                            row: nextRow,
+                            col: nextCol,
+                            capture: true
+                        });
+                    }
+                });
+
+                if (
+                    enPassant &&
+                    enPassant.row === row + direction &&
+                    Math.abs(enPassant.col - col) === 1
+                ) {
+                    list.push({
+                        row: enPassant.row,
+                        col: enPassant.col,
+                        capture: true,
+                        enPassant: true
+                    });
+                }
+            }
+
+            if (type === "n") {
+                [
+                    [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+                    [1, -2], [1, 2], [2, -1], [2, 1]
+                ].forEach(([r, c]) => addMove(list, row + r, col + c));
+            }
+
+            if (["b", "r", "q"].includes(type)) {
+                const directions = [];
+
+                if (["b", "q"].includes(type)) {
+                    directions.push([-1, -1], [-1, 1], [1, -1], [1, 1]);
+                }
+
+                if (["r", "q"].includes(type)) {
+                    directions.push([-1, 0], [1, 0], [0, -1], [0, 1]);
+                }
+
+                directions.forEach(([dr, dc]) => {
+                    let r = row + dr;
+                    let c = col + dc;
+
+                    while (inside(r, c)) {
+                        if (!addMove(list, r, c)) break;
+                        r += dr;
+                        c += dc;
+                    }
+                });
+            }
+
+            if (type === "k") {
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        if (dr || dc) addMove(list, row + dr, col + dc);
+                    }
+                }
+
+                const homeRow = color === "w" ? 7 : 0;
+
+                if (
+                    row === homeRow &&
+                    col === 4 &&
+                    castling[color + "k"] &&
+                    board[homeRow][7] === color + "r" &&
+                    !board[homeRow][5] &&
+                    !board[homeRow][6]
+                ) {
+                    list.push({ row: homeRow, col: 6, castle: "king" });
+                }
+
+                if (
+                    row === homeRow &&
+                    col === 4 &&
+                    castling[color + "q"] &&
+                    board[homeRow][0] === color + "r" &&
+                    !board[homeRow][1] &&
+                    !board[homeRow][2] &&
+                    !board[homeRow][3]
+                ) {
+                    list.push({ row: homeRow, col: 2, castle: "queen" });
+                }
+            }
+
+            return list;
+        }
+
+        function updateCastlingRights(piece, from, to, capturedPiece) {
+            const color = colorOf(piece);
+
+            if (typeOf(piece) === "k") {
+                castling[color + "k"] = false;
+                castling[color + "q"] = false;
+            }
+
+            if (piece === "wr" && from.row === 7 && from.col === 0) castling.wq = false;
+            if (piece === "wr" && from.row === 7 && from.col === 7) castling.wk = false;
+            if (piece === "br" && from.row === 0 && from.col === 0) castling.bq = false;
+            if (piece === "br" && from.row === 0 && from.col === 7) castling.bk = false;
+
+            if (capturedPiece === "wr" && to.row === 7 && to.col === 0) castling.wq = false;
+            if (capturedPiece === "wr" && to.row === 7 && to.col === 7) castling.wk = false;
+            if (capturedPiece === "br" && to.row === 0 && to.col === 0) castling.bq = false;
+            if (capturedPiece === "br" && to.row === 0 && to.col === 7) castling.bk = false;
+        }
+
+        function recordText(piece, from, move) {
+            const color = colorOf(piece);
+
+            if (move.castle === "king") {
+                return `${NAMES[color].k}: 王車易位（短易位）`;
+            }
+
+            if (move.castle === "queen") {
+                return `${NAMES[color].k}: 王車易位（長易位）`;
+            }
+
+            return `${NAMES[color][typeOf(piece)]}: ${squareName(from.row, from.col)}至${squareName(move.row, move.col)}`;
+        }
+
+        function commitMove(from, move, promotionType = null) {
+            if (cursor < moves.length) {
+                moves = moves.slice(0, cursor);
+                states = states.slice(0, cursor + 1);
+            }
+
+            const piece = board[from.row][from.col];
+            const color = colorOf(piece);
+            let capturedPiece = board[move.row][move.col];
+            let text = recordText(piece, from, move);
+
+            board[move.row][move.col] = piece;
+            board[from.row][from.col] = null;
+
+            if (move.enPassant) {
+                const pawnRow = color === "w" ? move.row + 1 : move.row - 1;
+                capturedPiece = board[pawnRow][move.col];
+                board[pawnRow][move.col] = null;
+            }
+
+            if (capturedPiece) {
+                captured[color].push(capturedPiece);
+            }
+
+            if (move.castle === "king") {
+                const homeRow = color === "w" ? 7 : 0;
+                board[homeRow][5] = board[homeRow][7];
+                board[homeRow][7] = null;
+            }
+
+            if (move.castle === "queen") {
+                const homeRow = color === "w" ? 7 : 0;
+                board[homeRow][3] = board[homeRow][0];
+                board[homeRow][0] = null;
+            }
+
+            updateCastlingRights(piece, from, move, capturedPiece);
+
+            enPassant = move.doublePawn
+                ? { row: (from.row + move.row) / 2, col: from.col }
+                : null;
+
+            if (typeOf(piece) === "p" && (move.row === 0 || move.row === 7)) {
+                const newType = promotionType || "q";
+                board[move.row][move.col] = color + newType;
+                text += `，升變為${NAMES[color][newType].slice(1)}`;
+            }
+
+            if (capturedPiece && typeOf(capturedPiece) === "k") {
+                gameOver = true;
+                winner = color;
+            }
+
+            moves.push({ text });
+
+            lastMove = {
+                from,
+                to: { row: move.row, col: move.col }
+            };
+
+            turn = otherColor(turn);
+            cursor = moves.length;
+            selected = null;
+            legalMoves = [];
+            states.push(saveState());
+
+            render();
+        }
+
+        function showPromotion(from, move) {
+            promotionData = { from, move };
+
+            const color = colorOf(board[from.row][from.col]);
+            const container = $("promotionOptions");
+            container.innerHTML = "";
+
+            ["q", "r", "b", "n"].forEach(type => {
+                const button = document.createElement("button");
+                button.className = "promotion-option";
+                button.type = "button";
+                button.textContent = SYMBOLS[color][type];
+
+                button.addEventListener("click", () => {
+                    $("promotionModal").classList.remove("show");
+                    commitMove(promotionData.from, promotionData.move, type);
+                });
+
+                container.appendChild(button);
+            });
+
+            $("promotionModal").classList.add("show");
+        }
+
+        function handleGameSquare(row, col) {
+            if (gameOver) return;
+
+            if (selected) {
+                const move = legalMoves.find(item => item.row === row && item.col === col);
+
+                if (move) {
+                    const piece = board[selected.row][selected.col];
+
+                    if (typeOf(piece) === "p" && (row === 0 || row === 7)) {
+                        showPromotion(selected, move);
+                    } else {
+                        commitMove(selected, move);
+                    }
+
+                    return;
+                }
+            }
+
+            const clickedPiece = board[row][col];
+
+            if (clickedPiece && colorOf(clickedPiece) === turn) {
+                selected = { row, col };
+                legalMoves = getMoves(row, col);
+            } else {
+                selected = null;
+                legalMoves = [];
+            }
+
+            render();
+        }
+
+        function handleSetupSquare(row, col) {
+            if (removeMode) {
+                board[row][col] = null;
+            } else {
+                board[row][col] = setupColor + setupType;
+            }
+
+            captured = { w: [], b: [] };
+            lastMove = null;
+            gameOver = false;
+            winner = null;
+
+            render();
+        }
+
+        function renderCoordinates() {
+            const rows = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            const cols = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            ["coordinatesTop", "coordinatesBottom", "coordinatesLeft", "coordinatesRight"]
+                .forEach(id => $(id).innerHTML = "");
+
+            cols.forEach(col => {
+                ["coordinatesTop", "coordinatesBottom"].forEach(id => {
+                    const item = document.createElement("span");
+                    item.className = "coordinate";
+                    item.textContent = FILES[col];
+                    $(id).appendChild(item);
+                });
+            });
+
+            rows.forEach(row => {
+                ["coordinatesLeft", "coordinatesRight"].forEach(id => {
+                    const item = document.createElement("span");
+                    item.className = "coordinate";
+                    item.textContent = 8 - row;
+                    $(id).appendChild(item);
+                });
+            });
+        }
+
+        function renderBoard() {
+            const boardElement = $("chessBoard");
+            boardElement.innerHTML = "";
+
+            const rows = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            const cols = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            rows.forEach(row => {
+                cols.forEach(col => {
+                    const square = document.createElement("button");
+                    const piece = board[row][col];
+                    const move = legalMoves.find(item => item.row === row && item.col === col);
+
+                    square.type = "button";
+                    square.className = "square";
+
+                    if ((row + col) % 2) square.classList.add("dark-square");
+
+                    if (selected && selected.row === row && selected.col === col) {
+                        square.classList.add("selected");
+                    }
+
+                    if (move) {
+                        square.classList.add("legal");
+                        if (move.capture) square.classList.add("capture");
+                    }
+
+                    if (
+                        lastMove &&
+                        (
+                            (lastMove.from.row === row && lastMove.from.col === col) ||
+                            (lastMove.to.row === row && lastMove.to.col === col)
+                        )
+                    ) {
+                        square.classList.add("last-move");
+                    }
+
+                    if (gameOver && piece && typeOf(piece) === "k") {
+                        square.classList.add("king-dead");
+                    }
+
+                    if (piece) {
+                        const pieceElement = document.createElement("span");
+                        pieceElement.className =
+                            "piece " + (colorOf(piece) === "w" ? "white-piece" : "black-piece");
+
+                        pieceElement.textContent = SYMBOLS[colorOf(piece)][typeOf(piece)];
+                        square.appendChild(pieceElement);
+                    }
+
+                    square.addEventListener("click", () => {
+                        if (setupMode) {
+                            handleSetupSquare(row, col);
+                        } else {
+                            handleGameSquare(row, col);
+                        }
+                    });
+
+                    boardElement.appendChild(square);
+                });
+            });
+        }
+
+        function renderHistory() {
+            const history = $("history");
+            history.innerHTML = "";
+
+            if (!moves.length) {
+                history.innerHTML =
+                    `<p style="padding:8px;color:var(--muted)">尚未開始對局</p>`;
+                return;
+            }
+
+            moves.forEach((move, index) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className =
+                    "history-item" + (cursor === index + 1 ? " active" : "");
+
+                button.innerHTML = `
+          <span>${index + 1}.</span>
+          <span>${move.text}</span>
+        `;
+
+                button.addEventListener("click", () => goToMove(index + 1));
+                history.appendChild(button);
+            });
+        }
+
+        function renderCaptured() {
+            const show = pieces => pieces.length
+                ? pieces.map(piece => SYMBOLS[colorOf(piece)][typeOf(piece)]).join("")
+                : "—";
+
+            $("whiteCaptured").textContent = show(captured.w);
+            $("blackCaptured").textContent = show(captured.b);
+        }
+
+        function renderStatus() {
+            if (gameOver) {
+                $("statusText").textContent =
+                    `終局：${winner === "w" ? "白方" : "黑方"}吃掉對方的王`;
+
+                $("turnLabel").textContent = "對局結束";
+                $("turnPiece").textContent = "♚";
+            } else if (cursor < moves.length) {
+                $("statusText").textContent =
+                    `重播第 ${cursor} 手，可直接下棋建立新發展`;
+
+                $("turnLabel").textContent = "重播模式";
+                $("turnPiece").textContent = turn === "w" ? "♟" : "♛";
+            } else {
+                $("statusText").textContent =
+                    turn === "w" ? "輪到白方走棋" : "輪到黑方走棋";
+
+                $("turnLabel").textContent =
+                    turn === "w" ? "白方回合" : "黑方回合";
+
+                $("turnPiece").textContent = turn === "w" ? "♟" : "♛";
+            }
+
+            $("moveCount").textContent = `${cursor} / ${moves.length} 手`;
+
+            $("undoButton").disabled = cursor === 0;
+            $("firstMoveButton").disabled = cursor === 0;
+            $("previousMoveButton").disabled = cursor === 0;
+            $("nextMoveButton").disabled = cursor >= moves.length;
+            $("lastMoveButton").disabled = cursor >= moves.length;
+        }
+
+        function renderTopSetupControls() {
+            const container = $("setupTopPieces");
+            container.innerHTML = "";
+
+            ["k", "q", "r", "b", "n", "p"].forEach(type => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className =
+                    "setup-top-piece" +
+                    (!removeMode && setupType === type ? " active" : "");
+
+                button.textContent = SYMBOLS[setupColor][type];
+
+                button.addEventListener("click", () => {
+                    setupType = type;
+                    removeMode = false;
+                    renderTopSetupControls();
+                });
+
+                container.appendChild(button);
+            });
+
+            // 棋子顏色選擇（白棋／黑棋）
+            document.querySelectorAll("[data-top-color]").forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.topColor === setupColor
+                );
+            });
+
+            // 先行方選擇（白先／黑先）
+            document.querySelectorAll("[data-top-turn]").forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.topTurn === setupTurn
+                );
+            });
+
+            $("topRemoveButton").classList.toggle("active", removeMode);
+        }
+
+        function render() {
+            renderCoordinates();
+            renderBoard();
+            renderHistory();
+            renderCaptured();
+            renderStatus();
+
+            if (setupMode) {
+                renderTopSetupControls();
+            }
+        }
+
+        function goToMove(index) {
+            cursor = Math.max(0, Math.min(index, moves.length));
+            loadState(states[cursor]);
+            render();
+        }
+
+        function toggleSetup(enabled = !setupMode) {
+            setupMode = Boolean(enabled);
+            selected = null;
+            legalMoves = [];
+            removeMode = false;
+
+            document.body.classList.toggle("setup-active", setupMode);
+
+            $("setupButton").classList.toggle("primary", setupMode);
+            $("setupButton").textContent = setupMode ? "✓ 擺盤中" : "♟ 擺設";
+
+            if (setupMode) {
+                renderTopSetupControls();
+            }
+
+            render();
+        }
+
+        function clearSetupBoard() {
+            board = Array.from({ length: 8 }, () => Array(8).fill(null));
+            captured = { w: [], b: [] };
+            lastMove = null;
+            gameOver = false;
+            winner = null;
+            moves = [];
+            states = [];
+            cursor = 0;
+            castling = { wk: false, wq: false, bk: false, bq: false };
+            enPassant = null;
+
+            render();
+        }
+
+        function startSetupGame() {
+            const pieces = board.flat();
+
+            if (!pieces.includes("wk") || !pieces.includes("bk")) {
+                alert("開始對局前，棋盤必須同時放置白王及黑王。");
+                return;
+            }
+
+            turn = setupTurn;
+            captured = { w: [], b: [] };
+            lastMove = null;
+            castling = { wk: false, wq: false, bk: false, bq: false };
+            enPassant = null;
+            gameOver = false;
+            winner = null;
+            moves = [];
+            states = [saveState()];
+            cursor = 0;
+
+            toggleSetup(false);
+        }
+
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = filename;
+            link.style.display = "none";
+
+            document.body.appendChild(link);
+            link.click();
+
+            setTimeout(() => {
+                link.remove();
+                URL.revokeObjectURL(url);
+            }, 1500);
+        }
+
+        function exportRecord() {
+            const records = moves.length
+                ? moves.map((move, index) => `${index + 1}. ${move.text}`)
+                : ["尚未有走棋記錄。"];
+
+            const content = [
+                "國際象棋走棋記錄",
+                "────────────────────────────────────────",
+                `匯出時間：${new Date().toLocaleString("zh-HK")}`,
+                `總手數：${moves.length}`,
+                "",
+                ...records
+            ].join("\r\n");
+
+            downloadFile(
+                new Blob(["\ufeff" + content], {
+                    type: "text/plain;charset=utf-8"
+                }),
+                "chess-moves.txt"
+            );
+        }
+
+        function exportJson() {
+            const data = {
+                format: "ChessReplayJSON",
+                version: 4,
+                moves,
+                states,
+                cursor,
+                flipped
+            };
+
+            downloadFile(
+                new Blob([JSON.stringify(data, null, 2)], {
+                    type: "application/json"
+                }),
+                "chess-replay.json"
+            );
+        }
+
+        function exportPng() {
+            const canvas = document.createElement("canvas");
+            const size = 1000;
+            const padding = 80;
+            const cell = (size - padding * 2) / 8;
+            const context = canvas.getContext("2d");
+
+            canvas.width = size;
+            canvas.height = size;
+
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, size, size);
+
+            context.fillStyle = "#202020";
+            context.fillRect(
+                padding - 8,
+                padding - 8,
+                cell * 8 + 16,
+                cell * 8 + 16
+            );
+
+            const rows = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            const cols = flipped
+                ? [7, 6, 5, 4, 3, 2, 1, 0]
+                : [0, 1, 2, 3, 4, 5, 6, 7];
+
+            context.fillStyle = "#222";
+            context.font = "bold 28px Arial";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+
+            cols.forEach((col, index) => {
+                const x = padding + index * cell + cell / 2;
+                context.fillText(FILES[col], x, 40);
+                context.fillText(FILES[col], x, size - 40);
+            });
+
+            rows.forEach((row, index) => {
+                const y = padding + index * cell + cell / 2;
+                context.fillText(8 - row, 40, y);
+                context.fillText(8 - row, size - 40, y);
+            });
+
+            rows.forEach((row, displayRow) => {
+                cols.forEach((col, displayCol) => {
+                    const x = padding + displayCol * cell;
+                    const y = padding + displayRow * cell;
+                    const piece = board[row][col];
+
+                    context.fillStyle = (row + col) % 2
+                        ? "#c8cdd2"
+                        : "#ffffff";
+
+                    context.fillRect(x, y, cell, cell);
+
+                    if (piece) {
+                        context.font = `${cell * .76}px "Times New Roman"`;
+                        context.textAlign = "center";
+                        context.textBaseline = "middle";
+                        context.lineWidth = 2;
+
+                        const symbol = SYMBOLS[colorOf(piece)][typeOf(piece)];
+
+                        if (colorOf(piece) === "w") {
+                            context.fillStyle = "#ffffff";
+                            context.strokeStyle = "#171717";
+                        } else {
+                            context.fillStyle = "#24292f";
+                            context.strokeStyle = "#ffffff";
+                        }
+
+                        context.strokeText(symbol, x + cell / 2, y + cell / 2 + 3);
+                        context.fillText(symbol, x + cell / 2, y + cell / 2 + 3);
+                    }
+                });
+            });
+
+            canvas.toBlob(blob => {
+                downloadFile(blob, "chess-board.png");
+            }, "image/png");
+        }
+
+        async function importJsonFiles(files) {
+            for (const file of [...files]) {
+                try {
+                    const data = JSON.parse(await file.text());
+
+                    if (!Array.isArray(data.moves) || !Array.isArray(data.states)) {
+                        throw new Error("Invalid file");
+                    }
+
+                    importedGames.push({
+                        name: file.name,
+                        data
+                    });
+                } catch {
+                    alert(`無法讀取：${file.name}`);
+                }
+            }
+
+            renderImportList();
+        }
+
+        function renderImportList() {
+            const list = $("importList");
+            list.innerHTML = "";
+
+            importedGames.forEach((game, index) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "import-button";
+                button.textContent = `載入：${game.name}`;
+
+                button.addEventListener("click", () => {
+                    moves = game.data.moves;
+                    states = game.data.states;
+                    cursor = Math.min(
+                        game.data.cursor ?? moves.length,
+                        moves.length
+                    );
+
+                    flipped = Boolean(game.data.flipped);
+                    loadState(states[cursor]);
+                    render();
+                });
+
+                list.appendChild(button);
+            });
+        }
+
+        function setPanelPosition(position) {
+            $("gameStage").className = `stage ${position}`;
+            $("positionSelect").value = position;
+            localStorage.setItem("chess-panel-position", position);
+        }
+
+        $("themeButton").addEventListener("click", () => {
+            document.body.classList.toggle("dark");
+
+            $("themeButton").textContent =
+                document.body.classList.contains("dark") ? "☀" : "☾";
+        });
+
+        $("newGameButton").addEventListener("click", resetGame);
+        $("undoButton").addEventListener("click", () => goToMove(cursor - 1));
+
+        $("flipButton").addEventListener("click", () => {
+            flipped = !flipped;
+            render();
+        });
+
+        $("firstMoveButton").addEventListener("click", () => goToMove(0));
+        $("previousMoveButton").addEventListener("click", () => goToMove(cursor - 1));
+        $("nextMoveButton").addEventListener("click", () => goToMove(cursor + 1));
+        $("lastMoveButton").addEventListener("click", () => goToMove(moves.length));
+
+        $("exportJsonButton").addEventListener("click", exportJson);
+        $("exportPngButton").addEventListener("click", exportPng);
+        $("exportRecordButton").addEventListener("click", exportRecord);
+
+        $("setupButton").addEventListener("click", () => toggleSetup());
+        $("topExitSetupButton").addEventListener("click", () => toggleSetup(false));
+
+        $("topClearButton").addEventListener("click", clearSetupBoard);
+        $("topStartButton").addEventListener("click", startSetupGame);
+
+        $("topRemoveButton").addEventListener("click", () => {
+            removeMode = !removeMode;
+            renderTopSetupControls();
+        });
+
+        document.querySelectorAll("[data-top-color]").forEach(button => {
+            button.addEventListener("click", () => {
+                setupColor = button.dataset.topColor;
+                removeMode = false;
+                renderTopSetupControls();
+            });
+        });
+
+        document.querySelectorAll("[data-top-turn]").forEach(button => {
+            button.addEventListener("click", () => {
+                setupTurn = button.dataset.topTurn === "b" ? "b" : "w";
+                renderTopSetupControls();
+            });
+        });
+
+        $("positionSelect").addEventListener("change", event => {
+            setPanelPosition(event.target.value);
+        });
+
+        $("jsonFileInput").addEventListener("change", event => {
+            importJsonFiles(event.target.files);
+            event.target.value = "";
+        });
+
+        $("helpButton").addEventListener("click", () => {
+            $("helpModal").classList.add("show");
+        });
+
+        $("closeHelpButton").addEventListener("click", () => {
+            $("helpModal").classList.remove("show");
+        });
+
+        document.addEventListener("keydown", event => {
+            if (["INPUT", "SELECT"].includes(event.target.tagName)) return;
+
+            const key = event.key.toLowerCase();
+
+            if (event.ctrlKey || event.metaKey) {
+                if (key === "s") {
+                    event.preventDefault();
+                    exportJson();
+                }
+
+                if (key === "z") {
+                    event.preventDefault();
+                    goToMove(cursor - 1);
+                }
+
+                return;
+            }
+
+            if (["arrowleft", "arrowup"].includes(key) || key === "h") {
+                event.preventDefault();
+                goToMove(cursor - 1);
+            }
+
+            if (["arrowright", "arrowdown"].includes(key) || key === "l") {
+                event.preventDefault();
+                goToMove(cursor + 1);
+            }
+
+            if (key === "home") goToMove(0);
+            if (key === "end") goToMove(moves.length);
+
+            if (key === "r" || key === "n") resetGame();
+            if (key === "u") goToMove(cursor - 1);
+
+            if (key === "f") {
+                flipped = !flipped;
+                render();
+            }
+
+            if (key === "t") $("themeButton").click();
+            if (key === "s") toggleSetup();
+            if (key === "m") exportRecord();
+            if (key === "p") exportPng();
+            if (key === "i") $("jsonFileInput").click();
+
+            if (key === "1") setPanelPosition("right");
+            if (key === "2") setPanelPosition("left");
+            if (key === "3") setPanelPosition("top");
+            if (key === "4") setPanelPosition("bottom");
+
+            if (event.key === "Escape") {
+                selected = null;
+                legalMoves = [];
+                $("promotionModal").classList.remove("show");
+                $("helpModal").classList.remove("show");
+                render();
+            }
+        });
+
+        setPanelPosition(localStorage.getItem("chess-panel-position") || "right");
+        resetGame();
+    </script>
+</body>
+
+</html>
