@@ -727,6 +727,39 @@
                 font-size: 16px;
             }
         }
+        
+        /* 擺盤頂部棋子：白棋實心白色、黑色幼線 */
+.setup-top-piece.white-piece {
+  color: #ffffff;
+  text-shadow:
+    -1px -1px 0 #171717,
+     1px -1px 0 #171717,
+    -1px  1px 0 #171717,
+     1px  1px 0 #171717;
+}
+
+/* 擺盤頂部棋子：黑棋深色 */
+.setup-top-piece.black-piece {
+  color: #211a16;
+  text-shadow: 1px 1px 0 #d5ad87;
+}
+
+/* 深色模式下也不能把白棋覆蓋成黑色 */
+body.dark .setup-top-piece.white-piece {
+  color: #ffffff;
+  text-shadow:
+    -1px -1px 0 #171717,
+     1px -1px 0 #171717,
+    -1px  1px 0 #171717,
+     1px  1px 0 #171717;
+}
+
+body.dark .setup-top-piece.black-piece {
+  color: #24292f;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+        
     </style>
 </head>
 
@@ -1225,7 +1258,10 @@
 
             ["q", "r", "b", "n"].forEach(type => {
                 const button = document.createElement("button");
-                button.className = "promotion-option";
+                button.className =
+  "promotion-option " +
+  (color === "w" ? "white-piece" : "black-piece");
+
                 button.type = "button";
                 button.textContent = SYMBOLS[color][type];
 
@@ -1460,9 +1496,13 @@
             ["k", "q", "r", "b", "n", "p"].forEach(type => {
                 const button = document.createElement("button");
                 button.type = "button";
-                button.className =
-                    "setup-top-piece" +
-                    (!removeMode && setupType === type ? " active" : "");
+ button.className =
+  "setup-top-piece " +
+  (setupColor === "w" ? "white-piece" : "black-piece") +
+  (!removeMode && setupType === type ? " active" : "");
+
+button.textContent = SYMBOLS[setupColor][type];
+
 
                 button.textContent = SYMBOLS[setupColor][type];
 
