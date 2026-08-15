@@ -1,0 +1,2739 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4F46E5">
+  <title>FriendBill — Shared expenses</title>
+  <style>
+    :root {
+      --accent: #4F46E5;
+      --accent-hover: #4338ca;
+      --accent-soft: #eef2ff;
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --surface-muted: #f8fafc;
+      --text: #172033;
+      --text-muted: #667085;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --success: #15803d;
+      --success-soft: #f0fdf4;
+      --warning: #a16207;
+      --shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+      --radius-sm: 9px;
+    }
+
+    [data-theme="dark"] {
+      --bg: #10131d;
+      --surface: #191e2b;
+      --surface-muted: #141925;
+      --text: #eef2ff;
+      --text-muted: #aab3c5;
+      --border: #30394a;
+      --accent-soft: #222555;
+      --danger-soft: #3a1d24;
+      --success-soft: #163424;
+      --shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(79, 70, 229, 0.35);
+      outline-offset: 2px;
+    }
+
+    [inert] {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .app-shell {
+      width: min(1440px, 100%);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .sidebar,
+    .main-panel {
+      min-width: 0;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 46px;
+      padding: 0 2px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 17px;
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .icon-button:hover {
+      background: var(--surface-muted);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card {
+      padding: 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .total-value {
+      margin: 2px 0 8px;
+      font-size: 31px;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+    }
+
+    .summary-caption {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .currency-breakdown {
+      display: grid;
+      gap: 7px;
+      margin-top: 16px;
+    }
+
+    .currency-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-muted);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .currency-row strong {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .metric {
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-muted);
+    }
+
+    .metric-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .section-card {
+      overflow: hidden;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: -0.015em;
+    }
+
+    .section-heading-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-heading .count {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .balance-list,
+    .settlement-list {
+      margin: 0;
+      padding: 6px 12px 12px;
+      list-style: none;
+    }
+
+    .person-balance {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .person-balance:last-child {
+      border-bottom: 0;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--avatar-bg, var(--accent-soft));
+      color: var(--avatar-text, var(--accent));
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .person-name {
+      display: block;
+      overflow: hidden;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .person-detail {
+      display: block;
+      margin-top: 1px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .balance-value {
+      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .positive { color: var(--success); }
+    .negative { color: var(--danger); }
+    .neutral { color: var(--text-muted); }
+
+    .settlement-list {
+      display: grid;
+      gap: 8px;
+      padding-top: 12px;
+    }
+
+    .settlement-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-muted);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .settlement-item strong {
+      color: var(--text);
+    }
+
+    .settlement-item .button {
+      width: 100%;
+      min-height: 34px;
+      margin-top: 7px;
+      font-size: 12px;
+    }
+
+    .settlement-empty {
+      margin: 0;
+      padding: 18px 4px 6px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 3px 0 0;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: clamp(25px, 3vw, 34px);
+      letter-spacing: -0.045em;
+      line-height: 1.12;
+    }
+
+    .page-header p {
+      margin: 7px 0 0;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--text);
+      background: var(--surface);
+      font-weight: 750;
+      text-decoration: none;
+      transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .button:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .button-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 5px 12px rgba(79, 70, 229, 0.24);
+    }
+
+    .button-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .button-secondary {
+      border-color: var(--border);
+    }
+
+    .button-secondary:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--surface-muted);
+    }
+
+    .button-danger {
+      border-color: rgba(220, 38, 38, 0.22);
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .button-quiet {
+      min-height: 31px;
+      padding: 0 8px;
+      border-color: var(--border);
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    .expense-card {
+      overflow: hidden;
+    }
+
+    .expense-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .expense-toolbar h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .expense-toolbar span {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .expense-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .expense-item {
+      border-bottom: 1px solid var(--border);
+      transition: background 160ms ease;
+    }
+
+    .expense-item:last-child {
+      border-bottom: 0;
+    }
+
+    .expense-item:hover {
+      background: var(--surface-muted);
+    }
+
+    .expense-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 18px;
+    }
+
+    .expense-info {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+    }
+
+    .expense-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .expense-icon svg,
+    .button svg,
+    .icon-button svg,
+    .row-action svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .expense-title {
+      overflow: hidden;
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .expense-meta {
+      margin: 3px 0 0;
+      overflow: hidden;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .expense-amount {
+      min-width: 104px;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .row-action {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-muted);
+      background: transparent;
+    }
+
+    .row-action:hover {
+      border-color: var(--border);
+      background: var(--surface);
+      color: var(--accent);
+    }
+
+    .row-action.delete:hover {
+      color: var(--danger);
+    }
+
+    .expense-detail {
+      display: none;
+      margin: 0 18px 16px 72px;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-muted);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .expense-item.is-expanded .expense-detail {
+      display: block;
+    }
+
+    .expense-detail strong {
+      color: var(--text);
+    }
+
+    .empty-state {
+      padding: 64px 24px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 14px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .empty-icon svg {
+      width: 25px;
+      height: 25px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .empty-state h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .empty-state p {
+      max-width: 360px;
+      margin: 7px auto 18px;
+      color: var(--text-muted);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.54);
+    }
+
+    .modal-backdrop.is-open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(620px, 100%);
+      max-height: min(760px, calc(100vh - 36px));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    .modal.modal-small {
+      width: min(470px, 100%);
+    }
+
+    .modal-header,
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 20px;
+    }
+
+    .modal-header {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.025em;
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .modal-footer {
+      justify-content: flex-end;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .field-help {
+      display: block;
+      margin-top: 5px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 42px;
+      padding: 0 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      background: var(--surface);
+      color: var(--text);
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    input:hover,
+    select:hover {
+      border-color: #a5afc1;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+    }
+
+    .participants-box {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-muted);
+    }
+
+    .participant-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .participant-actions span {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .text-button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .text-button:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .participant-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .participant-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 7px 9px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease;
+    }
+
+    .participant-option:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .participant-option input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .participant-option span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .inline-note {
+      display: none;
+      margin-top: 9px;
+      padding: 9px 10px;
+      border: 1px solid rgba(161, 98, 7, 0.25);
+      border-radius: 8px;
+      background: #fffbeb;
+      color: var(--warning);
+      font-size: 12px;
+    }
+
+    [data-theme="dark"] .inline-note {
+      background: #30250e;
+      border-color: rgba(234, 179, 8, 0.28);
+      color: #facc15;
+    }
+
+    .inline-note.is-visible {
+      display: block;
+    }
+
+    .validation-message {
+      display: none;
+      margin: 0 0 15px;
+      padding: 10px 12px;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      border-radius: 9px;
+      background: var(--danger-soft);
+      color: var(--danger);
+      font-size: 13px;
+    }
+
+    .validation-message.is-visible {
+      display: block;
+    }
+
+    .confirm-content {
+      color: var(--text-muted);
+    }
+
+    .confirm-content p {
+      margin: 0;
+    }
+
+    .member-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .member-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-muted);
+    }
+
+    .member-row .member-row-name {
+      overflow: hidden;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .member-row .member-row-status {
+      margin-top: 2px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .member-row .row-action {
+      background: var(--surface);
+    }
+
+    .add-member-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .add-member-form input {
+      min-width: 0;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface-muted);
+    }
+
+    .history-item p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .history-item strong {
+      color: var(--text);
+    }
+
+    .history-item .row-action {
+      align-self: center;
+      background: var(--surface);
+    }
+
+    .toast-region {
+      position: fixed;
+      z-index: 40;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      gap: 10px;
+      width: min(390px, calc(100vw - 36px));
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      pointer-events: auto;
+      animation: toast-in 180ms ease-out;
+    }
+
+    .toast-message {
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .toast .text-button {
+      flex: 0 0 auto;
+      font-size: 13px;
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mobile-add {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+
+      .brand-bar,
+      .summary-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .app-shell {
+        padding: 14px;
+        gap: 14px;
+      }
+
+      .sidebar {
+        display: flex;
+      }
+
+      .page-header {
+        align-items: flex-start;
+      }
+
+      .header-actions .button-primary {
+        display: none;
+      }
+
+      .header-actions {
+        gap: 6px;
+      }
+
+      .header-actions .button {
+        padding-inline: 10px;
+      }
+
+      .header-actions .button span.optional-text {
+        display: none;
+      }
+
+      .expense-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .expense-amount {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+      }
+
+      .row-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        margin-left: 52px;
+      }
+
+      .expense-detail {
+        margin: 0 14px 14px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .participant-options {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal {
+        max-height: calc(100vh - 18px);
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .mobile-add {
+        position: sticky;
+        bottom: 12px;
+        z-index: 5;
+        display: flex;
+        justify-content: flex-end;
+        pointer-events: none;
+      }
+
+      .mobile-add .button {
+        pointer-events: auto;
+        box-shadow: 0 10px 22px rgba(79, 70, 229, 0.35);
+      }
+
+      .add-member-form {
+        flex-direction: column;
+      }
+
+      .toast-region {
+        right: 12px;
+        bottom: 12px;
+        width: calc(100vw - 24px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="appShell" class="app-shell">
+    <aside class="sidebar" aria-label="Group summary">
+      <div class="brand-bar">
+        <a class="brand" href="#" aria-label="FriendBill home">
+          <span class="brand-mark" aria-hidden="true">ƒ</span>
+          <span>FriendBill</span>
+        </a>
+        <button id="themeToggle" class="icon-button" type="button" aria-label="Switch to dark theme" title="Toggle theme">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-5-4-9-9-9Z"></path><path d="M12 3v18"></path></svg>
+        </button>
+      </div>
+
+      <section class="card summary-card" aria-labelledby="overviewTitle">
+        <p class="eyebrow" id="overviewTitle">Group spending</p>
+        <p class="total-value" id="totalSpent">$0.00</p>
+        <p class="summary-caption" id="totalCaption">Total across all recorded expenses</p>
+        <div id="currencyBreakdown" class="currency-breakdown" hidden></div>
+        <div class="summary-grid">
+          <div class="metric">
+            <span class="metric-label">Expenses</span>
+            <span class="metric-value" id="expenseCount">0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Members</span>
+            <span class="metric-value" id="memberCount">0</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card section-card" aria-labelledby="balancesTitle">
+        <div class="section-heading">
+          <h2 id="balancesTitle">Balances</h2>
+          <span class="count" id="balanceCount">0 people</span>
+        </div>
+        <ul class="balance-list" id="balanceList"></ul>
+      </section>
+
+      <section class="card section-card" aria-labelledby="settlementsTitle">
+        <div class="section-heading">
+          <h2 id="settlementsTitle">Settle up</h2>
+          <span class="count" id="settlementCount">All clear</span>
+        </div>
+        <ul class="settlement-list" id="settlementList"></ul>
+      </section>
+    </aside>
+
+    <section class="main-panel" aria-labelledby="pageTitle">
+      <header class="page-header">
+        <div>
+          <h1 id="pageTitle">Shared expenses</h1>
+          <p>Track what everyone paid and settle up fairly.</p>
+        </div>
+        <div class="header-actions">
+          <button id="manageMembersButton" class="button button-secondary" type="button" aria-haspopup="dialog">
+            <span class="optional-text">Members</span>
+          </button>
+          <button id="historyButton" class="button button-secondary" type="button" aria-haspopup="dialog">
+            <span class="optional-text">History</span>
+          </button>
+          <button id="exportButton" class="button button-secondary" type="button" title="Export expense list as CSV">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+            <span class="optional-text">Export CSV</span>
+          </button>
+          <button id="addExpenseButton" class="button button-primary" type="button" aria-haspopup="dialog">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+            Add expense
+          </button>
+        </div>
+      </header>
+
+      <section class="card expense-card" aria-labelledby="expensesTitle">
+        <div class="expense-toolbar">
+          <div>
+            <h2 id="expensesTitle">Expense activity</h2>
+            <span id="expenseSubtitle">No expenses yet</span>
+          </div>
+        </div>
+        <ul id="expenseList" class="expense-list" aria-live="polite"></ul>
+      </section>
+
+      <div class="mobile-add">
+        <button id="mobileAddExpenseButton" class="button button-primary" type="button" aria-haspopup="dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          Add expense
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <div id="expenseModalBackdrop" class="modal-backdrop" role="presentation">
+    <section id="expenseModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="expenseModalTitle" tabindex="-1">
+      <header class="modal-header">
+        <h2 id="expenseModalTitle">Add expense</h2>
+        <button class="icon-button" type="button" data-close-modal="expense" aria-label="Close expense dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12"></path><path d="m18 6-12 12"></path></svg>
+        </button>
+      </header>
+
+      <form id="expenseForm" novalidate>
+        <div class="modal-body">
+          <div id="expenseValidation" class="validation-message" role="alert"></div>
+
+          <div class="form-grid">
+            <div class="field full">
+              <label for="description">Description</label>
+              <input id="description" name="description" type="text" maxlength="80" placeholder="e.g. Dinner at Little Bao" required>
+            </div>
+
+            <div class="field">
+              <label for="amount">Amount</label>
+              <input id="amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required>
+            </div>
+
+            <div class="field">
+              <label for="currency">Currency</label>
+              <select id="currency" name="currency">
+                <option value="USD">USD — US Dollar</option>
+                <option value="HKD">HKD — Hong Kong Dollar</option>
+                <option value="EUR">EUR — Euro</option>
+                <option value="GBP">GBP — British Pound</option>
+                <option value="JPY">JPY — Japanese Yen</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="paidBy">Paid by</label>
+              <select id="paidBy" name="paidBy" required></select>
+            </div>
+
+            <div class="field">
+              <label for="date">Date</label>
+              <input id="date" name="date" type="date" required>
+            </div>
+
+            <div class="field full">
+              <label>Split equally with</label>
+              <div class="participants-box">
+                <div class="participant-actions">
+                  <span id="participantHint">Select one or more members</span>
+                  <button id="selectAllParticipants" class="text-button" type="button">Select all</button>
+                </div>
+                <div id="participantOptions" class="participant-options"></div>
+                <div id="payerNotIncludedNote" class="inline-note" role="status"></div>
+              </div>
+              <span class="field-help">Any remainder unit is assigned in participant display order so every split adds up exactly.</span>
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button class="button button-secondary" type="button" data-close-modal="expense">Cancel</button>
+          <button id="saveExpenseButton" class="button button-primary" type="submit">Save expense</button>
+        </footer>
+      </form>
+    </section>
+  </div>
+
+  <div id="confirmModalBackdrop" class="modal-backdrop" role="presentation">
+    <section id="confirmModal" class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" tabindex="-1">
+      <header class="modal-header">
+        <h2 id="confirmModalTitle">Delete expense?</h2>
+        <button class="icon-button" type="button" data-close-modal="confirm" aria-label="Close confirmation dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12"></path><path d="m18 6-12 12"></path></svg>
+        </button>
+      </header>
+      <div class="modal-body confirm-content">
+        <p id="confirmMessage">This expense will be removed permanently from this device.</p>
+      </div>
+      <footer class="modal-footer">
+        <button class="button button-secondary" type="button" data-close-modal="confirm">Cancel</button>
+        <button id="confirmDeleteButton" class="button button-danger" type="button">Delete expense</button>
+      </footer>
+    </section>
+  </div>
+
+  <div id="memberModalBackdrop" class="modal-backdrop" role="presentation">
+    <section id="memberModal" class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle" tabindex="-1">
+      <header class="modal-header">
+        <h2 id="memberModalTitle">Manage members</h2>
+        <button class="icon-button" type="button" data-close-modal="member" aria-label="Close members dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12"></path><path d="m18 6-12 12"></path></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <div id="memberValidation" class="validation-message" role="alert"></div>
+        <div id="memberList" class="member-list"></div>
+        <form id="addMemberForm" class="add-member-form" novalidate>
+          <input id="newMemberName" type="text" maxlength="50" placeholder="Add a new member" aria-label="New member name">
+          <button class="button button-primary" type="submit">Add member</button>
+        </form>
+      </div>
+      <footer class="modal-footer">
+        <button class="button button-secondary" type="button" data-close-modal="member">Done</button>
+      </footer>
+    </section>
+  </div>
+
+  <div id="historyModalBackdrop" class="modal-backdrop" role="presentation">
+    <section id="historyModal" class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle" tabindex="-1">
+      <header class="modal-header">
+        <h2 id="historyModalTitle">Settlement history</h2>
+        <button class="icon-button" type="button" data-close-modal="history" aria-label="Close settlement history dialog">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12"></path><path d="m18 6-12 12"></path></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <ul id="historyList" class="history-list"></ul>
+      </div>
+      <footer class="modal-footer">
+        <button class="button button-secondary" type="button" data-close-modal="history">Done</button>
+      </footer>
+    </section>
+  </div>
+
+  <div id="toastRegion" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "friendbill-data-v2";
+      const LEGACY_STORAGE_KEY = "friendbill-data-v1";
+      const THEME_KEY = "friendbill-theme-v1";
+
+      const ICONS = {
+        plus: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>',
+        edit: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"></path></svg>',
+        trash: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></svg>',
+        details: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>',
+        archive: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M6 7V4h12v3"></path><path d="M5 7v13h14V7"></path><path d="M9 11h6"></path></svg>',
+        restore: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4v6h6"></path><path d="M20 20v-6h-6"></path><path d="M7 17a7 7 0 0 0 11-2"></path><path d="M17 7A7 7 0 0 0 6 9"></path></svg>',
+        receipt: '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 3h10v18l-2-1.5L12 21l-3-1.5L7 21Z"></path><path d="M9 8h6"></path><path d="M9 12h6"></path></svg>'
+      };
+
+      const colorPairs = [
+        ["#dbeafe", "#1d4ed8"],
+        ["#fce7f3", "#be185d"],
+        ["#dcfce7", "#15803d"],
+        ["#fef3c7", "#a16207"],
+        ["#ede9fe", "#6d28d9"],
+        ["#cffafe", "#0f766e"],
+        ["#fee2e2", "#b91c1c"],
+        ["#e0e7ff", "#4338ca"]
+      ];
+
+      const defaultMembers = [
+        { id: "alex", name: "Alex Chen", color: "#dbeafe", textColor: "#1d4ed8", archived: false },
+        { id: "maya", name: "Maya Wong", color: "#fce7f3", textColor: "#be185d", archived: false },
+        { id: "jordan", name: "Jordan Lee", color: "#dcfce7", textColor: "#15803d", archived: false },
+        { id: "sam", name: "Sam Patel", color: "#fef3c7", textColor: "#a16207", archived: false }
+      ];
+
+      function relativeDate(daysAgo) {
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+        return toDateInputValue(date);
+      }
+
+      const defaultExpenses = [
+        {
+          id: "exp-sample-1",
+          description: "Dinner at Little Bao",
+          amountMinor: 16800,
+          currency: "USD",
+          paidBy: "alex",
+          date: relativeDate(3),
+          participants: ["alex", "maya", "jordan", "sam"]
+        },
+        {
+          id: "exp-sample-2",
+          description: "Airport transfer",
+          amountMinor: 7200,
+          currency: "USD",
+          paidBy: "maya",
+          date: relativeDate(2),
+          participants: ["alex", "maya", "jordan"]
+        },
+        {
+          id: "exp-sample-3",
+          description: "Museum tickets",
+          amountMinor: 9600,
+          currency: "USD",
+          paidBy: "jordan",
+          date: relativeDate(1),
+          participants: ["alex", "jordan", "sam"]
+        },
+        {
+          id: "exp-sample-4",
+          description: "Groceries for the apartment",
+          amountMinor: 6400,
+          currency: "USD",
+          paidBy: "sam",
+          date: relativeDate(1),
+          participants: ["alex", "maya", "jordan", "sam"]
+        }
+      ];
+
+      const modalState = {
+        active: null,
+        stack: []
+      };
+
+      let state = loadState();
+      let editingExpenseId = null;
+      let deletingExpenseId = null;
+      let pendingUndo = null;
+
+      const elements = {
+        appShell: document.getElementById("appShell"),
+        totalSpent: document.getElementById("totalSpent"),
+        totalCaption: document.getElementById("totalCaption"),
+        currencyBreakdown: document.getElementById("currencyBreakdown"),
+        expenseCount: document.getElementById("expenseCount"),
+        memberCount: document.getElementById("memberCount"),
+        balanceCount: document.getElementById("balanceCount"),
+        settlementCount: document.getElementById("settlementCount"),
+        balanceList: document.getElementById("balanceList"),
+        settlementList: document.getElementById("settlementList"),
+        expenseList: document.getElementById("expenseList"),
+        expenseSubtitle: document.getElementById("expenseSubtitle"),
+        themeToggle: document.getElementById("themeToggle"),
+        addExpenseButton: document.getElementById("addExpenseButton"),
+        mobileAddExpenseButton: document.getElementById("mobileAddExpenseButton"),
+        manageMembersButton: document.getElementById("manageMembersButton"),
+        historyButton: document.getElementById("historyButton"),
+        exportButton: document.getElementById("exportButton"),
+        expenseModalBackdrop: document.getElementById("expenseModalBackdrop"),
+        expenseModal: document.getElementById("expenseModal"),
+        expenseModalTitle: document.getElementById("expenseModalTitle"),
+        expenseForm: document.getElementById("expenseForm"),
+        description: document.getElementById("description"),
+        amount: document.getElementById("amount"),
+        currency: document.getElementById("currency"),
+        paidBy: document.getElementById("paidBy"),
+        date: document.getElementById("date"),
+        participantOptions: document.getElementById("participantOptions"),
+        selectAllParticipants: document.getElementById("selectAllParticipants"),
+        participantHint: document.getElementById("participantHint"),
+        payerNotIncludedNote: document.getElementById("payerNotIncludedNote"),
+        expenseValidation: document.getElementById("expenseValidation"),
+        saveExpenseButton: document.getElementById("saveExpenseButton"),
+        confirmModalBackdrop: document.getElementById("confirmModalBackdrop"),
+        confirmModal: document.getElementById("confirmModal"),
+        confirmMessage: document.getElementById("confirmMessage"),
+        confirmDeleteButton: document.getElementById("confirmDeleteButton"),
+        memberModalBackdrop: document.getElementById("memberModalBackdrop"),
+        memberModal: document.getElementById("memberModal"),
+        memberList: document.getElementById("memberList"),
+        memberValidation: document.getElementById("memberValidation"),
+        addMemberForm: document.getElementById("addMemberForm"),
+        newMemberName: document.getElementById("newMemberName"),
+        historyModalBackdrop: document.getElementById("historyModalBackdrop"),
+        historyModal: document.getElementById("historyModal"),
+        historyList: document.getElementById("historyList"),
+        toastRegion: document.getElementById("toastRegion")
+      };
+
+      function createId(prefix) {
+        return typeof crypto !== "undefined" && crypto.randomUUID
+          ? `${prefix}-${crypto.randomUUID()}`
+          : `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      }
+
+      function toDateInputValue(date) {
+        const offset = date.getTimezoneOffset();
+        return new Date(date.getTime() - offset * 60 * 1000).toISOString().slice(0, 10);
+      }
+
+      function getToday() {
+        return toDateInputValue(new Date());
+      }
+
+      function getCurrencyDigits(currency) {
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency
+          }).resolvedOptions().maximumFractionDigits;
+        } catch (_) {
+          return 2;
+        }
+      }
+
+      function minorFactor(currency) {
+        return 10 ** getCurrencyDigits(currency);
+      }
+
+      function amountToMinor(value, currency) {
+        return Math.round(Number(value) * minorFactor(currency));
+      }
+
+      function minorToAmount(minor, currency) {
+        return Number(minor) / minorFactor(currency);
+      }
+
+      function formatMoneyMinor(minor, currency) {
+        return new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency
+        }).format(minorToAmount(minor, currency));
+      }
+
+      function formatDate(dateString) {
+        if (!isValidDateString(dateString)) return "Unknown date";
+        const [year, month, day] = dateString.split("-").map(Number);
+        return new Intl.DateTimeFormat(undefined, {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        }).format(new Date(year, month - 1, day));
+      }
+
+      function isValidDateString(value) {
+        return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T12:00:00`));
+      }
+
+      function normalizeLegacyExpense(expense) {
+        const currency = typeof expense.currency === "string" ? expense.currency : "USD";
+        const amountMinor = Number.isInteger(expense.amountMinor)
+          ? expense.amountMinor
+          : amountToMinor(Number(expense.amount) || 0, currency);
+
+        return {
+          id: typeof expense.id === "string" ? expense.id : createId("exp"),
+          description: typeof expense.description === "string" ? expense.description.trim() : "Untitled expense",
+          amountMinor,
+          currency,
+          paidBy: typeof expense.paidBy === "string" ? expense.paidBy : "",
+          date: isValidDateString(expense.date) ? expense.date : getToday(),
+          participants: Array.isArray(expense.participants) ? expense.participants.filter(id => typeof id === "string") : []
+        };
+      }
+
+      function normalizeSettlement(settlement) {
+        const currency = typeof settlement.currency === "string" ? settlement.currency : "USD";
+        const amountMinor = Number.isInteger(settlement.amountMinor)
+          ? settlement.amountMinor
+          : amountToMinor(Number(settlement.amount) || 0, currency);
+
+        return {
+          id: typeof settlement.id === "string" ? settlement.id : createId("settlement"),
+          from: typeof settlement.from === "string" ? settlement.from : "",
+          to: typeof settlement.to === "string" ? settlement.to : "",
+          amountMinor,
+          currency,
+          date: isValidDateString(settlement.date) ? settlement.date : getToday()
+        };
+      }
+
+      function normalizeState(raw) {
+        const rawMembers = Array.isArray(raw?.members) ? raw.members : [];
+        const memberIds = new Set();
+        const members = rawMembers
+          .filter(member => member && typeof member.name === "string" && member.name.trim())
+          .map((member, index) => {
+            let id = typeof member.id === "string" && member.id ? member.id : createId("member");
+            while (memberIds.has(id)) id = createId("member");
+            memberIds.add(id);
+
+            const pair = colorPairs[index % colorPairs.length];
+            return {
+              id,
+              name: member.name.trim().slice(0, 50),
+              color: typeof member.color === "string" ? member.color : pair[0],
+              textColor: typeof member.textColor === "string" ? member.textColor : pair[1],
+              archived: Boolean(member.archived)
+            };
+          });
+
+        const allMemberIds = new Set(members.map(member => member.id));
+
+        const expenses = (Array.isArray(raw?.expenses) ? raw.expenses : [])
+          .map(normalizeLegacyExpense)
+          .map(expense => {
+            const participants = [...new Set(expense.participants.filter(id => allMemberIds.has(id)))];
+            return {
+              ...expense,
+              paidBy: allMemberIds.has(expense.paidBy) ? expense.paidBy : "",
+              participants
+            };
+          })
+          .filter(expense =>
+            expense.description &&
+            expense.amountMinor > 0 &&
+            expense.paidBy &&
+            expense.participants.length > 0
+          );
+
+        const settlements = (Array.isArray(raw?.settlements) ? raw.settlements : [])
+          .map(normalizeSettlement)
+          .filter(settlement =>
+            settlement.amountMinor > 0 &&
+            settlement.from &&
+            settlement.to &&
+            settlement.from !== settlement.to &&
+            allMemberIds.has(settlement.from) &&
+            allMemberIds.has(settlement.to)
+          );
+
+        return {
+          version: 2,
+          members: members.length ? members : defaultMembers.map(member => ({ ...member })),
+          expenses,
+          settlements
+        };
+      }
+
+      function buildDefaultState() {
+        return {
+          version: 2,
+          members: defaultMembers.map(member => ({ ...member })),
+          expenses: defaultExpenses.map(expense => ({ ...expense, participants: [...expense.participants] })),
+          settlements: []
+        };
+      }
+
+      function loadState() {
+        try {
+          const current = localStorage.getItem(STORAGE_KEY);
+          if (current) {
+            return normalizeState(JSON.parse(current));
+          }
+
+          const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (legacy) {
+            const migrated = normalizeState(JSON.parse(legacy));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+            return migrated;
+          }
+        } catch (_) {
+          // Start from a fresh sample ledger when locally stored data is unusable.
+        }
+
+        const seeded = buildDefaultState();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
+        return seeded;
+      }
+
+      function saveState() {
+        state.version = 2;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function getAllMemberById(id) {
+        return state.members.find(member => member.id === id);
+      }
+
+      function getActiveMembers() {
+        return state.members.filter(member => !member.archived);
+      }
+
+      function getEligibleMembersForExpense(expense) {
+        const ids = new Set([expense.paidBy, ...expense.participants]);
+        return state.members.filter(member => ids.has(member.id));
+      }
+
+      function initials(name) {
+        return name
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map(part => part[0])
+          .join("")
+          .toUpperCase();
+      }
+
+      function getExpenseShares(expense) {
+        const validParticipants = expense.participants
+          .filter(id => getAllMemberById(id))
+          .sort((a, b) => {
+            const aIndex = state.members.findIndex(member => member.id === a);
+            const bIndex = state.members.findIndex(member => member.id === b);
+            return aIndex - bIndex;
+          });
+
+        if (!validParticipants.length || expense.amountMinor <= 0) return [];
+
+        const baseShare = Math.floor(expense.amountMinor / validParticipants.length);
+        const remainder = expense.amountMinor % validParticipants.length;
+
+        return validParticipants.map((memberId, index) => ({
+          memberId,
+          amountMinor: baseShare + (index < remainder ? 1 : 0)
+        }));
+      }
+
+      function createCurrencyBalanceBucket() {
+        return { paidMinor: 0, owedMinor: 0, settledOutMinor: 0, settledInMinor: 0, netMinor: 0 };
+      }
+
+      function calculateBalances() {
+        const balances = Object.fromEntries(
+          state.members.map(member => [member.id, {}])
+        );
+
+        const ensureBucket = (memberId, currency) => {
+          if (!balances[memberId][currency]) {
+            balances[memberId][currency] = createCurrencyBalanceBucket();
+          }
+          return balances[memberId][currency];
+        };
+
+        state.expenses.forEach(expense => {
+          if (!getAllMemberById(expense.paidBy)) return;
+          ensureBucket(expense.paidBy, expense.currency).paidMinor += expense.amountMinor;
+
+          getExpenseShares(expense).forEach(share => {
+            ensureBucket(share.memberId, expense.currency).owedMinor += share.amountMinor;
+          });
+        });
+
+        state.settlements.forEach(settlement => {
+          if (!getAllMemberById(settlement.from) || !getAllMemberById(settlement.to)) return;
+          ensureBucket(settlement.from, settlement.currency).settledOutMinor += settlement.amountMinor;
+          ensureBucket(settlement.to, settlement.currency).settledInMinor += settlement.amountMinor;
+        });
+
+        Object.values(balances).forEach(currencyBuckets => {
+          Object.values(currencyBuckets).forEach(bucket => {
+            bucket.netMinor =
+              bucket.paidMinor -
+              bucket.owedMinor -
+              bucket.settledOutMinor +
+              bucket.settledInMinor;
+          });
+        });
+
+        return balances;
+      }
+
+      function getCurrenciesInUse() {
+        const currencies = new Set();
+        state.expenses.forEach(expense => currencies.add(expense.currency));
+        state.settlements.forEach(settlement => currencies.add(settlement.currency));
+        return [...currencies].sort();
+      }
+
+      function getCurrencyTotals() {
+        const totals = {};
+        state.expenses.forEach(expense => {
+          totals[expense.currency] = (totals[expense.currency] || 0) + expense.amountMinor;
+        });
+        return totals;
+      }
+
+      function calculateSettlementsForCurrency(balances, currency) {
+        const creditors = [];
+        const debtors = [];
+
+        state.members.forEach(member => {
+          const netMinor = balances[member.id]?.[currency]?.netMinor || 0;
+          if (netMinor > 0) creditors.push({ id: member.id, amountMinor: netMinor });
+          if (netMinor < 0) debtors.push({ id: member.id, amountMinor: Math.abs(netMinor) });
+        });
+
+        creditors.sort((a, b) => b.amountMinor - a.amountMinor);
+        debtors.sort((a, b) => b.amountMinor - a.amountMinor);
+
+        const settlements = [];
+        let creditorIndex = 0;
+        let debtorIndex = 0;
+
+        while (creditorIndex < creditors.length && debtorIndex < debtors.length) {
+          const creditor = creditors[creditorIndex];
+          const debtor = debtors[debtorIndex];
+          const amountMinor = Math.min(creditor.amountMinor, debtor.amountMinor);
+
+          if (amountMinor > 0) {
+            settlements.push({
+              from: debtor.id,
+              to: creditor.id,
+              amountMinor,
+              currency
+            });
+          }
+
+          creditor.amountMinor -= amountMinor;
+          debtor.amountMinor -= amountMinor;
+
+          if (creditor.amountMinor === 0) creditorIndex += 1;
+          if (debtor.amountMinor === 0) debtorIndex += 1;
+        }
+
+        return settlements;
+      }
+
+      function calculateAllSuggestedSettlements(balances) {
+        return getCurrenciesInUse().flatMap(currency =>
+          calculateSettlementsForCurrency(balances, currency)
+        );
+      }
+
+      function render() {
+        const balances = calculateBalances();
+        const settlements = calculateAllSuggestedSettlements(balances);
+
+        renderSummary();
+        renderBalances(balances);
+        renderSettlements(settlements);
+        renderExpenses();
+      }
+
+      function renderSummary() {
+        const totals = getCurrencyTotals();
+        const currencies = Object.keys(totals).sort();
+        const activeMemberCount = getActiveMembers().length;
+
+        elements.expenseCount.textContent = state.expenses.length;
+        elements.memberCount.textContent = activeMemberCount;
+        elements.balanceCount.textContent = `${activeMemberCount} ${activeMemberCount === 1 ? "person" : "people"}`;
+        elements.expenseSubtitle.textContent = state.expenses.length
+          ? `${state.expenses.length} recorded ${state.expenses.length === 1 ? "expense" : "expenses"}`
+          : "No expenses yet";
+
+        elements.currencyBreakdown.innerHTML = "";
+
+        if (!currencies.length) {
+          elements.totalSpent.textContent = "$0.00";
+          elements.totalCaption.textContent = "Total across all recorded expenses";
+          elements.currencyBreakdown.hidden = true;
+          return;
+        }
+
+        if (currencies.length === 1) {
+          const currency = currencies[0];
+          elements.totalSpent.textContent = formatMoneyMinor(totals[currency], currency);
+          elements.totalCaption.textContent = "Total across all recorded expenses";
+          elements.currencyBreakdown.hidden = true;
+          return;
+        }
+
+        elements.totalSpent.textContent = `${currencies.length} currencies`;
+        elements.totalCaption.textContent = "Totals are kept separate by currency";
+        elements.currencyBreakdown.hidden = false;
+
+        currencies.forEach(currency => {
+          const row = document.createElement("div");
+          row.className = "currency-row";
+          row.innerHTML = `<span>${escapeHtml(currency)}</span><strong>${formatMoneyMinor(totals[currency], currency)}</strong>`;
+          elements.currencyBreakdown.appendChild(row);
+        });
+      }
+
+      function renderBalances(balances) {
+        elements.balanceList.innerHTML = "";
+        const activeMembers = getActiveMembers();
+        const currencies = getCurrenciesInUse();
+
+        activeMembers.forEach(member => {
+          const currencyBalances = balances[member.id] || {};
+          const netEntries = currencies
+            .map(currency => ({
+              currency,
+              ...currencyBalances[currency] || createCurrencyBalanceBucket()
+            }))
+            .filter(entry =>
+              entry.paidMinor !== 0 ||
+              entry.owedMinor !== 0 ||
+              entry.settledInMinor !== 0 ||
+              entry.settledOutMinor !== 0
+            );
+
+          const item = document.createElement("li");
+          item.className = "person-balance";
+
+          const detail = netEntries.length
+            ? netEntries.map(entry =>
+                `Paid ${formatMoneyMinor(entry.paidMinor, entry.currency)} · Owes ${formatMoneyMinor(entry.owedMinor, entry.currency)}`
+              ).join(" · ")
+            : "No activity yet";
+
+          const netMarkup = netEntries.length
+            ? netEntries.map(entry => {
+                const netClass = entry.netMinor > 0 ? "positive" : entry.netMinor < 0 ? "negative" : "neutral";
+                const prefix = entry.netMinor > 0 ? "+" : entry.netMinor < 0 ? "−" : "";
+                return `<span class="${netClass}">${prefix}${formatMoneyMinor(Math.abs(entry.netMinor), entry.currency)}</span>`;
+              }).join("<br>")
+            : '<span class="neutral">—</span>';
+
+          item.innerHTML = `
+            <span class="avatar" style="--avatar-bg:${escapeHtml(member.color)};--avatar-text:${escapeHtml(member.textColor)}">${escapeHtml(initials(member.name))}</span>
+            <span>
+              <span class="person-name">${escapeHtml(member.name)}</span>
+              <span class="person-detail">${escapeHtml(detail)}</span>
+            </span>
+            <span class="balance-value">${netMarkup}</span>
+          `;
+          elements.balanceList.appendChild(item);
+        });
+
+        if (!activeMembers.length) {
+          elements.balanceList.innerHTML = `<li class="settlement-empty">Add a member to begin.</li>`;
+        }
+      }
+
+      function renderSettlements(settlements) {
+        elements.settlementList.innerHTML = "";
+
+        if (!settlements.length) {
+          elements.settlementCount.textContent = "All clear";
+          elements.settlementList.innerHTML = `<li class="settlement-empty">Everyone is settled up.</li>`;
+          return;
+        }
+
+        elements.settlementCount.textContent = `${settlements.length} ${settlements.length === 1 ? "payment" : "payments"}`;
+
+        settlements.forEach(settlement => {
+          const from = getAllMemberById(settlement.from);
+          const to = getAllMemberById(settlement.to);
+          if (!from || !to) return;
+
+          const item = document.createElement("li");
+          item.className = "settlement-item";
+          item.innerHTML = `
+            <strong>${escapeHtml(from.name)}</strong>
+            <span>pays</span>
+            <strong>${escapeHtml(to.name)}</strong>
+            <strong>${formatMoneyMinor(settlement.amountMinor, settlement.currency)}</strong>
+            <button
+              class="button button-secondary"
+              type="button"
+              data-record-settlement
+              data-from="${escapeHtml(settlement.from)}"
+              data-to="${escapeHtml(settlement.to)}"
+              data-amount-minor="${settlement.amountMinor}"
+              data-currency="${escapeHtml(settlement.currency)}"
+            >
+              Record payment
+            </button>
+          `;
+          elements.settlementList.appendChild(item);
+        });
+      }
+
+      function renderExpenses() {
+        elements.expenseList.innerHTML = "";
+
+        if (!state.expenses.length) {
+          elements.expenseList.innerHTML = `
+            <li class="empty-state">
+              <div class="empty-icon" aria-hidden="true">${ICONS.receipt}</div>
+              <h3>No shared expenses yet</h3>
+              <p>Add the first bill to calculate what everyone owes and generate settlement suggestions.</p>
+              <button class="button button-primary" type="button" data-empty-add aria-haspopup="dialog">
+                ${ICONS.plus}
+                Add first expense
+              </button>
+            </li>
+          `;
+          return;
+        }
+
+        const sortedExpenses = [...state.expenses].sort((a, b) =>
+          b.date.localeCompare(a.date) || b.id.localeCompare(a.id)
+        );
+
+        sortedExpenses.forEach(expense => {
+          const payer = getAllMemberById(expense.paidBy);
+          const participantNames = expense.participants
+            .map(memberId => getAllMemberById(memberId))
+            .filter(Boolean)
+            .map(member => member.name.split(" ")[0]);
+
+          const shares = getExpenseShares(expense);
+          const splitDetail = shares.map(share => {
+            const member = getAllMemberById(share.memberId);
+            return `${member?.name || "Unknown"}: ${formatMoneyMinor(share.amountMinor, expense.currency)}`;
+          }).join(" · ");
+
+          const item = document.createElement("li");
+          item.className = "expense-item";
+          item.innerHTML = `
+            <div class="expense-row">
+              <div class="expense-info">
+                <div class="expense-icon" aria-hidden="true">${getExpenseIcon(expense.description)}</div>
+                <div>
+                  <p class="expense-title">${escapeHtml(expense.description)}</p>
+                  <p class="expense-meta">
+                    ${escapeHtml(formatDate(expense.date))} · Paid by ${escapeHtml(payer ? payer.name : "Unknown")} · Split with ${escapeHtml(participantNames.join(", "))}
+                  </p>
+                </div>
+              </div>
+              <div class="expense-amount">${formatMoneyMinor(expense.amountMinor, expense.currency)}</div>
+              <div class="row-actions">
+                <button class="row-action" type="button" data-toggle-details-id="${escapeHtml(expense.id)}" aria-expanded="false" aria-label="Show split details for ${escapeHtml(expense.description)}" title="Show split details">${ICONS.details}</button>
+                <button class="row-action" type="button" data-edit-id="${escapeHtml(expense.id)}" aria-label="Edit ${escapeHtml(expense.description)}" title="Edit expense">${ICONS.edit}</button>
+                <button class="row-action delete" type="button" data-delete-id="${escapeHtml(expense.id)}" aria-label="Delete ${escapeHtml(expense.description)}" title="Delete expense">${ICONS.trash}</button>
+              </div>
+            </div>
+            <div class="expense-detail">
+              <strong>Equal split:</strong> ${escapeHtml(splitDetail)}
+            </div>
+          `;
+          elements.expenseList.appendChild(item);
+        });
+      }
+
+      function getExpenseIcon(description) {
+        const value = description.toLowerCase();
+        if (/(dinner|lunch|breakfast|restaurant|grocer|food|coffee|drink)/.test(value)) {
+          return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 3v7a4 4 0 0 0 4 4V3"></path><path d="M8 3v5"></path><path d="M4 3v5"></path><path d="M16 3v18"></path><path d="M16 3c3 1 4 4 4 7h-4"></path></svg>';
+        }
+        if (/(taxi|transfer|train|flight|transport|bus)/.test(value)) {
+          return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 16h18"></path><path d="M5 16 6 8h12l1 8"></path><path d="M8 16v2"></path><path d="M16 16v2"></path><path d="M8 11h.01"></path><path d="M16 11h.01"></path></svg>';
+        }
+        if (/(ticket|museum|show|movie|game)/.test(value)) {
+          return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"></path></svg>';
+        }
+        if (/(hotel|apartment|stay|room)/.test(value)) {
+          return '<svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"></path><path d="M5 10v10h14V10"></path><path d="M10 20v-6h4v6"></path></svg>';
+        }
+        return ICONS.receipt;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function clearValidation(element) {
+        element.textContent = "";
+        element.classList.remove("is-visible");
+      }
+
+      function showValidation(element, message) {
+        element.textContent = message;
+        element.classList.add("is-visible");
+      }
+
+      function getModalElements(type) {
+        const lookup = {
+          expense: { backdrop: elements.expenseModalBackdrop, modal: elements.expenseModal },
+          confirm: { backdrop: elements.confirmModalBackdrop, modal: elements.confirmModal },
+          member: { backdrop: elements.memberModalBackdrop, modal: elements.memberModal },
+          history: { backdrop: elements.historyModalBackdrop, modal: elements.historyModal }
+        };
+        return lookup[type];
+      }
+
+      function openModal(type, trigger = document.activeElement) {
+        const { backdrop, modal } = getModalElements(type);
+        modalState.stack.push({ type, trigger });
+        modalState.active = type;
+        backdrop.classList.add("is-open");
+        elements.appShell.inert = true;
+        elements.appShell.setAttribute("aria-hidden", "true");
+        document.body.classList.add("modal-open");
+        setTimeout(() => {
+          const focusable = getFocusableElements(modal);
+          (focusable[0] || modal).focus();
+        }, 0);
+      }
+
+      function closeModal(type) {
+        const { backdrop } = getModalElements(type);
+        backdrop.classList.remove("is-open");
+
+        const stackIndex = [...modalState.stack].map(item => item.type).lastIndexOf(type);
+        const entry = stackIndex >= 0 ? modalState.stack.splice(stackIndex, 1)[0] : null;
+
+        modalState.active = modalState.stack.length
+          ? modalState.stack[modalState.stack.length - 1].type
+          : null;
+
+        if (!modalState.active) {
+          elements.appShell.inert = false;
+          elements.appShell.removeAttribute("aria-hidden");
+          document.body.classList.remove("modal-open");
+        }
+
+        if (entry?.trigger && typeof entry.trigger.focus === "function") {
+          setTimeout(() => entry.trigger.focus(), 0);
+        }
+      }
+
+      function closeActiveModal() {
+        if (modalState.active) closeModal(modalState.active);
+      }
+
+      function getFocusableElements(modal) {
+        return [...modal.querySelectorAll(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )].filter(element => element.offsetParent !== null);
+      }
+
+      function trapFocus(event) {
+        if (event.key !== "Tab" || !modalState.active) return;
+        const { modal } = getModalElements(modalState.active);
+        const focusable = getFocusableElements(modal);
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+
+      function openExpenseModal(expenseId = null, trigger = document.activeElement) {
+        editingExpenseId = expenseId;
+        clearValidation(elements.expenseValidation);
+
+        const expense = expenseId
+          ? state.expenses.find(item => item.id === expenseId)
+          : null;
+
+        const activeMembers = getActiveMembers();
+        if (!activeMembers.length) {
+          showToast("Add a member before creating an expense.");
+          openMemberModal(trigger);
+          return;
+        }
+
+        elements.expenseModalTitle.textContent = expense ? "Edit expense" : "Add expense";
+        elements.saveExpenseButton.textContent = expense ? "Save changes" : "Save expense";
+
+        const relevantMemberIds = expense
+          ? new Set(getEligibleMembersForExpense(expense).map(member => member.id))
+          : new Set(activeMembers.map(member => member.id));
+
+        const availableMembers = state.members.filter(member =>
+          !member.archived || relevantMemberIds.has(member.id)
+        );
+
+        populatePayerOptions(expense?.paidBy || activeMembers[0].id, availableMembers);
+        populateParticipantOptions(
+          expense?.participants || activeMembers.map(member => member.id),
+          availableMembers
+        );
+
+        elements.description.value = expense?.description || "";
+        elements.currency.value = expense?.currency || "USD";
+        elements.amount.value = expense
+          ? minorToAmount(expense.amountMinor, expense.currency)
+          : "";
+        elements.date.value = expense?.date || getToday();
+
+        updateParticipantHint();
+        updatePayerParticipationNote();
+        openModal("expense", trigger);
+        setTimeout(() => elements.description.focus(), 0);
+      }
+
+      function populatePayerOptions(selectedId, availableMembers) {
+        elements.paidBy.innerHTML = availableMembers
+          .map(member => {
+            const suffix = member.archived ? " (archived)" : "";
+            return `<option value="${escapeHtml(member.id)}">${escapeHtml(member.name + suffix)}</option>`;
+          })
+          .join("");
+        elements.paidBy.value = selectedId;
+      }
+
+      function populateParticipantOptions(selectedIds, availableMembers) {
+        elements.participantOptions.innerHTML = availableMembers.map(member => `
+          <label class="participant-option">
+            <input type="checkbox" name="participants" value="${escapeHtml(member.id)}" ${selectedIds.includes(member.id) ? "checked" : ""}>
+            <span>${escapeHtml(member.name)}${member.archived ? " (archived)" : ""}</span>
+          </label>
+        `).join("");
+      }
+
+      function getSelectedParticipants() {
+        return [...elements.participantOptions.querySelectorAll('input[name="participants"]:checked')]
+          .map(input => input.value);
+      }
+
+      function updateParticipantHint() {
+        const checked = getSelectedParticipants();
+        elements.participantHint.textContent = checked.length
+          ? `${checked.length} ${checked.length === 1 ? "member" : "members"} selected`
+          : "Select one or more members";
+      }
+
+      function updatePayerParticipationNote() {
+        const payer = elements.paidBy.value;
+        const payerMember = getAllMemberById(payer);
+        const selected = getSelectedParticipants();
+
+        if (payer && !selected.includes(payer) && payerMember) {
+          elements.payerNotIncludedNote.textContent = `${payerMember.name} paid, but is not included in this split. This is allowed.`;
+          elements.payerNotIncludedNote.classList.add("is-visible");
+        } else {
+          elements.payerNotIncludedNote.textContent = "";
+          elements.payerNotIncludedNote.classList.remove("is-visible");
+        }
+      }
+
+      function saveExpense(event) {
+        event.preventDefault();
+        clearValidation(elements.expenseValidation);
+
+        const description = elements.description.value.trim();
+        const currency = elements.currency.value;
+        const amountMinor = amountToMinor(elements.amount.value, currency);
+        const paidBy = elements.paidBy.value;
+        const date = elements.date.value;
+        const participants = getSelectedParticipants();
+
+        if (!description) {
+          showValidation(elements.expenseValidation, "Enter a short description for this expense.");
+          elements.description.focus();
+          return;
+        }
+
+        if (!Number.isInteger(amountMinor) || amountMinor <= 0) {
+          showValidation(elements.expenseValidation, "Enter an amount greater than zero.");
+          elements.amount.focus();
+          return;
+        }
+
+        if (!paidBy || !getAllMemberById(paidBy)) {
+          showValidation(elements.expenseValidation, "Choose the person who paid the bill.");
+          elements.paidBy.focus();
+          return;
+        }
+
+        if (!isValidDateString(date)) {
+          showValidation(elements.expenseValidation, "Choose a valid date for this expense.");
+          elements.date.focus();
+          return;
+        }
+
+        if (!participants.length) {
+          showValidation(elements.expenseValidation, "Select at least one participating member.");
+          elements.participantOptions.querySelector("input")?.focus();
+          return;
+        }
+
+        const expense = {
+          id: editingExpenseId || createId("exp"),
+          description,
+          amountMinor,
+          currency,
+          paidBy,
+          date,
+          participants
+        };
+
+        if (editingExpenseId) {
+          const index = state.expenses.findIndex(item => item.id === editingExpenseId);
+          if (index !== -1) state.expenses[index] = expense;
+          showToast("Expense updated.");
+        } else {
+          state.expenses.push(expense);
+          showToast("Expense added.");
+        }
+
+        saveState();
+        render();
+        closeModal("expense");
+      }
+
+      function requestDelete(expenseId, trigger) {
+        const expense = state.expenses.find(item => item.id === expenseId);
+        if (!expense) return;
+
+        deletingExpenseId = expenseId;
+        elements.confirmMessage.textContent = `Delete “${expense.description}” (${formatMoneyMinor(expense.amountMinor, expense.currency)})? You can undo it for a few seconds after deletion.`;
+        openModal("confirm", trigger);
+        setTimeout(() => elements.confirmDeleteButton.focus(), 0);
+      }
+
+      function deleteExpense() {
+        if (!deletingExpenseId) return;
+        const deletedExpense = state.expenses.find(expense => expense.id === deletingExpenseId);
+        if (!deletedExpense) return;
+
+        state.expenses = state.expenses.filter(expense => expense.id !== deletingExpenseId);
+        deletingExpenseId = null;
+        saveState();
+        render();
+        closeModal("confirm");
+
+        if (pendingUndo?.timer) clearTimeout(pendingUndo.timer);
+        pendingUndo = {
+          kind: "expense",
+          value: deletedExpense,
+          timer: null
+        };
+
+        showToast("Expense deleted.", {
+          actionLabel: "Undo",
+          onAction: () => {
+            if (!pendingUndo || pendingUndo.kind !== "expense") return;
+            state.expenses.push(pendingUndo.value);
+            saveState();
+            render();
+            pendingUndo = null;
+            showToast("Expense restored.");
+          },
+          duration: 8000,
+          onExpire: () => { pendingUndo = null; }
+        });
+      }
+
+      function recordSettlement(settlement, trigger) {
+        const existing = state.settlements.some(item =>
+          item.from === settlement.from &&
+          item.to === settlement.to &&
+          item.amountMinor === settlement.amountMinor &&
+          item.currency === settlement.currency &&
+          item.date === getToday()
+        );
+
+        if (existing) {
+          showToast("That payment has already been recorded today.");
+          return;
+        }
+
+        state.settlements.push({
+          id: createId("settlement"),
+          from: settlement.from,
+          to: settlement.to,
+          amountMinor: settlement.amountMinor,
+          currency: settlement.currency,
+          date: getToday()
+        });
+
+        saveState();
+        render();
+
+        const from = getAllMemberById(settlement.from);
+        const to = getAllMemberById(settlement.to);
+        showToast(`Recorded payment from ${from?.name || "member"} to ${to?.name || "member"}.`);
+
+        if (trigger) trigger.focus();
+      }
+
+      function openMemberModal(trigger = document.activeElement) {
+        clearValidation(elements.memberValidation);
+        renderMembers();
+        openModal("member", trigger);
+        setTimeout(() => elements.newMemberName.focus(), 0);
+      }
+
+      function renderMembers() {
+        elements.memberList.innerHTML = "";
+
+        state.members.forEach(member => {
+          const hasActivity = state.expenses.some(expense =>
+            expense.paidBy === member.id || expense.participants.includes(member.id)
+          ) || state.settlements.some(settlement =>
+            settlement.from === member.id || settlement.to === member.id
+          );
+
+          const item = document.createElement("div");
+          item.className = "member-row";
+          item.innerHTML = `
+            <span class="avatar" style="--avatar-bg:${escapeHtml(member.color)};--avatar-text:${escapeHtml(member.textColor)}">${escapeHtml(initials(member.name))}</span>
+            <span>
+              <span class="member-row-name">${escapeHtml(member.name)}</span>
+              <span class="member-row-status">${member.archived ? "Archived — kept for history" : hasActivity ? "Active with history" : "Active"}</span>
+            </span>
+            <button class="row-action" type="button" data-rename-member-id="${escapeHtml(member.id)}" aria-label="Rename ${escapeHtml(member.name)}" title="Rename member">${ICONS.edit}</button>
+            <button class="row-action" type="button" data-toggle-member-id="${escapeHtml(member.id)}" aria-label="${member.archived ? "Restore" : "Archive"} ${escapeHtml(member.name)}" title="${member.archived ? "Restore member" : "Archive member"}">${member.archived ? ICONS.restore : ICONS.archive}</button>
+          `;
+          elements.memberList.appendChild(item);
+        });
+      }
+
+      function addMember(event) {
+        event.preventDefault();
+        clearValidation(elements.memberValidation);
+
+        const name = elements.newMemberName.value.trim();
+        if (!name) {
+          showValidation(elements.memberValidation, "Enter a name for the new member.");
+          elements.newMemberName.focus();
+          return;
+        }
+
+        if (state.members.some(member => member.name.toLowerCase() === name.toLowerCase())) {
+          showValidation(elements.memberValidation, "A member with that name already exists.");
+          elements.newMemberName.focus();
+          return;
+        }
+
+        const pair = colorPairs[state.members.length % colorPairs.length];
+        state.members.push({
+          id: createId("member"),
+          name: name.slice(0, 50),
+          color: pair[0],
+          textColor: pair[1],
+          archived: false
+        });
+
+        elements.newMemberName.value = "";
+        saveState();
+        render();
+        renderMembers();
+        showToast(`${name} added to the group.`);
+        elements.newMemberName.focus();
+      }
+
+      function renameMember(memberId) {
+        const member = getAllMemberById(memberId);
+        if (!member) return;
+
+        const nextName = window.prompt("Rename member", member.name);
+        if (nextName === null) return;
+
+        const name = nextName.trim();
+        if (!name) {
+          showToast("Member name was not changed.");
+          return;
+        }
+
+        if (state.members.some(item => item.id !== memberId && item.name.toLowerCase() === name.toLowerCase())) {
+          showToast("Another member already uses that name.");
+          return;
+        }
+
+        member.name = name.slice(0, 50);
+        saveState();
+        render();
+        renderMembers();
+        showToast("Member renamed.");
+      }
+
+      function toggleMemberArchive(memberId) {
+        const member = getAllMemberById(memberId);
+        if (!member) return;
+
+        const activeMembers = getActiveMembers();
+        if (!member.archived && activeMembers.length <= 1) {
+          showToast("Keep at least one active member in the group.");
+          return;
+        }
+
+        member.archived = !member.archived;
+        saveState();
+        render();
+        renderMembers();
+        showToast(member.archived ? `${member.name} archived.` : `${member.name} restored.`);
+      }
+
+      function openHistoryModal(trigger = document.activeElement) {
+        renderSettlementHistory();
+        openModal("history", trigger);
+      }
+
+      function renderSettlementHistory() {
+        elements.historyList.innerHTML = "";
+
+        if (!state.settlements.length) {
+          elements.historyList.innerHTML = `<li class="settlement-empty">No payments have been recorded yet.</li>`;
+          return;
+        }
+
+        const history = [...state.settlements].sort((a, b) =>
+          b.date.localeCompare(a.date) || b.id.localeCompare(a.id)
+        );
+
+        history.forEach(settlement => {
+          const from = getAllMemberById(settlement.from);
+          const to = getAllMemberById(settlement.to);
+          if (!from || !to) return;
+
+          const item = document.createElement("li");
+          item.className = "history-item";
+          item.innerHTML = `
+            <div>
+              <strong>${escapeHtml(from.name)} paid ${escapeHtml(to.name)}</strong>
+              <p>${escapeHtml(formatDate(settlement.date))} · ${formatMoneyMinor(settlement.amountMinor, settlement.currency)}</p>
+            </div>
+            <button class="row-action delete" type="button" data-delete-settlement-id="${escapeHtml(settlement.id)}" aria-label="Delete recorded payment from ${escapeHtml(from.name)} to ${escapeHtml(to.name)}" title="Delete payment">${ICONS.trash}</button>
+          `;
+          elements.historyList.appendChild(item);
+        });
+      }
+
+      function deleteSettlement(settlementId) {
+        const settlement = state.settlements.find(item => item.id === settlementId);
+        if (!settlement) return;
+
+        state.settlements = state.settlements.filter(item => item.id !== settlementId);
+        saveState();
+        render();
+        renderSettlementHistory();
+        showToast("Recorded payment removed.");
+      }
+
+      function exportCsv() {
+        const columns = [
+          "Type",
+          "Description",
+          "Amount",
+          "Currency",
+          "Paid By",
+          "Date",
+          "Participants",
+          "From",
+          "To"
+        ];
+
+        const expenseRows = state.expenses.map(expense => [
+          "Expense",
+          expense.description,
+          minorToAmount(expense.amountMinor, expense.currency),
+          expense.currency,
+          getAllMemberById(expense.paidBy)?.name || expense.paidBy,
+          expense.date,
+          expense.participants.map(id => getAllMemberById(id)?.name || id).join("; "),
+          "",
+          ""
+        ]);
+
+        const settlementRows = state.settlements.map(settlement => [
+          "Settlement",
+          "Recorded payment",
+          minorToAmount(settlement.amountMinor, settlement.currency),
+          settlement.currency,
+          "",
+          settlement.date,
+          "",
+          getAllMemberById(settlement.from)?.name || settlement.from,
+          getAllMemberById(settlement.to)?.name || settlement.to
+        ]);
+
+        const csv = [columns, ...expenseRows, ...settlementRows]
+          .map(row => row.map(csvCell).join(","))
+          .join("\r\n");
+
+        const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = `friendbill-ledger-${getToday()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+        showToast("CSV export started.");
+      }
+
+      function csvCell(value) {
+        return `"${String(value ?? "").replace(/"/g, '""')}"`;
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        elements.themeToggle.setAttribute(
+          "aria-label",
+          theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
+        );
+        elements.themeToggle.title = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        const preferredDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+        applyTheme(savedTheme || (preferredDark ? "dark" : "light"));
+      }
+
+      function showToast(message, options = {}) {
+        const { actionLabel, onAction, duration = 3600, onExpire } = options;
+        const toast = document.createElement("div");
+        toast.className = "toast";
+
+        const text = document.createElement("span");
+        text.className = "toast-message";
+        text.textContent = message;
+        toast.appendChild(text);
+
+        let timer;
+
+        if (actionLabel && typeof onAction === "function") {
+          const action = document.createElement("button");
+          action.className = "text-button";
+          action.type = "button";
+          action.textContent = actionLabel;
+          action.addEventListener("click", () => {
+            clearTimeout(timer);
+            toast.remove();
+            onAction();
+          });
+          toast.appendChild(action);
+        }
+
+        elements.toastRegion.appendChild(toast);
+
+        timer = setTimeout(() => {
+          toast.remove();
+          if (typeof onExpire === "function") onExpire();
+        }, duration);
+      }
+
+      elements.addExpenseButton.addEventListener("click", event => openExpenseModal(null, event.currentTarget));
+      elements.mobileAddExpenseButton.addEventListener("click", event => openExpenseModal(null, event.currentTarget));
+      elements.manageMembersButton.addEventListener("click", event => openMemberModal(event.currentTarget));
+      elements.historyButton.addEventListener("click", event => openHistoryModal(event.currentTarget));
+      elements.expenseForm.addEventListener("submit", saveExpense);
+      elements.addMemberForm.addEventListener("submit", addMember);
+      elements.exportButton.addEventListener("click", exportCsv);
+
+      elements.themeToggle.addEventListener("click", () => {
+        const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+      });
+
+      elements.selectAllParticipants.addEventListener("click", () => {
+        const checkboxes = elements.participantOptions.querySelectorAll('input[name="participants"]');
+        const shouldSelectAll = [...checkboxes].some(checkbox => !checkbox.checked);
+        checkboxes.forEach(checkbox => { checkbox.checked = shouldSelectAll; });
+        updateParticipantHint();
+        updatePayerParticipationNote();
+      });
+
+      elements.participantOptions.addEventListener("change", () => {
+        updateParticipantHint();
+        updatePayerParticipationNote();
+      });
+
+      elements.paidBy.addEventListener("change", updatePayerParticipationNote);
+
+      elements.expenseList.addEventListener("click", event => {
+        const editButton = event.target.closest("[data-edit-id]");
+        const deleteButton = event.target.closest("[data-delete-id]");
+        const detailButton = event.target.closest("[data-toggle-details-id]");
+        const emptyAddButton = event.target.closest("[data-empty-add]");
+
+        if (editButton) {
+          openExpenseModal(editButton.dataset.editId, editButton);
+          return;
+        }
+
+        if (deleteButton) {
+          requestDelete(deleteButton.dataset.deleteId, deleteButton);
+          return;
+        }
+
+        if (detailButton) {
+          const item = detailButton.closest(".expense-item");
+          const expanded = item.classList.toggle("is-expanded");
+          detailButton.setAttribute("aria-expanded", String(expanded));
+          detailButton.setAttribute(
+            "aria-label",
+            `${expanded ? "Hide" : "Show"} split details for ${detailButton.closest(".expense-item").querySelector(".expense-title").textContent}`
+          );
+          return;
+        }
+
+        if (emptyAddButton) {
+          openExpenseModal(null, emptyAddButton);
+        }
+      });
+
+      elements.settlementList.addEventListener("click", event => {
+        const button = event.target.closest("[data-record-settlement]");
+        if (!button) return;
+
+        recordSettlement({
+          from: button.dataset.from,
+          to: button.dataset.to,
+          amountMinor: Number(button.dataset.amountMinor),
+          currency: button.dataset.currency
+        }, button);
+      });
+
+      elements.memberList.addEventListener("click", event => {
+        const renameButton = event.target.closest("[data-rename-member-id]");
+        const toggleButton = event.target.closest("[data-toggle-member-id]");
+
+        if (renameButton) renameMember(renameButton.dataset.renameMemberId);
+        if (toggleButton) toggleMemberArchive(toggleButton.dataset.toggleMemberId);
+      });
+
+      elements.historyList.addEventListener("click", event => {
+        const deleteButton = event.target.closest("[data-delete-settlement-id]");
+        if (deleteButton) deleteSettlement(deleteButton.dataset.deleteSettlementId);
+      });
+
+      document.querySelectorAll("[data-close-modal]").forEach(button => {
+        button.addEventListener("click", () => closeModal(button.dataset.closeModal));
+      });
+
+      elements.confirmDeleteButton.addEventListener("click", deleteExpense);
+
+      [
+        elements.expenseModalBackdrop,
+        elements.confirmModalBackdrop,
+        elements.memberModalBackdrop,
+        elements.historyModalBackdrop
+      ].forEach(backdrop => {
+        backdrop.addEventListener("mousedown", event => {
+          if (event.target !== backdrop) return;
+
+          const modalType = backdrop === elements.expenseModalBackdrop ? "expense"
+            : backdrop === elements.confirmModalBackdrop ? "confirm"
+            : backdrop === elements.memberModalBackdrop ? "member"
+            : "history";
+
+          closeModal(modalType);
+        });
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && modalState.active) {
+          event.preventDefault();
+          closeActiveModal();
+          return;
+        }
+        trapFocus(event);
+      });
+
+      initializeTheme();
+      render();
+    })();
+  </script>
+</body>
+</html>
+```
+
+Sources
