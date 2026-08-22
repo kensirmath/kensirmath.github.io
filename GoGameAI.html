@@ -63,12 +63,21 @@
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
   }
   #info { min-width: 120px; text-align: center; color: #bac5d0; font-size: 13px; white-space: nowrap; }
+  #message {
+    width: min(96vw, 1000px);
+    min-height: 22px;
+    padding: 2px 12px 0;
+    text-align: center;
+    color: #c8d4df;
+    font-size: 13px;
+  }
+  #message.score { color: #f6dfa5; font-weight: 600; }
   #replaySpeed { width: 110px; accent-color: #9bc6ee; }
   @media (max-width: 620px) {
     #topbar { gap: 5px; padding: 6px; }
     #bottombar { gap: 5px; padding: 2px 6px 6px; }
     select, button { min-height: 30px; padding: 4px 7px; font-size: 12px; }
-    #boardWrap { width: min(99vw, calc(100vh - 108px)); }
+    #boardWrap { width: min(99vw, calc(100vh - 128px)); }
   }
 </style>
 </head>
@@ -92,7 +101,7 @@
 </div>
 
 <div id="boardWrap"><canvas id="board"></canvas></div>
-
+<div id="message"></div>
 <div id="bottombar"><span id="info"></span></div>
 
 <div id="replaybar" hidden>
@@ -131,6 +140,7 @@
   const exportSgfBtn = document.getElementById('exportSgfBtn');
   const replayBtn = document.getElementById('replayBtn');
   const infoEl = document.getElementById('info');
+  const messageEl = document.getElementById('message');
   const replaybar = document.getElementById('replaybar');
   const replayFirstBtn = document.getElementById('replayFirstBtn');
   const replayPrevBtn = document.getElementById('replayPrevBtn');
@@ -146,6 +156,7 @@
   const inBounds = (x, y) => x >= 0 && x < size && y >= 0 && y < size;
   const emptyBoard = () => Array.from({ length: size }, () => Array(size).fill(EMPTY));
   const stoneName = c => c === BLACK ? '黑' : '白';
+  function setMessage(text = '', score = false) { messageEl.textContent = text; messageEl.classList.toggle('score', score); }
 
   function neighbors(x, y) {
     const r = [];
@@ -240,6 +251,7 @@
     current = opponent(color);
     passCount++;
     lastMove = { color, x: null, y: null, pass: true };
+    setMessage(`${stoneName(color)}棋停一手`);
   }
 
   function getStars() {
@@ -304,10 +316,11 @@
     aiStone = opponent(playerStone);
     board = emptyBoard(); current = BLACK; captures = { [BLACK]: 0, [WHITE]: 0 };
     history = []; moveHistory = []; lastBoardSnapshot = null; lastMove = null; passCount = 0; gameOver = false; aiThinking = false;
-    lockControls(false); resizeBoard(); updateInfo();
+    setMessage(''); lockControls(false); resizeBoard(); updateInfo();
     if (playerStone === WHITE) setTimeout(runAiMove, 180);
   }
 
+  // ---------- KataLite ----------
   const groupId = g => [...g.stones].sort().join('|');
   function adjacentGroups(b, x, y, color) { const s = new Set(); for (const [nx, ny] of neighbors(x, y)) if (b[ny][nx] === color) s.add(groupId(getGroup(b, nx, ny))); return s.size; }
   function localInfluence(b, x, y, color) {
@@ -378,7 +391,28 @@
     setTimeout(()=>{try{const r=search(aiStone,KATALITE),m=r?.move;if(!m){pass(aiStone);if(passCount>=2)endGame();else{lockControls(false);updateInfo();}return;}if(!placeStone(m.x,m.y,aiStone))throw Error('illegal');draw();}catch(e){console.error(e);current=playerStone;}finally{aiThinking=false;if(!gameOver)lockControls(false);updateInfo();}},25);
   }
 
-  function endGame(){gameOver=true;lockControls(true);exportSgfBtn.disabled=false;replayBtn.disabled=false;updateInfo('終局');}
+  function scorePosition() {
+    const seen = Array.from({ length: size }, () => Array(size).fill(false));
+    let blackTerritory = 0, whiteTerritory = 0;
+    for (let y=0;y<size;y++) for (let x=0;x<size;x++) {
+      if (board[y][x] !== EMPTY || seen[y][x]) continue;
+      const stack=[[x,y]], borders=new Set(), region=[]; seen[y][x]=true;
+      while(stack.length){const [cx,cy]=stack.pop();region.push([cx,cy]);for(const[nx,ny]of neighbors(cx,cy)){if(board[ny][nx]===EMPTY&&!seen[ny][nx]){seen[ny][nx]=true;stack.push([nx,ny]);}else if(board[ny][nx]!==EMPTY)borders.add(board[ny][nx]);}}
+      if(borders.size===1){if(borders.has(BLACK))blackTerritory+=region.length;else whiteTerritory+=region.length;}
+    }
+    let blackStones=0,whiteStones=0;
+    for(const row of board)for(const stone of row){if(stone===BLACK)blackStones++;else if(stone===WHITE)whiteStones++;}
+    const black=blackStones+blackTerritory;
+    const white=whiteStones+whiteTerritory+KOMI;
+    return { black, white, blackStones, whiteStones, blackTerritory, whiteTerritory, margin: Math.abs(black-white) };
+  }
+
+  function endGame(){
+    gameOver=true;lockControls(true);exportSgfBtn.disabled=false;replayBtn.disabled=false;
+    const score=scorePosition(), winner=score.black>score.white?'黑':'白';
+    setMessage(`終局　黑 ${score.black.toFixed(1)}　白 ${score.white.toFixed(1)}　${winner}勝 ${score.margin.toFixed(1)}`,true);
+    updateInfo('終局');
+  }
 
   function sgfCoord(x,y){return x===null||y===null?'':SGF_ALPHABET[x]+SGF_ALPHABET[y];}
   function exportSgf(){
@@ -393,19 +427,19 @@
     for(let i=0;i<index;i++){const m=moveHistory[i];if(m.pass){replayLastMove={...m};continue;}const r=attemptMove(replayBoard,m.x,m.y,m.color,previous);if(!r)return;previous=cloneBoard(replayBoard);replayBoard=r.newBoard;replayLastMove={...m};}
     replayIndex=index;draw(replayBoard,replayLastMove);updateInfo();replayFirstBtn.disabled=index===0;replayPrevBtn.disabled=index===0;replayNextBtn.disabled=index===moveHistory.length;replayLastBtn.disabled=index===moveHistory.length;
   }
-  function enterReplay(){if(aiThinking||!moveHistory.length)return;savedLiveState={board:cloneBoard(board),lastMove:lastMove?{...lastMove}:null};replayMode=true;lockControls(true);exportSgfBtn.disabled=false;exitReplayBtn.disabled=false;replaybar.hidden=false;rebuildReplay(0);}
-  function exitReplay(){stopReplay();replayMode=false;replaybar.hidden=true;board=savedLiveState.board;lastMove=savedLiveState.lastMove;draw();if(!gameOver)lockControls(false);else{lockControls(true);exportSgfBtn.disabled=false;replayBtn.disabled=false;}updateInfo();}
+  function enterReplay(){if(aiThinking||!moveHistory.length)return;savedLiveState={board:cloneBoard(board),lastMove:lastMove?{...lastMove}:null,message:messageEl.textContent,messageScore:messageEl.classList.contains('score')};replayMode=true;lockControls(true);exportSgfBtn.disabled=false;exitReplayBtn.disabled=false;replaybar.hidden=false;setMessage('');rebuildReplay(0);}
+  function exitReplay(){stopReplay();replayMode=false;replaybar.hidden=true;board=savedLiveState.board;lastMove=savedLiveState.lastMove;draw();setMessage(savedLiveState.message,savedLiveState.messageScore);if(!gameOver)lockControls(false);else{lockControls(true);exportSgfBtn.disabled=false;replayBtn.disabled=false;}updateInfo();}
   function autoplay(){if(replayTimer){stopReplay();return;}if(replayIndex>=moveHistory.length)rebuildReplay(0);replayPlayBtn.textContent='Ⅱ';replayTimer=setInterval(()=>{if(replayIndex>=moveHistory.length){stopReplay();return;}rebuildReplay(replayIndex+1);},Number(replaySpeed.value));}
 
   canvas.addEventListener('click',e=>{
     if(gameOver||aiThinking||replayMode||current!==playerStone)return;
     const r=canvas.getBoundingClientRect(),x=Math.round(((e.clientX-r.left)*canvas.width/r.width-margin)/cell),y=Math.round(((e.clientY-r.top)*canvas.height/r.height-margin)/cell);
     if(!inBounds(x,y)||!placeStone(x,y,playerStone))return;
-    draw();runAiMove();
+    setMessage('');draw();runAiMove();
   });
   newGameBtn.addEventListener('click',initGame);
   passBtn.addEventListener('click',()=>{if(gameOver||aiThinking||replayMode||current!==playerStone)return;pass(playerStone);if(passCount>=2)endGame();else runAiMove();});
-  undoBtn.addEventListener('click',()=>{if(aiThinking||replayMode||history.length<2)return;history.pop();const s=history.pop();board=s.board;current=s.current;captures=s.captures;lastBoardSnapshot=s.previous;passCount=s.passCount;lastMove=s.lastMove;moveHistory=moveHistory.slice(0,s.moveLength);draw();updateInfo();});
+  undoBtn.addEventListener('click',()=>{if(aiThinking||replayMode||history.length<2)return;history.pop();const s=history.pop();board=s.board;current=s.current;captures=s.captures;lastBoardSnapshot=s.previous;passCount=s.passCount;lastMove=s.lastMove;moveHistory=moveHistory.slice(0,s.moveLength);setMessage('');draw();updateInfo();});
   exportSgfBtn.addEventListener('click',exportSgf); replayBtn.addEventListener('click',enterReplay); exitReplayBtn.addEventListener('click',exitReplay);
   replayFirstBtn.addEventListener('click',()=>{stopReplay();rebuildReplay(0);}); replayPrevBtn.addEventListener('click',()=>{stopReplay();rebuildReplay(Math.max(0,replayIndex-1));}); replayNextBtn.addEventListener('click',()=>{stopReplay();rebuildReplay(Math.min(moveHistory.length,replayIndex+1));}); replayLastBtn.addEventListener('click',()=>{stopReplay();rebuildReplay(moveHistory.length);}); replayPlayBtn.addEventListener('click',autoplay); replaySpeed.addEventListener('input',()=>{if(replayTimer){stopReplay();autoplay();}});
   window.addEventListener('resize',()=>requestAnimationFrame(resizeBoard));
