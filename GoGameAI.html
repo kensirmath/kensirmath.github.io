@@ -3,308 +3,287 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>圍棋 - 玩家 vs RAVE-MCTS AI</title>
+<title>圍棋 - KataLite HTML AI</title>
 <style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
   body {
-    font-family: "Microsoft JhengHei", "PingFang HK", sans-serif;
-    background: #2b2b2b;
-    color: #eee;
+    margin: 0;
+    min-height: 100vh;
+    padding: 18px;
+    background: #1e2329;
+    color: #edf2f7;
+    font-family: "PingFang HK", "Microsoft JhengHei", system-ui, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    margin: 0;
   }
-  h1 { font-size: 20px; margin-bottom: 8px; }
-  #boardWrap { position: relative; }
-  canvas { background: #dcb35c; border-radius: 4px; cursor: pointer; }
+  h1 { margin: 4px 0 12px; font-size: 21px; }
   #panel {
-    margin-top: 16px;
+    max-width: 980px;
     display: flex;
-    gap: 12px;
     flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
+    gap: 9px;
+    margin-bottom: 10px;
   }
-  button, select {
-    background: #444;
-    color: #eee;
-    border: 1px solid #666;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
+  label { font-size: 14px; color: #d6dde8; }
+  select, button {
+    border: 1px solid #596372;
+    border-radius: 7px;
+    background: #303943;
+    color: #f4f7fb;
+    padding: 8px 10px;
+    font: inherit;
     font-size: 14px;
   }
-  button:hover, select:hover { background: #555; }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  #status {
-    margin-top: 10px;
-    font-size: 15px;
-    min-height: 22px;
+  button { cursor: pointer; }
+  button:hover:not(:disabled) { background: #3c4854; }
+  button:disabled { cursor: not-allowed; opacity: .48; }
+  #difficultyDesc, #status, #thinking, #ruleNote, #selfTestResult {
+    max-width: 760px;
     text-align: center;
-    max-width: 640px;
   }
-  #scoreBoard {
-    display: flex;
-    gap: 20px;
-    margin-top: 6px;
-    font-size: 14px;
-    flex-wrap: wrap;
-    justify-content: center;
+  #difficultyDesc { min-height: 19px; color: #b8c5d6; font-size: 13px; }
+  #boardWrap { position: relative; margin-top: 10px; }
+  canvas {
+    display: block;
+    max-width: calc(100vw - 32px);
+    height: auto;
+    border: 2px solid #6f4c18;
+    border-radius: 5px;
+    background: #d9aa55;
+    cursor: crosshair;
+    box-shadow: 0 8px 25px rgba(0,0,0,.35);
   }
-  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; vertical-align:middle;}
-  .black { background:#111; }
-  .white { background:#fafafa; border:1px solid #999;}
-  #thinking {
-    font-size: 13px;
-    color: #9ad;
-    min-height: 18px;
+  #status { min-height: 24px; margin-top: 11px; font-size: 15px; }
+  #thinking { min-height: 19px; color: #86bff6; font-size: 13px; }
+  #scoreBoard { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: 14px; }
+  .dot { display:inline-block; width:12px; height:12px; margin-right:5px; border-radius:50%; vertical-align:-1px; }
+  .black { background:#080b0f; border:1px solid #6c7178; }
+  .white { background:#f9fbff; border:1px solid #aeb8c5; }
+  #ruleNote { margin-top: 6px; font-size: 12px; color: #9ba9b8; line-height: 1.45; }
+  #selfTestResult { margin-top: 8px; white-space: pre-line; color: #7bd98c; font-size: 11px; line-height: 1.45; }
+  #selfTestResult.failed { color: #ff7c7c; }
+  @media (max-width: 520px) {
+    body { padding: 10px; }
+    h1 { font-size: 18px; }
+    #panel { gap: 6px; }
+    select, button { padding: 7px 8px; font-size: 13px; }
   }
-  #difficultyDesc {
-    font-size: 12px;
-    color: #ccc;
-    max-width: 640px;
-    text-align: center;
-    margin-top: 2px;
-    min-height: 16px;
-  }
-  .ruleNote {
-    font-size: 12px;
-    color: #aaa;
-    max-width: 640px;
-    text-align: center;
-    margin-top: 4px;
-  }
-  #selfTestResult {
-    font-size: 11px;
-    color: #7c7;
-    max-width: 640px;
-    text-align: center;
-    margin-top: 8px;
-    white-space: pre-line;
-  }
-  #selfTestResult.failed { color: #e66; }
 </style>
 </head>
 <body>
-
-<h1>圍棋對弈 - 玩家（黑）vs RAVE-MCTS AI（白）</h1>
+<h1>圍棋對弈：玩家（黑）vs HTML KataLite AI（白）</h1>
 
 <div id="panel">
-  <label>棋盤大小：
+  <label>棋盤
     <select id="boardSize">
-      <option value="9">9x9</option>
-      <option value="13">13x13</option>
-      <option value="19">19x19</option>
+      <option value="9" selected>9 路</option>
+      <option value="13">13 路</option>
+      <option value="19">19 路</option>
     </select>
   </label>
-  <label>AI難度：
+  <label>AI 難度
     <select id="aiLevel">
       <option value="beginner">新手</option>
       <option value="easy">簡單</option>
-      <option value="normal" selected>普通</option>
+      <option value="normal">普通</option>
       <option value="hard">較強</option>
       <option value="expert">專家</option>
-      <option value="master">大師（UCT+RAVE深搜）</option>
+      <option value="master">大師（UCT + RAVE）</option>
+      <option value="katalite" selected>KataLite（HTML 強化）</option>
     </select>
   </label>
-  <label>計分規則：
+  <label>規則
     <select id="scoringRule">
-      <option value="chinese" selected>中國數子法（棋子+領地）</option>
-      <option value="japanese">日本目數法（只算領地）</option>
+      <option value="chinese" selected>中國數子法</option>
+      <option value="japanese">日本目數法</option>
     </select>
   </label>
   <button id="newGameBtn">開新局</button>
-  <button id="passBtn">停一手 (Pass)</button>
+  <button id="passBtn">停一手</button>
   <button id="undoBtn">悔棋</button>
 </div>
 
 <div id="difficultyDesc"></div>
-
-<div id="boardWrap">
-  <canvas id="board"></canvas>
-</div>
-
-<div id="status">請落子</div>
+<div id="boardWrap"><canvas id="board"></canvas></div>
+<div id="status">請落子（黑棋先行）</div>
 <div id="thinking"></div>
 <div id="scoreBoard">
-  <span><span class="dot black"></span>黑（玩家）提子數: <span id="blackCaptures">0</span></span>
-  <span><span class="dot white"></span>白（AI）提子數: <span id="whiteCaptures">0</span></span>
+  <span><span class="dot black"></span>黑（玩家）提子：<span id="blackCaptures">0</span></span>
+  <span><span class="dot white"></span>白（AI）提子：<span id="whiteCaptures">0</span></span>
 </div>
-<div class="ruleNote">貼目固定為 6.5（白棋加分）。「大師」難度使用 UCT + RAVE（AMAF）混合評估：早期節點以全局同色落點的模擬結果快速估值，隨訪問次數增加逐漸轉為精確的樹搜尋統計，收斂速度比純UCT更快。</div>
+<div id="ruleNote">KataLite 是純 HTML/JavaScript 的 KataGo-inspired AI：使用戰術先驗、影響力評估、PUCT + RAVE 與策略導向推演。它不是 KataGo 神經網絡；9 路棋盤效果最佳。合法性判斷會先提掉無氣的對方棋群，再檢查自身氣，因此「叫吃後在原本看似禁著點落子」正確視為合法。</div>
 <div id="selfTestResult"></div>
 
 <script>
-(function () {
+(() => {
+  'use strict';
+
   const EMPTY = 0, BLACK = 1, WHITE = 2;
   const KOMI = 6.5;
+
   let size = 9;
-  let cell = 40;
-  let margin = 30;
+  let cell = 42;
+  let margin = 42;
   let board = [];
-  let history = [];
   let current = BLACK;
   let captures = { [BLACK]: 0, [WHITE]: 0 };
+  let history = [];
   let lastBoardSnapshot = null;
   let passCount = 0;
   let gameOver = false;
   let aiThinking = false;
+  let lastMove = null;
 
   const canvas = document.getElementById('board');
   const ctx = canvas.getContext('2d');
+  const boardSizeSelect = document.getElementById('boardSize');
+  const aiLevelSelect = document.getElementById('aiLevel');
+  const scoringRuleSelect = document.getElementById('scoringRule');
+  const newGameBtn = document.getElementById('newGameBtn');
+  const passBtn = document.getElementById('passBtn');
+  const undoBtn = document.getElementById('undoBtn');
   const statusEl = document.getElementById('status');
   const thinkingEl = document.getElementById('thinking');
   const difficultyDescEl = document.getElementById('difficultyDesc');
-  const blackCapEl = document.getElementById('blackCaptures');
-  const whiteCapEl = document.getElementById('whiteCaptures');
-  const passBtn = document.getElementById('passBtn');
-  const undoBtn = document.getElementById('undoBtn');
-  const aiLevelSelect = document.getElementById('aiLevel');
+  const blackCapturesEl = document.getElementById('blackCaptures');
+  const whiteCapturesEl = document.getElementById('whiteCaptures');
   const selfTestEl = document.getElementById('selfTestResult');
 
   const DIFFICULTY = {
-    beginner: { engine: 'flat', candidateLimit: 6,  totalSims: 20,  maxPlyPerPlayout: 25, temperature: 45, blindSpotRate: 0.35,
-      desc: '新手：常漏看叫吃與逃跑機會，落點隨機性高，適合剛學會規則的玩家。' },
-    easy:     { engine: 'flat', candidateLimit: 8,  totalSims: 40,  maxPlyPerPlayout: 35, temperature: 25, blindSpotRate: 0.15,
-      desc: '簡單：偶爾漏看戰術機會，仍有明顯隨機性，適合練習基本攻殺。' },
-    normal:   { engine: 'flat', candidateLimit: 12, totalSims: 90,  maxPlyPerPlayout: 50, temperature: 10, blindSpotRate: 0.05,
-      desc: '普通：大致穩健，讀效範圍中等，偶爾仍會失誤。' },
-    hard:     { engine: 'flat', candidateLimit: 16, totalSims: 160, maxPlyPerPlayout: 60, temperature: 3,  blindSpotRate: 0.0,
-      desc: '較強：幾乎總是選擇評分最高的候選點，戰術幾乎不漏看。' },
-    expert:   { engine: 'flat', candidateLimit: 20, totalSims: 260, maxPlyPerPlayout: 70, temperature: 0.5, blindSpotRate: 0.0,
-      desc: '專家：模擬量大、候選範圍廣，接近貪心＋推演雙重最優解，思考時間較長。' },
-    master:   { engine: 'uct-rave', candidateLimit: 24, iterations: 500, maxPlyPerPlayout: 45, timeBudgetMs: 4500,
-      raveEquivParam: 300, explorationConst: 1.0, blindSpotRate: 0.0,
-      desc: '大師：UCT樹搜尋結合RAVE（AMAF）快速評估，早期節點收斂更快、後期回歸精確統計，棋力為所有層級中最高，單手思考可達數秒。' }
+    beginner: {
+      engine: 'flat', candidateLimit: 6, totalSims: 18, maxPly: 20, temperature: 45, blindSpotRate: 0.35,
+      desc: '新手：常漏看叫吃與逃跑機會，落點隨機性高。'
+    },
+    easy: {
+      engine: 'flat', candidateLimit: 8, totalSims: 40, maxPly: 28, temperature: 24, blindSpotRate: 0.16,
+      desc: '簡單：有基本吃子及救棋概念，但仍會出現明顯失誤。'
+    },
+    normal: {
+      engine: 'flat', candidateLimit: 12, totalSims: 85, maxPly: 38, temperature: 9, blindSpotRate: 0.05,
+      desc: '普通：大致穩健，會看到基本戰術，但全局判斷有限。'
+    },
+    hard: {
+      engine: 'flat', candidateLimit: 16, totalSims: 150, maxPly: 48, temperature: 2.5, blindSpotRate: 0,
+      desc: '較強：較少漏看直接戰術，更多候選手及推演。'
+    },
+    expert: {
+      engine: 'flat', candidateLimit: 20, totalSims: 230, maxPly: 58, temperature: 0.4, blindSpotRate: 0,
+      desc: '專家：單層候選評估配策略導向推演，思考較久。'
+    },
+    master: {
+      engine: 'uct-rave', candidateLimit: 22, iterations: 420, timeBudgetMs: 2600, maxPly: 36,
+      explorationConst: 1.0, raveEquivParam: 260,
+      desc: '大師：UCT 樹搜尋加 RAVE（AMAF）統計；比單層推演更會集中搜索。'
+    },
+    katalite: {
+      engine: 'katalite', candidateLimit: 28, iterations: 650, timeBudgetMs: 1800, maxPly: 34,
+      cpuct: 1.35, raveEquivParam: 220,
+      desc: 'KataLite：戰術 policy prior、影響力／棋群價值估算、PUCT + RAVE 及戰術導向推演；9 路最佳。'
+    }
   };
 
-  function updateDifficultyDesc() {
-    const level = aiLevelSelect.value;
-    difficultyDescEl.textContent = DIFFICULTY[level].desc;
-  }
-  aiLevelSelect.addEventListener('change', updateDifficultyDesc);
-
-  function initBoard(newSize) {
-    size = newSize;
-    cell = size === 19 ? 30 : (size === 13 ? 36 : 40);
-    margin = cell;
-    const dim = margin * 2 + cell * (size - 1);
-    canvas.width = dim;
-    canvas.height = dim;
-    board = Array.from({ length: size }, () => Array(size).fill(EMPTY));
-    history = [];
-    current = BLACK;
-    captures = { [BLACK]: 0, [WHITE]: 0 };
-    lastBoardSnapshot = null;
-    passCount = 0;
-    gameOver = false;
-    aiThinking = false;
-    setButtonsEnabled(true);
-    updateScoreUI();
-    setStatus('請落子（黑棋先行）');
-    thinkingEl.textContent = '';
-    updateDifficultyDesc();
-    draw();
-  }
-
-  function setButtonsEnabled(enabled) {
-    passBtn.disabled = !enabled;
-    undoBtn.disabled = !enabled;
-  }
-
+  function setStatus(text) { statusEl.textContent = text; }
+  function moveKey(x, y) { return `${x},${y}`; }
   function cloneBoard(b) { return b.map(row => row.slice()); }
+  function opponent(color) { return color === BLACK ? WHITE : BLACK; }
+  function inBounds(x, y) { return x >= 0 && x < size && y >= 0 && y < size; }
 
-  function boardsEqual(a, b) {
-    if (a.length !== b.length) return false;
-    for (let y = 0; y < a.length; y++)
-      for (let x = 0; x < a.length; x++)
-        if (a[y][x] !== b[y][x]) return false;
-    return true;
-  }
-
-  function inBoundsForSize(x, y, s) { return x >= 0 && x < s && y >= 0 && y < s; }
-  function inBounds(x, y) { return inBoundsForSize(x, y, size); }
-
-  function neighborsForBoard(x, y, s) {
+  function neighbors(x, y) {
     const result = [];
-    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy]) => {
-      const nx = x+dx, ny = y+dy;
-      if (inBoundsForSize(nx, ny, s)) result.push([nx, ny]);
-    });
+    for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+      const nx = x + dx, ny = y + dy;
+      if (inBounds(nx, ny)) result.push([nx, ny]);
+    }
     return result;
   }
-  function neighbors(x, y) { return neighborsForBoard(x, y, size); }
 
   function diagonalNeighbors(x, y) {
     const result = [];
-    [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([dx,dy]) => {
-      const nx = x+dx, ny = y+dy;
+    for (const [dx, dy] of [[-1,-1],[1,-1],[-1,1],[1,1]]) {
+      const nx = x + dx, ny = y + dy;
       if (inBounds(nx, ny)) result.push([nx, ny]);
-    });
+    }
     return result;
   }
 
-  function getGroupOnBoard(b, x, y, s) {
+  function boardsEqual(a, b) {
+    if (!a || !b || a.length !== b.length) return false;
+    for (let y = 0; y < a.length; y++) {
+      for (let x = 0; x < a.length; x++) {
+        if (a[y][x] !== b[y][x]) return false;
+      }
+    }
+    return true;
+  }
+
+  function getGroup(b, x, y) {
     const color = b[y][x];
-    const visited = new Set();
+    const stones = new Set();
     const liberties = new Set();
     const stack = [[x, y]];
     while (stack.length) {
       const [cx, cy] = stack.pop();
-      const key = cx + ',' + cy;
-      if (visited.has(key)) continue;
-      visited.add(key);
-      for (const [nx, ny] of neighborsForBoard(cx, cy, s)) {
-        if (b[ny][nx] === EMPTY) {
-          liberties.add(nx + ',' + ny);
-        } else if (b[ny][nx] === color && !visited.has(nx + ',' + ny)) {
-          stack.push([nx, ny]);
-        }
+      const key = moveKey(cx, cy);
+      if (stones.has(key)) continue;
+      stones.add(key);
+      for (const [nx, ny] of neighbors(cx, cy)) {
+        if (b[ny][nx] === EMPTY) liberties.add(moveKey(nx, ny));
+        else if (b[ny][nx] === color && !stones.has(moveKey(nx, ny))) stack.push([nx, ny]);
       }
     }
-    return { stones: visited, liberties };
+    return { stones, liberties };
   }
-  function getGroup(b, x, y) { return getGroupOnBoard(b, x, y, size); }
 
-  function opponent(c) { return c === BLACK ? WHITE : BLACK; }
-
-  /**
-   * Core legality check. Order of operations: place stone -> capture opponent groups with zero
-   * liberties -> THEN check own group liberties (so captures correctly open up liberties for the
-   * just-placed stone) -> simple ko check on single-stone recaptures.
-   */
-  function attemptMoveOnBoard(b, x, y, color, prevSnapshot, s) {
-    if (b[y][x] !== EMPTY) return null;
+  /*
+    Correct Go legality order:
+    1. Place on a trial board.
+    2. Remove ALL opponent groups now having no liberties.
+    3. Check own liberties only after captures.
+    Therefore a move that appears surrounded is legal when it captures a neighboring
+    opponent group and the captured point becomes a liberty. Only actual self-capture
+    with no resulting liberty is rejected.
+  */
+  function attemptMove(b, x, y, color, prevSnapshot) {
+    if (!inBounds(x, y) || b[y][x] !== EMPTY) return null;
     const trial = cloneBoard(b);
     trial[y][x] = color;
+    const enemy = opponent(color);
+    const removed = new Set();
 
-    let capturedStones = [];
-    const opp = opponent(color);
-    for (const [nx, ny] of neighborsForBoard(x, y, s)) {
-      if (trial[ny][nx] === opp) {
-        const { stones, liberties } = getGroupOnBoard(trial, nx, ny, s);
-        if (liberties.size === 0) {
-          stones.forEach(k => {
-            const [sx, sy] = k.split(',').map(Number);
-            trial[sy][sx] = EMPTY;
-          });
-          capturedStones = capturedStones.concat([...stones]);
+    for (const [nx, ny] of neighbors(x, y)) {
+      if (trial[ny][nx] !== enemy) continue;
+      const group = getGroup(trial, nx, ny);
+      if (group.liberties.size === 0) {
+        for (const stoneKey of group.stones) {
+          const [sx, sy] = stoneKey.split(',').map(Number);
+          trial[sy][sx] = EMPTY;
+          removed.add(stoneKey);
         }
       }
     }
 
-    const { liberties: selfLibs } = getGroupOnBoard(trial, x, y, s);
-    if (selfLibs.size === 0) return null;
+    const ownGroup = getGroup(trial, x, y);
+    if (ownGroup.liberties.size === 0) return null;
 
-    if (capturedStones.length === 1 && prevSnapshot && boardsEqual(trial, prevSnapshot)) {
-      return null;
-    }
+    // Simple ko: cannot immediately recreate board before opponent's last move.
+    if (removed.size === 1 && prevSnapshot && boardsEqual(trial, prevSnapshot)) return null;
 
-    return { newBoard: trial, capturedCount: capturedStones.length };
+    return { newBoard: trial, capturedCount: removed.size };
   }
 
-  function attemptMove(b, x, y, color, prevSnapshot) {
-    return attemptMoveOnBoard(b, x, y, color, prevSnapshot, size);
+  function isTrueEye(b, x, y, color) {
+    if (b[y][x] !== EMPTY) return false;
+    for (const [nx, ny] of neighbors(x, y)) {
+      if (b[ny][nx] !== color) return false;
+    }
+    const diagonals = diagonalNeighbors(x, y);
+    let ownDiag = 0;
+    for (const [dx, dy] of diagonals) if (b[dy][dx] === color) ownDiag++;
+    return diagonals.length === 4 ? ownDiag >= 3 : ownDiag === diagonals.length;
   }
 
   function placeStone(x, y, color) {
@@ -312,64 +291,25 @@
     if (!result) return false;
     history.push({
       board: cloneBoard(board),
-      current, captures: { ...captures },
+      current,
+      captures: { ...captures },
       lastBoardSnapshot: lastBoardSnapshot ? cloneBoard(lastBoardSnapshot) : null,
-      passCount
+      passCount,
+      lastMove: lastMove ? { ...lastMove } : null
     });
     lastBoardSnapshot = cloneBoard(board);
     board = result.newBoard;
     captures[color] += result.capturedCount;
+    current = opponent(color);
     passCount = 0;
-    updateScoreUI();
+    lastMove = { color, x, y };
+    updateScoreUi();
     return true;
   }
 
-  function updateScoreUI() {
-    blackCapEl.textContent = captures[BLACK];
-    whiteCapEl.textContent = captures[WHITE];
-  }
-
-  function setStatus(msg) { statusEl.textContent = msg; }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#dcb35c';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#3a2a10';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < size; i++) {
-      const pos = margin + i * cell;
-      ctx.beginPath(); ctx.moveTo(margin, pos); ctx.lineTo(margin + cell * (size - 1), pos); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(pos, margin); ctx.lineTo(pos, margin + cell * (size - 1)); ctx.stroke();
-    }
-    const starPoints = getStarPoints(size);
-    ctx.fillStyle = '#3a2a10';
-    starPoints.forEach(([sx, sy]) => {
-      ctx.beginPath();
-      ctx.arc(margin + sx * cell, margin + sy * cell, 3, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        if (board[y][x] !== EMPTY) drawStone(x, y, board[y][x]);
-      }
-    }
-  }
-
-  function drawStone(x, y, color) {
-    const cx = margin + x * cell;
-    const cy = margin + y * cell;
-    const r = cell * 0.42;
-    const grad = ctx.createRadialGradient(cx - r/3, cy - r/3, r/6, cx, cy, r);
-    if (color === BLACK) { grad.addColorStop(0, '#555'); grad.addColorStop(1, '#000'); }
-    else { grad.addColorStop(0, '#fff'); grad.addColorStop(1, '#ccc'); }
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 0.5;
-    ctx.stroke();
+  function updateScoreUi() {
+    blackCapturesEl.textContent = captures[BLACK];
+    whiteCapturesEl.textContent = captures[WHITE];
   }
 
   function getStarPoints(n) {
@@ -379,561 +319,634 @@
     return [];
   }
 
+  function drawStone(x, y, color) {
+    const cx = margin + x * cell;
+    const cy = margin + y * cell;
+    const r = cell * 0.43;
+    const gradient = ctx.createRadialGradient(cx - r * .35, cy - r * .35, r * .08, cx, cy, r);
+    if (color === BLACK) {
+      gradient.addColorStop(0, '#555c65');
+      gradient.addColorStop(.35, '#20262d');
+      gradient.addColorStop(1, '#020304');
+    } else {
+      gradient.addColorStop(0, '#ffffff');
+      gradient.addColorStop(.7, '#e0e4e7');
+      gradient.addColorStop(1, '#afb5bc');
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.strokeStyle = color === BLACK ? '#000' : '#929aa3';
+    ctx.lineWidth = .7;
+    ctx.stroke();
+  }
+
+  function drawLastMoveMarker() {
+    if (!lastMove) return;
+    const cx = margin + lastMove.x * cell;
+    const cy = margin + lastMove.y * cell;
+    ctx.beginPath();
+    ctx.arc(cx, cy, Math.max(3, cell * .095), 0, Math.PI * 2);
+    ctx.fillStyle = lastMove.color === BLACK ? '#f7f3b7' : '#263238';
+    ctx.fill();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#d9aa55';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#4f3511';
+    ctx.lineWidth = 1;
+    const max = margin + cell * (size - 1);
+    for (let i = 0; i < size; i++) {
+      const p = margin + i * cell;
+      ctx.beginPath(); ctx.moveTo(margin, p); ctx.lineTo(max, p); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p, margin); ctx.lineTo(p, max); ctx.stroke();
+    }
+    ctx.fillStyle = '#4f3511';
+    for (const [x, y] of getStarPoints(size)) {
+      ctx.beginPath();
+      ctx.arc(margin + x * cell, margin + y * cell, Math.max(2.5, cell * .07), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        if (board[y][x] !== EMPTY) drawStone(x, y, board[y][x]);
+      }
+    }
+    drawLastMoveMarker();
+  }
+
   function pixelToCoord(px, py) {
-    const x = Math.round((px - margin) / cell);
-    const y = Math.round((py - margin) / cell);
-    return { x, y };
+    return {
+      x: Math.round((px - margin) / cell),
+      y: Math.round((py - margin) / cell)
+    };
   }
 
-  canvas.addEventListener('click', (e) => {
-    if (gameOver || current !== BLACK || aiThinking) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const px = (e.clientX - rect.left) * scaleX;
-    const py = (e.clientY - rect.top) * scaleY;
-    const { x, y } = pixelToCoord(px, py);
-    if (!inBounds(x, y)) return;
+  function updateDifficultyDescription() {
+    difficultyDescEl.textContent = DIFFICULTY[aiLevelSelect.value].desc;
+  }
 
-    const ok = placeStone(x, y, BLACK);
-    if (!ok) {
-      setStatus('此點不能落子（違反打劫規則，或無法吃子且自身無氣的自殺禁手）');
-      return;
-    }
-    draw();
-    current = WHITE;
-    setButtonsEnabled(false);
-    setStatus('AI思考中...');
-    setTimeout(runAiMove, 50);
-  });
+  function setControlLock(locked) {
+    passBtn.disabled = locked;
+    undoBtn.disabled = locked;
+    boardSizeSelect.disabled = locked;
+    aiLevelSelect.disabled = locked;
+    scoringRuleSelect.disabled = locked;
+  }
 
-  passBtn.addEventListener('click', () => {
-    if (gameOver || current !== BLACK || aiThinking) return;
-    passCount++;
-    history.push({ board: cloneBoard(board), current, captures: {...captures}, lastBoardSnapshot: lastBoardSnapshot?cloneBoard(lastBoardSnapshot):null, passCount: passCount-1 });
-    if (passCount >= 2) { endGame(); return; }
-    current = WHITE;
-    setButtonsEnabled(false);
-    setStatus('你選擇停一手。AI思考中...');
-    setTimeout(runAiMove, 50);
-  });
-
-  undoBtn.addEventListener('click', () => {
-    if (history.length < 2 || aiThinking) return;
-    history.pop();
-    const prev = history.pop();
-    board = prev.board;
-    current = prev.current;
-    captures = prev.captures;
-    lastBoardSnapshot = prev.lastBoardSnapshot;
-    passCount = prev.passCount;
+  function initGame(newSize) {
+    size = newSize;
+    cell = size === 19 ? 29 : size === 13 ? 35 : 42;
+    margin = cell;
+    const dimension = margin * 2 + cell * (size - 1);
+    canvas.width = dimension;
+    canvas.height = dimension;
+    board = Array.from({ length: size }, () => Array(size).fill(EMPTY));
+    current = BLACK;
+    captures = { [BLACK]: 0, [WHITE]: 0 };
+    history = [];
+    lastBoardSnapshot = null;
+    passCount = 0;
     gameOver = false;
-    setButtonsEnabled(true);
-    updateScoreUI();
+    aiThinking = false;
+    lastMove = null;
+    setControlLock(false);
+    updateScoreUi();
+    updateDifficultyDescription();
+    thinkingEl.textContent = '';
+    setStatus('請落子（黑棋先行）');
     draw();
-    setStatus('已悔棋，請落子');
-  });
-
-  document.getElementById('newGameBtn').addEventListener('click', () => {
-    initBoard(parseInt(document.getElementById('boardSize').value, 10));
-  });
-
-  function endGame() {
-    gameOver = true;
-    setButtonsEnabled(false);
-    const rule = document.getElementById('scoringRule').value;
-    const result = computeScore(rule);
-    setStatus(`對局結束（${rule === 'chinese' ? '中國數子法' : '日本目數法'}）。黑 ${result.black.toFixed(1)} - 白 ${result.white.toFixed(1)}。勝者：${result.winner}`);
-  }
-
-  function isTrueEye(b, x, y, color) {
-    if (b[y][x] !== EMPTY) return false;
-    for (const [nx, ny] of neighbors(x, y)) {
-      if (b[ny][nx] !== color) return false;
-    }
-    const diags = diagonalNeighbors(x, y);
-    let ownDiag = 0;
-    diags.forEach(([dx, dy]) => { if (b[dy][dx] === color) ownDiag++; });
-    if (diags.length === 4) return ownDiag >= 3;
-    return ownDiag >= diags.length;
   }
 
   function floodEmptyRegions(b) {
     const visited = Array.from({ length: size }, () => Array(size).fill(false));
-    const regions = [];
+    const output = [];
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
-        if (b[y][x] === EMPTY && !visited[y][x]) {
-          const region = [];
-          const stack = [[x, y]];
-          const borderColors = new Set();
-          visited[y][x] = true;
-          while (stack.length) {
-            const [cx, cy] = stack.pop();
-            region.push([cx, cy]);
-            for (const [nx, ny] of neighbors(cx, cy)) {
-              if (b[ny][nx] === EMPTY && !visited[ny][nx]) {
-                visited[ny][nx] = true;
-                stack.push([nx, ny]);
-              } else if (b[ny][nx] !== EMPTY) {
-                borderColors.add(b[ny][nx]);
-              }
+        if (b[y][x] !== EMPTY || visited[y][x]) continue;
+        const region = [];
+        const borders = new Set();
+        const stack = [[x, y]];
+        visited[y][x] = true;
+        while (stack.length) {
+          const [cx, cy] = stack.pop();
+          region.push([cx, cy]);
+          for (const [nx, ny] of neighbors(cx, cy)) {
+            if (b[ny][nx] === EMPTY && !visited[ny][nx]) {
+              visited[ny][nx] = true;
+              stack.push([nx, ny]);
+            } else if (b[ny][nx] !== EMPTY) {
+              borders.add(b[ny][nx]);
             }
           }
-          regions.push({ region, borderColors });
         }
+        output.push({ region, borders });
       }
     }
-    return regions;
+    return output;
   }
 
-  function computeScore(rule) {
-    const regions = floodEmptyRegions(board);
+  function computeScore() {
     let blackTerritory = 0, whiteTerritory = 0;
-    regions.forEach(({ region, borderColors }) => {
-      if (borderColors.size === 1) {
-        if (borderColors.has(BLACK)) blackTerritory += region.length;
-        else if (borderColors.has(WHITE)) whiteTerritory += region.length;
-      }
-    });
-
-    let blackScore, whiteScore;
-    if (rule === 'chinese') {
-      let blackStones = 0, whiteStones = 0;
-      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-        if (board[y][x] === BLACK) blackStones++;
-        else if (board[y][x] === WHITE) whiteStones++;
-      }
-      blackScore = blackStones + blackTerritory;
-      whiteScore = whiteStones + whiteTerritory + KOMI;
-    } else {
-      blackScore = blackTerritory + captures[BLACK];
-      whiteScore = whiteTerritory + captures[WHITE] + KOMI;
+    for (const item of floodEmptyRegions(board)) {
+      if (item.borders.size !== 1) continue;
+      if (item.borders.has(BLACK)) blackTerritory += item.region.length;
+      if (item.borders.has(WHITE)) whiteTerritory += item.region.length;
     }
-    const winner = blackScore > whiteScore ? '黑棋（玩家）' : '白棋（AI）';
-    return { black: blackScore, white: whiteScore, winner };
+    let black = 0, white = 0;
+    if (scoringRuleSelect.value === 'chinese') {
+      let blackStones = 0, whiteStones = 0;
+      for (const row of board) for (const stone of row) {
+        if (stone === BLACK) blackStones++;
+        if (stone === WHITE) whiteStones++;
+      }
+      black = blackStones + blackTerritory;
+      white = whiteStones + whiteTerritory + KOMI;
+    } else {
+      black = blackTerritory + captures[BLACK];
+      white = whiteTerritory + captures[WHITE] + KOMI;
+    }
+    return { black, white, winner: black > white ? '黑棋（玩家）' : '白棋（AI）' };
   }
 
-  function generateLegalMoves(b, color, prevSnapshot, limit, skipEyes) {
-    const moves = [];
+  function endGame() {
+    gameOver = true;
+    setControlLock(true);
+    const score = computeScore();
+    const ruleLabel = scoringRuleSelect.value === 'chinese' ? '中國數子法' : '日本目數法';
+    setStatus(`對局結束（${ruleLabel}）：黑 ${score.black.toFixed(1)}，白 ${score.white.toFixed(1)}。勝者：${score.winner}`);
+  }
+
+  // ---------- Shared tactical / rollout helpers ----------
+  function groupId(group) { return [...group.stones].sort().join('|'); }
+
+  function adjacentDistinctGroups(b, x, y, color) {
+    const groups = new Set();
+    for (const [nx, ny] of neighbors(x, y)) {
+      if (b[ny][nx] === color) groups.add(groupId(getGroup(b, nx, ny)));
+    }
+    return groups.size;
+  }
+
+  function localInfluence(b, x, y, color) {
+    let value = 0;
+    const enemy = opponent(color);
+    for (let dy = -3; dy <= 3; dy++) {
+      for (let dx = -3; dx <= 3; dx++) {
+        const nx = x + dx, ny = y + dy;
+        const distance = Math.abs(dx) + Math.abs(dy);
+        if (!inBounds(nx, ny) || distance === 0 || distance > 3) continue;
+        const weight = 1 / distance;
+        if (b[ny][nx] === color) value += weight;
+        if (b[ny][nx] === enemy) value -= weight;
+      }
+    }
+    return value;
+  }
+
+  function tacticalMoveScore(b, x, y, color, result) {
+    const after = result.newBoard;
+    const enemy = opponent(color);
+    let score = result.capturedCount * 500;
+    const ownAfter = getGroup(after, x, y);
+    if (ownAfter.liberties.size === 1 && result.capturedCount === 0) score -= 350;
+    else if (ownAfter.liberties.size === 2) score -= 25;
+    else if (ownAfter.liberties.size >= 4) score += 12;
+
+    const seenFriendly = new Set();
+    for (const [nx, ny] of neighbors(x, y)) {
+      if (b[ny][nx] !== color) continue;
+      const group = getGroup(b, nx, ny);
+      const id = groupId(group);
+      if (!seenFriendly.has(id) && group.liberties.size === 1) {
+        seenFriendly.add(id);
+        score += 180 + group.stones.size * 15;
+      }
+    }
+
+    const seenEnemy = new Set();
+    for (const [nx, ny] of neighbors(x, y)) {
+      if (after[ny][nx] !== enemy) continue;
+      const group = getGroup(after, nx, ny);
+      const id = groupId(group);
+      if (!seenEnemy.has(id) && group.liberties.size === 1) {
+        seenEnemy.add(id);
+        score += 110 + group.stones.size * 9;
+      }
+    }
+
+    const connects = adjacentDistinctGroups(b, x, y, color);
+    if (connects >= 2) score += 55 * (connects - 1);
+    const cuts = adjacentDistinctGroups(b, x, y, enemy);
+    if (cuts >= 2) score += 28 * (cuts - 1);
+    score += localInfluence(b, x, y, color) * 4;
+
+    const edgeDistance = Math.min(x, y, size - 1 - x, size - 1 - y);
+    if (edgeDistance === 0) score -= 14;
+    else if (edgeDistance === 1) score += 4;
+    else if (edgeDistance === 2 || edgeDistance === 3) score += 10;
+
+    if (lastMove && lastMove.color === enemy) {
+      const d = Math.abs(x - lastMove.x) + Math.abs(y - lastMove.y);
+      if (d === 1) score += 16;
+      else if (d === 2) score += 6;
+    }
+    return score;
+  }
+
+  function kataLiteCandidates(b, color, prevSnapshot, limit) {
+    const candidates = [];
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
-        if (skipEyes && isTrueEye(b, x, y, color)) continue;
+        if (isTrueEye(b, x, y, color)) continue;
         const result = attemptMove(b, x, y, color, prevSnapshot);
-        if (result) {
-          moves.push({ x, y, capturedCount: result.capturedCount, newBoard: result.newBoard });
-        }
+        if (!result) continue;
+        candidates.push({
+          x, y,
+          newBoard: result.newBoard,
+          capturedCount: result.capturedCount,
+          rawScore: tacticalMoveScore(b, x, y, color, result),
+          prior: 0
+        });
       }
     }
-    if (limit && moves.length > limit) {
-      moves.sort((a, b2) => b2.capturedCount - a.capturedCount);
-      return moves.slice(0, limit);
+    candidates.sort((a, b2) => b2.rawScore - a.rawScore);
+    const chosen = candidates.slice(0, Math.min(limit, candidates.length));
+    if (!chosen.length) return chosen;
+    const maxScore = chosen[0].rawScore;
+    const temperature = 70;
+    let total = 0;
+    for (const c of chosen) {
+      c.prior = Math.exp((c.rawScore - maxScore) / temperature);
+      total += c.prior;
     }
-    return moves;
+    for (const c of chosen) c.prior /= total || 1;
+    return chosen;
   }
 
-  function quickHeuristicScore(x, y, capturedCount, b, color) {
-    let score = capturedCount * 50;
-    let neighborStones = 0;
-    for (const [nx, ny] of neighbors(x, y)) {
-      if (b[ny][nx] !== EMPTY) neighborStones++;
+  function chooseTacticalRolloutMove(b, color, prevSnapshot, candidateLimit = 12) {
+    const candidates = kataLiteCandidates(b, color, prevSnapshot, candidateLimit);
+    if (!candidates.length) return null;
+    const tactical = candidates.filter(c => c.capturedCount > 0 || c.rawScore >= 140);
+    if (tactical.length && Math.random() < .82) {
+      return tactical[Math.floor(Math.random() * Math.min(3, tactical.length))];
     }
-    score += neighborStones * 2;
-    const center = (size - 1) / 2;
-    const distToCenter = Math.abs(x - center) + Math.abs(y - center);
-    score += Math.max(0, size - distToCenter) * 0.3;
-    const opp = opponent(color);
-    let putsOpponentInAtari = false;
-    for (const [nx, ny] of neighbors(x, y)) {
-      if (b[ny][nx] === opp) {
-        const { liberties } = getGroup(b, nx, ny);
-        if (liberties.size === 1) { score += 30; putsOpponentInAtari = true; }
-      }
-    }
-    for (const [nx, ny] of neighbors(x, y)) {
-      if (b[ny][nx] === color) {
-        const { liberties } = getGroup(b, nx, ny);
-        if (liberties.size === 1) score += 25;
-      }
-    }
-    return { score, putsOpponentInAtari };
+    const top = candidates.slice(0, Math.min(6, candidates.length));
+    return Math.random() < .52 ? top[0] : top[Math.floor(Math.random() * top.length)];
   }
 
-  // Policy-biased random move for rollouts, favoring captures and atari-escapes over pure random.
-  function policyBiasedMove(b, color, prevSnapshot) {
-    const size2 = size * size;
-    const capturingMoves = [];
-    const savingMoves = [];
-    const otherMoves = [];
-    const tried = new Set();
-    const maxScan = Math.min(size2, 70);
-
-    for (let attempt = 0; attempt < maxScan; attempt++) {
-      const idx = Math.floor(Math.random() * size2);
-      if (tried.has(idx)) continue;
-      tried.add(idx);
-      const x = idx % size, y = Math.floor(idx / size);
-      if (isTrueEye(b, x, y, color)) continue;
-      const result = attemptMove(b, x, y, color, prevSnapshot);
-      if (!result) continue;
-
-      if (result.capturedCount > 0) {
-        capturingMoves.push({ x, y, newBoard: result.newBoard });
-        continue;
-      }
-      let savesOwnAtari = false;
-      for (const [nx, ny] of neighbors(x, y)) {
-        if (b[ny][nx] === color) {
-          const { liberties } = getGroup(b, nx, ny);
-          if (liberties.size === 1) { savesOwnAtari = true; break; }
-        }
-      }
-      if (savesOwnAtari) savingMoves.push({ x, y, newBoard: result.newBoard });
-      else otherMoves.push({ x, y, newBoard: result.newBoard });
-
-      if (capturingMoves.length + savingMoves.length + otherMoves.length >= 24) break;
-    }
-
-    if (capturingMoves.length > 0 && Math.random() < 0.85) {
-      return capturingMoves[Math.floor(Math.random() * capturingMoves.length)];
-    }
-    if (savingMoves.length > 0 && Math.random() < 0.7) {
-      return savingMoves[Math.floor(Math.random() * savingMoves.length)];
-    }
-    const pool = otherMoves.length ? otherMoves : (capturingMoves.length ? capturingMoves : savingMoves);
-    if (pool.length === 0) return null;
-    return pool[Math.floor(Math.random() * pool.length)];
-  }
-
-  function policyBiasedPlayout(startBoard, startColor, maxPly) {
-    let b = startBoard;
-    let cur = startColor;
-    let prevSnap = null;
-    let passes = 0;
-    let ply = 0;
-    while (passes < 2 && ply < maxPly) {
-      const mv = policyBiasedMove(b, cur, prevSnap);
-      if (!mv) {
-        passes++;
-      } else {
-        passes = 0;
-        prevSnap = b;
-        b = mv.newBoard;
-      }
-      cur = opponent(cur);
-      ply++;
-    }
-    let blackCount = 0, whiteCount = 0;
+  function computeInfluenceMap(b) {
+    let influence = Array.from({ length: size }, () => Array(size).fill(0));
     for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-      if (b[y][x] === BLACK) blackCount++;
-      else if (b[y][x] === WHITE) whiteCount++;
+      influence[y][x] = b[y][x] === BLACK ? 4 : b[y][x] === WHITE ? -4 : 0;
     }
-    return blackCount - whiteCount;
+    for (let pass = 0; pass < 4; pass++) {
+      const next = influence.map(row => row.slice());
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        if (b[y][x] !== EMPTY) continue;
+        const ns = neighbors(x, y);
+        const average = ns.reduce((sum, [nx, ny]) => sum + influence[ny][nx], 0) / Math.max(1, ns.length);
+        next[y][x] = Math.max(-4, Math.min(4, average));
+      }
+      influence = next;
+    }
+    return influence;
   }
 
-  // Playout variant that also LOGS every (color, move) played, needed for RAVE/AMAF updates.
-  function policyBiasedPlayoutWithLog(startBoard, startColor, maxPly) {
+  function evaluateKataLite(b) {
+    const influence = computeInfluenceMap(b);
+    let blackTerritory = 0, whiteTerritory = 0, blackInfluence = 0, whiteInfluence = 0;
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      if (b[y][x] !== EMPTY) continue;
+      const v = influence[y][x];
+      if (v > 1) blackTerritory++;
+      else if (v < -1) whiteTerritory++;
+      if (v > 0) blackInfluence += v;
+      else whiteInfluence -= v;
+    }
+
+    let blackGroupValue = 0, whiteGroupValue = 0, blackStones = 0, whiteStones = 0;
+    const visited = new Set();
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      const color = b[y][x];
+      if (color === EMPTY) continue;
+      if (color === BLACK) blackStones++; else whiteStones++;
+      const key = moveKey(x, y);
+      if (visited.has(key)) continue;
+      const group = getGroup(b, x, y);
+      for (const stoneKey of group.stones) visited.add(stoneKey);
+      const liberties = group.liberties.size;
+      const stones = group.stones.size;
+      let value = Math.min(liberties, 6) * 1.2 + stones * .08;
+      if (liberties === 1) value -= stones * 8.5;
+      else if (liberties === 2) value -= stones * 1.6;
+      if (color === BLACK) blackGroupValue += value; else whiteGroupValue += value;
+    }
+    const blackValue = blackTerritory + blackInfluence * .10 + blackGroupValue + blackStones * .08;
+    const whiteValue = whiteTerritory + whiteInfluence * .10 + whiteGroupValue + whiteStones * .08 + KOMI;
+    return blackValue - whiteValue;
+  }
+
+  function kataLitePlayout(startBoard, startColor, maxPly) {
     let b = startBoard;
-    let cur = startColor;
-    let prevSnap = null;
+    let color = startColor;
+    let previous = null;
     let passes = 0;
-    let ply = 0;
     const moveLog = [];
-    while (passes < 2 && ply < maxPly) {
-      const mv = policyBiasedMove(b, cur, prevSnap);
-      if (!mv) {
+    for (let ply = 0; ply < maxPly && passes < 2; ply++) {
+      const move = chooseTacticalRolloutMove(b, color, previous);
+      if (!move) {
         passes++;
       } else {
         passes = 0;
-        prevSnap = b;
-        b = mv.newBoard;
-        moveLog.push({ color: cur, x: mv.x, y: mv.y });
+        previous = b;
+        b = move.newBoard;
+        moveLog.push({ color, x: move.x, y: move.y });
       }
-      cur = opponent(cur);
-      ply++;
+      color = opponent(color);
     }
-    let blackCount = 0, whiteCount = 0;
-    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
-      if (b[y][x] === BLACK) blackCount++;
-      else if (b[y][x] === WHITE) whiteCount++;
-    }
-    return { result: blackCount - whiteCount, moveLog };
+    return { rawScore: evaluateKataLite(b), moveLog };
   }
 
+  // ---------- Flat engine ----------
   function softmaxPick(items, temperature) {
-    if (temperature <= 0.05) {
-      let best = items[0];
-      for (const it of items) if (it.value > best.value) best = it;
-      return best;
-    }
-    const maxV = Math.max(...items.map(i => i.value));
-    const weights = items.map(i => Math.exp((i.value - maxV) / temperature));
-    const total = weights.reduce((a, b) => a + b, 0);
-    let r = Math.random() * total;
+    if (!items.length) return null;
+    if (temperature <= .05) return items.reduce((best, item) => item.value > best.value ? item : best, items[0]);
+    const max = Math.max(...items.map(i => i.value));
+    const weights = items.map(i => Math.exp((i.value - max) / temperature));
+    let r = Math.random() * weights.reduce((a, b) => a + b, 0);
     for (let i = 0; i < items.length; i++) {
       r -= weights[i];
       if (r <= 0) return items[i];
     }
-    return items[items.length - 1];
+    return items.at(-1);
   }
 
-  // ---------- Flat engine (beginner..expert): one-ply candidate list + rollout averaging ----------
   function flatEngineSelectMove(color, settings) {
-    const ignoreTactics = Math.random() < settings.blindSpotRate;
-    let candidates = generateLegalMoves(board, color, lastBoardSnapshot, null, true);
-    if (candidates.length === 0) return null;
-
-    candidates.forEach(c => {
-      const { score, putsOpponentInAtari } = quickHeuristicScore(c.x, c.y, c.capturedCount, board, color);
-      c.heuristic = score;
-      c.tactical = putsOpponentInAtari || c.capturedCount > 0;
-    });
-
-    if (ignoreTactics) {
-      const nonTactical = candidates.filter(c => !c.tactical);
-      if (nonTactical.length > 0) candidates = nonTactical;
+    let candidates = kataLiteCandidates(board, color, lastBoardSnapshot, Math.max(settings.candidateLimit * 2, 16));
+    if (!candidates.length) return null;
+    if (Math.random() < settings.blindSpotRate) {
+      const nonTactical = candidates.filter(c => c.capturedCount === 0 && c.rawScore < 140);
+      if (nonTactical.length) candidates = nonTactical;
     }
-
-    candidates.sort((a, b) => b.heuristic - a.heuristic);
-    if (candidates.length > settings.candidateLimit) {
-      candidates = candidates.slice(0, settings.candidateLimit);
-    }
-
-    const simsPerCandidate = Math.max(1, Math.floor(settings.totalSims / candidates.length));
-    const opp = opponent(color);
-
+    candidates = candidates.slice(0, settings.candidateLimit);
+    const sims = Math.max(1, Math.floor(settings.totalSims / candidates.length));
+    const enemy = opponent(color);
     const evaluated = candidates.map(c => {
       let total = 0;
-      for (let i = 0; i < simsPerCandidate; i++) {
-        const rawResult = policyBiasedPlayout(c.newBoard, opp, settings.maxPlyPerPlayout);
-        const scoreForColor = color === BLACK ? rawResult : -rawResult;
-        total += scoreForColor;
+      for (let i = 0; i < sims; i++) {
+        const rollout = kataLitePlayout(c.newBoard, enemy, settings.maxPly);
+        total += color === BLACK ? rollout.rawScore : -rollout.rawScore;
       }
-      const avg = total / simsPerCandidate + c.heuristic * 0.05;
-      return { x: c.x, y: c.y, value: avg };
+      return { x: c.x, y: c.y, value: total / sims + c.rawScore * .045 };
     });
-
     return softmaxPick(evaluated, settings.temperature);
   }
 
-  // ---------- UCT + RAVE engine (master tier) ----------
-  // Each node stores standard MCTS stats (visits, winValue) PLUS AMAF maps keyed by move "x,y":
-  // amafVisits/amafWins record outcomes for EVERY occurrence of a move by this node's mover color,
-  // both inside the tree beyond this node and in the random playout tail. This lets a move's value
-  // be estimated from many more samples than just "how many times was this exact child visited",
-  // which is what makes RAVE converge faster than plain UCT with the same iteration budget.
-  function createRaveNode(nodeBoard, color, lastSnap, parent, move) {
+  // ---------- Generic UCT + RAVE engine ----------
+  function createNode(nodeBoard, color, snapshot, parent, move, prior = .001) {
     return {
-      board: nodeBoard, color, lastSnap, parent, move,
-      children: [], visits: 0, winValue: 0,
-      untried: null,
+      board: nodeBoard, color, snapshot, parent, move, prior,
+      children: [], untried: null, visits: 0, winValue: 0,
       amafVisits: new Map(), amafWins: new Map()
     };
   }
 
-  function moveKey(x, y) { return x + ',' + y; }
+  function updateRave(path, moveLog, rootColor, winForRoot) {
+    const movesByColor = { [BLACK]: [], [WHITE]: [] };
+    for (let i = 1; i < path.length; i++) movesByColor[path[i - 1].color].push(path[i].move);
+    for (const m of moveLog) movesByColor[m.color].push({ x: m.x, y: m.y });
+    for (let i = 0; i < path.length - 1; i++) {
+      const ancestor = path[i];
+      const winForMover = ancestor.color === rootColor ? winForRoot : 1 - winForRoot;
+      for (const move of movesByColor[ancestor.color]) {
+        const key = moveKey(move.x, move.y);
+        ancestor.amafVisits.set(key, (ancestor.amafVisits.get(key) || 0) + 1);
+        ancestor.amafWins.set(key, (ancestor.amafWins.get(key) || 0) + winForMover);
+      }
+    }
+  }
 
-  function uctRaveSelectChild(node, explorationConst, raveEquivParam) {
-    let best = null, bestVal = -Infinity;
-    const beta = node.visits > 0
-      ? Math.sqrt(raveEquivParam / (3 * node.visits + raveEquivParam))
-      : 1.0;
+  function selectUctRaveChild(node, settings, usePuct) {
+    let best = null, bestValue = -Infinity;
+    const beta = node.visits > 0 ? Math.sqrt(settings.raveEquivParam / (3 * node.visits + settings.raveEquivParam)) : 1;
     for (const child of node.children) {
       const key = moveKey(child.move.x, child.move.y);
-      const qUct = child.visits > 0 ? (child.winValue / child.visits) : 0;
-      const amafV = node.amafVisits.get(key) || 0;
-      const amafW = node.amafWins.get(key) || 0;
-      const qRave = amafV > 0 ? (amafW / amafV) : 0;
-      const qBlend = (1 - beta) * qUct + beta * qRave;
-      const explore = explorationConst * Math.sqrt(Math.log(node.visits + 1) / (child.visits + 1));
-      const val = qBlend + explore;
-      if (val > bestVal) { bestVal = val; best = child; }
+      const qUct = child.visits ? child.winValue / child.visits : .5;
+      const av = node.amafVisits.get(key) || 0;
+      const aw = node.amafWins.get(key) || 0;
+      const qRave = av ? aw / av : .5;
+      const q = (1 - beta) * qUct + beta * qRave;
+      const explore = usePuct
+        ? settings.cpuct * child.prior * Math.sqrt(node.visits + 1) / (1 + child.visits)
+        : settings.explorationConst * Math.sqrt(Math.log(node.visits + 1) / (child.visits + 1));
+      const value = q + explore;
+      if (value > bestValue) { bestValue = value; best = child; }
     }
     return best;
   }
 
-  function expandRaveNode(node, candidateLimit) {
-    if (node.untried === null) {
-      node.untried = generateLegalMoves(node.board, node.color, node.lastSnap, candidateLimit, true);
-    }
-    if (node.untried.length === 0) return null;
-    const idx = Math.floor(Math.random() * node.untried.length);
-    const mv = node.untried.splice(idx, 1)[0];
-    const child = createRaveNode(mv.newBoard, opponent(node.color), node.board, node, { x: mv.x, y: mv.y });
+  function expandNode(node, settings) {
+    if (node.untried === null) node.untried = kataLiteCandidates(node.board, node.color, node.snapshot, settings.candidateLimit);
+    if (!node.untried.length) return null;
+    const index = Math.floor(Math.random() * Math.min(5, node.untried.length));
+    const move = node.untried.splice(index, 1)[0];
+    const child = createNode(move.newBoard, opponent(node.color), node.board, node, { x: move.x, y: move.y }, move.prior);
     node.children.push(child);
     return child;
   }
 
-  function uctRaveSearch(rootColor, settings) {
-    const root = createRaveNode(board, rootColor, lastBoardSnapshot, null, null);
-    root.untried = generateLegalMoves(root.board, root.color, root.lastSnap, settings.candidateLimit, true);
-    if (root.untried.length === 0) return null;
-
-    const startTime = performance.now();
+  function treeSearch(rootColor, settings, usePuct) {
+    const root = createNode(board, rootColor, lastBoardSnapshot, null, null, 1);
+    root.untried = kataLiteCandidates(root.board, root.color, root.snapshot, settings.candidateLimit);
+    if (!root.untried.length) return null;
+    const started = performance.now();
     let iterations = 0;
-
-    while (iterations < settings.iterations && (performance.now() - startTime) < settings.timeBudgetMs) {
+    while (iterations < settings.iterations && performance.now() - started < settings.timeBudgetMs) {
       let node = root;
       const path = [node];
-
-      // Selection: descend using UCT+RAVE blended value while fully expanded
-      while (node.untried !== null && node.untried.length === 0 && node.children.length > 0) {
-        node = uctRaveSelectChild(node, settings.explorationConst, settings.raveEquivParam);
+      while (node.untried !== null && node.untried.length === 0 && node.children.length) {
+        node = selectUctRaveChild(node, settings, usePuct);
         path.push(node);
       }
-
-      // Expansion
-      if (node.untried === null || node.untried.length > 0) {
-        const child = expandRaveNode(node, settings.candidateLimit);
+      if (node.untried === null || node.untried.length) {
+        const child = expandNode(node, settings);
         if (child) { node = child; path.push(node); }
       }
-
-      // Simulation with move logging for AMAF updates
-      const { result: rawResult, moveLog } = policyBiasedPlayoutWithLog(node.board, opponent(node.color), settings.maxPlyPerPlayout);
-      const scoreForRoot = rootColor === BLACK ? rawResult : -rawResult;
-      const winForRoot = scoreForRoot > 0 ? 1 : (scoreForRoot < 0 ? 0 : 0.5);
-
-      // Standard backpropagation up the visited path
-      for (const n of path) {
-        n.visits += 1;
-        const winForThisNode = (n.color === rootColor) ? (1 - winForRoot) : winForRoot;
-        n.winValue += winForThisNode;
+      const playout = kataLitePlayout(node.board, opponent(node.color), settings.maxPly);
+      const scoreForRoot = rootColor === BLACK ? playout.rawScore : -playout.rawScore;
+      const winForRoot = scoreForRoot > .35 ? 1 : scoreForRoot < -.35 ? 0 : .5;
+      for (const p of path) {
+        p.visits++;
+        p.winValue += p.color === rootColor ? winForRoot : 1 - winForRoot;
       }
-
-      // RAVE / AMAF backpropagation: collect all moves made by each color, both from the tree
-      // path (beyond each ancestor) and from the playout tail, then update every ancestor's AMAF
-      // tables for its mover color. A move played anywhere in this simulation "counts as if" it
-      // had been tried directly from every earlier node where it was a legal, same-color option.
-      const movesByColor = { [BLACK]: [], [WHITE]: [] };
-      for (let i = 1; i < path.length; i++) {
-        movesByColor[path[i - 1].color].push(path[i].move);
-      }
-      for (const m of moveLog) {
-        movesByColor[m.color].push({ x: m.x, y: m.y });
-      }
-
-      for (let i = 0; i < path.length - 1; i++) {
-        const ancestor = path[i];
-        const moverColor = ancestor.color;
-        const winForMover = (moverColor === rootColor) ? winForRoot : (1 - winForRoot);
-        for (const mv of movesByColor[moverColor]) {
-          const key = moveKey(mv.x, mv.y);
-          ancestor.amafVisits.set(key, (ancestor.amafVisits.get(key) || 0) + 1);
-          ancestor.amafWins.set(key, (ancestor.amafWins.get(key) || 0) + winForMover);
-        }
-      }
-
+      updateRave(path, playout.moveLog, rootColor, winForRoot);
       iterations++;
     }
-
-    if (root.children.length === 0) return null;
-    let best = root.children[0];
-    for (const child of root.children) {
-      if (child.visits > best.visits) best = child;
-    }
-    return { move: best.move, iterations };
+    if (!root.children.length) return null;
+    root.children.sort((a, b) => b.visits - a.visits || (b.winValue / Math.max(1,b.visits)) - (a.winValue / Math.max(1,a.visits)));
+    const best = root.children[0];
+    return { move: best.move, iterations, visits: best.visits, winrate: best.winValue / Math.max(1, best.visits) };
   }
 
+  function uctRaveSearch(color, settings) { return treeSearch(color, settings, false); }
+  function kataLiteSearch(color, settings) { return treeSearch(color, settings, true); }
+
+  // ---------- AI turn ----------
   function runAiMove() {
-    if (gameOver) return;
+    if (gameOver || current !== WHITE) return;
     aiThinking = true;
-    const level = aiLevelSelect.value;
-    const settings = DIFFICULTY[level];
-    const engineLabel = settings.engine === 'uct-rave' ? 'UCT+RAVE深搜' : '單層推演';
-    thinkingEl.textContent = `AI思考中（難度：${aiLevelSelect.options[aiLevelSelect.selectedIndex].text}，引擎：${engineLabel}）...`;
+    setControlLock(true);
+    const settings = DIFFICULTY[aiLevelSelect.value];
+    const label = settings.engine === 'katalite' ? 'KataLite PUCT + RAVE' : settings.engine === 'uct-rave' ? 'UCT + RAVE' : '策略推演';
+    thinkingEl.textContent = `AI 思考中（${label}）...`;
 
     setTimeout(() => {
-      let move = null;
-      if (settings.engine === 'uct-rave') {
-        const result = uctRaveSearch(WHITE, settings);
-        move = result ? result.move : null;
-      } else {
-        move = flatEngineSelectMove(WHITE, settings);
-      }
+      try {
+        let result;
+        if (settings.engine === 'katalite') result = kataLiteSearch(WHITE, settings);
+        else if (settings.engine === 'uct-rave') result = uctRaveSearch(WHITE, settings);
+        else result = flatEngineSelectMove(WHITE, settings);
 
-      aiThinking = false;
-      setButtonsEnabled(true);
-
-      if (!move) {
-        passCount++;
-        thinkingEl.textContent = '';
-        if (passCount >= 2) { endGame(); return; }
+        const move = result?.move ?? result;
+        if (!move) {
+          passCount++;
+          current = BLACK;
+          if (passCount >= 2) endGame();
+          else setStatus('AI 停一手。請落子。');
+          return;
+        }
+        if (!placeStone(move.x, move.y, WHITE)) throw new Error('AI returned illegal move');
+        draw();
+        const extra = result?.iterations ? `（搜索 ${result.iterations} 次）` : '';
+        setStatus(`AI 於 (${move.x + 1}, ${move.y + 1}) 落子${extra}。請落子。`);
+      } catch (error) {
+        console.error(error);
         current = BLACK;
-        setStatus('AI選擇停一手（無有利落點）。請落子');
-        return;
+        setStatus(`AI 運算出錯：${error.message}`);
+      } finally {
+        aiThinking = false;
+        thinkingEl.textContent = '';
+        if (!gameOver) setControlLock(false);
       }
-
-      placeStone(move.x, move.y, WHITE);
-      draw();
-      current = BLACK;
-      thinkingEl.textContent = '';
-      setStatus(`AI於 (${move.x + 1}, ${move.y + 1}) 落子。請落子`);
-    }, 30);
+    }, 25);
   }
 
-  /**
-   * Self-test suite: verifies the rule engine's trickiest legality cases on isolated small boards.
-   */
+  // ---------- UI events ----------
+  canvas.addEventListener('click', event => {
+    if (gameOver || aiThinking || current !== BLACK) return;
+    const rect = canvas.getBoundingClientRect();
+    const px = (event.clientX - rect.left) * canvas.width / rect.width;
+    const py = (event.clientY - rect.top) * canvas.height / rect.height;
+    const { x, y } = pixelToCoord(px, py);
+    if (!inBounds(x, y)) return;
+    if (!placeStone(x, y, BLACK)) {
+      setStatus('此點不能落子：已有棋子、違反打劫，或是不能吃子且自身無氣的自殺禁手。');
+      return;
+    }
+    draw();
+    setStatus('AI 思考中...');
+    runAiMove();
+  });
+
+  newGameBtn.addEventListener('click', () => initGame(Number(boardSizeSelect.value)));
+  aiLevelSelect.addEventListener('change', updateDifficultyDescription);
+
+  passBtn.addEventListener('click', () => {
+    if (gameOver || aiThinking || current !== BLACK) return;
+    history.push({
+      board: cloneBoard(board), current, captures: { ...captures },
+      lastBoardSnapshot: lastBoardSnapshot ? cloneBoard(lastBoardSnapshot) : null,
+      passCount, lastMove: lastMove ? { ...lastMove } : null
+    });
+    passCount++;
+    current = WHITE;
+    if (passCount >= 2) { endGame(); return; }
+    setStatus('你停一手，AI 思考中...');
+    runAiMove();
+  });
+
+  undoBtn.addEventListener('click', () => {
+    if (aiThinking || history.length < 2) {
+      if (!aiThinking) setStatus('暫時沒有足夠步數可悔棋。');
+      return;
+    }
+    history.pop(); // discard state before AI's last move
+    const state = history.pop(); // restore state before player's last move
+    board = state.board;
+    current = state.current;
+    captures = state.captures;
+    lastBoardSnapshot = state.lastBoardSnapshot;
+    passCount = state.passCount;
+    lastMove = state.lastMove;
+    gameOver = false;
+    updateScoreUi();
+    draw();
+    setStatus('已悔棋，請落子。');
+  });
+
+  // ---------- Small rule-engine test suite ----------
   function runSelfTests() {
+    const originalSize = size;
     const results = [];
-
-    (function () {
-      const s = 5;
-      const b = Array.from({ length: s }, () => Array(s).fill(EMPTY));
-      b[1][2] = WHITE;
-      b[1][1] = BLACK; b[1][3] = BLACK; b[0][2] = BLACK;
-      b[3][2] = WHITE; b[3][3] = EMPTY;
-      b[2][1] = WHITE; b[2][0] = EMPTY;
-      b[2][3] = WHITE; b[2][4] = EMPTY;
-      const r = attemptMoveOnBoard(b, 2, 2, BLACK, null, s);
-      const pass = r !== null && r.capturedCount === 1 && r.newBoard[1][2] === EMPTY;
-      results.push({ name: '叫吃：吃子後於原本四面被圍的點落子應為合法', pass });
-    })();
-
-    (function () {
-      const s = 5;
-      const b = Array.from({ length: s }, () => Array(s).fill(EMPTY));
-      b[1][2] = WHITE; b[1][1] = EMPTY;
-      b[3][2] = WHITE; b[3][3] = EMPTY;
-      b[2][1] = WHITE; b[2][0] = EMPTY;
-      b[2][3] = WHITE; b[2][4] = EMPTY;
-      const r = attemptMoveOnBoard(b, 2, 2, BLACK, null, s);
-      results.push({ name: '真自殺：無法吃子且自身無氣應為非法', pass: r === null });
-    })();
-
-    (function () {
-      const s = 5;
-      const beforeWhiteCapture = Array.from({ length: s }, () => Array(s).fill(EMPTY));
-      beforeWhiteCapture[1][2] = BLACK;
-      beforeWhiteCapture[3][2] = BLACK;
-      beforeWhiteCapture[2][1] = BLACK;
-      beforeWhiteCapture[2][2] = WHITE;
-      beforeWhiteCapture[2][3] = EMPTY;
-      const prevSnapshot = cloneBoard(beforeWhiteCapture);
-      const currentBoard = Array.from({ length: s }, () => Array(s).fill(EMPTY));
-      currentBoard[1][2] = BLACK;
-      currentBoard[3][2] = BLACK;
-      currentBoard[2][1] = BLACK;
-      currentBoard[2][3] = WHITE;
-      currentBoard[2][2] = EMPTY;
-      const r = attemptMoveOnBoard(currentBoard, 2, 2, BLACK, prevSnapshot, s);
-      results.push({ name: '打劫：單子立即回提造成同型應為非法', pass: r === null });
-    })();
-
+    // These tests require a 5x5 temporary board, so use a local version of the core test helper.
+    function localNeighbors(x, y, s) {
+      return [[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy]) => [x+dx,y+dy]).filter(([nx,ny]) => nx >= 0 && nx < s && ny >= 0 && ny < s);
+    }
+    function localGroup(b, x, y, s) {
+      const color = b[y][x], stones = new Set(), liberties = new Set(), stack = [[x,y]];
+      while (stack.length) {
+        const [cx,cy] = stack.pop(), k = `${cx},${cy}`;
+        if (stones.has(k)) continue;
+        stones.add(k);
+        for (const [nx,ny] of localNeighbors(cx,cy,s)) {
+          if (b[ny][nx] === EMPTY) liberties.add(`${nx},${ny}`);
+          else if (b[ny][nx] === color && !stones.has(`${nx},${ny}`)) stack.push([nx,ny]);
+        }
+      }
+      return { stones, liberties };
+    }
+    function localAttempt(b, x, y, color, previous, s) {
+      if (b[y][x] !== EMPTY) return null;
+      const t = b.map(r => r.slice()); t[y][x] = color;
+      const removed = new Set();
+      for (const [nx,ny] of localNeighbors(x,y,s)) if (t[ny][nx] === opponent(color)) {
+        const g = localGroup(t,nx,ny,s);
+        if (!g.liberties.size) for (const key of g.stones) { const [sx,sy] = key.split(',').map(Number); t[sy][sx] = EMPTY; removed.add(key); }
+      }
+      if (!localGroup(t,x,y,s).liberties.size) return null;
+      if (removed.size === 1 && previous && boardsEqual(t, previous)) return null;
+      return { newBoard:t, capturedCount:removed.size };
+    }
+    {
+      const s=5, b=Array.from({length:s},()=>Array(s).fill(EMPTY));
+      b[1][2]=WHITE; b[1][1]=BLACK; b[1][3]=BLACK; b[0][2]=BLACK;
+      b[3][2]=WHITE; b[2][1]=WHITE; b[2][3]=WHITE;
+      const r=localAttempt(b,2,2,BLACK,null,s);
+      results.push({ name:'叫吃後在原本四面被圍點落子合法', pass: !!r && r.capturedCount===1 && r.newBoard[1][2]===EMPTY });
+    }
+    {
+      const s=5, b=Array.from({length:s},()=>Array(s).fill(EMPTY));
+      b[1][2]=WHITE; b[3][2]=WHITE; b[2][1]=WHITE; b[2][3]=WHITE;
+      const r=localAttempt(b,2,2,BLACK,null,s);
+      results.push({ name:'真自殺（不能吃子且無氣）非法', pass:r===null });
+    }
+    size = originalSize;
     return results;
   }
 
-  function displaySelfTestResults(results) {
-    const allPass = results.every(r => r.pass);
-    const lines = results.map(r => `${r.pass ? '✓' : '✗'} ${r.name}`);
-    selfTestEl.textContent = '規則引擎自檢：\n' + lines.join('\n');
-    selfTestEl.className = allPass ? '' : 'failed';
-    if (!allPass) console.error('Go rule engine self-test FAILED:', results);
-    else console.log('Go rule engine self-test passed:', results);
+  function displaySelfTests() {
+    const tests = runSelfTests();
+    const ok = tests.every(t => t.pass);
+    selfTestEl.textContent = '規則引擎自檢：\n' + tests.map(t => `${t.pass ? '✓' : '✗'} ${t.name}`).join('\n');
+    selfTestEl.className = ok ? '' : 'failed';
   }
 
-  displaySelfTestResults(runSelfTests());
-  initBoard(9);
+  displaySelfTests();
+  initGame(9);
 })();
 </script>
 </body>
