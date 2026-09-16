@@ -1,927 +1,688 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
-
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>幸運抽獎</title>
-
-    <style>
-        :root {
-            --bg1: #09111f;
-            --bg2: #172a4b;
-            --panel: rgba(255, 255, 255, 0.10);
-            --border: rgba(255, 255, 255, 0.18);
-            --text: #f7fbff;
-            --muted: #b7c6df;
-            --primary: #53d8fb;
-            --gold: #ffd166;
-            --danger: #ff6b7a;
-            --success: #69e6a4;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            margin: 0;
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                "PingFang HK", "Microsoft JhengHei", sans-serif;
-            background:
-                radial-gradient(circle at 15% 15%, rgba(83, 216, 251, 0.18), transparent 28%),
-                radial-gradient(circle at 85% 85%, rgba(255, 209, 102, 0.15), transparent 25%),
-                linear-gradient(135deg, var(--bg1), var(--bg2));
-        }
-
-        .page {
-            width: min(1440px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 34px 0 42px;
-        }
-
-        header {
-            margin-bottom: 28px;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            letter-spacing: 0.08em;
-            text-shadow: 0 0 26px rgba(83, 216, 251, 0.55);
-        }
-
-        header p {
-            margin: 12px 0 0;
-            color: var(--muted);
-        }
-
-        .layout {
-            display: grid;
-            grid-template-columns: minmax(260px, 1fr) minmax(260px, 0.72fr) minmax(260px, 1fr);
-            gap: 22px;
-            align-items: stretch;
-        }
-
-        .panel {
-            min-height: 500px;
-            padding: 22px;
-            border: 1px solid var(--border);
-            border-radius: 22px;
-            background: var(--panel);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
-        }
-
-        .panel h2 {
-            margin: 0 0 8px;
-            font-size: 1.25rem;
-        }
-
-        .hint {
-            min-height: 40px;
-            margin: 0 0 14px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            line-height: 1.45;
-        }
-
-        textarea {
-            width: 100%;
-            height: 330px;
-            resize: vertical;
-            padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 14px;
-            outline: none;
-            color: var(--text);
-            background: rgba(3, 10, 24, 0.42);
-            font: inherit;
-            line-height: 1.55;
-        }
-
-        textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(83, 216, 251, 0.15);
-        }
-
-        textarea[readonly] {
-            opacity: 0.95;
-        }
-
-        .button-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 9px;
-            margin-top: 13px;
-        }
-
-        button {
-            min-height: 42px;
-            padding: 9px 12px;
-            border: 0;
-            border-radius: 10px;
-            cursor: pointer;
-            color: #06101d;
-            background: #dbe9ff;
-            font: inherit;
-            font-weight: 700;
-            transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
-        }
-
-        button:hover:not(:disabled) {
-            filter: brightness(1.08);
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            cursor: not-allowed;
-            opacity: 0.45;
-        }
-
-        .paste-btn {
-            background: #a8d8ff;
-        }
-
-        .clear-btn {
-            background: #ffb3bd;
-        }
-
-        .center-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .draw-controls {
-            width: 100%;
-            margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: var(--muted);
-            font-weight: 600;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            max-width: 220px;
-            padding: 14px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            outline: none;
-            color: var(--text);
-            background: rgba(3, 10, 24, 0.42);
-            font: inherit;
-            font-size: 1.3rem;
-            font-weight: 800;
-            text-align: center;
-        }
-
-        input[type="number"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(83, 216, 251, 0.15);
-        }
-
-        #drawButton {
-            width: 100%;
-            min-height: 58px;
-            margin-top: 22px;
-            color: #172033;
-            background: linear-gradient(135deg, var(--gold), #ff9e5e);
-            box-shadow: 0 8px 24px rgba(255, 178, 73, 0.28);
-            font-size: 1.15rem;
-        }
-
-        .counter {
-            min-height: 25px;
-            margin: 14px 0 0;
-            color: var(--muted);
-            font-size: 0.92rem;
-        }
-
-        .effect-box {
-            position: relative;
-            display: grid;
-            width: min(100%, 320px);
-            height: 205px;
-            place-items: center;
-            overflow: hidden;
-            margin-top: auto;
-            margin-bottom: auto;
-            border: 1px solid rgba(83, 216, 251, 0.35);
-            border-radius: 22px;
-            background:
-                radial-gradient(circle, rgba(83, 216, 251, 0.23), transparent 60%),
-                rgba(0, 0, 0, 0.18);
-        }
-
-        .effect-icon {
-            z-index: 2;
-            font-size: 4rem;
-            filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.8));
-        }
-
-        .effect-message {
-            z-index: 2;
-            margin-top: -55px;
-            color: #e9f7ff;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-        }
-
-        .orb {
-            position: absolute;
-            width: 19px;
-            height: 19px;
-            border-radius: 50%;
-            opacity: 0;
-            background: var(--primary);
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        .effect-box.running {
-            animation: pulse 0.55s ease-in-out infinite alternate;
-        }
-
-        .effect-box.running .effect-icon {
-            animation: bounce 0.38s ease-in-out infinite alternate;
-        }
-
-        .effect-box.running .orb {
-            opacity: 1;
-            animation: orbit 1s linear infinite;
-        }
-
-        .orb:nth-child(3) {
-            background: var(--gold);
-            box-shadow: 0 0 15px var(--gold);
-            animation-delay: -0.33s !important;
-        }
-
-        .orb:nth-child(4) {
-            background: var(--success);
-            box-shadow: 0 0 15px var(--success);
-            animation-delay: -0.66s !important;
-        }
-
-        .status {
-            min-height: 24px;
-            margin-top: 15px;
-            color: var(--muted);
-            font-size: 0.92rem;
-            font-weight: 600;
-        }
-
-        .status.error {
-            color: #ffb3bd;
-        }
-
-        .status.success {
-            color: #a9f2c8;
-        }
-
-        /* ===== 全頁抽獎效果 ===== */
-
-        .draw-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: none;
-            place-items: center;
-            overflow: hidden;
-            color: #fff;
-            background:
-                radial-gradient(circle at 50% 45%, rgba(75, 220, 255, 0.32), transparent 24%),
-                radial-gradient(circle at 20% 80%, rgba(255, 72, 150, 0.22), transparent 30%),
-                radial-gradient(circle at 80% 20%, rgba(255, 205, 70, 0.22), transparent 28%),
-                rgba(3, 7, 20, 0.76);
-            backdrop-filter: blur(12px) saturate(1.35);
-            -webkit-backdrop-filter: blur(12px) saturate(1.35);
-        }
-
-        .draw-overlay.show {
-            display: grid;
-            animation: overlayIn 0.35s ease-out both;
-        }
-
-        .draw-overlay.drawing {
-            animation: overlayIn 0.35s ease-out both, screenShake 0.42s linear infinite;
-        }
-
-        .draw-overlay.reveal {
-            background:
-                radial-gradient(circle at center, rgba(255, 240, 135, 0.9), rgba(255, 130, 70, 0.38) 25%, rgba(3, 7, 20, 0.86) 70%);
-            animation: winnerFlash 1.4s ease-out both;
-        }
-
-        .overlay-content {
-            position: relative;
-            z-index: 3;
-            width: min(92vw, 950px);
-            text-align: center;
-            text-shadow: 0 0 16px rgba(83, 216, 251, 0.9);
-        }
-
-        .mega-icon {
-            margin-bottom: 16px;
-            font-size: clamp(5rem, 16vw, 12rem);
-            filter: drop-shadow(0 0 32px rgba(255, 210, 85, 0.95));
-            animation: iconFloat 0.48s ease-in-out infinite alternate;
-        }
-
-        .overlay-title {
-            font-size: clamp(1.6rem, 5vw, 4rem);
-            font-weight: 900;
-            letter-spacing: 0.2em;
-        }
-
-        .overlay-count {
-            min-height: 1.15em;
-            margin: 4px 0;
-            color: #ffd166;
-            font-size: clamp(9rem, 31vw, 24rem);
-            font-weight: 1000;
-            line-height: 1;
-            text-shadow:
-                0 0 18px #fff,
-                0 0 45px #ffd166,
-                0 0 90px #ff8b4a;
-        }
-
-        .overlay-count.pop {
-            animation: numberPop 0.72s cubic-bezier(.12, .9, .24, 1.35) both;
-        }
-
-        .overlay-subtext {
-            margin-top: 12px;
-            color: #dcecff;
-            font-size: clamp(1.1rem, 3vw, 2rem);
-            font-weight: 800;
-            letter-spacing: 0.12em;
-        }
-
-        .laser {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 150vmax;
-            height: 16px;
-            border-radius: 999px;
-            opacity: 0.78;
-            transform-origin: 0 50%;
-            filter: blur(2px);
-            background: linear-gradient(90deg,
-                    transparent,
-                    #53d8fb 45%,
-                    #fff 50%,
-                    #53d8fb 55%,
-                    transparent);
-            box-shadow: 0 0 18px #53d8fb, 0 0 45px #53d8fb;
-        }
-
-        .laser-a {
-            transform: rotate(18deg);
-            animation: laserSpin 2.2s linear infinite;
-        }
-
-        .laser-b {
-            transform: rotate(83deg);
-            background: linear-gradient(90deg,
-                    transparent,
-                    #ff5fa2 45%,
-                    #fff 50%,
-                    #ff5fa2 55%,
-                    transparent);
-            box-shadow: 0 0 18px #ff5fa2, 0 0 45px #ff5fa2;
-            animation: laserSpin 1.55s linear infinite reverse;
-        }
-
-        .laser-c {
-            transform: rotate(145deg);
-            background: linear-gradient(90deg,
-                    transparent,
-                    #ffd166 45%,
-                    #fff 50%,
-                    #ffd166 55%,
-                    transparent);
-            box-shadow: 0 0 18px #ffd166, 0 0 45px #ffd166;
-            animation: laserSpin 2.8s linear infinite;
-        }
-
-        .particle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: var(--size);
-            height: var(--size);
-            border-radius: 50%;
-            color: hsl(var(--hue), 100%, 70%);
-            opacity: 0;
-            background: currentColor;
-            box-shadow: 0 0 13px currentColor;
-            animation: particleFly 1.55s ease-out infinite;
-            animation-delay: var(--delay);
-        }
-
-        .draw-overlay.reveal .particle {
-            animation-duration: 1.05s;
-        }
-
-        @keyframes pulse {
-            from {
-                box-shadow: 0 0 0 rgba(83, 216, 251, 0), inset 0 0 10px rgba(83, 216, 251, 0.1);
-            }
-
-            to {
-                box-shadow: 0 0 38px rgba(83, 216, 251, 0.52), inset 0 0 30px rgba(255, 209, 102, 0.2);
-            }
-        }
-
-        @keyframes bounce {
-            from {
-                transform: scale(1) rotate(-8deg);
-            }
-
-            to {
-                transform: scale(1.18) rotate(8deg);
-            }
-        }
-
-        @keyframes orbit {
-            0% {
-                transform: rotate(0deg) translateX(76px) rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg) translateX(76px) rotate(-360deg);
-            }
-        }
-
-        @keyframes overlayIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes laserSpin {
-            from {
-                rotate: 0deg;
-            }
-
-            to {
-                rotate: 360deg;
-            }
-        }
-
-        @keyframes iconFloat {
-            from {
-                transform: scale(0.92) rotate(-8deg);
-            }
-
-            to {
-                transform: scale(1.1) rotate(8deg);
-            }
-        }
-
-        @keyframes numberPop {
-            0% {
-                opacity: 0;
-                transform: scale(0.15) rotate(-18deg);
-            }
-
-            62% {
-                opacity: 1;
-                transform: scale(1.22) rotate(6deg);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0);
-            }
-        }
-
-        @keyframes screenShake {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            20% {
-                transform: translate(-7px, 4px);
-            }
-
-            40% {
-                transform: translate(7px, -5px);
-            }
-
-            60% {
-                transform: translate(-5px, -4px);
-            }
-
-            80% {
-                transform: translate(5px, 5px);
-            }
-        }
-
-        @keyframes winnerFlash {
-            0% {
-                filter: brightness(1);
-            }
-
-            18% {
-                filter: brightness(3.4);
-            }
-
-            100% {
-                filter: brightness(1);
-            }
-        }
-
-        @keyframes particleFly {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(0.3);
-            }
-
-            12% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--distance)) scale(1.3);
-            }
-        }
-
-        @media (max-width: 960px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-
-            .panel {
-                min-height: auto;
-            }
-
-            textarea {
-                height: 230px;
-            }
-
-            .center-panel {
-                min-height: 420px;
-            }
-
-            .effect-box {
-                margin: 30px 0;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .draw-overlay,
-            .draw-overlay *,
-            .draw-overlay.reveal,
-            .effect-box,
-            .effect-box * {
-                animation: none !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>抽獎工具</title>
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --accent: #f59e0b;
+    --bg: #f4f5fb;
+    --card: #ffffff;
+    --border: #e2e4f0;
+    --text: #1f2333;
+    --muted: #6b7280;
+    --success: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    background: linear-gradient(135deg, #eef1fb 0%, #fdf2f8 100%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 4px;
+    color: var(--primary-dark);
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(79,70,229,0.06);
+  }
+  .card h2 {
+    font-size: 16px;
+    margin: 0 0 12px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  label {
+    font-size: 13px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 220px;
+    resize: vertical;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: inherit;
+    background: #fbfbff;
+  }
+  textarea:focus, input:focus { outline: 2px solid var(--primary); }
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .checkbox-row input { width: 16px; height: 16px; }
+  .row-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: transform .08s ease, box-shadow .15s ease;
+  }
+  button:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    flex: 1;
+    box-shadow: 0 4px 10px rgba(79,70,229,0.35);
+  }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled {
+    background: #b6b9d6;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #eef0fa;
+    color: var(--primary-dark);
+  }
+  .btn-secondary:hover { background: #e0e3fa; }
+  .btn-danger {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+  .btn-danger:hover { background: #fecaca; }
+  .stage {
+    min-height: 130px;
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    background: #fafaff;
+    margin-bottom: 18px;
+    letter-spacing: 2px;
+    padding: 20px;
+    text-align: center;
+    word-break: break-word;
+    position: relative;
+    z-index: 1;
+  }
+  .stage.rolling {
+    color: var(--accent);
+    animation: pulse 0.15s infinite alternate;
+  }
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.04); }
+  }
+  .stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: #eef0fa;
+    color: var(--primary-dark);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 18px 0 10px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .round-block {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: #fffdf7;
+  }
+  .round-block .round-label {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .winner-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .winner-chip {
+    background: linear-gradient(135deg, #fde68a, #f59e0b);
+    color: #7c2d12;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .winner-chip .num {
+    background: #7c2d12;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .remain-box {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: #f7f8fd;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .remain-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .remain-chip {
+    background: #e7e9f7;
+    color: var(--primary-dark);
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  .empty-hint {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 0;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 30px;
+  }
+
+  /* ===== Fireworks overlay ===== */
+  #fireworksCanvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+  }
+  #fireworksCanvas.active { display: block; }
+
+  .flash-banner {
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    z-index: 10000;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #7c2d12;
+    padding: 16px 36px;
+    border-radius: 16px;
+    font-size: 26px;
+    font-weight: 900;
+    box-shadow: 0 10px 30px rgba(245,158,11,0.5);
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+    max-width: 90vw;
+    word-break: break-word;
+  }
+  .flash-banner.show {
+    animation: bannerPop 3s ease forwards;
+  }
+  @keyframes bannerPop {
+    0%   { opacity: 0; transform: translateX(-50%) scale(0.6); }
+    12%  { opacity: 1; transform: translateX(-50%) scale(1.08); }
+    20%  { opacity: 1; transform: translateX(-50%) scale(1); }
+    85%  { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.9); }
+  }
+</style>
 </head>
-
 <body>
-    <main class="page">
-        <header>
-            <h1>幸運抽獎</h1>
-            <p>設定抽獎人數後，一次過抽出全部得獎者。</p>
-        </header>
+<canvas id="fireworksCanvas"></canvas>
+<div class="flash-banner" id="flashBanner"></div>
 
-        <section class="layout">
-            <section class="panel">
-                <h2>參加者名單</h2>
-                <p class="hint">每行一個姓名，或使用逗號分隔。重複姓名會自動合併。</p>
+<div class="wrap">
+  <h1>🎉 抽獎工具</h1>
+  <p class="subtitle">貼上名單、設定每次抽出人數，即可開始抽籤；未抽中嘅人會自動保留到下一輪</p>
 
-                <textarea id="participants" placeholder="例如：
-陳大文
-李小美, 王小明
-張美玲"></textarea>
+  <div class="layout">
+    <div class="card">
+      <h2>⚙️ 設定</h2>
+      <label for="nameInput">參加者名單（每行一個名，或用逗號 / 空格分隔）</label>
+      <textarea id="nameInput" placeholder="例如：&#10;陳大文&#10;李小明&#10;王美美&#10;張三&#10;李四"></textarea>
 
-                <div class="button-row">
-                    <button type="button" data-action="copy" data-target="participants">全部複製</button>
-                    <button type="button" class="paste-btn" data-action="paste" data-target="participants">貼上</button>
-                    <button type="button" class="clear-btn" data-action="clear" data-target="participants">清除</button>
-                </div>
-            </section>
+      <label for="drawCount">每次抽出人數</label>
+      <input type="number" id="drawCount" min="1" value="1">
 
-            <section class="panel center-panel">
-                <h2>抽獎控制</h2>
+      <div class="checkbox-row">
+        <input type="checkbox" id="fxToggle" checked>
+        <label for="fxToggle" style="margin:0;">開啟全屏煙花特效</label>
+      </div>
 
-                <div class="draw-controls">
-                    <label for="winnerCount">抽獎人數</label>
-                    <input id="winnerCount" type="number" min="1" value="1" inputmode="numeric" />
-
-                    <button id="drawButton" type="button">開始抽獎</button>
-                    <p id="participantCount" class="counter">目前 0 位有效參加者</p>
-                </div>
-
-                <div id="effectBox" class="effect-box" aria-live="polite">
-                    <span class="effect-icon">🎁</span>
-                    <span id="effectMessage" class="effect-message">等待開始</span>
-                    <i class="orb"></i>
-                    <i class="orb"></i>
-                    <i class="orb"></i>
-                </div>
-
-                <p id="status" class="status">請先貼上參加者名單。</p>
-            </section>
-
-            <section class="panel">
-                <h2>得獎名單</h2>
-                <p class="hint">抽獎特效完成後，所有得獎者會同時顯示在此。</p>
-
-                <textarea id="winners" readonly placeholder="尚未抽獎"></textarea>
-
-                <div class="button-row">
-                    <button type="button" data-action="copy" data-target="winners">全部複製</button>
-                    <button type="button" class="paste-btn" data-action="paste" data-target="winners">貼上</button>
-                    <button type="button" class="clear-btn" data-action="clear" data-target="winners">清除</button>
-                </div>
-            </section>
-        </section>
-    </main>
-
-    <div id="drawOverlay" class="draw-overlay" aria-hidden="true">
-        <div class="laser laser-a"></div>
-        <div class="laser laser-b"></div>
-        <div class="laser laser-c"></div>
-
-        <div id="particles" class="particles"></div>
-
-        <div class="overlay-content">
-            <div class="mega-icon">🎉</div>
-            <div id="overlayTitle" class="overlay-title">幸運抽獎</div>
-            <div id="overlayCount" class="overlay-count">3</div>
-            <div id="overlaySubtext" class="overlay-subtext">得獎者即將誕生</div>
-        </div>
+      <div class="row-btns">
+        <button class="btn-primary" id="loadBtn">載入 / 更新名單</button>
+      </div>
+      <div class="row-btns">
+        <button class="btn-secondary" id="exportBtn">匯出結果 (CSV)</button>
+        <button class="btn-danger" id="resetBtn">重設全部</button>
+      </div>
     </div>
 
-    <script>
-        const participantsEl = document.getElementById("participants");
-        const winnersEl = document.getElementById("winners");
-        const winnerCountEl = document.getElementById("winnerCount");
-        const drawButton = document.getElementById("drawButton");
-        const participantCountEl = document.getElementById("participantCount");
-        const effectBox = document.getElementById("effectBox");
-        const effectMessage = document.getElementById("effectMessage");
-        const statusEl = document.getElementById("status");
+    <div class="card">
+      <h2>🎯 抽籤</h2>
+      <div class="stats">
+        <div class="stat-pill" id="totalStat">總人數：0</div>
+        <div class="stat-pill" id="drawnStat">已抽出：0</div>
+        <div class="stat-pill" id="remainStat">未抽出：0</div>
+        <div class="stat-pill" id="roundStat">已進行輪數：0</div>
+      </div>
 
-        const drawOverlay = document.getElementById("drawOverlay");
-        const overlayTitle = document.getElementById("overlayTitle");
-        const overlayCount = document.getElementById("overlayCount");
-        const overlaySubtext = document.getElementById("overlaySubtext");
-        const particlesEl = document.getElementById("particles");
+      <div class="stage" id="stage">請先載入名單</div>
 
-        let isDrawing = false;
+      <div class="row-btns">
+        <button class="btn-primary" id="drawBtn" disabled>🎲 開始抽籤</button>
+      </div>
 
-        function parseNames(text) {
-            const seen = new Set();
+      <div class="section-title">🏆 中獎名單（按輪次 / 抽出次序）</div>
+      <div id="winnersArea">
+        <p class="empty-hint">尚未有抽獎結果</p>
+      </div>
 
-            return text
-                .split(/[\n,，]+/)
-                .map(name => name.trim())
-                .filter(name => {
-                    if (!name) return false;
+      <div class="section-title">📋 未抽名單</div>
+      <div class="remain-box">
+        <ul class="remain-list" id="remainList"></ul>
+      </div>
+    </div>
+  </div>
 
-                    const key = name.toLocaleLowerCase();
+  <footer>提示：每次抽籤後，未抽中嘅人會自動留喺「未抽名單」，方便直接進行下一輪抽籤。</footer>
+</div>
 
-                    if (seen.has(key)) return false;
+<script>
+let pool = [];        // 未抽出名單
+let rounds = [];      // 每輪結果 [{round, names:[...]}]
+let totalPeople = 0;
 
-                    seen.add(key);
-                    return true;
-                });
-        }
+const nameInput = document.getElementById('nameInput');
+const drawCountInput = document.getElementById('drawCount');
+const loadBtn = document.getElementById('loadBtn');
+const drawBtn = document.getElementById('drawBtn');
+const resetBtn = document.getElementById('resetBtn');
+const exportBtn = document.getElementById('exportBtn');
+const stage = document.getElementById('stage');
+const remainList = document.getElementById('remainList');
+const winnersArea = document.getElementById('winnersArea');
+const fxToggle = document.getElementById('fxToggle');
+const flashBanner = document.getElementById('flashBanner');
 
-        function updateParticipantCount() {
-            const count = parseNames(participantsEl.value).length;
-            participantCountEl.textContent = `目前 ${count} 位有效參加者`;
-        }
+const totalStat = document.getElementById('totalStat');
+const drawnStat = document.getElementById('drawnStat');
+const remainStat = document.getElementById('remainStat');
+const roundStat = document.getElementById('roundStat');
 
-        function setStatus(message, type = "") {
-            statusEl.textContent = message;
-            statusEl.className = `status ${type}`;
-        }
+function parseNames(text) {
+  return text
+    .split(/[\n,，、\t]+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+}
 
-        function shuffle(array) {
-            const result = [...array];
+function updateStats() {
+  const drawnCount = rounds.reduce((sum, r) => sum + r.names.length, 0);
+  totalStat.textContent = `總人數：${totalPeople}`;
+  drawnStat.textContent = `已抽出：${drawnCount}`;
+  remainStat.textContent = `未抽出：${pool.length}`;
+  roundStat.textContent = `已進行輪數：${rounds.length}`;
+}
 
-            for (let i = result.length - 1; i > 0; i--) {
-                const randomValue = crypto.getRandomValues(new Uint32Array(1))[0];
-                const j = randomValue % (i + 1);
+function renderRemain() {
+  remainList.innerHTML = '';
+  if (pool.length === 0) {
+    remainList.innerHTML = '<li class="empty-hint">名單已全部抽完 🎊</li>';
+    return;
+  }
+  pool.forEach(name => {
+    const li = document.createElement('li');
+    li.className = 'remain-chip';
+    li.textContent = name;
+    remainList.appendChild(li);
+  });
+}
 
-                [result[i], result[j]] = [result[j], result[i]];
-            }
+function renderWinners() {
+  if (rounds.length === 0) {
+    winnersArea.innerHTML = '<p class="empty-hint">尚未有抽獎結果</p>';
+    return;
+  }
+  winnersArea.innerHTML = '';
+  rounds.forEach((r, idx) => {
+    const block = document.createElement('div');
+    block.className = 'round-block';
+    const label = document.createElement('div');
+    label.className = 'round-label';
+    label.textContent = `第 ${idx + 1} 輪（抽出 ${r.names.length} 人）`;
+    const ul = document.createElement('ul');
+    ul.className = 'winner-list';
+    r.names.forEach((name, i) => {
+      const li = document.createElement('li');
+      li.className = 'winner-chip';
+      const numSpan = document.createElement('span');
+      numSpan.className = 'num';
+      numSpan.textContent = i + 1;
+      li.appendChild(numSpan);
+      li.appendChild(document.createTextNode(name));
+      ul.appendChild(li);
+    });
+    block.appendChild(label);
+    block.appendChild(ul);
+    winnersArea.appendChild(block);
+  });
+}
 
-            return result;
-        }
+loadBtn.addEventListener('click', () => {
+  const names = parseNames(nameInput.value);
+  if (names.length === 0) {
+    alert('請輸入至少一個名字！');
+    return;
+  }
+  const uniqueNames = [...new Set(names)];
+  if (uniqueNames.length !== names.length) {
+    if (!confirm(`偵測到重複名字，已自動移除重複，剩餘 ${uniqueNames.length} 人。是否繼續？`)) {
+      return;
+    }
+  }
+  pool = [...uniqueNames];
+  totalPeople = uniqueNames.length;
+  rounds = [];
+  stage.textContent = '準備就緒，按「開始抽籤」！';
+  drawBtn.disabled = false;
+  updateStats();
+  renderRemain();
+  renderWinners();
+});
 
-        async function copyText(text) {
-            if (!text.trim()) {
-                setStatus("沒有內容可複製。", "error");
-                return;
-            }
+drawBtn.addEventListener('click', () => {
+  let n = parseInt(drawCountInput.value, 10);
+  if (!n || n < 1) n = 1;
+  if (pool.length === 0) {
+    alert('未抽名單已經冇人喇，請重設或載入新名單。');
+    return;
+  }
+  if (n > pool.length) {
+    n = pool.length;
+  }
 
-            try {
-                await navigator.clipboard.writeText(text);
-                setStatus("已複製到剪貼簿。", "success");
-            } catch {
-                setStatus("無法自動複製，請手動選取文字後複製。", "error");
-            }
-        }
+  drawBtn.disabled = true;
+  stage.classList.add('rolling');
 
-        async function pasteText(target) {
-            try {
-                const text = await navigator.clipboard.readText();
-                target.value = text;
-                target.dispatchEvent(new Event("input"));
-                setStatus("已從剪貼簿貼上。", "success");
-            } catch {
-                setStatus("瀏覽器未允許讀取剪貼簿，請在文字框內手動貼上。", "error");
-            }
-        }
+  let ticks = 0;
+  const maxTicks = 18;
+  const rollInterval = setInterval(() => {
+    const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, n);
+    stage.textContent = shuffled.join('、');
+    ticks++;
+    if (ticks >= maxTicks) {
+      clearInterval(rollInterval);
+      finalizeDraw(n);
+    }
+  }, 80);
+});
 
-        function clearText(target) {
-            if (isDrawing) return;
+function finalizeDraw(n) {
+  const shuffledPool = [...pool].sort(() => Math.random() - 0.5);
+  const winners = shuffledPool.slice(0, n);
+  const winnerSet = new Set(winners);
+  pool = pool.filter(name => !winnerSet.has(name));
 
-            target.value = "";
-            target.dispatchEvent(new Event("input"));
-            setStatus("已清除內容。", "success");
-        }
+  rounds.push({ round: rounds.length + 1, names: winners });
 
-        function setDrawingState(drawing) {
-            isDrawing = drawing;
-            drawButton.disabled = drawing;
-            winnerCountEl.disabled = drawing;
+  stage.classList.remove('rolling');
+  stage.textContent = winners.join('、');
 
-            document.querySelectorAll("[data-action]").forEach(button => {
-                button.disabled = drawing;
-            });
-        }
+  updateStats();
+  renderRemain();
+  renderWinners();
 
-        function startEffect() {
-            effectBox.classList.add("running");
-            effectMessage.textContent = "正在抽獎";
-            winnersEl.value = "";
-            setStatus("抽獎進行中，結果即將一次過揭曉。");
-        }
+  drawBtn.disabled = pool.length === 0;
+  if (pool.length === 0) {
+    stage.textContent += '（全部人已抽完）';
+  }
 
-        function stopEffect() {
-            effectBox.classList.remove("running");
-            effectMessage.textContent = "抽獎完成";
-        }
+  if (fxToggle.checked) {
+    launchFireworksCelebration(winners);
+  }
+}
 
-        function createParticles(total = 75) {
-            particlesEl.innerHTML = "";
+resetBtn.addEventListener('click', () => {
+  if (!confirm('確定要重設所有資料（包括名單同抽獎結果）？')) return;
+  pool = [];
+  rounds = [];
+  totalPeople = 0;
+  nameInput.value = '';
+  drawCountInput.value = 1;
+  stage.textContent = '請先載入名單';
+  drawBtn.disabled = true;
+  updateStats();
+  renderRemain();
+  renderWinners();
+});
 
-            for (let i = 0; i < total; i++) {
-                const particle = document.createElement("i");
-                particle.className = "particle";
+exportBtn.addEventListener('click', () => {
+  if (rounds.length === 0) {
+    alert('尚未有抽獎結果可匯出。');
+    return;
+  }
+  let csv = '輪次,次序,姓名\n';
+  rounds.forEach((r, ridx) => {
+    r.names.forEach((name, i) => {
+      csv += `${ridx + 1},${i + 1},${name}\n`;
+    });
+  });
+  csv += '\n未抽出名單\n';
+  pool.forEach(name => { csv += `${name}\n`; });
 
-                particle.style.setProperty("--angle", `${Math.random() * 360}deg`);
-                particle.style.setProperty("--distance", `${35 + Math.random() * 80}vmax`);
-                particle.style.setProperty("--size", `${5 + Math.random() * 14}px`);
-                particle.style.setProperty("--hue", Math.floor(Math.random() * 360));
-                particle.style.setProperty("--delay", `${-(Math.random() * 1.5)}s`);
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '抽獎結果.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
 
-                particlesEl.appendChild(particle);
-            }
-        }
+updateStats();
+renderRemain();
+renderWinners();
 
-        function animateOverlayNumber() {
-            const numbers = ["3", "2", "1", "✨"];
+/* ===================== 全屏煙花特效 ===================== */
+const fwCanvas = document.getElementById('fireworksCanvas');
+const fwCtx = fwCanvas.getContext('2d');
+let fwParticles = [];
+let fwRunning = false;
+let fwAnimId = null;
+let fwLaunchTimer = null;
+let fwStopTimeout = null;
 
-            numbers.forEach((number, index) => {
-                window.setTimeout(() => {
-                    overlayCount.classList.remove("pop");
-                    void overlayCount.offsetWidth;
+function resizeFwCanvas() {
+  fwCanvas.width = window.innerWidth;
+  fwCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeFwCanvas);
+resizeFwCanvas();
 
-                    overlayCount.textContent = number;
-                    overlayCount.classList.add("pop");
+const FW_COLORS = [
+  '#ff595e', '#ffca3a', '#8ac926', '#1982c4', '#6a4c93',
+  '#ff924c', '#f72585', '#4cc9f0', '#ffd60a', '#06d6a0'
+];
 
-                    if (number === "✨") {
-                        overlayTitle.textContent = "結果揭曉";
-                        overlaySubtext.textContent = "恭喜所有得獎者！";
+function randRange(min, max) { return Math.random() * (max - min) + min; }
 
-                        drawOverlay.classList.remove("drawing");
-                        drawOverlay.classList.add("reveal");
-                    }
-                }, index * 650);
-            });
-        }
+function createExplosion(x, y) {
+  const color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+  const count = 60 + Math.floor(Math.random() * 40);
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
+    const speed = randRange(2, 7);
+    fwParticles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      alpha: 1,
+      color,
+      size: randRange(2, 3.5),
+      gravity: 0.045,
+      decay: randRange(0.008, 0.018)
+    });
+  }
+}
 
-        function showOverlay() {
-            createParticles();
+function fwAnimate() {
+  fwCtx.fillStyle = 'rgba(10, 10, 25, 0.22)';
+  fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
 
-            drawOverlay.className = "draw-overlay show drawing";
-            drawOverlay.setAttribute("aria-hidden", "false");
+  for (let i = fwParticles.length - 1; i >= 0; i--) {
+    const p = fwParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += p.gravity;
+    p.vx *= 0.99;
+    p.alpha -= p.decay;
 
-            overlayTitle.textContent = "幸運抽獎";
-            overlaySubtext.textContent = "得獎者即將誕生";
-            overlayCount.textContent = "3";
+    if (p.alpha <= 0) {
+      fwParticles.splice(i, 1);
+      continue;
+    }
 
-            animateOverlayNumber();
-        }
+    fwCtx.globalAlpha = Math.max(p.alpha, 0);
+    fwCtx.fillStyle = p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fwCtx.fill();
+  }
+  fwCtx.globalAlpha = 1;
 
-        function hideOverlay() {
-            drawOverlay.className = "draw-overlay";
-            drawOverlay.setAttribute("aria-hidden", "true");
-        }
+  if (fwRunning || fwParticles.length > 0) {
+    fwAnimId = requestAnimationFrame(fwAnimate);
+  } else {
+    fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+    fwCanvas.classList.remove('active');
+  }
+}
 
-        function drawWinners() {
-            if (isDrawing) return;
+function launchFireworksCelebration(winners) {
+  clearTimeout(fwLaunchTimer);
+  clearTimeout(fwStopTimeout);
+  if (fwAnimId) cancelAnimationFrame(fwAnimId);
 
-            const participants = parseNames(participantsEl.value);
-            const winnerCount = Number.parseInt(winnerCountEl.value, 10);
+  fwParticles = [];
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  fwCanvas.classList.add('active');
+  fwRunning = true;
+  fwAnimate();
 
-            if (participants.length === 0) {
-                setStatus("請先輸入至少一位參加者。", "error");
-                participantsEl.focus();
-                return;
-            }
+  const burstOnce = () => {
+    const x = randRange(fwCanvas.width * 0.12, fwCanvas.width * 0.88);
+    const y = randRange(fwCanvas.height * 0.12, fwCanvas.height * 0.55);
+    createExplosion(x, y);
+  };
 
-            if (!Number.isInteger(winnerCount) || winnerCount < 1) {
-                setStatus("抽獎人數必須是大於 0 的整數。", "error");
-                winnerCountEl.focus();
-                return;
-            }
+  burstOnce();
+  let bursts = 0;
+  const maxBursts = 14;
+  fwLaunchTimer = setInterval(() => {
+    burstOnce();
+    bursts++;
+    if (bursts >= maxBursts) {
+      clearInterval(fwLaunchTimer);
+      fwRunning = false;
+    }
+  }, 220);
 
-            if (winnerCount > participants.length) {
-                setStatus(`抽獎人數不可多於有效參加者人數（${participants.length} 位）。`, "error");
-                winnerCountEl.focus();
-                return;
-            }
-
-            const selectedWinners = shuffle(participants).slice(0, winnerCount);
-
-            setDrawingState(true);
-            startEffect();
-            showOverlay();
-
-            window.setTimeout(() => {
-                winnersEl.value = selectedWinners.join("\n");
-                stopEffect();
-
-                overlayTitle.textContent = "抽獎完成";
-                overlayCount.textContent = "🎊";
-                overlaySubtext.textContent = `已一次過抽出 ${selectedWinners.length} 位得獎者`;
-
-                setStatus(
-                    `恭喜！已一次過抽出 ${selectedWinners.length} 位得獎者。`,
-                    "success"
-                );
-            }, 2750);
-
-            window.setTimeout(() => {
-                hideOverlay();
-                setDrawingState(false);
-            }, 4300);
-        }
-
-        participantsEl.addEventListener("input", updateParticipantCount);
-        drawButton.addEventListener("click", drawWinners);
-
-        document.querySelectorAll("[data-action]").forEach(button => {
-            button.addEventListener("click", async () => {
-                const target = document.getElementById(button.dataset.target);
-                const action = button.dataset.action;
-
-                if (action === "copy") {
-                    await copyText(target.value);
-                }
-
-                if (action === "paste") {
-                    await pasteText(target);
-                }
-
-                if (action === "clear") {
-                    clearText(target);
-                }
-            });
-        });
-
-        updateParticipantCount();
-    </script>
+  const bannerText = winners.length === 1
+    ? `🎊 恭喜 ${winners[0]}！🎊`
+    : `🎊 恭喜 ${winners.join('、')}！🎊`;
+  flashBanner.textContent = bannerText;
+  flashBanner.classList.remove('show');
+  void flashBanner.offsetWidth;
+  flashBanner.classList.add('show');
+}
+</script>
 </body>
-
 </html>
