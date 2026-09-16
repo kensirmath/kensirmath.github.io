@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中秋知識問答</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+    background: radial-gradient(circle at 50% 15%, #16213e 0%, #0f1b3d 35%, #0a0f2c 70%, #050815 100%);
+    overflow: hidden;
+    color: #fff8e7;
+  }
+
+  /* 星星背景 */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: #fff8e7;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+  /* 月亮 */
+  .moon {
+    position: fixed;
+    top: 6%;
+    right: 8%;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffceb, #ffe9a8 60%, #ffd97a 100%);
+    box-shadow: 0 0 60px 25px rgba(255, 233, 170, 0.55);
+    z-index: 0;
+  }
+
+  .lantern {
+    position: fixed;
+    font-size: 3rem;
+    z-index: 0;
+    opacity: 0.85;
+    filter: drop-shadow(0 0 8px rgba(255,120,0,0.6));
+  }
+  .lantern.l1 { top: 4%; left: 5%; }
+  .lantern.l2 { top: 18%; left: 88%; font-size: 2.2rem; }
+  .lantern.l3 { top: 78%; left: 4%; }
+  .lantern.l4 { top: 82%; left: 90%; font-size: 2.2rem; }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3vh 5vw;
+    text-align: center;
+  }
+
+  .qnum {
+    font-size: 2.2rem;
+    color: #ffd97a;
+    letter-spacing: 4px;
+    margin-bottom: 1.5vh;
+    text-shadow: 0 0 12px rgba(255, 217, 122, 0.6);
+  }
+
+  .question {
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.4;
+    max-width: 90vw;
+    margin-bottom: 5vh;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    white-space: pre-line;
+  }
+
+  .choices {
+    display: flex;
+    gap: 4vw;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 5vh;
+  }
+
+  .choice-btn {
+    font-size: clamp(1.8rem, 3.2vw, 3rem);
+    font-weight: 700;
+    padding: 2.2vh 4vw;
+    min-width: 260px;
+    border-radius: 24px;
+    border: 4px solid #ffd97a;
+    background: rgba(255, 217, 122, 0.08);
+    color: #fff8e7;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px rgba(255, 217, 122, 0.15);
+  }
+  .choice-btn:hover {
+    background: rgba(255, 217, 122, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(255, 217, 122, 0.35);
+  }
+  .choice-btn.selected {
+    background: #ffd97a;
+    color: #4a2c00;
+    box-shadow: 0 0 30px rgba(255, 217, 122, 0.8);
+  }
+
+  .next-btn {
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    padding: 1.6vh 5vw;
+    border-radius: 40px;
+    border: none;
+    background: linear-gradient(135deg, #ff8a3d, #ff5e57);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255, 94, 87, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.2s ease;
+    letter-spacing: 3px;
+  }
+  .next-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .next-btn:hover {
+    transform: scale(1.06);
+  }
+
+  .progress {
+    position: fixed;
+    bottom: 3vh;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+    color: rgba(255, 248, 231, 0.6);
+    z-index: 1;
+  }
+
+  .end-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .end-screen .emoji {
+    font-size: 6rem;
+    margin-bottom: 2vh;
+  }
+  .end-title {
+    font-size: clamp(2.6rem, 5vw, 4.5rem);
+    font-weight: 800;
+    color: #ffd97a;
+    text-shadow: 0 0 20px rgba(255,217,122,0.7);
+    margin-bottom: 2vh;
+  }
+  .end-sub {
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    color: #fff8e7;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="moon"></div>
+<div class="lantern l1">🏮</div>
+<div class="lantern l2">🏮</div>
+<div class="lantern l3">🏮</div>
+<div class="lantern l4">🏮</div>
+
+<div class="container" id="quizScreen">
+  <div class="qnum" id="qnum">第 1 題</div>
+  <div class="question" id="questionText"></div>
+  <div class="choices" id="choices"></div>
+  <button class="next-btn" id="nextBtn">下一題 →</button>
+</div>
+
+<div class="container end-screen" id="endScreen">
+  <div class="emoji">🌕🥮🐇</div>
+  <div class="end-title">中秋快樂！</div>
+  <div class="end-sub">問答已完成，祝閱讀愉快、月圓人團圓 🏮</div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<script>
+const questions = [
+  {
+    q: "第一題\n中國古代宋代（公元960年至1279年）時，\n月餅內有沒有蓮蓉？",
+    choices: ["有", "無"]
+  },
+  {
+    q: "第二題\n在「后羿射日」的傳說中，天空原本出現了9個太陽。是否正確?",
+    choices: ["正確", "不正確"]
+  },
+  {
+    q: "第三題\n古代中秋的習俗「祭月」比「賞月」先開始。是否正確？",
+    choices: ["正確", "不正確"]
+  },
+  {
+    q: "第四題\n猜燈謎又叫「打燈虎」。當中的「虎」主要用來形容甚麼？",
+    choices: [
+      "A. 燈謎答案隱藏巧妙，猜中有如射中老虎一樣難",
+      "B. 猜燈謎時要反覆推敲，過程像追捕老虎一樣緊張刺激"
+    ]
+  },
+  {
+    q: "第五題\n燈謎最先是哪一個節日的活動？",
+    choices: ["A. 中秋節", "B. 元宵節"]
+  },
+  {
+    q: "第六題\n中秋節在農曆八月，因此又稱為：",
+    choices: ["A. 仲秋節", "B. 季秋節"]
+  },
+  {
+    q: "第七題\n傳說中，嫦娥是因為服用了什麼而飛到月亮上？",
+    choices: ["A. 不死藥", "B. 仙桃"]
+  },
+  {
+    q: "第八題\n中秋節吃柚子，民間常說「柚」與以下哪一個字關聯？",
+    choices: ["A. 又", "B. 佑"]
+  },
+  {
+    q: "第九題\n中秋節為什麼要吃芋頭？",
+    choices: ["A. 芋頭當造收成", "B. 芋頭形狀圓潤"]
+  }
+];
+
+let current = 0;
+
+const qnumEl = document.getElementById("qnum");
+const questionEl = document.getElementById("questionText");
+const choicesEl = document.getElementById("choices");
+const nextBtn = document.getElementById("nextBtn");
+const progressEl = document.getElementById("progress");
+const quizScreen = document.getElementById("quizScreen");
+const endScreen = document.getElementById("endScreen");
+
+function renderQuestion() {
+  const item = questions[current];
+  qnumEl.textContent = `第 ${current + 1} / ${questions.length} 題`;
+  questionEl.textContent = item.q;
+  choicesEl.innerHTML = "";
+  nextBtn.classList.remove("show");
+
+  item.choices.forEach((choiceText) => {
+    const btn = document.createElement("button");
+    btn.className = "choice-btn";
+    btn.textContent = choiceText;
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      nextBtn.classList.add("show");
+    });
+    choicesEl.appendChild(btn);
+  });
+
+  progressEl.textContent = `${current + 1} / ${questions.length}`;
+}
+
+nextBtn.addEventListener("click", () => {
+  current++;
+  if (current >= questions.length) {
+    quizScreen.style.display = "none";
+    progressEl.style.display = "none";
+    endScreen.style.display = "flex";
+  } else {
+    renderQuestion();
+  }
+});
+
+function createStars() {
+  const starsContainer = document.getElementById("stars");
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.animationDelay = Math.random() * 3 + "s";
+    starsContainer.appendChild(star);
+  }
+}
+
+createStars();
+renderQuestion();
+</script>
+
+</body>
+</html>
