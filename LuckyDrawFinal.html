@@ -1,0 +1,1200 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>抽籤工具｜姓名電話分欄</title>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --dark: #312e81;
+      --border: #dfe3f1;
+      --text: #20243a;
+      --muted: #667085;
+      --duplicate-bg: #fff0ef;
+      --excluded-bg: #f4f4f5;
+      --success-bg: #ecfdf3;
+      --success-text: #087443;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      color: var(--text);
+      background: linear-gradient(135deg, #eef2ff, #fff7ed);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--dark);
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 8px 0 22px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .card {
+      margin: 16px 0;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      color: var(--dark);
+      font-size: 18px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 150px;
+      padding: 10px;
+      resize: vertical;
+      border: 1px solid #c8cde0;
+      border-radius: 9px;
+      color: var(--text);
+      font: 14px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    textarea:focus {
+      outline: 3px solid #c7d2fe;
+      border-color: var(--primary);
+    }
+
+    .short-textarea {
+      min-height: 80px;
+    }
+
+    .output-textarea {
+      min-height: 135px;
+      background: #fbfcff;
+    }
+
+    .hint {
+      margin: 6px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      padding: 10px 13px;
+      border: 0;
+      border-radius: 8px;
+      background: #e8eaff;
+      color: var(--dark);
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(0.97);
+    }
+
+    button.primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    button.danger {
+      background: #fee4e2;
+      color: #912018;
+    }
+
+    .notice {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .stat {
+      padding: 10px;
+      border-radius: 9px;
+      background: #f5f6ff;
+      text-align: center;
+    }
+
+    .stat b {
+      display: block;
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .scroll-table {
+      max-height: 340px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f2f3ff;
+      color: var(--dark);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .duplicate-row td {
+      background: var(--duplicate-bg);
+    }
+
+    .excluded-row td {
+      background: var(--excluded-bg);
+      color: #626572;
+    }
+
+    .manual-selected td {
+      background: #ffffff;
+    }
+
+    .manual-excluded td {
+      background: var(--excluded-bg);
+      color: #626572;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 99px;
+      background: #e8eaff;
+      font-size: 12px;
+    }
+
+    .status-text {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .checkbox-cell {
+      width: 68px;
+      text-align: center;
+    }
+
+    .checkbox-cell input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <h1>🎉 抽籤工具</h1>
+
+    <p class="subtitle">
+      姓名電話自動分欄、重複檢查、排除名單、人手勾選確認，以及 Excel 四欄輸出。
+    </p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>1. 匯入名單</h2>
+
+        <label for="inputList">參加者名單（最多 400 人）</label>
+
+        <textarea id="inputList" placeholder="例子：
+陳大文12345678
+&quot;陳小美98765432&quot;
+「王先生61234567」
+# &quot;張小姐92345678&quot;
+李先生, 9123 4567"></textarea>
+
+        <p class="hint">
+          支援姓名與電話中間沒有空格，例如「陳大文12345678」。
+          人名前的空格、雙引號、單引號、#、*、-、．等符號會自動忽略。
+          前後都有引號的「&quot;陳大文12345678&quot;」也可以正確分欄。
+        </p>
+
+        <label for="excludeList">排除抽籤名單（可選）</label>
+
+        <textarea id="excludeList" class="short-textarea" placeholder="每行填寫姓名、電話或姓名及電話，例如：
+周國強
+61234567
+# 梁小姐"></textarea>
+
+        <div class="buttons">
+          <button type="button" class="primary" id="loadBtn">
+            載入及檢查名單
+          </button>
+
+          <button type="button" class="danger" id="resetBtn">
+            清除全部
+          </button>
+        </div>
+
+        <div id="notice" class="notice hidden"></div>
+      </section>
+
+      <section class="card">
+        <h2>使用規則</h2>
+
+        <p class="hint" style="font-size:14px; line-height:2">
+          1. 每個姓名只保留第一次出現的紀錄作候選人。<br>
+          2. 多出的同名人士會標示為「重複（不抽）」。<br>
+          3. 排除名單內的人士預設不勾選，但可人手重新勾選加回。<br>
+          4. 候選名單會按中文姓名排序。<br>
+          5. 取消勾選即可人手剔除；重新勾選即可加回。<br>
+          6. 未抽名單及抽籤結果均可複製至 Excel，格式固定為四欄。<br>
+          7. 本工具完全離線運作。
+        </p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>名單檢查</h2>
+
+      <div class="stats">
+        <div class="stat">
+          <b id="rawCount">0</b>
+          <span>匯入紀錄</span>
+        </div>
+
+        <div class="stat">
+          <b id="eligibleCount">0</b>
+          <span>目前已選擇</span>
+        </div>
+
+        <div class="stat">
+          <b id="duplicateCount">0</b>
+          <span>多出重複姓名</span>
+        </div>
+
+        <div class="stat">
+          <b id="excludedCount">0</b>
+          <span>原始已排除</span>
+        </div>
+      </div>
+
+      <div id="reviewTable" class="scroll-table">
+        <div class="empty">請先載入名單</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>人手確認抽籤名單</h2>
+
+      <p class="hint">
+        以下只顯示每個姓名第一次出現的紀錄，並已按中文姓名排序。
+        勾選代表包括在未抽名單及抽籤池；取消勾選代表人手剔除。
+        原先在排除名單內的人會預設不勾選，但可隨時加回。
+      </p>
+
+      <div class="buttons">
+        <button type="button" id="selectAllBtn">
+          全部勾選
+        </button>
+
+        <button type="button" id="unselectAllBtn">
+          全部取消勾選
+        </button>
+      </div>
+
+      <div id="manualSelectionTable" class="scroll-table">
+        <div class="empty">載入名單後顯示</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>非重複未抽名單</h2>
+
+      <p class="hint">
+        只包括目前已勾選的人士，並按中文姓名排序。
+        可直接複製貼到 Excel，固定輸出四欄：
+        「次序．人名 電話」、「次序」、「人名」、「電話」。
+      </p>
+
+      <div class="buttons">
+        <button type="button" id="copyUniqueBtn">
+          複製未抽名單到 Excel
+        </button>
+      </div>
+
+      <div id="uniqueTable" class="scroll-table">
+        <div class="empty">載入名單後顯示</div>
+      </div>
+
+      <label for="uniqueOutput">可直接複製貼上 Excel（4 欄）</label>
+
+      <textarea
+        id="uniqueOutput"
+        class="output-textarea"
+        readonly
+      ></textarea>
+    </section>
+
+    <section class="card">
+      <h2>2. 抽籤結果</h2>
+
+      <div class="buttons">
+        <button type="button" class="primary" id="drawBtn">
+          🎲 進行抽次序
+        </button>
+
+        <button type="button" id="copyResultBtn">
+          複製結果到 Excel
+        </button>
+
+        <button type="button" id="csvBtn">
+          匯出結果 CSV
+        </button>
+      </div>
+
+      <p class="hint">
+        抽籤時只會使用目前勾選的人士，並隨機排列由 1 至總人數的完整次序。
+      </p>
+
+      <div id="resultTable" class="scroll-table">
+        <div class="empty">尚未進行抽籤</div>
+      </div>
+
+      <label for="resultOutput">可直接複製貼上 Excel（4 欄）</label>
+
+      <textarea
+        id="resultOutput"
+        class="output-textarea"
+        readonly
+      ></textarea>
+    </section>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    let allRows = [];
+    let candidates = [];
+    let eligiblePeople = [];
+    let drawResults = [];
+
+    function cleanLeadingText(value) {
+      return String(value || "")
+        .replace(/^\uFEFF/, "")
+        .trim()
+        .replace(
+          /^[\s#＊*\-—_.,，。．、:：;；!！?？()（）【】{}<>《》「」『』"'`~]+/,
+          ""
+        )
+        .trim();
+    }
+
+    function cleanName(value) {
+      return cleanLeadingText(value)
+        .replace(/["'”」』]\s*$/, "")
+        .trim()
+        .replace(/\s+/g, " ");
+    }
+
+    function nameKey(value) {
+      return cleanName(value).toLocaleLowerCase();
+    }
+
+    function phoneKey(value) {
+      return String(value || "")
+        .replace(/[\s\-()（）]/g, "")
+        .replace(/^\+?852/, "");
+    }
+
+    function isPhone(value) {
+      const digits = phoneKey(value).replace(/\D/g, "");
+
+      return /^\d{8,15}$/.test(digits);
+    }
+
+    function parseLine(line) {
+      line = cleanLeadingText(line);
+
+      line = line
+        .replace(/["'”」』]\s*$/, "")
+        .trim();
+
+      if (!line) {
+        return null;
+      }
+
+      const separatedParts = line
+        .split(/\t|,|，|;|；/)
+        .map(part => {
+          return cleanLeadingText(part)
+            .replace(/["'”」』]\s*$/, "")
+            .trim();
+        })
+        .filter(Boolean);
+
+      if (separatedParts.length > 1) {
+        const separatedPhone = separatedParts.find(isPhone);
+
+        if (separatedPhone) {
+          return {
+            name: cleanName(
+              separatedParts
+                .filter(item => item !== separatedPhone)
+                .join(" ")
+            ),
+            phone: separatedPhone
+          };
+        }
+
+        return {
+          name: cleanName(separatedParts[0]),
+          phone: separatedParts.slice(1).join(" ")
+        };
+      }
+
+      const match = line.match(/^(.*?)(\+?\d[\d\s\-()（）]*)$/);
+
+      if (match) {
+        const [, matchedName, matchedPhone] = match;
+        const normalizedPhone = phoneKey(matchedPhone);
+
+        if (/^\d{8,15}$/.test(normalizedPhone.replace(/\D/g, ""))) {
+          return {
+            name: cleanName(matchedName),
+            phone: cleanLeadingText(matchedPhone)
+          };
+        }
+      }
+
+      const tokens = line.split(/\s+/);
+      const tokenPhone = tokens.find(isPhone);
+
+      if (tokenPhone) {
+        return {
+          name: cleanName(
+            tokens
+              .filter(item => item !== tokenPhone)
+              .join(" ")
+          ),
+          phone: tokenPhone
+        };
+      }
+
+      return {
+        name: cleanName(line),
+        phone: ""
+      };
+    }
+
+    function parseList(text) {
+      return text
+        .split(/\r?\n/)
+        .map(parseLine)
+        .filter(item => item && item.name);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => {
+        const map = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        };
+
+        return map[character];
+      });
+    }
+
+    function showNotice(text) {
+      const notice = $("notice");
+
+      notice.textContent = text;
+      notice.className = "notice";
+    }
+
+    function sortByChineseName(people) {
+      const collator = new Intl.Collator(
+        "zh-Hant-HK",
+        {
+          sensitivity: "base",
+          numeric: true
+        }
+      );
+
+      return [...people].sort((firstPerson, secondPerson) => {
+        const nameResult = collator.compare(
+          firstPerson.name,
+          secondPerson.name
+        );
+
+        if (nameResult !== 0) {
+          return nameResult;
+        }
+
+        return collator.compare(
+          firstPerson.phone || "",
+          secondPerson.phone || ""
+        );
+      });
+    }
+
+    function getSelectedPeople() {
+      return sortByChineseName(
+        candidates
+          .filter(person => person.checked)
+          .map(person => {
+            return {
+              name: person.name,
+              phone: person.phone
+            };
+          })
+      );
+    }
+
+    function createFourColumnText(people) {
+      return people
+        .map((person, index) => {
+          const order = person.order || index + 1;
+
+          return [
+            `${order}. ${person.name} ${person.phone}`,
+            order,
+            person.name,
+            person.phone
+          ].join("\t");
+        })
+        .join("\n");
+    }
+
+    function createFourColumnTable(people) {
+      if (!people.length) {
+        return '<div class="empty">目前沒有資料</div>';
+      }
+
+      const rows = people
+        .map((person, index) => {
+          const order = person.order || index + 1;
+
+          return `
+            <tr>
+              <td>${order}. ${escapeHtml(person.name)} ${escapeHtml(person.phone)}</td>
+              <td>${order}</td>
+              <td>${escapeHtml(person.name)}</td>
+              <td>${escapeHtml(person.phone)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      return `
+        <table>
+          <thead>
+            <tr>
+              <th>次序．人名 電話</th>
+              <th>次序</th>
+              <th>人名</th>
+              <th>電話</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderReviewTable() {
+      if (!allRows.length) {
+        $("reviewTable").innerHTML =
+          '<div class="empty">請先載入名單</div>';
+
+        return;
+      }
+
+      const rows = allRows
+        .map(person => {
+          let className = "";
+
+          if (person.status.startsWith("重複")) {
+            className = "duplicate-row";
+          }
+
+          if (person.status === "已排除") {
+            className = "excluded-row";
+          }
+
+          return `
+            <tr class="${className}">
+              <td>${person.importRow}</td>
+              <td>${escapeHtml(person.name)}</td>
+              <td>${escapeHtml(person.phone)}</td>
+              <td><span class="tag">${person.status}</span></td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      $("reviewTable").innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>匯入行</th>
+              <th>人名</th>
+              <th>電話</th>
+              <th>檢查結果</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderManualSelectionTable() {
+      if (!candidates.length) {
+        $("manualSelectionTable").innerHTML =
+          '<div class="empty">載入名單後顯示</div>';
+
+        return;
+      }
+
+      const sortedCandidates = sortByChineseName(candidates);
+
+      const rows = sortedCandidates
+        .map(person => {
+          const className = person.checked
+            ? "manual-selected"
+            : "manual-excluded";
+
+          const selectedText = person.checked
+            ? "已包括"
+            : "已剔除";
+
+          return `
+            <tr class="${className}">
+              <td class="checkbox-cell">
+                <input
+                  type="checkbox"
+                  class="candidate-checkbox"
+                  data-candidate-id="${person.id}"
+                  ${person.checked ? "checked" : ""}
+                  aria-label="選擇 ${escapeHtml(person.name)}"
+                >
+              </td>
+
+              <td>${escapeHtml(person.name)}</td>
+              <td>${escapeHtml(person.phone)}</td>
+
+              <td>
+                <span class="tag">${selectedText}</span>
+              </td>
+
+              <td>
+                <span class="status-text">
+                  ${escapeHtml(person.originalStatus)}
+                </span>
+              </td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      $("manualSelectionTable").innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th class="checkbox-cell">抽籤</th>
+              <th>人名</th>
+              <th>電話</th>
+              <th>目前選擇</th>
+              <th>原始狀態</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+
+      document
+        .querySelectorAll(".candidate-checkbox")
+        .forEach(checkbox => {
+          checkbox.addEventListener("change", event => {
+            const candidateId = Number(
+              event.target.dataset.candidateId
+            );
+
+            const targetPerson = candidates.find(person => {
+              return person.id === candidateId;
+            });
+
+            if (!targetPerson) {
+              return;
+            }
+
+            targetPerson.checked = event.target.checked;
+
+            updateSelectedListAfterManualChange();
+          });
+        });
+    }
+
+    function renderUniqueList() {
+      $("uniqueTable").innerHTML =
+        createFourColumnTable(eligiblePeople);
+
+      $("uniqueOutput").value =
+        createFourColumnText(eligiblePeople);
+    }
+
+    function renderDrawResults() {
+      if (!drawResults.length) {
+        $("resultTable").innerHTML =
+          '<div class="empty">尚未進行抽籤</div>';
+
+        $("resultOutput").value = "";
+        return;
+      }
+
+      $("resultTable").innerHTML =
+        createFourColumnTable(drawResults);
+
+      $("resultOutput").value =
+        createFourColumnText(drawResults);
+    }
+
+    function updateSelectedListAfterManualChange() {
+      eligiblePeople = getSelectedPeople();
+
+      $("eligibleCount").textContent =
+        eligiblePeople.length;
+
+      drawResults = [];
+
+      renderManualSelectionTable();
+      renderUniqueList();
+      renderDrawResults();
+
+      showNotice(
+        `目前已選擇 ${eligiblePeople.length} 位人士參與抽籤。`
+      );
+    }
+
+    function loadAndCheckList() {
+      const rawList = parseList($("inputList").value);
+
+      if (rawList.length > 400) {
+        showNotice(
+          `目前匯入 ${rawList.length} 筆資料，超出 400 人上限。請刪減後重新載入。`
+        );
+
+        return;
+      }
+
+      const exclusionList = parseList($("excludeList").value);
+
+      const excludedNames = new Set(
+        exclusionList.map(person => nameKey(person.name))
+      );
+
+      const excludedPhones = new Set(
+        exclusionList
+          .filter(person => person.phone)
+          .map(person => phoneKey(person.phone))
+      );
+
+      const seenNames = new Set();
+
+      allRows = [];
+      candidates = [];
+      eligiblePeople = [];
+      drawResults = [];
+
+      rawList.forEach((person, index) => {
+        const normalizedName = nameKey(person.name);
+        const normalizedPhone = phoneKey(person.phone);
+
+        const isExcludedByName =
+          excludedNames.has(normalizedName);
+
+        const isExcludedByPhone =
+          person.phone &&
+          excludedPhones.has(normalizedPhone);
+
+        const hasAppearedBefore =
+          seenNames.has(normalizedName);
+
+        let status = "";
+
+        if (hasAppearedBefore) {
+          status = "重複（不抽）";
+        } else if (
+          isExcludedByName ||
+          isExcludedByPhone
+        ) {
+          status = "已排除";
+
+          candidates.push({
+            id: index + 1,
+            name: person.name,
+            phone: person.phone,
+            checked: false,
+            originalStatus: "排除名單"
+          });
+        } else {
+          status = "合資格";
+
+          candidates.push({
+            id: index + 1,
+            name: person.name,
+            phone: person.phone,
+            checked: true,
+            originalStatus: "合資格"
+          });
+        }
+
+        seenNames.add(normalizedName);
+
+        allRows.push({
+          importRow: index + 1,
+          name: person.name,
+          phone: person.phone,
+          status: status
+        });
+      });
+
+      eligiblePeople = getSelectedPeople();
+
+      $("rawCount").textContent = rawList.length;
+      $("eligibleCount").textContent =
+        eligiblePeople.length;
+
+      $("duplicateCount").textContent =
+        allRows.filter(person => {
+          return person.status.startsWith("重複");
+        }).length;
+
+      $("excludedCount").textContent =
+        allRows.filter(person => {
+          return person.status === "已排除";
+        }).length;
+
+      renderReviewTable();
+      renderManualSelectionTable();
+      renderUniqueList();
+      renderDrawResults();
+
+      showNotice(
+        `名單檢查完成：目前已勾選 ${eligiblePeople.length} 位人士參與抽籤。`
+      );
+    }
+
+    function shuffle(array) {
+      const copiedArray = [...array];
+
+      for (
+        let index = copiedArray.length - 1;
+        index > 0;
+        index--
+      ) {
+        const randomIndex = Math.floor(
+          Math.random() * (index + 1)
+        );
+
+        const temporary = copiedArray[index];
+
+        copiedArray[index] =
+          copiedArray[randomIndex];
+
+        copiedArray[randomIndex] = temporary;
+      }
+
+      return copiedArray;
+    }
+
+    function performDrawOrder() {
+      eligiblePeople = getSelectedPeople();
+
+      if (!eligiblePeople.length) {
+        showNotice(
+          "請先在「人手確認抽籤名單」勾選至少一位人士。"
+        );
+
+        return;
+      }
+
+      drawResults = shuffle(eligiblePeople).map(
+        (person, index) => {
+          return {
+            name: person.name,
+            phone: person.phone,
+            order: index + 1
+          };
+        }
+      );
+
+      renderDrawResults();
+
+      showNotice(
+        `抽次序完成：共 ${drawResults.length} 位人士，已隨機排列 1 至 ${drawResults.length}。`
+      );
+    }
+
+    async function copyToExcel(textareaId) {
+      const textarea = $(textareaId);
+
+      if (!textarea.value) {
+        showNotice("目前沒有可複製的資料。");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          textarea.value
+        );
+      } catch (error) {
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+      }
+
+      showNotice("已複製，可直接貼上到 Excel。");
+    }
+
+    function exportResultCsv() {
+      if (!drawResults.length) {
+        showNotice(
+          "請先進行抽次序，才可匯出 CSV。"
+        );
+
+        return;
+      }
+
+      const quoteCsv = value => {
+        return `"${String(value).replace(/"/g, '""')}"`;
+      };
+
+      let csv =
+        "次序．人名 電話,次序,人名,電話\r\n";
+
+      csv += drawResults
+        .map(person => {
+          return [
+            `${person.order}. ${person.name} ${person.phone}`,
+            person.order,
+            person.name,
+            person.phone
+          ]
+            .map(quoteCsv)
+            .join(",");
+        })
+        .join("\r\n");
+
+      const blob = new Blob(
+        ["\uFEFF" + csv],
+        {
+          type: "text/csv;charset=utf-8"
+        }
+      );
+
+      const downloadLink = document.createElement("a");
+
+      downloadLink.href =
+        URL.createObjectURL(blob);
+
+      downloadLink.download = "抽籤結果.csv";
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+
+      URL.revokeObjectURL(downloadLink.href);
+    }
+
+    function resetAll() {
+      if (!confirm("確定清除所有名單及抽籤結果？")) {
+        return;
+      }
+
+      $("inputList").value = "";
+      $("excludeList").value = "";
+      $("uniqueOutput").value = "";
+      $("resultOutput").value = "";
+
+      allRows = [];
+      candidates = [];
+      eligiblePeople = [];
+      drawResults = [];
+
+      $("rawCount").textContent = "0";
+      $("eligibleCount").textContent = "0";
+      $("duplicateCount").textContent = "0";
+      $("excludedCount").textContent = "0";
+
+      $("reviewTable").innerHTML =
+        '<div class="empty">請先載入名單</div>';
+
+      $("manualSelectionTable").innerHTML =
+        '<div class="empty">載入名單後顯示</div>';
+
+      $("uniqueTable").innerHTML =
+        '<div class="empty">載入名單後顯示</div>';
+
+      $("resultTable").innerHTML =
+        '<div class="empty">尚未進行抽籤</div>';
+
+      $("notice").className = "notice hidden";
+    }
+
+    $("loadBtn").addEventListener(
+      "click",
+      loadAndCheckList
+    );
+
+    $("drawBtn").addEventListener(
+      "click",
+      performDrawOrder
+    );
+
+    $("copyUniqueBtn").addEventListener(
+      "click",
+      () => {
+        copyToExcel("uniqueOutput");
+      }
+    );
+
+    $("copyResultBtn").addEventListener(
+      "click",
+      () => {
+        copyToExcel("resultOutput");
+      }
+    );
+
+    $("csvBtn").addEventListener(
+      "click",
+      exportResultCsv
+    );
+
+    $("selectAllBtn").addEventListener(
+      "click",
+      () => {
+        candidates.forEach(person => {
+          person.checked = true;
+        });
+
+        updateSelectedListAfterManualChange();
+      }
+    );
+
+    $("unselectAllBtn").addEventListener(
+      "click",
+      () => {
+        candidates.forEach(person => {
+          person.checked = false;
+        });
+
+        updateSelectedListAfterManualChange();
+      }
+    );
+
+    $("resetBtn").addEventListener(
+      "click",
+      resetAll
+    );
+  </script>
+</body>
+</html>
