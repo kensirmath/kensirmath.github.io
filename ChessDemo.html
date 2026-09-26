@@ -727,6 +727,60 @@
                 font-size: 16px;
             }
         }
+        /* ===== Mobile fix: force white chess pieces to remain white ===== */
+
+.piece.white-piece,
+.setup-top-piece.white-piece,
+.promotion-option.white-piece {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+
+  font-family:
+    "Times New Roman",
+    "DejaVu Serif",
+    "Noto Serif Symbols 2",
+    "Noto Sans Symbols 2",
+    "Arial Unicode MS",
+    serif !important;
+
+  text-shadow:
+    -1px -1px 0 #111111,
+     1px -1px 0 #111111,
+    -1px  1px 0 #111111,
+     1px  1px 0 #111111 !important;
+}
+
+/* iPhone / iPad Safari sometimes applies its own button text rendering */
+button .white-piece,
+button.white-piece {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Ensure black pieces remain visibly different */
+.piece.black-piece,
+.setup-top-piece.black-piece,
+.promotion-option.black-piece {
+  color: #202020 !important;
+  -webkit-text-fill-color: #202020 !important;
+}
+
+/* Prevent mobile browsers from applying automatic dark-text adjustments */
+@media (max-width: 820px) {
+  .piece.white-piece {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+
+    text-shadow:
+      -1px -1px 0 #111111,
+       1px -1px 0 #111111,
+      -1px  1px 0 #111111,
+       1px  1px 0 #111111 !important;
+  }
+}
+
+        
     </style>
 </head>
 
