@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宇宙光流 · Cosmic Drift</title><style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#01030b;color:#b8cbe1;font-family:system-ui,sans-serif}canvas{display:block;width:100%;height:100%}.panel{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:12px 18px;border:1px solid #a0c5ff26;border-radius:18px;background:#07101dcc;backdrop-filter:blur(16px);transition:opacity .7s;white-space:nowrap}.hidden{opacity:0;pointer-events:none}button{border:1px solid #a0c5ff30;border-radius:9px;background:#abcfff0a;color:inherit;padding:7px 12px;cursor:pointer}label{font-size:12px;display:flex;align-items:center;gap:7px}input{width:85px;accent-color:#91bfff}.title{position:fixed;top:25px;left:28px;font-size:11px;letter-spacing:4px;opacity:.5;transition:opacity .7s}.hint{font-size:11px;opacity:.55}@media(max-width:600px){.panel{gap:8px;padding:10px}.hint{display:none}input{width:55px}.title{font-size:9px}}
+</style></head><body><canvas id="space" aria-label="柔和宇宙光線穿梭動畫"></canvas><div class="title" id="title">COSMIC DRIFT / 宇宙光流</div><div class="panel" id="panel"><button id="pause">暫停</button><button id="full">全螢幕</button><label>光度<input id="light" type="range" min="15" max="100" value="55"></label><span class="hint">空白鍵暫停 · F 全螢幕</span></div><script>
+'use strict';
+const canvas=document.getElementById('space'),ctx=canvas.getContext('2d'),panel=document.getElementById('panel'),title=document.getElementById('title');
+let W,H,dpr,paused=false,elapsed=0,last=0,brightness=.55,hideTimer;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+paused=reduced;
+let seed=73421;function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+const stars=Array.from({length:300},()=>({angle:rand()*Math.PI*2,offset:rand(),radius:.35+rand()*.95,width:.35+rand()*.9,tone:rand(),length:.018+rand()*.025}));
+const distant=Array.from({length:160},()=>({x:rand(),y:rand(),r:.25+rand()*.7,a:.08+rand()*.25}));
+function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+function draw(t){ctx.fillStyle='#01030b';ctx.fillRect(0,0,W,H);const cx=W*.5,cy=H*.5,unit=Math.max(W,H)*.56;
+const haze=ctx.createRadialGradient(W*.48,H*.49,0,W*.48,H*.49,Math.max(W,H)*.7);haze.addColorStop(0,'#030817');haze.addColorStop(.45,'#07091b');haze.addColorStop(1,'#01030a');ctx.fillStyle=haze;ctx.fillRect(0,0,W,H);
+ctx.globalAlpha=brightness;for(const s of distant){ctx.fillStyle=`rgba(164,192,234,${s.a})`;ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);ctx.fill()}
+ctx.globalCompositeOperation='lighter';
+for(const s of stars){const u=(s.offset+t/32)%1;const ease=u*u;const r=unit*s.radius*(.025+ease*1.8);const tail=unit*s.radius*s.length*(.12+ease*2.6);const a=Math.sin(Math.PI*u)**2;const co=Math.cos(s.angle),si=Math.sin(s.angle);const x=cx+co*r,y=cy+si*r;const x0=cx+co*Math.max(0,r-tail),y0=cy+si*Math.max(0,r-tail);const color=s.tone<.18?'169,145,230':'151,196,246';const g=ctx.createLinearGradient(x0,y0,x,y);g.addColorStop(0,`rgba(${color},0)`);g.addColorStop(1,`rgba(${color},${a*.65})`);ctx.strokeStyle=g;ctx.lineWidth=s.width*(.4+u*.7);ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x,y);ctx.stroke();}
+ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';const vignette=ctx.createRadialGradient(cx,cy,Math.min(W,H)*.12,cx,cy,Math.max(W,H)*.7);vignette.addColorStop(0,'rgba(0,0,0,0)');vignette.addColorStop(1,'rgba(0,0,5,.68)');ctx.fillStyle=vignette;ctx.fillRect(0,0,W,H);
+}
+function frame(now){if(last&&!paused&&!document.hidden)elapsed+=Math.min((now-last)/1000,.05);last=now;draw(elapsed);requestAnimationFrame(frame)}
+function sync(){document.getElementById('pause').textContent=paused?'播放':'暫停'}
+function toggle(){paused=!paused;sync();wake()}
+async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){document.getElementById('full').textContent='請用瀏覽器全螢幕'}}
+function wake(){panel.classList.remove('hidden');title.classList.remove('hidden');document.body.style.cursor='';clearTimeout(hideTimer);hideTimer=setTimeout(()=>{if(panel.matches(':hover')||panel.contains(document.activeElement)){wake();return}panel.classList.add('hidden');title.classList.add('hidden');document.body.style.cursor='none'},3500)}
+document.getElementById('pause').onclick=toggle;document.getElementById('full').onclick=fullscreen;document.getElementById('light').oninput=e=>{brightness=e.target.value/100};
+addEventListener('pointermove',wake);addEventListener('pointerdown',wake);addEventListener('keydown',e=>{wake();if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON')return;if(e.code==='Space'){e.preventDefault();toggle()}if(e.key.toLowerCase()==='f')fullscreen()});document.addEventListener('visibilitychange',()=>{last=0});sync();wake();requestAnimationFrame(frame);
+</script></body></html>
